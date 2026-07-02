@@ -14,6 +14,7 @@ class Tenant extends Model
         'about_text',
         'contact_email',
         'contact_phone',
+        'whatsapp_number',
         'contact_address',
         'shipping_policy',
         'return_policy',

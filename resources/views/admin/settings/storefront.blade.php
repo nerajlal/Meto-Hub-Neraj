@@ -203,6 +203,14 @@
                             @enderror
                         </div>
                         <div class="mb-3">
+                            <label for="whatsapp_number" class="form-label fw-semibold">WhatsApp Number</label>
+                            <input type="text" class="form-control @error('whatsapp_number') is-invalid @enderror" id="whatsapp_number" name="whatsapp_number" value="{{ old('whatsapp_number', $tenant->whatsapp_number) }}" placeholder="e.g. 919876543210 (without +)">
+                            @error('whatsapp_number')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                            <div class="form-text mt-1 small text-muted">Include country code without '+' (e.g., 919876543210 for India).</div>
+                        </div>
+                        <div class="mb-3">
                             <label for="contact_address" class="form-label fw-semibold">Physical Shop Address</label>
                             <textarea class="form-control @error('contact_address') is-invalid @enderror" id="contact_address" name="contact_address" rows="4" placeholder="Store address details...">{{ old('contact_address', $tenant->contact_address) }}</textarea>
                             @error('contact_address')

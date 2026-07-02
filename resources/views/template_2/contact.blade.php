@@ -23,6 +23,16 @@
                 <i class="fa-solid fa-location-dot"></i>
                 <span>{{ $currentTenant->contact_address ?? 'Fresh Grocery, MG Road, Bangalore, India' }}</span>
             </div>
+            @if(!empty($currentTenant->whatsapp_number))
+            <div class="info-item">
+                <i class="fa-brands fa-whatsapp"></i>
+                <span>
+                    <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $currentTenant->whatsapp_number) }}" target="_blank" style="color: inherit; text-decoration: none;">
+                        {{ $currentTenant->whatsapp_number }}
+                    </a>
+                </span>
+            </div>
+            @endif
         </div>
 
         <form class="contact-form">
