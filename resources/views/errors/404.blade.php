@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scent Evaporated - Page Not Found | VESPR</title>
+    <title>Page Not Found | Fresh Grocery</title>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -174,7 +174,7 @@
         $tenant = \App\Models\Tenant::find($tenantId);
         
         $homeUrl = '/';
-        $brand = 'VESPR';
+        $brand = 'Fresh Grocery';
         if ($tenant) {
             $brand = $tenant->name;
             $theme = $tenant->theme;
@@ -195,12 +195,12 @@
         
         <div class="error-code">404</div>
         
-        <h1 class="error-title">Scent Lost In The Air</h1>
+        <h1 class="error-title">Page Not Found</h1>
         
         <div class="divider"></div>
         
         <p class="error-description">
-            The page you are looking for has evaporated or does not exist. Let us guide you back to our curated fragrance collections.
+            The page you are looking for does not exist. Let us guide you back to our fresh groceries catalog.
         </p>
         
         <a href="{{ $homeUrl }}" class="cta-button">

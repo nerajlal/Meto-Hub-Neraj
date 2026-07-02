@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Boutique Maintenance | VESPR</title>
+    <title>Store Maintenance | Fresh Grocery</title>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -171,7 +171,7 @@
             ?? 1;
         $tenant = \App\Models\Tenant::find($tenantId);
         
-        $brand = 'VESPR';
+        $brand = 'Fresh Grocery';
         if ($tenant) {
             $brand = $tenant->name;
         }
@@ -182,12 +182,12 @@
         
         <div class="error-code">503</div>
         
-        <h1 class="error-title">Reblending Our Essences</h1>
+        <h1 class="error-title">Store Maintenance</h1>
         
         <div class="divider"></div>
         
         <p class="error-description">
-            We are currently refining our catalog formulations. We will return shortly with fresh premium batches. Please check back soon.
+            We are currently updating our storefront. We will return shortly with fresh premium groceries. Please check back soon.
         </p>
         
         <button onclick="window.location.reload();" class="cta-button">

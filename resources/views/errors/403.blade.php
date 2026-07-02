@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Access Forbidden | VESPR</title>
+    <title>Access Forbidden | Fresh Grocery</title>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -171,7 +171,7 @@
         $tenant = \App\Models\Tenant::find($tenantId);
         
         $homeUrl = '/';
-        $brand = 'VESPR';
+        $brand = 'Fresh Grocery';
         if ($tenant) {
             $brand = $tenant->name;
             $theme = $tenant->theme;
@@ -192,12 +192,12 @@
         
         <div class="error-code">403</div>
         
-        <h1 class="error-title">Scent Restricted</h1>
+        <h1 class="error-title">Access Restricted</h1>
         
         <div class="divider"></div>
         
         <p class="error-description">
-            You do not have authorization to view this collection or private vault. Let us guide you back to safety.
+            You do not have authorization to view this page. Let us guide you back to safety.
         </p>
         
         <a href="{{ $homeUrl }}" class="cta-button">

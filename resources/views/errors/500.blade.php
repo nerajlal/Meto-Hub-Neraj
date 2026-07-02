@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Internal Server Error | VESPR</title>
+    <title>Internal Server Error | Fresh Grocery</title>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -171,7 +171,7 @@
         $tenant = \App\Models\Tenant::find($tenantId);
         
         $homeUrl = '/';
-        $brand = 'VESPR';
+        $brand = 'Fresh Grocery';
         if ($tenant) {
             $brand = $tenant->name;
             $theme = $tenant->theme;
@@ -192,12 +192,12 @@
         
         <div class="error-code">500</div>
         
-        <h1 class="error-title">Formulation Disturbance</h1>
+        <h1 class="error-title">Internal Server Error</h1>
         
         <div class="divider"></div>
         
         <p class="error-description">
-            Our distillers encountered an unexpected disturbance while blending this page. Please try refreshing or return back to the main storefront.
+            Our servers encountered an unexpected disturbance. Please try refreshing or return back to the main storefront.
         </p>
         
         <a href="{{ $homeUrl }}" class="cta-button">
