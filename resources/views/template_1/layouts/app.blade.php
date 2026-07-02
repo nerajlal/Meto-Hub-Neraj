@@ -52,6 +52,13 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #94a3b8;
         }
+
+        /* Mobile specific hiding for tags */
+        @media (max-width: 768px) {
+            .hide-text-mobile {
+                display: none !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -269,7 +276,7 @@
     </script>
     @yield('scripts')
     @if(!empty($currentTenant->whatsapp_number))
-        <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $currentTenant->whatsapp_number) }}" target="_blank" class="whatsapp-float-btn" style="position: fixed; bottom: 20px; left: 20px; width: 60px; height: 60px; background-color: #25d366; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.15); z-index: 1000; text-decoration: none; transition: transform 0.3s ease;">
+        <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $currentTenant->whatsapp_number) }}" target="_blank" class="whatsapp-float-btn" style="position: fixed; bottom: 20px; right: 20px; width: 60px; height: 60px; background-color: #25d366; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.15); z-index: 1000; text-decoration: none; transition: transform 0.3s ease;">
             <i class="fa-brands fa-whatsapp"></i>
         </a>
     @endif

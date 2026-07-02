@@ -30,14 +30,26 @@
                     {{ $bundle->type == 'pack' ? 'VOLUME VALUE DEAL' : 'COMBO SAVINGS' }}
                 </div>
             </div>
+            @if($bundle->products->count() > 0)
+            <div class="thumb-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;">
+                <div class="thumb-item active" onclick="document.getElementById('p-main-img').src='{{ $mainImg }}'; document.querySelectorAll('.thumb-item').forEach(el => el.style.borderColor='var(--border-color)'); this.style.borderColor='var(--accent-color)';" style="border: 2px solid var(--accent-color); border-radius: 0.75rem; overflow: hidden; aspect-ratio: 1; cursor: pointer; transition: 0.2s;">
+                    <img src="{{ $mainImg }}" onerror="this.src='{{ asset('Images/placeholder-grocery.webp') }}'" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+                @foreach($bundle->products->take(3) as $prod)
+                    <div class="thumb-item" onclick="document.getElementById('p-main-img').src='{{ $prod->main_image_url }}'; document.querySelectorAll('.thumb-item').forEach(el => el.style.borderColor='var(--border-color)'); this.style.borderColor='var(--accent-color)';" style="border: 2px solid var(--border-color); border-radius: 0.75rem; overflow: hidden; aspect-ratio: 1; cursor: pointer; transition: 0.2s;">
+                        <img src="{{ $prod->main_image_url }}" onerror="this.src='{{ asset('Images/placeholder-grocery.webp') }}'" alt="{{ $prod->title }}" style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                @endforeach
+            </div>
+            @endif
         </div>
 
         <!-- Bundle Info Panel -->
         <div class="product-details-panel" style="background: #fff; padding: 2.5rem; border-radius: 1.5rem; border: 1px solid var(--border-color);">
-            <p class="p-vendor-label" style="font-size: 0.75rem; font-weight: 800; color: var(--accent-color); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.5rem;">Value Pack Combo</p>
-            <h1 class="p-title" style="font-size: 2.2rem; font-weight: 800; color: var(--primary-color); margin-bottom: 1rem; line-height: 1.2;">{{ $bundle->title }}</h1>
+            <p class="p-vendor-label" style="font-size: 0.75rem; font-weight: 800; color: var(--accent-color); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.25rem;">Value Pack Combo</p>
+            <h1 class="p-title" style="font-size: 2.2rem; font-weight: 800; color: var(--primary-color); margin-bottom: 0.5rem; line-height: 1.2;">{{ $bundle->title }}</h1>
             
-            <div class="p-price-row" style="display: flex; align-items: baseline; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+            <div class="p-price-row" style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem;">
                 <span class="p-current-price" style="font-size: 2rem; font-weight: 800; color: var(--accent-color);">₹{{ number_format($bundle->total_price, 2) }}</span>
                 @php
                     $originalPrice = $bundle->products->sum(function($p) {
@@ -45,14 +57,16 @@
                     });
                 @endphp
                 @if($originalPrice > $bundle->total_price)
-                    <span class="p-compare-at" style="font-size: 1.2rem; text-decoration: line-through; color: var(--text-muted);">₹{{ number_format($originalPrice, 2) }}</span>
-                    <span class="p-discount-badge" style="background: #ecfdf5; color: var(--accent-color); padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.8rem; font-weight: 700;">Save ₹{{ number_format($originalPrice - $bundle->total_price, 2) }}</span>
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <span class="p-compare-at" style="font-size: 1.1rem; text-decoration: line-through; color: var(--text-muted);">₹{{ number_format($originalPrice, 2) }}</span>
+                        <span class="p-discount-badge" style="background: #ecfdf5; color: var(--accent-color); padding: 0.2rem 0.5rem; border-radius: 9999px; font-size: 0.7rem; font-weight: 800; white-space: nowrap;">Save ₹{{ number_format($originalPrice - $bundle->total_price, 2) }}</span>
+                    </div>
                 @endif
             </div>
 
             <div class="delivery-note" style="margin-bottom: 2rem; color: var(--accent-color); font-weight: 700; font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem;">
                 <i class="fa-solid fa-truck-fast"></i>
-                <span>Delivered in 2 hours (Express Delivery)</span>
+                <span>Delivered by {{ \Carbon\Carbon::now()->addDays($currentTenant->delivery_days ?? 2)->format('D, M d') }}</span>
             </div>
 
             <div class="p-tabs" style="margin-bottom: 2rem;">
@@ -85,14 +99,16 @@
                 </div>
             </div>
 
-            <div class="p-actions-row" style="display: flex; gap: 1rem; margin-bottom: 2rem;">
-                <div class="qty-control" style="display: flex; align-items: center; border: 2px solid var(--border-color); border-radius: 0.75rem; overflow: hidden; background: #fff;">
-                    <button onclick="changePageQty(-1)" style="border: none; background: none; padding: 0.75rem 1.25rem; font-size: 1.2rem; cursor: pointer; color: var(--text-muted);">-</button>
-                    <span id="page-qty" style="font-weight: 700; min-width: 30px; text-align: center;">1</span>
-                    <button onclick="changePageQty(1)" style="border: none; background: none; padding: 0.75rem 1.25rem; font-size: 1.25rem; cursor: pointer; color: var(--text-muted);">+</button>
+            <div class="p-actions-row" style="display: flex; gap: 1rem; margin-bottom: 2rem; height: 3.5rem;">
+                <div class="qty-control" style="background: #fff; border: 2px solid var(--border-color); border-radius: 0.75rem; display: flex; flex-direction: row; align-items: center; justify-content: center; padding: 0.25rem 0.75rem; min-width: 70px; height: 100%;">
+                    <span id="page-qty" style="font-size: 1.2rem; font-weight: 800; text-align: center; line-height: 1; margin-right: 0.75rem;">1</span>
+                    <div style="display: flex; flex-direction: column; gap: 0.4rem; align-items: center; justify-content: center;">
+                        <button onclick="changePageQty(1)" style="border: none; background: none; padding: 0; font-size: 0.75rem; cursor: pointer; color: var(--text-muted); line-height: 1;"><i class="fa-solid fa-chevron-up"></i></button>
+                        <button onclick="changePageQty(-1)" style="border: none; background: none; padding: 0; font-size: 0.75rem; cursor: pointer; color: var(--text-muted); line-height: 1;"><i class="fa-solid fa-chevron-down"></i></button>
+                    </div>
                 </div>
-                <button class="btn-add-to-cart add-to-cart-btn" id="add-to-cart-bundle-btn" style="flex-grow: 1; background: var(--accent-color); color: #fff; border: none; padding: 1rem; border-radius: 0.75rem; font-weight: 800; font-size: 1rem; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
-                    <span>ADD COMBO TO BAG</span>
+                <button class="btn-add-to-cart add-to-cart-btn" id="add-to-cart-bundle-btn" style="flex-grow: 1; height: 100%; background: var(--accent-color); color: #fff; border: none; border-radius: 0.75rem; font-weight: 800; font-size: 1rem; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.5rem; white-space: nowrap;">
+                    <span>ADD TO BAG</span>
                     <span style="width: 1px; height: 16px; background: rgba(255,255,255,0.3); margin: 0 0.5rem;"></span>
                     <span id="btn-price-display">₹{{ number_format($bundle->total_price, 2) }}</span>
                 </button>

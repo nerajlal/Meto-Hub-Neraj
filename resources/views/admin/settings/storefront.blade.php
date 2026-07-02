@@ -244,6 +244,26 @@
                     </div>
                 </div>
 
+                <!-- Delivery Settings -->
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header py-3 d-flex align-items-center">
+                        <i class="fa-solid fa-truck-fast me-2 shopify-green"></i>
+                        <h5 class="m-0 fw-bold">Delivery Settings</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="delivery_days" class="form-label fw-semibold">Delivery Days Count</label>
+                            <input type="number" class="form-control @error('delivery_days') is-invalid @enderror" id="delivery_days" name="delivery_days" value="{{ old('delivery_days', $tenant->delivery_days ?? 2) }}" min="0" max="30" placeholder="e.g. 2">
+                            @error('delivery_days')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                            <div class="form-text mt-2 small text-muted">
+                                Number of days for delivery. The expected delivery date will be calculated from today and shown on product pages. Set to 0 for same-day delivery.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Tax Configuration -->
                 <div class="card mb-4 shadow-sm">
                     <div class="card-header py-3 d-flex align-items-center">

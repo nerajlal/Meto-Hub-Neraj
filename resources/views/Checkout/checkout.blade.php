@@ -7,12 +7,75 @@
     .checkout-main-grid {
         display: grid;
         grid-template-columns: 1.8fr 1fr;
-        gap: 3rem;
+        gap: 2rem;
         align-items: start;
+    }
+    .form-grid-lg {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+    }
+    .form-group-lg.full {
+        grid-column: span 2;
     }
     @media (max-width: 900px) {
         .checkout-main-grid {
             grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+        .checkout-sticky-summary {
+            position: static !important;
+        }
+        .checkout-title-lg {
+            font-size: 1.8rem !important;
+        }
+    }
+    @media (max-width: 600px) {
+        .checkout-page-container {
+            padding: 0 !important;
+            max-width: 100% !important;
+            margin: 0 !important;
+        }
+        .checkout-header-lg {
+            margin-bottom: 1.5rem !important;
+        }
+        .form-grid-lg {
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+        .form-group-lg.full {
+            grid-column: span 1;
+        }
+        .checkout-card {
+            padding: 1.25rem !important;
+            margin-bottom: 1.25rem !important;
+            border-radius: 1rem !important;
+        }
+        .card-heading {
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            font-size: 1.1rem !important;
+            padding-bottom: 0.75rem !important;
+        }
+        .order-summary-card {
+            padding: 1.25rem !important;
+            border-radius: 1rem !important;
+        }
+        .pay-option {
+            padding: 1rem !important;
+            gap: 1rem !important;
+        }
+        .summary-footer-badges {
+            gap: 0.25rem !important;
+            flex-wrap: wrap;
+            justify-content: center !important;
+        }
+        .badge-item {
+            font-size: 0.6rem !important;
+        }
+        .btn-complete-order {
+            font-size: 1rem !important;
+            padding: 1rem !important;
         }
     }
 </style>
@@ -33,16 +96,16 @@
                     <h2 class="card-heading" style="font-size: 1.25rem; font-weight: 800; margin-bottom: 2rem; display: flex; align-items: center; gap: 0.75rem; color: var(--primary-color); border-bottom: 1px solid var(--border-color); padding-bottom: 1rem;">
                         <i class="fa-solid fa-circle-user" style="color: var(--accent-color);"></i> 1. Contact Information
                     </h2>
-                    <div class="form-grid-lg" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
-                        <div class="form-group-lg full" style="grid-column: span 2;">
+                    <div class="form-grid-lg">
+                        <div class="form-group-lg full">
                             <label style="display: block; font-size: 0.8rem; font-weight: 800; color: var(--text-muted); margin-bottom: 0.5rem; text-transform: uppercase;">Full Name</label>
                             <input type="text" name="name" value="{{ auth()->user()->name ?? '' }}" required placeholder="e.g. John Doe" style="width: 100%; padding: 0.85rem 1.25rem; border: 2px solid var(--border-color); border-radius: 0.75rem; font-size: 1rem; outline: none;">
                         </div>
-                        <div class="form-group-lg" style="grid-column: span 2;">
+                        <div class="form-group-lg full">
                             <label style="display: block; font-size: 0.8rem; font-weight: 800; color: var(--text-muted); margin-bottom: 0.5rem; text-transform: uppercase;">Email Address</label>
                             <input type="email" name="email" value="{{ auth()->user()->email ?? '' }}" required placeholder="e.g. john@example.com" style="width: 100%; padding: 0.85rem 1.25rem; border: 2px solid var(--border-color); border-radius: 0.75rem; font-size: 1rem; outline: none;">
                         </div>
-                        <div class="form-group-lg" style="grid-column: span 2;">
+                        <div class="form-group-lg full">
                             <label style="display: block; font-size: 0.8rem; font-weight: 800; color: var(--text-muted); margin-bottom: 0.5rem; text-transform: uppercase;">Phone Number</label>
                             <input type="tel" name="phone" value="{{ auth()->user()->phone ?? '' }}" required placeholder="e.g. 9876543210" style="width: 100%; padding: 0.85rem 1.25rem; border: 2px solid var(--border-color); border-radius: 0.75rem; font-size: 1rem; outline: none;">
                         </div>
@@ -57,8 +120,8 @@
                             <i class="fa-solid fa-location-crosshairs" style="color: var(--accent-color);"></i> Use Current Location
                         </button>
                     </h2>
-                    <div class="form-grid-lg" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
-                        <div class="form-group-lg full" style="grid-column: span 2;">
+                    <div class="form-grid-lg">
+                        <div class="form-group-lg full">
                             <label style="display: block; font-size: 0.8rem; font-weight: 800; color: var(--text-muted); margin-bottom: 0.5rem; text-transform: uppercase;">Street Address</label>
                             <input type="text" name="address" value="{{ $address->address ?? '' }}" required placeholder="House No, Apartment, Street Name" style="width: 100%; padding: 0.85rem 1.25rem; border: 2px solid var(--border-color); border-radius: 0.75rem; font-size: 1rem; outline: none;">
                         </div>

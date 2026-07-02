@@ -14,8 +14,8 @@
             <i class="fa-solid fa-basket-shopping"></i>
             <span>{{ rand(20, 60) }} bought this week</span>
         </div>
-        <div style="position: absolute; top: 10px; right: 10px; background: var(--accent-color); color: #fff; padding: 4px 8px; border-radius: 4px; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">
-            {{ $bundle->type == 'pack' ? 'VOLUME DEAL' : 'COMBO SAVINGS' }}
+        <div style="position: absolute; top: 10px; right: 10px; background: var(--accent-color); color: #fff; padding: 4px 8px; border-radius: 4px; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap;">
+            <i class="fa-solid fa-layer-group me-1"></i><span class="hide-text-mobile">{{ $bundle->type == 'pack' ? 'VOLUME DEAL' : 'COMBO SAVINGS' }}</span>
         </div>
     </a>
     <div class="card-info" style="padding: 1rem; display: flex; flex-direction: column; gap: 0.25rem;">

@@ -27,8 +27,8 @@
 
         <!-- Pack Offer indicator badge -->
         @if($product->bundles->where('type', 'pack')->isNotEmpty())
-            <div style="position: absolute; top: 10px; left: 48px; background: #6366f1; color: #fff; padding: 4px 8px; border-radius: 4px; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);">
-                <i class="fa-solid fa-boxes-stacked me-1"></i>Pack Deal
+            <div style="position: absolute; top: 10px; left: 10px; background: #6366f1; color: #fff; padding: 4px 8px; border-radius: 4px; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3); white-space: nowrap;">
+                <i class="fa-solid fa-boxes-stacked me-1"></i><span class="hide-text-mobile">Pack Deal</span>
             </div>
         @endif
     </a>

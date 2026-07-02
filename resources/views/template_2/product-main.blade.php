@@ -28,6 +28,245 @@
   }
 }
 </script>
+<style>
+    .product-page-container {
+        animation: fadeIn 0.4s ease-out;
+    }
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    .main-image-display {
+        transition: transform 0.3s ease;
+    }
+    .main-image-display:hover {
+        transform: scale(1.02);
+    }
+    .size-rect {
+        transition: all 0.2s ease;
+    }
+    .size-rect:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .deal-card {
+        transition: all 0.2s ease;
+    }
+    .deal-card:hover {
+        background: #f0fdf4;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+    .btn-add-to-cart, #buy-now-btn, .wishlist-toggle-btn {
+        transition: all 0.2s ease;
+    }
+    .btn-add-to-cart:hover, #buy-now-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    .wishlist-toggle-btn:hover {
+        transform: scale(1.1);
+    }
+
+    @media (max-width: 768px) {
+        .product-page-container {
+            padding: 0 !important;
+        }
+        .breadcrumb {
+            margin-bottom: 1rem !important;
+            font-size: 0.75rem !important;
+        }
+        .product-core-grid {
+            gap: 1rem !important;
+            margin-bottom: 2rem !important;
+        }
+        .product-details-panel {
+            padding: 1.25rem !important;
+            border-radius: 1.5rem 1.5rem 0 0 !important;
+            margin: 0 -1rem !important;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.08) !important;
+            position: relative !important;
+        }
+        .p-title {
+            font-size: 1.5rem !important;
+            line-height: 1.3 !important;
+            margin-bottom: 0.75rem !important;
+        }
+        .p-price-row {
+            margin-bottom: 1.25rem !important;
+            padding: 0.75rem 1rem !important;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%) !important;
+            border-radius: 1rem !important;
+        }
+        .p-current-price {
+            font-size: 1.75rem !important;
+        }
+        .p-compare-at {
+            font-size: 1rem !important;
+        }
+        .section-title {
+            font-size: 1.25rem !important;
+        }
+        .size-rect-grid {
+            gap: 0.75rem !important;
+        }
+        .size-rect {
+            padding: 0.75rem 1rem !important;
+            border-radius: 1rem !important;
+            flex: 1 1 calc(50% - 0.5rem) !important;
+            justify-content: space-between !important;
+        }
+        .p-volume-deals {
+            margin-bottom: 1.5rem !important;
+        }
+        .deal-card {
+            border-radius: 1rem !important;
+        }
+        .p-actions-row {
+            flex-direction: row !important;
+            gap: 0.75rem !important;
+        }
+        .page-qty {
+            font-size: 1rem !important;
+            font-weight: 700 !important;
+            color: #1e293b !important;
+            padding: 0 0.75rem !important;
+            min-width: 30px !important;
+            text-align: center !important;
+        }
+        .btn-add-to-cart {
+            width: 100% !important;
+            border-radius: 1rem !important;
+        }
+        .p-tabs-minimal {
+            gap: 1.5rem !important;
+            padding: 0 0.25rem !important;
+        }
+        .tab-link {
+            position: relative !important;
+        }
+        .tab-link.active::after {
+            height: 3px !important;
+            border-radius: 999px !important;
+        }
+    }
+    @media (max-width: 480px) {
+        .p-title {
+            font-size: 1.35rem !important;
+            margin-bottom: 0.25rem !important;
+        }
+        .p-vendor-label {
+            margin-bottom: 0.25rem !important;
+        }
+        .p-current-price {
+            font-size: 1.5rem !important;
+        }
+        .p-compare-at {
+            font-size: 0.9rem !important;
+        }
+        .p-discount-badge {
+            font-size: 0.75rem !important;
+            padding: 0.3rem 0.7rem !important;
+            border-radius: 999px !important;
+            white-space: nowrap !important;
+        }
+        .delivery-note {
+            font-size: 0.85rem !important;
+            padding: 0.75rem !important;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%) !important;
+            border-radius: 0.75rem !important;
+            margin-bottom: 1.5rem !important;
+        }
+        .p-section-label {
+            font-size: 0.8rem !important;
+            margin-bottom: 0.75rem !important;
+            letter-spacing: 0.1em !important;
+        }
+        .deal-card {
+            padding: 1rem !important;
+        }
+        .deal-title {
+            font-size: 0.9rem !important;
+        }
+        .deal-save {
+            font-size: 0.75rem !important;
+        }
+        .btn-deal-add {
+            font-size: 0.75rem !important;
+            padding: 0.6rem 0.9rem !important;
+            border-radius: 0.75rem !important;
+        }
+        .p-actions-row {
+            margin-bottom: 1rem !important;
+            gap: 0.75rem !important;
+            flex-direction: row !important;
+        }
+        .secondary-actions-row {
+            margin-bottom: 1rem !important;
+            gap: 0.5rem !important;
+        }
+        .variant-container, .size-rect-grid {
+            margin-bottom: 1rem !important;
+        }
+        .size-rect-grid {
+            gap: 0.5rem !important;
+            flex-direction: column !important;
+        }
+        .size-rect {
+            padding: 0.6rem 0.8rem !important;
+        }
+        .delivery-note {
+            margin-bottom: 1rem !important;
+        }
+        .p-tabs-minimal {
+            margin-bottom: 1rem !important;
+        }
+        .p-actions-row .qty-control {
+            width: auto !important;
+            padding: 0.25rem !important;
+        }
+        .p-actions-row button {
+            padding: 1rem !important;
+        }
+        .qty-control button {
+            font-size: 1.5rem !important;
+            padding: 0.5rem 1.5rem !important;
+        }
+        .page-qty {
+            font-size: 1.1rem !important;
+            font-weight: 700 !important;
+        }
+        #buy-now-btn, .wishlist-toggle-btn {
+            padding: 0.85rem !important;
+            font-size: 0.95rem !important;
+            border-radius: 1rem !important;
+        }
+        .wishlist-toggle-btn {
+            width: 48px !important;
+            height: 48px !important;
+            font-size: 1.2rem !important;
+        }
+        .tab-link {
+            font-size: 0.8rem !important;
+            padding: 0.85rem 0 !important;
+            font-weight: 600 !important;
+        }
+        .tab-content-minimal {
+            font-size: 0.9rem !important;
+            line-height: 1.6 !important;
+            padding: 0.5rem 0 !important;
+        }
+        .department-section {
+            margin-top: 2.5rem !important;
+        }
+    }
+</style>
 @endsection
 
 @section('content')
@@ -82,24 +321,27 @@
             <p class="p-vendor-label" style="font-size: 0.75rem; font-weight: 800; color: var(--accent-color); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.5rem;">Organic & Fresh</p>
             <h1 class="p-title" style="font-size: 2.2rem; font-weight: 800; color: var(--primary-color); margin-bottom: 1rem; line-height: 1.2;">{{ $product->title }}</h1>
             
-            <div class="p-price-row" style="display: flex; align-items: baseline; gap: 1rem; margin-bottom: 1.5rem;">
+            <div class="p-price-row" style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem;">
                 <span class="p-current-price" id="p-price-display" style="font-size: 2rem; font-weight: 800; color: var(--accent-color);">₹{{ number_format($product->starting_price, 2) }}</span>
                 @if($product->compare_at_price > $product->starting_price)
-                    <span class="p-compare-at" style="font-size: 1.2rem; text-decoration: line-through; color: var(--text-muted);">₹{{ number_format($product->compare_at_price, 2) }}</span>
-                    @php $discount = round((($product->compare_at_price - $product->starting_price) / $product->compare_at_price) * 100); @endphp
-                    <span class="p-discount-badge" style="background: #ecfdf5; color: var(--accent-color); padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.8rem; font-weight: 700;">Save {{ $discount }}%</span>
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <span class="p-compare-at" style="font-size: 1.1rem; text-decoration: line-through; color: var(--text-muted);">₹{{ number_format($product->compare_at_price, 2) }}</span>
+                        @php $discount = round((($product->compare_at_price - $product->starting_price) / $product->compare_at_price) * 100); @endphp
+                        <span class="p-discount-badge" style="background: #ecfdf5; color: var(--accent-color); padding: 0.2rem 0.5rem; border-radius: 9999px; font-size: 0.7rem; font-weight: 800; white-space: nowrap;">Save {{ $discount }}%</span>
+                    </div>
                 @endif
             </div>
 
-            <div class="delivery-note" style="margin-bottom: 2rem; color: var(--accent-color); font-weight: 700; font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem;">
+            <div class="delivery-note" style="margin-bottom: 1.5rem; color: var(--accent-color); font-weight: 700; font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem;">
                 <i class="fa-solid fa-truck-fast"></i>
-                <span>Delivered in 2 hours (Express Delivery)</span>
+                <span>Delivered by {{ \Carbon\Carbon::now()->addDays($currentTenant->delivery_days ?? 2)->format('D, M d') }}</span>
             </div>
 
-            <!-- Size Selection -->
-            <div class="p-size-wrapper" style="margin-bottom: 2rem;">
-                <h3 class="p-section-label" style="font-size: 0.9rem; font-weight: 800; color: var(--primary-color); margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px;">Select Option</h3>
-                <div class="size-rect-grid" style="display: flex; flex-wrap: wrap; gap: 1rem;">
+            <!-- Variants -->
+            @if($product->variants->count() > 0)
+            <div class="variant-container" style="margin-bottom: 1.5rem;">
+                <span class="p-section-label" style="display: block; font-size: 0.85rem; font-weight: 800; color: var(--primary-color); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1rem;">SELECT OPTION</span>
+                <div class="size-rect-grid" style="display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem;">
                     @foreach($product->variants as $variant)
                         <div class="size-rect {{ $loop->first ? 'active' : '' }}" onclick="selectVariant(this, {{ $variant->price }}, '{{ $variant->size }}', {{ $variant->id }})" style="border: 2px solid {{ $loop->first ? 'var(--accent-color)' : 'var(--border-color)' }}; border-radius: 0.75rem; padding: 0.75rem 1.25rem; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 1rem; background: #fff;">
                             <span class="s-size" style="font-weight: 700; color: var(--primary-color);">{{ $variant->size }}</span>
@@ -109,6 +351,7 @@
                 </div>
                 <input type="hidden" id="selected-variant-id" name="variant_id" value="{{ $product->variants->first()->id ?? '' }}">
             </div>
+            @endif
 
             <!-- Special Volume / Pack Deals -->
             @if(isset($packBundles) && $packBundles->count() > 0)
@@ -142,17 +385,19 @@
             @endif
 
             <!-- Add to Cart actions row -->
-            <div class="p-actions-row" style="display: flex; gap: 1rem; margin-bottom: 1rem;">
-                <div class="qty-control" style="display: flex; align-items: center; border: 2px solid var(--border-color); border-radius: 0.75rem; overflow: hidden; background: #fff;">
-                    <button onclick="changePageQty(-1)" style="border: none; background: none; padding: 0.75rem 1.25rem; font-size: 1.2rem; cursor: pointer; color: var(--text-muted);">-</button>
-                    <span class="page-qty" style="font-weight: 700; min-width: 30px; text-align: center;">1</span>
-                    <button onclick="changePageQty(1)" style="border: none; background: none; padding: 0.75rem 1.25rem; font-size: 1.2rem; cursor: pointer; color: var(--text-muted);">+</button>
+            <div class="p-actions-row" style="display: flex; gap: 1rem; margin-bottom: 1.5rem; height: 3.5rem;">
+                <div class="qty-control" style="background: #fff; border: 2px solid var(--border-color); border-radius: 0.75rem; display: flex; flex-direction: row; align-items: center; justify-content: center; padding: 0.25rem 0.75rem; min-width: 70px; height: 100%;">
+                    <span class="page-qty" style="font-size: 1.2rem; font-weight: 800; text-align: center; line-height: 1; margin-right: 0.75rem;">1</span>
+                    <div style="display: flex; flex-direction: column; gap: 0.4rem; align-items: center; justify-content: center;">
+                        <button onclick="changePageQty(1)" style="border: none; background: none; padding: 0; font-size: 0.75rem; cursor: pointer; color: var(--text-muted); line-height: 1;"><i class="fa-solid fa-chevron-up"></i></button>
+                        <button onclick="changePageQty(-1)" style="border: none; background: none; padding: 0; font-size: 0.75rem; cursor: pointer; color: var(--text-muted); line-height: 1;"><i class="fa-solid fa-chevron-down"></i></button>
+                    </div>
                 </div>
-                <button class="btn-add-to-cart add-to-cart-btn" id="add-to-cart-page-btn" style="flex-grow: 1; background: var(--accent-color); color: #fff; border: none; padding: 1rem; border-radius: 0.75rem; font-weight: 800; font-size: 1rem; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                <button class="btn-add-to-cart add-to-cart-btn" id="add-to-cart-page-btn" style="flex-grow: 1; height: 100%; background: var(--accent-color); color: #fff; border: none; border-radius: 0.75rem; font-weight: 800; font-size: 1rem; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.5rem; white-space: nowrap;">
                     ADD TO CART <span class="btn-price-display">₹{{ number_format($product->starting_price, 2) }}</span>
                 </button>
             </div>
-            <div style="display: flex; gap: 1rem; margin-bottom: 2rem;">
+            <div class="secondary-actions-row" style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
                 <button id="buy-now-btn" style="flex-grow: 1; background: var(--primary-color); color: #fff; border: none; padding: 1rem; border-radius: 0.75rem; font-weight: 800; font-size: 1rem; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
                     <i class="fa-solid fa-bolt"></i> BUY NOW
                 </button>

@@ -102,8 +102,8 @@
                 <i class="fa-solid fa-truck-fast"></i>
             </div>
             <div class="usp-text">
-                <span class="usp-title" style="display: block; font-weight: 700; font-size: 0.95rem;">2-Hour Delivery</span>
-                <span class="usp-desc" style="display: block; font-size: 0.75rem; color: var(--text-muted);">Express delivery to your doorstep</span>
+                <span class="usp-title" style="display: block; font-weight: 700; font-size: 0.95rem;">Delivered in {{ $currentTenant->delivery_days ?? 2 }} {{ ($currentTenant->delivery_days ?? 2) == 1 ? 'day' : 'days' }}</span>
+                <span class="usp-desc" style="display: block; font-size: 0.75rem; color: var(--text-muted);">Fast delivery to your doorstep from us</span>
             </div>
         </div>
         <div class="usp-item" style="display: flex; align-items: center; gap: 1rem;">
@@ -191,8 +191,8 @@
                 <div class="product-card" style="border: 1px solid var(--border-color); border-radius: 1rem; overflow: hidden; background: #fff; position: relative;">
                     <a href="{{ route('v3.combo', ['id' => $bundle->id]) }}" class="card-img" style="display: block; position: relative; padding-top: 100%; background: #f8fafc;">
                         <img src="{{ \Illuminate\Support\Facades\Storage::url($bundle->image) }}" alt="{{ $bundle->title }}" onerror="this.src='{{ asset('Images/placeholder-grocery.webp') }}'" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;">
-                        <div style="position: absolute; top: 10px; right: 10px; background: #10b981; color: #fff; padding: 4px 8px; border-radius: 4px; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">
-                            Save Bundle
+                        <div style="position: absolute; top: 10px; left: 10px; background: #10b981; color: #fff; padding: 4px 8px; border-radius: 4px; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap;">
+                            <i class="fa-solid fa-layer-group me-1"></i><span class="hide-text-mobile">Save Bundle</span>
                         </div>
                     </a>
                     <div class="card-info" style="padding: 1rem; display: flex; flex-direction: column; gap: 0.25rem;">

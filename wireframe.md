@@ -29,6 +29,7 @@ This document outlines the complete section-by-section UI wireframe, CSS variabl
 |                           |  [Newsletter Banner]       |  |
 |                           |  Dark bg, Email & Sub btn  |  |
 |                           +----------------------------+  |
+|  [Floating WhatsApp Btn]                                  |
 +-----------------------------------------------------------+
 | [Footer] Brand Info / Trust | Categories | Care | News    |
 +-----------------------------------------------------------+
@@ -337,6 +338,7 @@ All static text pages load their copy dynamically from the tenant's settings col
 - **Contact Page**:
   - Support Email: `{{ $currentTenant->contact_email }}`
   - Support Phone: `{{ $currentTenant->contact_phone }}`
+  - WhatsApp Number: `{{ $currentTenant->whatsapp_number }}`
   - Shop Address: `{{ $currentTenant->contact_address }}`
 - **Policy Pages**:
   - Shipping Policy: `{{ $currentTenant->shipping_policy }}`

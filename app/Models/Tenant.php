@@ -27,6 +27,7 @@ class Tenant extends Model
         'currency',
         'tax_name',
         'tax_rate',
+        'delivery_days',
     ];
 
     public function admin()
