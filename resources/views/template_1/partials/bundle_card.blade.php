@@ -10,9 +10,9 @@
             }
         @endphp
         <img src="{{ $imagePath }}" alt="{{ $bundle->title }}" onerror="this.src='{{ asset('Images/placeholder-grocery.webp') }}'" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;">
-        <div class="social-proof-tag" style="position: absolute; bottom: 10px; left: 10px; background: rgba(255, 255, 255, 0.9); padding: 4px 8px; border-radius: 20px; font-size: 0.65rem; font-weight: 700; color: #059669; display: flex; align-items: center; gap: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+        <div class="social-proof-tag" style="position: absolute; bottom: 10px; left: 10px; background: rgba(255, 255, 255, 0.9); padding: 4px 8px; border-radius: 20px; font-size: 0.65rem; font-weight: 700; color: #059669; display: flex; align-items: center; gap: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); white-space: nowrap; max-width: 90%; overflow: hidden; text-overflow: ellipsis;">
             <i class="fa-solid fa-basket-shopping"></i>
-            <span>{{ rand(20, 60) }} bought this week</span>
+            <span>{{ rand(20, 60) }} bought</span>
         </div>
         <div style="position: absolute; top: 10px; right: 10px; background: var(--accent-color); color: #fff; padding: 4px 8px; border-radius: 4px; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap;">
             <i class="fa-solid fa-layer-group me-1"></i><span class="hide-text-mobile">{{ $bundle->type == 'pack' ? 'VOLUME DEAL' : 'COMBO SAVINGS' }}</span>

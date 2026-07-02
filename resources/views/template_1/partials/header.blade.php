@@ -13,7 +13,7 @@
 
         {{-- Search Bar with autocomplete --}}
         <div class="search-bar" style="position: relative; flex: 1; max-width: 520px;">
-            <form id="t1-search-form" action="{{ route('v3.all-products') }}" method="GET" autocomplete="off" style="display: flex; align-items: center; width: 100%;">
+            <form id="t1-search-form" action="{{ route('v3.all-products') }}" method="GET" autocomplete="off" style="display: flex; align-items: center; width: 100%; position: relative;">
                 <i class="fa-solid fa-magnifying-glass search-icon"></i>
                 <input
                     type="text"
@@ -23,7 +23,11 @@
                     placeholder="Search for fresh vegetables, fruits, dairy..."
                     value="{{ request('q') }}"
                     autocomplete="off"
+                    style="padding-right: 2.5rem;"
                 >
+                <button type="button" id="t1-search-clear" onclick="clearT1Search()" style="display: none; position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%); border: none; background: none; padding: 0.25rem; cursor: pointer; color: #9ca3af; font-size: 1.1rem; line-height: 1; transition: color 0.15s; z-index: 2;" onmouseover="this.style.color='#374151'" onmouseout="this.style.color='#9ca3af'">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
             </form>
             <div id="t1-search-dropdown" class="search-dropdown" style="display:none;">
                 <div id="t1-search-history-section">
@@ -109,7 +113,7 @@
     display: flex !important;
     flex-direction: row !important;
     align-items: center !important;
-    justify-content: space-between !important;
+    justify-content: flex-start !important;
     gap: 0.6rem;
     padding: 0.55rem 1rem;
     cursor: pointer;
@@ -123,16 +127,18 @@
 .search-suggestion-list li .suggestion-text {
     flex-grow: 1;
     text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .search-suggestion-list li .remove-history {
-    order: 3;
-    margin-left: auto;
     color: #d1d5db;
     font-size: 0.75rem;
     cursor: pointer;
     padding: 2px 4px;
     border-radius: 4px;
     transition: color 0.15s;
+    flex-shrink: 0;
 }
 .search-suggestion-list li .remove-history:hover {
     color: #ef4444;
@@ -249,5 +255,21 @@
     input.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') hideDropdown();
     });
+
+    // Show/hide clear button based on input content
+    const clearBtn = document.getElementById('t1-search-clear');
+    function updateClearBtn() {
+        if (clearBtn) clearBtn.style.display = input.value.trim() ? '' : 'none';
+    }
+    input.addEventListener('input', updateClearBtn);
+    input.addEventListener('focus', updateClearBtn);
+    updateClearBtn();
+
+    window.clearT1Search = function() {
+        input.value = '';
+        updateClearBtn();
+        hideDropdown();
+        input.focus();
+    };
 })();
 </script>

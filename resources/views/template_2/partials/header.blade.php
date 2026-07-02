@@ -20,8 +20,11 @@
                     placeholder="Search for fresh vegetables, fruits, dairy, or essentials..."
                     value="{{ request('q') }}"
                     autocomplete="off"
-                    style="width: 100%; padding: 0.75rem 1rem 0.75rem 2.75rem; border: 1.5px solid var(--border-color); border-radius: 99px; outline: none; transition: 0.2s; font-size: 0.95rem;"
+                    style="width: 100%; padding: 0.75rem 2.5rem 0.75rem 2.75rem; border: 1.5px solid var(--border-color); border-radius: 99px; outline: none; transition: 0.2s; font-size: 0.95rem;"
                 >
+                <button type="button" id="t2-search-clear" onclick="clearT2Search()" style="display: none; position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%); border: none; background: none; padding: 0.25rem; cursor: pointer; color: #9ca3af; font-size: 1rem; line-height: 1; transition: color 0.15s; z-index: 2;" onmouseover="this.style.color='#374151'" onmouseout="this.style.color='#9ca3af'">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
             </form>
             <div id="t2-search-dropdown" class="t2-search-dropdown" style="display:none;">
                 <div id="t2-search-history-section">
@@ -154,7 +157,7 @@
         display: flex !important;
         flex-direction: row !important;
         align-items: center !important;
-        justify-content: space-between !important;
+        justify-content: flex-start !important;
         gap: 0.65rem;
         padding: 0.55rem 1.25rem;
         cursor: pointer;
@@ -170,16 +173,18 @@
     .t2-sug-list li .sug-text {
         flex-grow: 1;
         text-align: left;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
     .t2-sug-list li .remove-h {
-        order: 3;
-        margin-left: auto;
         color: #d1d5db;
         font-size: 0.75rem;
         cursor: pointer;
         padding: 2px 5px;
         border-radius: 4px;
         transition: color 0.15s;
+        flex-shrink: 0;
     }
     .t2-sug-list li .remove-h:hover { color: #ef4444; }
     #t2-search-input:focus {
@@ -278,5 +283,21 @@
     form.addEventListener('submit', () => { if (input.value.trim()) addToHistory(input.value.trim()); });
     document.addEventListener('click', e => { if (!dropdown.contains(e.target) && e.target !== input) hideDropdown(); });
     input.addEventListener('keydown', e => { if (e.key === 'Escape') hideDropdown(); });
+
+    // Show/hide clear button based on input content
+    const clearBtn = document.getElementById('t2-search-clear');
+    function updateClearBtn() {
+        if (clearBtn) clearBtn.style.display = input.value.trim() ? '' : 'none';
+    }
+    input.addEventListener('input', updateClearBtn);
+    input.addEventListener('focus', updateClearBtn);
+    updateClearBtn();
+
+    window.clearT2Search = function() {
+        input.value = '';
+        updateClearBtn();
+        hideDropdown();
+        input.focus();
+    };
 })();
 </script>

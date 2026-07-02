@@ -24,9 +24,9 @@
         </div>
     @endif
 
-    <div style="display: grid; grid-template-columns: 300px 1fr; gap: 4rem; align-items: start;">
+    <div class="account-grid-container" style="display: grid; grid-template-columns: 300px 1fr; gap: 4rem; align-items: start;">
         <!-- Sidebar Nav -->
-        <aside style="position: sticky; top: 7rem;">
+        <div class="account-sidebar" style="position: sticky; top: 7rem;">
             <div style="background: var(--section-bg); padding: 1.5rem; border-radius: 2rem; border: 1px solid var(--border-color);">
                 <ul style="list-style: none;">
                     <li style="margin-bottom: 0.5rem;">
@@ -42,7 +42,7 @@
                     <!-- Add more as needed -->
                 </ul>
             </div>
-        </aside>
+        </div>
 
         <!-- Main Content -->
         <div class="account-content">
@@ -103,4 +103,64 @@
         </div>
     </div>
 </div>
+<style>
+    @media (max-width: 768px) {
+        .account-page-container {
+            padding: 1rem !important;
+        }
+        .account-header {
+            flex-direction: column !important;
+            gap: 1rem !important;
+            align-items: flex-start !important;
+        }
+        .account-header h1 {
+            font-size: 1.75rem !important;
+        }
+        .account-header form,
+        .account-header button {
+            width: 100% !important;
+        }
+        .account-grid-container {
+            grid-template-columns: 1fr !important;
+            gap: 2rem !important;
+        }
+        .account-sidebar {
+            position: static !important;
+        }
+        .account-sidebar div {
+            padding: 1rem !important;
+        }
+        .account-content > div {
+            padding: 1.5rem !important;
+            border-radius: 1.5rem !important;
+        }
+        .account-content > div h2 {
+            font-size: 1.25rem !important;
+            margin-bottom: 1.5rem !important;
+        }
+        .account-content > div > div:first-of-type {
+            grid-template-columns: 1fr !important;
+            gap: 1.5rem !important;
+            margin-bottom: 2rem !important;
+        }
+        .account-content form > div {
+            grid-template-columns: 1fr !important;
+            gap: 1rem !important;
+        }
+        .account-content form > div > div:first-child {
+            grid-column: span 1 !important;
+        }
+        .account-content form button {
+            width: 100% !important;
+        }
+    }
+    @media (max-width: 480px) {
+        .account-header h1 {
+            font-size: 1.5rem !important;
+        }
+        .account-content > div h2 {
+            font-size: 1.15rem !important;
+        }
+    }
+</style>
 @endsection

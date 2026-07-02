@@ -29,7 +29,7 @@ This document outlines the complete section-by-section UI wireframe, CSS variabl
 |                           |  [Newsletter Banner]       |  |
 |                           |  Dark bg, Email & Sub btn  |  |
 |                           +----------------------------+  |
-|  [Floating WhatsApp Btn]                                  |
+|  [Floating WhatsApp Btn (bottom-right)]                  |
 +-----------------------------------------------------------+
 | [Footer] Brand Info / Trust | Categories | Care | News    |
 +-----------------------------------------------------------+
@@ -95,7 +95,7 @@ When creating a new theme matching this structure, define these core styling tok
 - **Layout**: Grid (minmax 200px) containing 4 key trust cards.
 - **Items**:
   1. *100% Farm Fresh* - Sourced directly from local farms.
-  2. *2-Hour Delivery* - Express delivery to doorstep.
+  2. *Delivered in X days* - Dynamic text using `$currentTenant->delivery_days` (admin-configurable). Shows "Delivered in 2 days" by default. Handles singular/plural ("1 day" vs "2 days").
   3. *Hygienically Packed* - Handled with strict safety protocols.
   4. *No Questions Return* - Instant returns at delivery window.
 
@@ -291,8 +291,11 @@ For individual product specifications, sizing options, and bulk pack offers.
 ```
 
 ### Components specific to this page:
+- **Delivery Date Note**: Shows `🚛 Delivered by [Date]` dynamically calculated using `Carbon::now()->addDays($currentTenant->delivery_days ?? 2)->format('D, M d')`. The `delivery_days` value is configurable from the admin settings panel.
 - **Variant Selector**: Dynamic pill elements allowing selection of weight options (e.g. `500g`, `1kg`) which update the displayed price dynamically.
 - **Volume Pack Deals**: Highlighted DAShed card rows displaying special bulk pack offers (e.g. `Pack of 3 - Save ₹60 instantly`) linked to the bundle cart controller.
+- **Quantity Selector**: Compact vertical layout with the count number on the left and stacked chevron-up/chevron-down arrows on the right. Sits inline with the "ADD TO CART" button on the same row.
+- **Price Row**: Current price, struck-through compare-at price, and a compact "Save X%" pill badge all displayed on a single row (no wrapping).
 - **Related Products**: Underneath the main detail grid, loops through similar items in the same collection.
 
 ---
@@ -324,6 +327,49 @@ This page lists all special mix & match combos, bundle deals, and volume package
 ### Components specific to this page:
 - **Combo Card**: Rendered with a square thumbnail layout, including a "Save Bundle" or "Volume Deal" top-right badge, original retail price vs discount price display, and an add-to-bag action specifying type as `'bundle'`.
 - **Empty State Display**: Displays a layer-group icon, description, and redirect button back to the main catalog if no active bundles exist in the tenant's store.
+
+---
+
+## 8a. Combo / Bundle Detail Page Layout
+
+For individual combo/bundle product details, showing included products and savings.
+
+```
++-----------------------------------------------------------+
+| [Header] Logo | Search (Green Accent) | Acc / Login | Cart |
++-----------------------------------------------------------+
+|                                                           |
+|             [Breadcrumb Navigation]                       |
+|             Home > Weekly Combos > Bundle Name            |
+|             +---------------------------------------+     |
+|             |  [Bundle Gallery]  | [Bundle Info]     |     |
+|             |  Main Image        | Category Badge    |     |
+|             |  Thumbnail Grid    | Bundle Title      |     |
+|             |  (combo + product  | Price / Save ₹XX  |     |
+|             |   images, 4 cols)  | Delivery Date     |     |
+|             |                    |-------------------|     |
+|             |                    | About this Combo  |     |
+|             |                    | Products Included |     |
+|             |                    |   (list w/ images) |     |
+|             |                    |-------------------|     |
+|             |                    | Qty Selector       |     |
+|             |                    | & ADD TO BAG btn   |     |
+|             +---------------------------------------+     |
+|                                                           |
+|             [Related Combos Grid]                         |
+|             Grid of 4 Related Combo Cards                 |
+|                                                           |
++-----------------------------------------------------------+
+| [Footer] Brand Info / Trust | Categories | Care | News    |
++-----------------------------------------------------------+
+```
+
+### Components specific to this page:
+- **Bundle Image Gallery**: Main combo image with a thumbnail grid below showing: the combo image as the first thumbnail (active/highlighted), followed by up to 3 individual product images from the included products. Clicking a thumbnail swaps the main image.
+- **Delivery Date Note**: Shows `🚛 Delivered by [Date]` using same dynamic calculation as product pages.
+- **Products Included List**: Each product in the bundle shown as a row with image, title (with quantity prefix like "2x" if applicable), and variant/category info.
+- **Quantity Selector**: Same compact vertical layout as product pages (number + chevron arrows).
+- **Price Row**: Bundle price, struck-through original price, and "Save ₹XX" badge on single row.
 
 ---
 
@@ -507,6 +553,26 @@ Merchants can configure country‑specific tax rules from the admin settings pag
 - The tax is displayed as a separate line item (e.g., `GST (18%): ₹180.00`) in the order summary card.
 - The order total includes the subtotal, delivery charge, and the computed tax amount.
 - The configured `tax_name`, `tax_rate`, and calculated `tax_amount` are saved in the `orders` table upon successful order placement.
+
+---
+
+## 15a. Delivery Days Configuration
+
+Merchants can configure the number of delivery days from the admin settings page. This value is used to display expected delivery dates across the storefront.
+
+### Database Field (`tenants` table):
+| Column | Type | Default | Description |
+|--------|------|---------|-------------|
+| `delivery_days` | `unsignedInteger` | `2` | Number of days for delivery. Set to 0 for same-day delivery. Max 30. |
+
+### Display Locations:
+1. **Homepage USP Trust Bar**: Shows "Delivered in X days" (uses count directly).
+2. **Product Detail Pages**: Shows "Delivered by [calculated date]" using `Carbon::now()->addDays($currentTenant->delivery_days)->format('D, M d')`.
+3. **Combo/Bundle Detail Pages**: Same as product pages.
+
+### Admin Configuration:
+- Located in **Settings → Storefront → Delivery Settings**.
+- Number input field (0–30) with helper text explaining the feature.
 
 ---
 

@@ -14,9 +14,9 @@
             </a>
         </div>
 
-        <div style="display: grid; grid-template-columns: 300px 1fr; gap: 4rem; align-items: start;">
+        <div class="account-grid-container" style="display: grid; grid-template-columns: 300px 1fr; gap: 4rem; align-items: start;">
             <!-- Sidebar Nav -->
-            <aside style="position: sticky; top: 7rem;">
+            <div class="account-sidebar" style="position: sticky; top: 7rem;">
                 <div style="background: var(--section-bg); padding: 1.5rem; border-radius: 2rem; border: 1px solid var(--border-color);">
                     <ul style="list-style: none;">
                         <li style="margin-bottom: 0.5rem;">
@@ -26,12 +26,12 @@
                         </li>
                         <li style="margin-bottom: 0.5rem;">
                             <a href="{{ route('account.orders') }}" style="display: flex; align-items: center; gap: 1rem; padding: 1rem 1.5rem; border-radius: 1rem; background: var(--primary-color); color: #fff; font-weight: 700; text-decoration: none;">
-                            <i class="fa-solid fa-bag-shopping"></i> My Orders
-                        </a>
-                    </li>
-                </ul>
+                                <i class="fa-solid fa-bag-shopping"></i> My Orders
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </div>
-        </aside>
 
         <!-- Main Content -->
         <div class="account-content">
@@ -115,4 +115,83 @@
         </div>
     </div>
 </div>
+<style>
+    @media (max-width: 768px) {
+        .account-page-container {
+            padding: 1rem !important;
+        }
+        .account-header {
+            flex-direction: column !important;
+            gap: 1rem !important;
+            align-items: flex-start !important;
+        }
+        .account-header h1 {
+            font-size: 1.75rem !important;
+        }
+        .account-header a {
+            width: 100% !important;
+            text-align: center !important;
+        }
+        .account-grid-container {
+            grid-template-columns: 1fr !important;
+            gap: 2rem !important;
+        }
+        .account-sidebar {
+            position: static !important;
+        }
+        .account-sidebar div {
+            padding: 1rem !important;
+        }
+        .account-content > div {
+            padding: 1.25rem !important;
+            border-radius: 1.25rem !important;
+        }
+        .account-content > div > div:first-child {
+            flex-direction: column !important;
+            gap: 1rem !important;
+        }
+        .account-content > div > div:first-child div:last-child {
+            text-align: left !important;
+            width: 100% !important;
+            display: flex !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+        }
+        .order-items-list > div {
+            flex-wrap: wrap !important;
+        }
+        .order-items-list > div > div:first-child {
+            width: 60px !important;
+            height: 60px !important;
+        }
+        .order-items-list > div > div:last-child {
+            margin-left: auto !important;
+        }
+        .account-content > div > div:last-child,
+        .account-content > div > div:nth-child(3) {
+            flex-direction: column !important;
+        }
+        .account-content > div > div:last-child button,
+        .account-content > div > div:nth-child(3) button {
+            width: 100% !important;
+        }
+    }
+    @media (max-width: 480px) {
+        .account-header h1 {
+            font-size: 1.5rem !important;
+        }
+        .account-content > div > div:first-child p {
+            font-size: 1rem !important;
+        }
+        .account-content > div > div:first-child span:last-of-type {
+            font-size: 1.1rem !important;
+        }
+        .order-items-list > div h4 {
+            font-size: 0.95rem !important;
+        }
+        .order-items-list > div p {
+            font-size: 0.8rem !important;
+        }
+    }
+</style>
 @endsection
