@@ -4,25 +4,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VESPR Perfume SaaS - Premium Perfume Business Solution</title>
+    <title>Vespr Grocery SaaS - Premium Grocery Business Solution</title>
     <meta name="description"
-        content="The ultimate e-commerce SaaS platform for luxury perfume brands. Multi-theme, multi-tenant, and optimized for high-conversion fragrance sales.">
+        content="The ultimate e-commerce SaaS platform for grocery stores and supermarkets. Multi-theme, multi-tenant, and optimized for high-conversion grocery sales.">
     <meta name="keywords"
-        content="perfume saas, fragrance e-commerce, luxury perfume website, vespr, perfume business solution">
+        content="grocery saas, grocery e-commerce, supermarket website, vespr, grocery business solution">
     <link rel="canonical" href="{{ url()->current() }}">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ url()->current() }}">
-    <meta property="og:title" content="VESPR Perfume SaaS - Premium Perfume Business Solution">
-    <meta property="og:description" content="The ultimate e-commerce SaaS platform for luxury perfume brands. Multi-theme, multi-tenant, and optimized for high-conversion fragrance sales.">
+    <meta property="og:title" content="Vespr Grocery SaaS - Premium Grocery Business Solution">
+    <meta property="og:description" content="The ultimate e-commerce SaaS platform for grocery stores and supermarkets. Multi-theme, multi-tenant, and optimized for high-conversion grocery sales.">
     <meta property="og:image" content="{{ asset('Images/landing/v3-template.png') }}">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="{{ url()->current() }}">
-    <meta property="twitter:title" content="VESPR Perfume SaaS - Premium Perfume Business Solution">
-    <meta property="twitter:description" content="The ultimate e-commerce SaaS platform for luxury perfume brands. Multi-theme, multi-tenant, and optimized for high-conversion fragrance sales.">
+    <meta property="twitter:title" content="Vespr Grocery SaaS - Premium Grocery Business Solution">
+    <meta property="twitter:description" content="The ultimate e-commerce SaaS platform for grocery stores and supermarkets. Multi-theme, multi-tenant, and optimized for high-conversion grocery sales.">
     <meta property="twitter:image" content="{{ asset('Images/landing/v3-template.png') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -473,8 +473,8 @@
         <div class="container">
             <div class="footer-grid">
                 <div class="footer-info">
-                    <a href="#" class="logo footer-logo">VESPR<span>.</span>SAAS</a>
-                    <p>The ultimate e-commerce solution for the modern fragrance industry. Elevating brands with premium
+                    <a href="#" class="logo footer-logo">Vespr<span>.</span>SAAS</a>
+                    <p>The ultimate e-commerce solution for the modern grocery industry. Elevating brands with premium
                         digital experiences.</p>
                     <div class="footer-social">
                         <a href="#" class="social-icon"><i class="fa-brands fa-instagram"></i></a>
@@ -509,7 +509,7 @@
                 <div class="footer-newsletter">
                     <h4 class="footer-title">Stay Inspired</h4>
                     <p style="color: var(--text-light); font-size: 0.9rem;">Receive exclusive insights into the digital
-                        fragrance landscape.</p>
+                        grocery landscape.</p>
                     <form class="newsletter-form">
                         <input type="email" placeholder="Email address" class="newsletter-input">
                         <button class="newsletter-btn"><i class="fa-solid fa-paper-plane"></i></button>
@@ -518,7 +518,7 @@
             </div>
 
             <div class="footer-bottom">
-                <p class="copyright">&copy; {{ date('Y') }} VESPR Perfume SaaS. All rights reserved.</p>
+                <p class="copyright">&copy; {{ date('Y') }} Vespr Grocery SaaS. All rights reserved.</p>
                 <div class="footer-nav" style="display: flex; gap: 2rem;">
                     <a href="#" style="margin-bottom: 0;">Privacy Policy</a>
                     <a href="#" style="margin-bottom: 0;">Terms of Service</a>

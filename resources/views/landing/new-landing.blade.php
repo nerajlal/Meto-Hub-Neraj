@@ -2505,7 +2505,7 @@
       </div>
 
       <div class="features-grid-list">
-        <!-- Item 1: Fragrance-first themes -->
+        <!-- Item 1: Grocery-first themes -->
         <div class="feature-item-row">
           <div class="feature-item-left">
             <div class="feature-item-icon-box">
@@ -2539,7 +2539,7 @@
           <span class="feature-item-badge">Trust</span>
         </div>
 
-        <!-- Item 3: Scent bundle builder -->
+        <!-- Item 3: Grocery bundle builder -->
         <div class="feature-item-row">
           <div class="feature-item-left">
             <div class="feature-item-icon-box">
@@ -2601,7 +2601,7 @@
           <span class="feature-item-badge">Support</span>
         </div>
 
-        <!-- Item 7: Scent discovery SEO -->
+        <!-- Item 7: Grocery discovery SEO -->
         <div class="feature-item-row">
           <div class="feature-item-left">
             <div class="feature-item-icon-box">
@@ -2791,7 +2791,7 @@
       <div class="showcase-container">
         <!-- Left Side: Tabs 1 & 2 -->
         <div class="showcase-side-tabs showcase-side-left">
-          <div class="showcase-tab active" data-target="scent-pyramid">
+          <div class="showcase-tab active" data-target="grocery-details">
             <span class="showcase-tab-tag">Interactive</span>
             <h3>Category Grid Layout</h3>
             <p>Highlight categories, freshness indicators, and weight/quantity options directly next to the product image.</p>
@@ -2805,7 +2805,7 @@
 
         <!-- Middle: Preview Panel -->
         <div class="showcase-preview-panel">
-          <div class="showcase-image-wrapper active has-mobile" id="scent-pyramid">
+          <div class="showcase-image-wrapper active has-mobile" id="grocery-details">
             <img class="showcase-desktop-img" src="{{ asset('Images/product pages/1.png') }}" alt="Category Grid Layout">
             <div class="showcase-mobile-mockup">
               <img src="{{ asset('Images/product pages/m1.png') }}" alt="Category Grid Layout (Mobile)">
