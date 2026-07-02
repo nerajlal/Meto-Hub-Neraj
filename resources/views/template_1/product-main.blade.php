@@ -8,19 +8,19 @@
 @section('styles')
 <script type="application/ld+json">
 {
-  "@context": "https://schema.org/",
-  "@type": "Product",
+  "@@context": "https://schema.org/",
+  "@@type": "Product",
   "name": "{{ $product->title }}",
   "image": [
     "{{ $product->main_image_url ?? asset('Images/placeholder-grocery.webp') }}"
   ],
   "description": "{{ strip_tags($product->description) }}",
   "brand": {
-    "@type": "Brand",
+    "@@type": "Brand",
     "name": "{{ $currentTenant->name ?? 'Fresh Grocery' }}"
   },
   "offers": {
-    "@type": "Offer",
+    "@@type": "Offer",
     "url": "{{ url()->current() }}",
     "priceCurrency": "INR",
     "price": "{{ $product->starting_price }}",
@@ -142,7 +142,7 @@
             @endif
 
             <!-- Add to Cart actions row -->
-            <div class="p-actions-row" style="display: flex; gap: 1rem; margin-bottom: 2rem;">
+            <div class="p-actions-row" style="display: flex; gap: 1rem; margin-bottom: 1rem;">
                 <div class="qty-control" style="display: flex; align-items: center; border: 2px solid var(--border-color); border-radius: 0.75rem; overflow: hidden; background: #fff;">
                     <button onclick="changePageQty(-1)" style="border: none; background: none; padding: 0.75rem 1.25rem; font-size: 1.2rem; cursor: pointer; color: var(--text-muted);">-</button>
                     <span class="page-qty" style="font-weight: 700; min-width: 30px; text-align: center;">1</span>
@@ -150,6 +150,22 @@
                 </div>
                 <button class="btn-add-to-cart add-to-cart-btn" id="add-to-cart-page-btn" style="flex-grow: 1; background: var(--accent-color); color: #fff; border: none; padding: 1rem; border-radius: 0.75rem; font-weight: 800; font-size: 1rem; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
                     ADD TO CART <span class="btn-price-display">₹{{ number_format($product->starting_price, 2) }}</span>
+                </button>
+            </div>
+            <div style="display: flex; gap: 1rem; margin-bottom: 2rem;">
+                <button id="buy-now-btn" style="flex-grow: 1; background: var(--primary-color); color: #fff; border: none; padding: 1rem; border-radius: 0.75rem; font-weight: 800; font-size: 1rem; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                    <i class="fa-solid fa-bolt"></i> BUY NOW
+                </button>
+                @php
+                    $isPageWishlisted = false;
+                    if (auth()->check()) {
+                        $isPageWishlisted = \App\Models\Wishlist::where('user_id', auth()->id())
+                            ->where('product_id', $product->id)
+                            ->exists();
+                    }
+                @endphp
+                <button onclick="toggleWishlist(event, {{ $product->id }})" class="wishlist-toggle-btn" style="width: 50px; height: 50px; border-radius: 0.75rem; background: #f1f5f9; border: none; display: flex; align-items: center; justify-content: center; color: {{ $isPageWishlisted ? '#ef4444' : '#64748b' }}; cursor: pointer; transition: all 0.2s ease; font-size: 1.25rem;">
+                    <i class="{{ $isPageWishlisted ? 'fa-solid' : 'fa-regular' }} fa-heart"></i>
                 </button>
             </div>
 
@@ -180,7 +196,7 @@
         <div class="section-header" style="margin-bottom: 1.5rem;">
             <h2 class="section-title" style="font-weight: 800; font-size: 1.6rem; color: var(--primary-color);">You Might Also Like</h2>
         </div>
-        <div class="product-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1.5rem;">
+        <div class="product-grid grid-cols-mobile-{{ $currentTenant->mobile_grid_cols ?? 2 }}">
             @foreach($related as $rel)
                 @include('template_1.partials.product_card', ['product' => $rel])
             @endforeach
@@ -291,6 +307,45 @@
     }
 
     document.getElementById('add-to-cart-page-btn').addEventListener('click', addToCart);
+
+    function buyNow() {
+        const btn = document.getElementById('buy-now-btn');
+        const variantId = document.getElementById('selected-variant-id').value;
+        const activeCard = document.querySelector('.size-rect[style*="var(--accent-color)"]') || document.querySelector('.size-rect.active');
+        const size = activeCard ? activeCard.querySelector('.s-size').innerText : '';
+        const originalHtml = btn.innerHTML;
+
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing...';
+        btn.disabled = true;
+
+        $.ajax({
+            url: "{{ route('cart.add') }}",
+            method: "POST",
+            data: {
+                _token: "{{ csrf_token() }}",
+                id: "{{ $product->id }}",
+                quantity: qty,
+                size: size,
+                variant_id: variantId
+            },
+            success: function(response) {
+                if(response.success) {
+                    window.location.href = "{{ route('v3.checkout') }}";
+                } else {
+                    alert('Error: ' + response.message);
+                    btn.innerHTML = originalHtml;
+                    btn.disabled = false;
+                }
+            },
+            error: function() {
+                alert('Something went wrong. Please try again.');
+                btn.innerHTML = originalHtml;
+                btn.disabled = false;
+            }
+        });
+    }
+
+    document.getElementById('buy-now-btn').addEventListener('click', buyNow);
 
     function addPackToCart(event, bundleId) {
         event.preventDefault();

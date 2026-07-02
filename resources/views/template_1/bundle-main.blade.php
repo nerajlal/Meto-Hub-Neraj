@@ -111,7 +111,7 @@
         <div class="section-header" style="margin-bottom: 1.5rem;">
             <h2 class="section-title" style="font-weight: 800; font-size: 1.6rem; color: var(--primary-color);">Other Value Combos</h2>
         </div>
-        <div class="product-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1.5rem;">
+        <div class="product-grid grid-cols-mobile-{{ $currentTenant->mobile_grid_cols ?? 2 }}">
             @foreach($relatedBundles as $relBundle)
                 @include('template_1.partials.bundle_card', ['bundle' => $relBundle])
             @endforeach

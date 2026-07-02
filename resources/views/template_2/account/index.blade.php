@@ -1,4 +1,4 @@
-@extends('template_1.layouts.app')
+@extends('template_2.layouts.app')
 
 @section('title', 'My Account | ' . ($currentTenant->name ?? 'Store'))
 

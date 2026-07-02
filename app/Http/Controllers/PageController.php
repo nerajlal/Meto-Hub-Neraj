@@ -123,57 +123,78 @@ class PageController extends Controller
             if(in_array('50ml', $sizes)) $counts['size_50ml']++;
             if(in_array('100ml', $sizes)) $counts['size_100ml']++;
         }
-        return view($view, compact('title', 'products', 'counts', 'collection'));
+        $bundles = \App\Models\Bundle::where('tenant_id', $tenantId)->where('status', 'active')->where('type', '!=', 'pool')->with(['products.variants'])->latest()->get();
+        return view($view, ['title' => $title, 'products' => $products, 'counts' => $counts, 'bundles' => $bundles]);
     }
 
-    public function allProducts()
+    public function allProducts(Request $request)
     {
-        return $this->handleAllProducts($this->getView('all-products'));
+        return $this->handleAllProducts($this->getView('all-products'), $request);
     }
 
-    public function v3AllProducts()
+    public function v3AllProducts(Request $request)
     {
-        return $this->handleAllProducts($this->getView('all-products'));
+        return $this->handleAllProducts($this->getView('all-products'), $request);
     }
 
-    public function ajmalAllProducts(Request $request)
-    {
-        return $this->handleAllProducts('v4.all-products', $request);
-    }
-
-    private function handleAllProducts($view, Request $request = null)
+    private function handleAllProducts($view, Request $request)
     {
         $tenantId = $this->tenantId();
-        $query = \App\Models\Product::where('tenant_id', $tenantId)->where('status', 'active')->with(['variants', 'images']);
+        $query    = \App\Models\Product::where('tenant_id', $tenantId)
+                        ->where('status', 'active')
+                        ->with(['variants']);
 
-        if ($request) {
-            if ($request->has('min_price') || $request->has('max_price')) {
-                $query->whereHas('variants', function($q) use ($request) {
-                    if ($request->has('min_price')) {
-                        $q->where('price', '>=', $request->min_price);
-                    }
-                    if ($request->has('max_price')) {
-                        $q->where('price', '<=', $request->max_price);
-                    }
-                });
-            }
+        // Keyword search
+        $keyword = $request->query('q', '');
+        if ($keyword !== '') {
+            $query->where(function ($q) use ($keyword) {
+                $q->where('title', 'like', '%' . $keyword . '%')
+                  ->orWhere('description', 'like', '%' . $keyword . '%');
+            });
         }
 
         $products = $query->latest()->get();
-        $counts = ['stock_in' => 0, 'stock_out' => 0, 'gender_him' => 0, 'gender_her' => 0, 'gender_unisex' => 0, 'size_50ml' => 0, 'size_100ml' => 0];
-        foreach($products as $product) {
+
+        $counts = [
+            'stock_in'       => 0, 'stock_out'    => 0,
+            'gender_him'     => 0, 'gender_her'   => 0, 'gender_unisex' => 0,
+            'size_50ml'      => 0, 'size_100ml'   => 0,
+        ];
+        foreach ($products as $product) {
             $inStock = $product->variants->sum('stock') > 0;
-            if($inStock) $counts['stock_in']++; else $counts['stock_out']++;
-            $g = strtolower($product->gender);
-            if(in_array($g, ['men', 'man', 'him'])) $counts['gender_him']++;
-            elseif(in_array($g, ['women', 'woman', 'her'])) $counts['gender_her']++;
-            else $counts['gender_unisex']++;
+            if ($inStock) $counts['stock_in']++; else $counts['stock_out']++;
+            $g = strtolower($product->gender ?? '');
+            if (in_array($g, ['men', 'man', 'him']))         $counts['gender_him']++;
+            elseif (in_array($g, ['women', 'woman', 'her'])) $counts['gender_her']++;
+            else                                              $counts['gender_unisex']++;
             $sizes = $product->variants->pluck('size')->map(fn($s) => strtolower($s))->toArray();
-            if(in_array('50ml', $sizes)) $counts['size_50ml']++;
-            if(in_array('100ml', $sizes)) $counts['size_100ml']++;
+            if (in_array('50ml', $sizes))  $counts['size_50ml']++;
+            if (in_array('100ml', $sizes)) $counts['size_100ml']++;
         }
-        $bundles = \App\Models\Bundle::where('tenant_id', $tenantId)->where('status', 'active')->where('type', '!=', 'pool')->with(['products.variants'])->latest()->get();
-        return view($view, ['title' => 'All Perfumes', 'products' => $products, 'counts' => $counts, 'bundles' => $bundles]);
+
+        $bundlesQuery = \App\Models\Bundle::where('tenant_id', $tenantId)
+                        ->where('status', 'active')
+                        ->where('type', '!=', 'pool')
+                        ->with(['products.variants'])
+                        ->latest();
+        
+        // If we have search results, only show bundles that include at least one of those products
+        if ($keyword !== '') {
+            $productIds = $products->pluck('id')->toArray();
+            $bundlesQuery->whereHas('products', function($q) use ($productIds) {
+                $q->whereIn('products.id', $productIds);
+            });
+        }
+        
+        $bundles = $bundlesQuery->get();
+
+        return view($view, [
+            'title'    => $keyword ? "Search results for \"$keyword\"" : 'All Products',
+            'products' => $products,
+            'counts'   => $counts,
+            'bundles'  => $bundles,
+            'keyword'  => $keyword,
+        ]);
     }
 
     public function combos()
@@ -399,10 +420,21 @@ class PageController extends Controller
             }
         }
         $cartData = \App\Services\CartService::calculateTotal($cart);
-        $total = $cartData['total'];
-        $subtotal = $cartData['subtotal'];
+        $subtotal = $cartData['total'];
         $savings = $cartData['savings'];
-        return view($view, compact('cart', 'total', 'subtotal', 'savings', 'address', 'layout'));
+
+        $tenant = \App\Models\Tenant::find($tenantId);
+        $taxAmount = 0.00;
+        $taxRate = null;
+        $taxName = null;
+        if ($tenant && $tenant->tax_name && $tenant->tax_rate > 0) {
+            $taxRate = $tenant->tax_rate;
+            $taxName = $tenant->tax_name;
+            $taxAmount = round($subtotal * ($taxRate / 100), 2);
+        }
+        $total = $subtotal + $taxAmount;
+
+        return view($view, compact('cart', 'total', 'subtotal', 'savings', 'address', 'layout', 'taxAmount', 'taxRate', 'taxName'));
     }
 
     private function getActiveCoupon($product)

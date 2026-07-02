@@ -110,7 +110,19 @@ class OrderController extends Controller
         $subtotal = $cartData['total'];
         $savings = $cartData['savings'];
         $shipping = 0; // Free shipping
-        $total = $subtotal + $shipping;
+        
+        $tenantId = session('active_tenant_id') ?? 1;
+        $tenant = \App\Models\Tenant::find($tenantId);
+        $taxAmount = 0.00;
+        $taxRate = null;
+        $taxName = null;
+        if ($tenant && $tenant->tax_name && $tenant->tax_rate > 0) {
+            $taxRate = $tenant->tax_rate;
+            $taxName = $tenant->tax_name;
+            $taxAmount = round($subtotal * ($taxRate / 100), 2);
+        }
+        
+        $total = $subtotal + $shipping + $taxAmount;
 
         // Update item prices to effective prices for order items
         foreach ($cart as &$item) {
@@ -152,6 +164,9 @@ class OrderController extends Controller
             'subtotal' => $subtotal,
             'shipping_cost' => $shipping,
             'total_amount' => $total,
+            'tax_name' => $taxName,
+            'tax_rate' => $taxRate,
+            'tax_amount' => $taxAmount,
             'customer_name' => $customerName,
             'customer_email' => $request->email,
             'customer_phone' => $request->phone,

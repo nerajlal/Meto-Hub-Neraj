@@ -27,8 +27,14 @@
     <div class="n-cart-summary">
         <div class="n-summary-line">
             <span>Subtotal</span>
-            <span>₹{{ number_format($subtotal, 0) }}</span>
+            <span>₹{{ number_format($cartTotalBeforeTax, 0) }}</span>
         </div>
+        @if($taxRate)
+            <div class="n-summary-line">
+                <span>{{ $taxName }} ({{ $taxRate }}%)</span>
+                <span>₹{{ number_format($taxAmount, 0) }}</span>
+            </div>
+        @endif
         @if($savings > 0)
             <div class="n-summary-line savings">
                 <span>Total Savings</span>

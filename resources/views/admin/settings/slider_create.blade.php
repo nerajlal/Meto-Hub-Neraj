@@ -25,7 +25,7 @@
                             <p class="small text-muted mb-0">Click to upload desktop image</p>
                         </div>
                         <img id="desktop_preview" class="d-none w-100 h-100 object-fit-contain">
-                        <input type="file" name="image_desktop" id="desktop_image" class="d-none" accept="image/webp" onchange="previewSlideImage(this, 'desktop')" required>
+                        <input type="file" name="image_desktop" id="desktop_image" class="d-none" accept="image/webp, image/png, image/jpeg, image/jpg" onchange="previewSlideImage(this, 'desktop')" required>
                     </div>
                     @error('image_desktop') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
                 </div>
@@ -39,7 +39,7 @@
                             <p class="small text-muted mb-0">Click to upload mobile image</p>
                         </div>
                         <img id="mobile_preview" class="d-none w-100 h-100 object-fit-contain">
-                        <input type="file" name="image_mobile" id="mobile_image" class="d-none" accept="image/webp" onchange="previewSlideImage(this, 'mobile')" required>
+                        <input type="file" name="image_mobile" id="mobile_image" class="d-none" accept="image/webp, image/png, image/jpeg, image/jpg" onchange="previewSlideImage(this, 'mobile')" required>
                     </div>
                     @error('image_mobile') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
                 </div>

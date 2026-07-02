@@ -66,15 +66,17 @@
                 <h3 class="summary-heading" style="font-size: 1.35rem; font-weight: 800; margin-bottom: 1.5rem; color: var(--accent-color);">Order Total</h3>
                 <div class="summary-row-lg" style="display: flex; justify-content: space-between; margin-bottom: 1rem; color: #94a3b8;">
                     <span>Subtotal</span>
-                    <span id="subtotal-val">₹{{ number_format($total, 2) }}</span>
+                    <span id="subtotal-val">₹{{ number_format($cartTotalBeforeTax, 2) }}</span>
                 </div>
+                @if($taxRate)
+                <div class="summary-row-lg" style="display: flex; justify-content: space-between; margin-bottom: 1rem; color: #94a3b8;">
+                    <span>{{ $taxName }} ({{ $taxRate }}%)</span>
+                    <span id="tax-val">₹{{ number_format($taxAmount, 2) }}</span>
+                </div>
+                @endif
                 <div class="summary-row-lg" style="display: flex; justify-content: space-between; margin-bottom: 1rem; color: #94a3b8;">
                     <span>Shipping</span>
                     <span class="free-badge" style="color: #10b981; font-weight: 800;">FREE</span>
-                </div>
-                <div class="summary-row-lg" style="display: flex; justify-content: space-between; margin-bottom: 1rem; color: #94a3b8;">
-                    <span>Tax</span>
-                    <span>Included</span>
                 </div>
                 <div class="summary-row-lg" id="savings-row" style="{{ $savings > 0 ? 'display: flex;' : 'display: none;' }} justify-content: space-between; margin-bottom: 1rem; color: #94a3b8;">
                     <span>Volume Discount</span>
@@ -137,7 +139,10 @@
             success: function(response) {
                 qtyEl.innerText = newQty;
                 document.getElementById('price-' + id).innerText = '₹' + new Intl.NumberFormat().format(response.itemTotal);
-                document.getElementById('subtotal-val').innerText = '₹' + new Intl.NumberFormat().format(response.cartTotal + (response.savings || 0));
+                document.getElementById('subtotal-val').innerText = '₹' + new Intl.NumberFormat().format(response.cartTotalBeforeTax);
+                if (document.getElementById('tax-val')) {
+                    document.getElementById('tax-val').innerText = '₹' + new Intl.NumberFormat().format(response.taxAmount);
+                }
                 document.getElementById('total-val').innerText = '₹' + new Intl.NumberFormat().format(response.cartTotal);
                 $('#cart-count').text(response.cartCount);
                 
@@ -168,7 +173,10 @@
                     document.getElementById('item-' + id).style.opacity = '0';
                     setTimeout(() => {
                         document.getElementById('item-' + id).remove();
-                        document.getElementById('subtotal-val').innerText = '₹' + new Intl.NumberFormat().format(response.cartTotal);
+                        document.getElementById('subtotal-val').innerText = '₹' + new Intl.NumberFormat().format(response.cartTotalBeforeTax);
+                        if (document.getElementById('tax-val')) {
+                            document.getElementById('tax-val').innerText = '₹' + new Intl.NumberFormat().format(response.taxAmount);
+                        }
                         document.getElementById('total-val').innerText = '₹' + new Intl.NumberFormat().format(response.cartTotal);
                         $('#cart-count').text(response.cartCount);
                     }, 300);

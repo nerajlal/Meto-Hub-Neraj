@@ -56,7 +56,7 @@
 </head>
 <body>
     <div class="sidebar-overlay"></div>
-    @include('nurah.partials.header')
+    @include('template_1.partials.header')
 
     <div class="main-wrapper">
         <aside class="sidebar">
@@ -136,8 +136,8 @@
         </main>
     </div>
 
-    @include('nurah.partials.footer')
-    @include('nurah.partials.cart_drawer')
+    @include('template_1.partials.footer')
+    @include('template_1.partials.cart_drawer')
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
@@ -181,7 +181,7 @@
 
         function refreshNCart() {
             $('#cart-drawer-body-n').html('<div class="cart-loader-n"><i class="fa-solid fa-spinner fa-spin"></i></div>');
-            $.get("{{ route('cart.fetch') }}", { theme: 'nurah' }, function(html) {
+            $.get("{{ route('cart.fetch') }}", { theme: 'template_1' }, function(html) {
                 $('#cart-drawer-body-n').html(html);
             });
         }

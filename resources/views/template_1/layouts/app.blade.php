@@ -13,14 +13,17 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <script>
+        window.storeCurrencySymbol = "@currency";
+    </script>
     
     <style>
         /* Grocery Colors and Accents overrides */
         :root {
-            --primary-color: #0f172a;
-            --accent-color: #10b981; /* Green */
-            --accent-hover: #059669;
-            --bg-light: #f8fafc;
+            --primary-color: {{ $currentTenant->dark_color ?? '#0f172a' }};
+            --accent-color: {{ $currentTenant->primary_color ?? '#10b981' }};
+            --accent-hover: {{ $currentTenant->primary_color ?? '#10b981' }};
+            --bg-light: {{ $currentTenant->accent_color ?? '#f8fafc' }};
             --border-color: #e2e8f0;
             --text-muted: #64748b;
         }
@@ -209,6 +212,60 @@
                 }
             });
         });
+
+        window.toggleWishlist = function(event, productId) {
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+
+            @if(!auth()->check())
+                window.location.href = "{{ route('login') }}";
+                return;
+            @endif
+
+            $.ajax({
+                url: "{{ route('v3.wishlist.toggle') }}",
+                method: "POST",
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    product_id: productId
+                },
+                success: function(response) {
+                    if (response.success) {
+                        const btns = document.querySelectorAll(`button[onclick*="toggleWishlist"][onclick*="${productId}"]`);
+                        btns.forEach(btn => {
+                            const icon = btn.querySelector('i');
+                            if (response.wishlisted) {
+                                icon.className = 'fa-solid fa-heart';
+                                btn.style.color = '#ef4444';
+                            } else {
+                                icon.className = 'fa-regular fa-heart';
+                                btn.style.color = '#64748b';
+                            }
+                        });
+
+                        const badge = document.getElementById('wishlist-count');
+                        if (badge) {
+                            badge.textContent = response.count;
+                        } else if (response.count > 0) {
+                            const wishlistLink = document.querySelector('a[href*="wishlist"]');
+                            if (wishlistLink) {
+                                const newBadge = document.createElement('span');
+                                newBadge.id = 'wishlist-count';
+                                newBadge.className = 'badge rounded-circle';
+                                newBadge.style = 'font-size: 0.65rem; top: -5px; right: 5px; width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; border: 1.5px solid #fff; border-radius: 50%; background: #ef4444; position: absolute;';
+                                newBadge.textContent = response.count;
+                                wishlistLink.appendChild(newBadge);
+                            }
+                        }
+                    }
+                },
+                error: function() {
+                    alert('Error updating wishlist. Please try again.');
+                }
+            });
+        };
     </script>
     @yield('scripts')
 </body>

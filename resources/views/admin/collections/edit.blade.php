@@ -60,7 +60,7 @@
                             <span class="text-secondary fw-medium small mb-1">Change image</span>
                             <p class="small text-muted mb-0">1200 x 1200px recommended</p>
                         </div>
-                        <input type="file" name="image" id="collection_image" class="d-none" accept="image/webp" onchange="previewImage(this)">
+                        <input type="file" name="image" id="collection_image" class="d-none" accept="image/webp, image/png, image/jpeg, image/jpg" onchange="previewImage(this)">
                     </div>
                     
                     <div id="image_preview" class="mt-3 {{ $collection->image ? '' : 'd-none' }}">

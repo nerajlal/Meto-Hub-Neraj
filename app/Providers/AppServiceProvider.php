@@ -24,6 +24,21 @@ class AppServiceProvider extends ServiceProvider
         Schema::defaultStringLength(191);
         \Illuminate\Pagination\Paginator::useBootstrapFive();
 
+        \Illuminate\Support\Facades\Blade::directive('currency', function () {
+            return "<?php 
+                \$symbolMap = [
+                    'INR' => '₹',
+                    'USD' => '$',
+                    'EUR' => '€',
+                    'GBP' => '£',
+                    'AED' => 'د.إ',
+                    'CAD' => '$',
+                    'AUD' => '$',
+                ];
+                echo \$symbolMap[\$currentTenant->currency ?? 'INR'] ?? '₹';
+            ?>";
+        });
+
         // Share pending orders count with sidebar
         \Illuminate\Support\Facades\View::composer('admin.partials.sidebar', function ($view) {
             $pendingOrdersCount = \App\Models\Order::where('status', 'pending')->count();

@@ -14,7 +14,7 @@
 </div>
 
 @if($bundles->count() > 0)
-    <div class="product-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1.5rem;">
+    <div class="product-grid grid-cols-mobile-{{ $currentTenant->mobile_grid_cols ?? 2 }}">
         @foreach($bundles as $bundle)
             @include('template_1.partials.bundle_card', ['bundle' => $bundle])
         @endforeach

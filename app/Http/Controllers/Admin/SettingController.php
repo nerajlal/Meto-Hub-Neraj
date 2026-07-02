@@ -117,9 +117,17 @@ class SettingController extends Controller
             'shipping_policy' => 'nullable|string',
             'return_policy' => 'nullable|string',
             'terms_of_service' => 'nullable|string',
+            'mobile_grid_cols' => 'required|integer|in:1,2,3',
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,svg,webp|max:2048',
+            'primary_color' => 'required|string|regex:/^#[0-9A-Fa-f]{6}$/',
+            'dark_color' => 'required|string|regex:/^#[0-9A-Fa-f]{6}$/',
+            'accent_color' => 'required|string|regex:/^#[0-9A-Fa-f]{6}$/',
+            'currency' => 'required|string|in:INR,USD,EUR,GBP,AED,CAD,AUD',
+            'tax_name' => 'nullable|string|max:50',
+            'tax_rate' => 'nullable|numeric|min:0|max:100',
         ]);
 
-        $tenant->update([
+        $updateData = [
             'about_title' => $request->about_title,
             'about_text' => $request->about_text,
             'contact_email' => $request->contact_email,
@@ -128,7 +136,24 @@ class SettingController extends Controller
             'shipping_policy' => $request->shipping_policy,
             'return_policy' => $request->return_policy,
             'terms_of_service' => $request->terms_of_service,
-        ]);
+            'mobile_grid_cols' => $request->mobile_grid_cols,
+            'primary_color' => $request->primary_color,
+            'dark_color' => $request->dark_color,
+            'accent_color' => $request->accent_color,
+            'currency' => $request->currency,
+            'tax_name' => $request->tax_name,
+            'tax_rate' => $request->tax_rate,
+        ];
+
+        if ($request->hasFile('logo')) {
+            // Delete old logo if exists
+            if ($tenant->logo) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($tenant->logo);
+            }
+            $updateData['logo'] = $request->file('logo')->store('logos', 'public');
+        }
+
+        $tenant->update($updateData);
 
         return redirect()->back()->with('success', 'Storefront pages settings updated successfully.');
     }

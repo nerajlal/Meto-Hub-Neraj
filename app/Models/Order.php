@@ -28,7 +28,10 @@ class Order extends Model
         'placed_at',
         'tracking_number',
         'delivery_partner_id',
-        'tenant_id'
+        'tenant_id',
+        'tax_name',
+        'tax_rate',
+        'tax_amount'
     ];
 
     protected $casts = [

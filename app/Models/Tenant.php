@@ -18,6 +18,14 @@ class Tenant extends Model
         'shipping_policy',
         'return_policy',
         'terms_of_service',
+        'mobile_grid_cols',
+        'logo',
+        'primary_color',
+        'dark_color',
+        'accent_color',
+        'currency',
+        'tax_name',
+        'tax_rate',
     ];
 
     public function admin()

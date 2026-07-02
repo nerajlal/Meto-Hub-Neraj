@@ -49,11 +49,23 @@ class CartController extends Controller
         }
 
         $cartData = $this->calculateTotal($cart);
-        $total = $cartData['total'];
+        $cartTotalBeforeTax = $cartData['total'];
         $subtotal = $cartData['subtotal'];
         $savings = $cartData['savings'];
         
-        return view('template_1.cart', compact('cart', 'total', 'subtotal', 'savings'));
+        $tenantId = session('active_tenant_id') ?? (auth()->check() ? auth()->user()->tenant_id : null) ?? 1;
+        $tenant = \App\Models\Tenant::find($tenantId);
+        $taxAmount = 0.00;
+        $taxRate = null;
+        $taxName = null;
+        if ($tenant && $tenant->tax_name && $tenant->tax_rate > 0) {
+            $taxRate = $tenant->tax_rate;
+            $taxName = $tenant->tax_name;
+            $taxAmount = round($cartTotalBeforeTax * ($taxRate / 100), 2);
+        }
+        $total = $cartTotalBeforeTax + $taxAmount;
+        
+        return view('template_1.cart', compact('cart', 'total', 'subtotal', 'savings', 'taxAmount', 'taxRate', 'taxName', 'cartTotalBeforeTax'));
     }
 
     /**
@@ -93,7 +105,7 @@ class CartController extends Controller
         }
 
         $cartData = $this->calculateTotal($cart);
-        $total = $cartData['total'];
+        $cartTotalBeforeTax = $cartData['total'];
         $subtotal = $cartData['subtotal'];
         $savings = $cartData['savings'];
         
@@ -101,8 +113,18 @@ class CartController extends Controller
         $tenant = \App\Models\Tenant::find($tenantId);
         $theme = $tenant ? $tenant->theme : 'template_1';
         $view = ($theme === 'template_2') ? 'template_2.cart' : 'template_1.cart';
+        
+        $taxAmount = 0.00;
+        $taxRate = null;
+        $taxName = null;
+        if ($tenant && $tenant->tax_name && $tenant->tax_rate > 0) {
+            $taxRate = $tenant->tax_rate;
+            $taxName = $tenant->tax_name;
+            $taxAmount = round($cartTotalBeforeTax * ($taxRate / 100), 2);
+        }
+        $total = $cartTotalBeforeTax + $taxAmount;
 
-        return view($view, compact('cart', 'total', 'subtotal', 'savings'));
+        return view($view, compact('cart', 'total', 'subtotal', 'savings', 'taxAmount', 'taxRate', 'taxName', 'cartTotalBeforeTax'));
     }
 
     /**
@@ -122,8 +144,7 @@ class CartController extends Controller
                 
                 if(isset($item['type']) && $item['type'] == 'product' && isset($item['product_id'])) {
                     $product = Product::find($item['product_id']);
-                    if($product) {
-                        $item['coupon'] = $this->getActiveCoupon($product);
+                    if($product) {                        $item['coupon'] = $this->getActiveCoupon($product);
                         
                         if(isset($item['size']) && $item['size']) {
                             $variant = $product->variants->where('size', $item['size'])->first();
@@ -142,11 +163,23 @@ class CartController extends Controller
         }
 
         $cartData = $this->calculateTotal($cart);
-        $total = $cartData['total'];
+        $cartTotalBeforeTax = $cartData['total'];
         $subtotal = $cartData['subtotal'];
         $savings = $cartData['savings'];
         
-        return view('v4.cart', compact('cart', 'total', 'subtotal', 'savings'));
+        $tenantId = session('active_tenant_id') ?? (auth()->check() ? auth()->user()->tenant_id : null) ?? 1;
+        $tenant = \App\Models\Tenant::find($tenantId);
+        $taxAmount = 0.00;
+        $taxRate = null;
+        $taxName = null;
+        if ($tenant && $tenant->tax_name && $tenant->tax_rate > 0) {
+            $taxRate = $tenant->tax_rate;
+            $taxName = $tenant->tax_name;
+            $taxAmount = round($cartTotalBeforeTax * ($taxRate / 100), 2);
+        }
+        $total = $cartTotalBeforeTax + $taxAmount;
+        
+        return view('v4.cart', compact('cart', 'total', 'subtotal', 'savings', 'taxAmount', 'taxRate', 'taxName', 'cartTotalBeforeTax'));
     }
 
     /**
@@ -186,11 +219,23 @@ class CartController extends Controller
         }
 
         $cartData = $this->calculateTotal($cart);
-        $total = $cartData['total'];
+        $cartTotalBeforeTax = $cartData['total'];
         $subtotal = $cartData['subtotal'];
         $savings = $cartData['savings'];
         
-        return view('v5.cart', compact('cart', 'total', 'subtotal', 'savings'));
+        $tenantId = session('active_tenant_id') ?? (auth()->check() ? auth()->user()->tenant_id : null) ?? 1;
+        $tenant = \App\Models\Tenant::find($tenantId);
+        $taxAmount = 0.00;
+        $taxRate = null;
+        $taxName = null;
+        if ($tenant && $tenant->tax_name && $tenant->tax_rate > 0) {
+            $taxRate = $tenant->tax_rate;
+            $taxName = $tenant->tax_name;
+            $taxAmount = round($cartTotalBeforeTax * ($taxRate / 100), 2);
+        }
+        $total = $cartTotalBeforeTax + $taxAmount;
+        
+        return view('v5.cart', compact('cart', 'total', 'subtotal', 'savings', 'taxAmount', 'taxRate', 'taxName', 'cartTotalBeforeTax'));
     }
 
     private function calculateTotal(&$cart)
@@ -521,16 +566,26 @@ class CartController extends Controller
             }
 
             $cartData = $this->calculateTotal($cart);
-            $cartTotal = $cartData['total'];
+            $cartTotalBeforeTax = $cartData['total'];
             $count = 0;
             foreach($cart as $item) {
                 $count += $item['quantity'];
             }
             
+            $tenantId = session('active_tenant_id') ?? (auth()->check() ? auth()->user()->tenant_id : null) ?? 1;
+            $tenant = \App\Models\Tenant::find($tenantId);
+            $taxAmount = 0.00;
+            if ($tenant && $tenant->tax_name && $tenant->tax_rate > 0) {
+                $taxAmount = round($cartTotalBeforeTax * ($tenant->tax_rate / 100), 2);
+            }
+            $total = $cartTotalBeforeTax + $taxAmount;
+            
             return response()->json([
                 'success' => true, 
                 'itemTotal' => $itemTotal,
-                'cartTotal' => $cartTotal,
+                'cartTotal' => $total,
+                'cartTotalBeforeTax' => $cartTotalBeforeTax,
+                'taxAmount' => $taxAmount,
                 'cartCount' => $count,
                 'savings' => $cartData['savings'],
                 'subtotal' => $cartData['subtotal']
@@ -574,17 +629,27 @@ class CartController extends Controller
             }
             
             $cartData = $this->calculateTotal($cart);
-            $cartTotal = $cartData['total'];
+            $cartTotalBeforeTax = $cartData['total'];
             $count = 0;
             if($cart) {
                 foreach($cart as $item) {
                     $count += $item['quantity'];
                 }
             }
+            
+            $tenantId = session('active_tenant_id') ?? (auth()->check() ? auth()->user()->tenant_id : null) ?? 1;
+            $tenant = \App\Models\Tenant::find($tenantId);
+            $taxAmount = 0.00;
+            if ($tenant && $tenant->tax_name && $tenant->tax_rate > 0) {
+                $taxAmount = round($cartTotalBeforeTax * ($tenant->tax_rate / 100), 2);
+            }
+            $total = $cartTotalBeforeTax + $taxAmount;
 
             return response()->json([
                 'success' => true,
-                'cartTotal' => $cartTotal,
+                'cartTotal' => $total,
+                'cartTotalBeforeTax' => $cartTotalBeforeTax,
+                'taxAmount' => $taxAmount,
                 'cartCount' => $count,
                 'isEmpty' => empty($cart),
                 'savings' => $cartData['savings'],
@@ -705,6 +770,137 @@ class CartController extends Controller
         return $cart;
     }
 
+    /**
+     * Reorder all items from a previous order.
+     */
+    public function reorder(\App\Models\Order $order)
+    {
+        // Ensure the order belongs to the authenticated user
+        if ($order->user_id !== auth()->id()) {
+            return back()->with('error', 'You are not authorized to reorder this order!');
+        }
+
+        // Get current cart (keep existing items)
+        if (Auth::check()) {
+            self::syncSession(Auth::id());
+            $cart = $this->getCartFromDb();
+        } else {
+            $cart = session()->get('cart', []);
+        }
+
+        // Loop through order items and add to cart
+        foreach ($order->items as $orderItem) {
+            $quantity = $orderItem->quantity;
+            $size = $orderItem->size;
+
+            if ($orderItem->product_id) {
+                // Product item
+                $product = Product::find($orderItem->product_id);
+                if (!$product) continue;
+
+                $price = $product->starting_price;
+                $variantId = null;
+                if ($size) {
+                    $v = $product->variants()->where('size', $size)->first();
+                    if ($v) { 
+                        $price = $v->price; 
+                        $variantId = $v->id; 
+                    }
+                }
+
+                $cartKey = $product->id . ($size ? '-' . $size : '');
+
+                if (Auth::check()) {
+                    $cartItem = Cart::where('user_id', Auth::id())
+                        ->where('product_id', $product->id)
+                        ->where('size', $size)
+                        ->first();
+                    if ($cartItem) {
+                        $cartItem->quantity += $quantity;
+                        $cartItem->save();
+                    } else {
+                        Cart::create([
+                            'user_id' => Auth::id(),
+                            'product_id' => $product->id,
+                            'quantity' => $quantity,
+                            'size' => $size,
+                            'product_variant_id' => $variantId
+                        ]);
+                    }
+                } else {
+                    $cart[$cartKey] = [
+                        "product_id" => $product->id,
+                        "variant_id" => $variantId,
+                        "name" => $product->title,
+                        "quantity" => $quantity,
+                        "price" => $price,
+                        "image" => $product->main_image_url,
+                        "size" => $size,
+                        "type" => "product"
+                    ];
+                }
+            } elseif ($orderItem->bundle_id) {
+                // Bundle item
+                $bundle = Bundle::find($orderItem->bundle_id);
+                if (!$bundle) continue;
+
+                $cartKey = 'bundle-' . $bundle->id;
+
+                if (Auth::check()) {
+                    $cartItem = Cart::where('user_id', Auth::id())
+                        ->where('bundle_id', $bundle->id)
+                        ->first();
+                        
+                    if ($cartItem) {
+                        $cartItem->quantity += $quantity;
+                        $cartItem->save();
+                    } else {
+                        Cart::create([
+                            'user_id' => Auth::id(),
+                            'bundle_id' => $bundle->id,
+                            'quantity' => $quantity,
+                            'product_id' => null
+                        ]);
+                    }
+                } else {
+                    $bundleImage = $bundle->image ? \Illuminate\Support\Facades\Storage::url($bundle->image) : null;
+                    if (!$bundleImage && $bundle->type == 'pack') {
+                        $firstProd = $bundle->products->first();
+                        $bundleImage = $firstProd ? $firstProd->main_image_url : null;
+                    }
+                    
+                    $cart[$cartKey] = [
+                        "bundle_id" => $bundle->id,
+                        "name" => $bundle->title,
+                        "quantity" => $quantity,
+                        "price" => $bundle->total_price,
+                        "image" => $bundleImage,
+                        "size" => null,
+                        "type" => "bundle"
+                    ];
+                }
+            }
+        }
+
+        if (!Auth::check()) {
+            session()->put('cart', $cart);
+        }
+
+        // Determine correct checkout route based on order tenant!
+        $tenantId = $order->tenant_id;
+        $tenant = \App\Models\Tenant::find($tenantId);
+        $theme = $tenant ? $tenant->theme : 'template_1';
+        
+        $checkoutRoute = match(true) {
+            $theme === 'template_2' || $theme === 'v3' => 'v3.checkout',
+            $theme === 'v4' => 'v4.checkout',
+            $theme === 'v5' => 'v5.checkout',
+            default => 'v1.checkout'
+        };
+
+        return redirect()->route($checkoutRoute)->with('success', 'Order items added to cart!');
+    }
+
     public function fetch(Request $request)
     {
         if (Auth::check()) {
@@ -714,9 +910,21 @@ class CartController extends Controller
         }
 
         $cartData = $this->calculateTotal($cart);
-        $total = $cartData['total'];
+        $cartTotalBeforeTax = $cartData['total'];
         $subtotal = $cartData['subtotal'];
         $savings = $cartData['savings'];
+
+        $tenantId = session('active_tenant_id') ?? (auth()->check() ? auth()->user()->tenant_id : null) ?? 1;
+        $tenant = \App\Models\Tenant::find($tenantId);
+        $taxAmount = 0.00;
+        $taxRate = null;
+        $taxName = null;
+        if ($tenant && $tenant->tax_name && $tenant->tax_rate > 0) {
+            $taxRate = $tenant->tax_rate;
+            $taxName = $tenant->tax_name;
+            $taxAmount = round($cartTotalBeforeTax * ($tenant->tax_rate / 100), 2);
+        }
+        $total = $cartTotalBeforeTax + $taxAmount;
 
         $theme = $request->theme ?? 'template_1';
         if ($theme == 'v4') {
@@ -729,7 +937,7 @@ class CartController extends Controller
             $view = 'template_1.partials.cart_drawer_items';
         }
 
-        return view($view, compact('cart', 'total', 'subtotal', 'savings'))->render();
+        return view($view, compact('cart', 'total', 'subtotal', 'savings', 'taxAmount', 'taxRate', 'taxName', 'cartTotalBeforeTax'))->render();
     }
 
     private function getActiveCoupon($product)

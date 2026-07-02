@@ -3,33 +3,71 @@
         <button id="mobile-menu-toggle" class="mobile-toggle">
             <i class="fa-solid fa-bars"></i>
         </button>
-        <a href="{{ route('v3.home') }}" class="logo" style="color: var(--accent-color); font-weight: 800; font-size: 1.5rem; text-decoration: none;">
-            <i class="fa-solid fa-basket-shopping me-2"></i>{{ $currentTenant->name ?? 'Fresh Grocery' }}
+        <a href="{{ route('v3.home') }}" class="logo" style="color: var(--accent-color); font-weight: 800; font-size: 1.5rem; text-decoration: none; display: flex; align-items: center;">
+            @if($currentTenant->logo)
+                <img src="{{ Storage::url($currentTenant->logo) }}" alt="{{ $currentTenant->name }}" style="max-height: 45px; width: auto; object-fit: contain;">
+            @else
+                <i class="fa-solid fa-basket-shopping me-2"></i>{{ $currentTenant->name ?? 'Fresh Grocery' }}
+            @endif
         </a>
 
-        <div class="search-bar">
-            <i class="fa-solid fa-magnifying-glass search-icon"></i>
-            <input type="text" class="search-input" placeholder="Search for fresh vegetables, fruits, dairy, or essentials...">
+        {{-- Search Bar with autocomplete --}}
+        <div class="search-bar" style="position: relative; flex: 1; max-width: 520px;">
+            <form id="t1-search-form" action="{{ route('v3.all-products') }}" method="GET" autocomplete="off" style="display: flex; align-items: center; width: 100%;">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <input
+                    type="text"
+                    name="q"
+                    id="t1-search-input"
+                    class="search-input"
+                    placeholder="Search for fresh vegetables, fruits, dairy..."
+                    value="{{ request('q') }}"
+                    autocomplete="off"
+                >
+            </form>
+            <div id="t1-search-dropdown" class="search-dropdown" style="display:none;">
+                <div id="t1-search-history-section">
+                    <div class="search-dropdown-label"><i class="fa-solid fa-clock-rotate-left"></i> Recent Searches</div>
+                    <ul id="t1-history-list" class="search-suggestion-list"></ul>
+                </div>
+                <div id="t1-suggestions-section" style="display:none;">
+                    <div class="search-dropdown-label"><i class="fa-solid fa-magnifying-glass"></i> Suggestions</div>
+                    <ul id="t1-suggestions-list" class="search-suggestion-list"></ul>
+                </div>
+            </div>
         </div>
 
-        <div class="header-actions">
+        <div class="header-actions" style="display: flex; align-items: center; gap: 0.5rem;">
             @auth
-                <a href="{{ route('account.index') }}" class="action-btn text-decoration-none">
+                <a href="{{ route('account.index') }}" class="action-btn text-decoration-none" style="display: flex; align-items: center;">
                     <i class="fa-regular fa-user"></i>
                     <span class="action-text">Account</span>
                 </a>
             @else
-                <a href="{{ route('login') }}" class="action-btn text-decoration-none">
+                <a href="{{ route('login') }}" class="action-btn text-decoration-none" style="display: flex; align-items: center;">
                     <i class="fa-regular fa-user"></i>
                     <span class="action-text">Log In</span>
                 </a>
             @endauth
 
-            <a href="javascript:void(0)" class="action-btn cart-btn text-decoration-none" onclick="toggleNCart(true)">
+            <a href="{{ auth()->check() ? route('v3.wishlist') : route('login') }}" class="action-btn text-decoration-none" style="display: flex; align-items: center;">
+                <span style="position: relative; display: inline-flex;">
+                    <i class="fa-regular fa-heart"></i>
+                    @auth
+                        @php
+                            $wishlistCount = \App\Models\Wishlist::where('user_id', auth()->id())->where('tenant_id', $currentTenant->id ?? 1)->count();
+                        @endphp
+                        <span id="wishlist-count" class="badge rounded-circle position-absolute" style="font-size: 0.6rem; top: -8px; right: -8px; width: 15px; height: 15px; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; border: 1.5px solid #fff; background: #ef4444; border-radius: 50%;">{{ $wishlistCount }}</span>
+                    @endauth
+                </span>
+                <span class="action-text">Wishlist</span>
+            </a>
+
+            <a href="javascript:void(0)" class="action-btn cart-btn text-decoration-none" onclick="toggleNCart(true)" style="display: flex; align-items: center;">
                 <i class="fa-solid fa-cart-shopping"></i>
                 @php
                     $tenantId = $currentTenant->id ?? 1;
-                    $cartCount = auth()->check() 
+                    $cartCount = auth()->check()
                         ? \App\Models\Cart::where('tenant_id', $tenantId)->where('user_id', auth()->id())->sum('quantity')
                         : collect(session()->get('cart', []))->sum('quantity');
                 @endphp
@@ -38,3 +76,178 @@
         </div>
     </div>
 </header>
+
+<style>
+.search-dropdown {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    right: 0;
+    background: #fff;
+    border: 1.5px solid var(--border-color, #e5e7eb);
+    border-radius: 14px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.13);
+    z-index: 9999;
+    padding: 0.5rem 0;
+    animation: sdFadeIn 0.15s ease;
+}
+@keyframes sdFadeIn { from { opacity:0; transform: translateY(-6px); } to { opacity:1; transform: translateY(0); } }
+.search-dropdown-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #9ca3af;
+    padding: 0.5rem 1rem 0.25rem;
+}
+.search-suggestion-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.search-suggestion-list li {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 0.6rem;
+    padding: 0.55rem 1rem;
+    cursor: pointer;
+    font-size: 0.92rem;
+    color: #374151;
+    transition: background 0.12s;
+}
+.search-suggestion-list li:hover {
+    background: #f3f4f6;
+}
+.search-suggestion-list li .suggestion-text {
+    flex-grow: 1;
+    text-align: left;
+}
+.search-suggestion-list li .remove-history {
+    order: 3;
+    margin-left: auto;
+    color: #d1d5db;
+    font-size: 0.75rem;
+    cursor: pointer;
+    padding: 2px 4px;
+    border-radius: 4px;
+    transition: color 0.15s;
+}
+.search-suggestion-list li .remove-history:hover {
+    color: #ef4444;
+}
+</style>
+
+<script>
+(function () {
+    const HISTORY_KEY = 't1_search_history';
+    const MAX_HISTORY = 8;
+    const input = document.getElementById('t1-search-input');
+    const dropdown = document.getElementById('t1-search-dropdown');
+    const historySection = document.getElementById('t1-search-history-section');
+    const historyList = document.getElementById('t1-history-list');
+    const sugSection = document.getElementById('t1-suggestions-section');
+    const sugList = document.getElementById('t1-suggestions-list');
+    const form = document.getElementById('t1-search-form');
+
+    // --- Products data from blade for suggestions ---
+    const allProductNames = @json(\App\Models\Product::where('tenant_id', $currentTenant->id ?? 1)->where('status','active')->pluck('title'));
+
+    function getHistory() {
+        try { return JSON.parse(localStorage.getItem(HISTORY_KEY)) || []; } catch(e) { return []; }
+    }
+    function saveHistory(arr) {
+        localStorage.setItem(HISTORY_KEY, JSON.stringify(arr));
+    }
+    function addToHistory(term) {
+        if (!term.trim()) return;
+        let h = getHistory().filter(i => i.toLowerCase() !== term.toLowerCase());
+        h.unshift(term.trim());
+        if (h.length > MAX_HISTORY) h = h.slice(0, MAX_HISTORY);
+        saveHistory(h);
+    }
+
+    function renderHistory() {
+        const h = getHistory();
+        historyList.innerHTML = '';
+        if (h.length === 0) { historySection.style.display = 'none'; return; }
+        historySection.style.display = '';
+        h.forEach(term => {
+            const li = document.createElement('li');
+            li.innerHTML = `<i class="fa-solid fa-clock-rotate-left" style="color:#9ca3af;font-size:0.8rem;"></i><span class="suggestion-text">${escHtml(term)}</span><span class="remove-history" title="Remove"><i class="fa-solid fa-xmark"></i></span>`;
+            li.querySelector('.suggestion-text').addEventListener('click', () => doSearch(term));
+            li.querySelector('.remove-history').addEventListener('click', (e) => {
+                e.stopPropagation();
+                const filtered = getHistory().filter(i => i !== term);
+                saveHistory(filtered);
+                renderHistory();
+                if (filtered.length === 0 && sugList.children.length === 0) hideDropdown();
+            });
+            historyList.appendChild(li);
+        });
+    }
+
+    function renderSuggestions(query) {
+        sugList.innerHTML = '';
+        if (!query.trim()) { sugSection.style.display = 'none'; return; }
+        const matches = allProductNames.filter(n => n.toLowerCase().includes(query.toLowerCase())).slice(0, 6);
+        if (matches.length === 0) { sugSection.style.display = 'none'; return; }
+        sugSection.style.display = '';
+        matches.forEach(name => {
+            const li = document.createElement('li');
+            li.innerHTML = `<i class="fa-solid fa-magnifying-glass" style="color:#9ca3af;font-size:0.8rem;"></i><span>${highlight(name, query)}</span>`;
+            li.addEventListener('click', () => doSearch(name));
+            sugList.appendChild(li);
+        });
+    }
+
+    function highlight(text, query) {
+        const idx = text.toLowerCase().indexOf(query.toLowerCase());
+        if (idx < 0) return escHtml(text);
+        return escHtml(text.slice(0, idx)) + '<strong style="color:var(--accent-color);">' + escHtml(text.slice(idx, idx + query.length)) + '</strong>' + escHtml(text.slice(idx + query.length));
+    }
+
+    function escHtml(str) {
+        return str.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[m]);
+    }
+
+    function showDropdown() { dropdown.style.display = ''; }
+    function hideDropdown() { dropdown.style.display = 'none'; }
+
+    function doSearch(term) {
+        addToHistory(term);
+        input.value = term;
+        form.submit();
+    }
+
+    input.addEventListener('focus', () => {
+        renderHistory();
+        renderSuggestions(input.value);
+        const hasContent = getHistory().length > 0 || (input.value.trim() && allProductNames.some(n => n.toLowerCase().includes(input.value.toLowerCase())));
+        if (hasContent) showDropdown();
+    });
+
+    input.addEventListener('input', () => {
+        const q = input.value.trim();
+        renderSuggestions(q);
+        renderHistory();
+        const hasHistory = getHistory().length > 0;
+        const hasSug = sugList.children.length > 0;
+        if (hasHistory || hasSug) showDropdown(); else hideDropdown();
+    });
+
+    form.addEventListener('submit', (e) => {
+        const q = input.value.trim();
+        if (q) addToHistory(q);
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!dropdown.contains(e.target) && e.target !== input) hideDropdown();
+    });
+
+    input.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') hideDropdown();
+    });
+})();
+</script>

@@ -54,8 +54,10 @@ Route::prefix('v1')->name('v1.')->middleware([\App\Http\Middleware\IdentifyStore
 // Account Routes
 Route::middleware([\App\Http\Middleware\IdentifyStorefrontTenant::class, 'auth'])->group(function () {
     Route::get('/account', [App\Http\Controllers\AccountController::class, 'index'])->name('account.index');
+    Route::get('/account/profile', [App\Http\Controllers\AccountController::class, 'profile'])->name('account.profile');
     Route::post('/account/address', [App\Http\Controllers\AccountController::class, 'updateAddress'])->name('account.address.update');
     Route::get('/account/orders', [App\Http\Controllers\AccountController::class, 'orders'])->name('account.orders');
+    Route::post('/account/orders/reorder/{order}', [App\Http\Controllers\CartController::class, 'reorder'])->name('account.orders.reorder');
 });
 
 // User Auth Routes
@@ -66,11 +68,7 @@ Route::post('/logout', [App\Http\Controllers\AuthController::class, 'logout'])->
 Route::get('auth/google', [App\Http\Controllers\AuthController::class, 'redirectToGoogle'])->name('google.login');
 Route::get('auth/google/callback', [App\Http\Controllers\AuthController::class, 'handleGoogleCallback']);
 
-// Protected User Routes
-Route::middleware('auth')->group(function () {
-    Route::get('/account', [App\Http\Controllers\AccountController::class, 'index'])->name('account.index');
-    Route::post('/account/address', [App\Http\Controllers\AccountController::class, 'updateAddress'])->name('account.address.update');
-});
+// Centralized Admin Login Routes
 
 // Super Admin Routes
 Route::prefix('superadmin')->name('super_admin.')->group(function () {
@@ -320,6 +318,8 @@ Route::prefix('v3')->name('v3.')->middleware([\App\Http\Middleware\IdentifyStore
     Route::get('/product', [PageController::class, 'v3Product'])->name('product');
     Route::get('/cart', [App\Http\Controllers\CartController::class, 'v3Index'])->name('cart');
     Route::get('/checkout', [PageController::class, 'v3Checkout'])->name('checkout');
+    Route::post('/wishlist/toggle', [App\Http\Controllers\WishlistController::class, 'toggle'])->name('wishlist.toggle');
+    Route::get('/wishlist', [App\Http\Controllers\WishlistController::class, 'index'])->name('wishlist');
     Route::get('/about', [PageController::class, 'about'])->name('about');
     Route::get('/contact', [PageController::class, 'contact'])->name('contact');
     Route::get('/shipping-policy', [PageController::class, 'shippingPolicy'])->name('shipping-policy');

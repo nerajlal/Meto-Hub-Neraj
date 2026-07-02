@@ -12,6 +12,11 @@ class AccountController extends Controller
 {
     public function index()
     {
+        return redirect()->route('account.orders');
+    }
+
+    public function profile()
+    {
         $user = Auth::user();
         $address = $user->defaultAddress ?? $user->addresses()->first();
         
@@ -20,15 +25,12 @@ class AccountController extends Controller
             ?? session('demo_tenant_id') 
             ?? 1;
         $tenant = \App\Models\Tenant::find($tenantId);
-
-        $view = 'nurah.account.index';
-        if ($tenant) {
-            $theme = strtolower($tenant->theme ?? 'v1');
-            if ($theme === 'v3' || $theme === 'aura_luxe') {
-                $view = 'v3.account.index';
-            }
+        $theme = $tenant ? $tenant->theme : 'template_1';
+        if (!in_array($theme, ['template_1', 'template_2'])) {
+            $theme = 'template_1';
         }
-        
+
+        $view = "{$theme}.account.index";
         return view($view, compact('user', 'address'));
     }
 
@@ -66,15 +68,12 @@ class AccountController extends Controller
             ?? session('demo_tenant_id') 
             ?? 1;
         $tenant = \App\Models\Tenant::find($tenantId);
-
-        $view = 'nurah.account.orders';
-        if ($tenant) {
-            $theme = strtolower($tenant->theme ?? 'v1');
-            if ($theme === 'v3' || $theme === 'aura_luxe') {
-                $view = 'v3.account.orders';
-            }
+        $theme = $tenant ? $tenant->theme : 'template_1';
+        if (!in_array($theme, ['template_1', 'template_2'])) {
+            $theme = 'template_1';
         }
 
+        $view = "{$theme}.account.orders";
         return view($view, compact('orders'));
     }
 }

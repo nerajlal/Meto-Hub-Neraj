@@ -3,13 +3,26 @@
 @section('title', 'Secure Checkout | ' . ($currentTenant->name ?? 'Fresh Grocery'))
 
 @section('content')
+<style>
+    .checkout-main-grid {
+        display: grid;
+        grid-template-columns: 1.8fr 1fr;
+        gap: 3rem;
+        align-items: start;
+    }
+    @media (max-width: 900px) {
+        .checkout-main-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
 <div class="checkout-page-container" style="max-width: 1200px; margin: 0 auto; padding: 2rem 1rem;">
     <div class="checkout-header-lg" style="margin-bottom: 2.5rem;">
         <h1 class="checkout-title-lg" style="font-size: 2.5rem; font-weight: 800; color: var(--primary-color); margin-bottom: 0.5rem;">Secure Checkout</h1>
         <p class="checkout-subtitle" style="color: var(--text-muted); font-size: 1.05rem;">Review your fresh items and complete your order.</p>
     </div>
 
-    <div class="checkout-main-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 3rem; align-items: start;">
+    <div class="checkout-main-grid">
         <!-- Checkout forms -->
         <div class="checkout-forms-panel">
             <form action="{{ route('order.place') }}" method="POST" id="main-checkout-form">
@@ -38,8 +51,11 @@
 
                 <!-- Shipping Address -->
                 <div class="checkout-card" style="background: #fff; border: 1px solid var(--border-color); border-radius: 1.5rem; padding: 2.5rem; margin-bottom: 2rem;">
-                    <h2 class="card-heading" style="font-size: 1.25rem; font-weight: 800; margin-bottom: 2rem; display: flex; align-items: center; gap: 0.75rem; color: var(--primary-color); border-bottom: 1px solid var(--border-color); padding-bottom: 1rem;">
-                        <i class="fa-solid fa-truck-fast" style="color: var(--accent-color);"></i> 2. Delivery Address
+                    <h2 class="card-heading" style="font-size: 1.25rem; font-weight: 800; margin-bottom: 2rem; display: flex; align-items: center; justify-content: space-between; color: var(--primary-color); border-bottom: 1px solid var(--border-color); padding-bottom: 1rem; flex-wrap: wrap; gap: 1rem;">
+                        <span><i class="fa-solid fa-truck-fast" style="color: var(--accent-color);"></i> 2. Delivery Address</span>
+                        <button type="button" id="btn-geolocation" onclick="detectLocation()" style="background: #f1f5f9; border: 1px solid var(--border-color); padding: 0.5rem 1rem; border-radius: 0.75rem; font-weight: 700; font-size: 0.8rem; cursor: pointer; color: var(--primary-color); display: flex; align-items: center; gap: 0.5rem; transition: 0.2s;">
+                            <i class="fa-solid fa-location-crosshairs" style="color: var(--accent-color);"></i> Use Current Location
+                        </button>
                     </h2>
                     <div class="form-grid-lg" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
                         <div class="form-group-lg full" style="grid-column: span 2;">
@@ -130,10 +146,16 @@
                         <span>-₹{{ number_format($savings, 2) }}</span>
                     </div>
                     @endif
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 1.5rem; font-size: 0.95rem; color: var(--text-muted);">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem; font-size: 0.95rem; color: var(--text-muted);">
                         <span>Shipping</span>
                         <span style="color: #10b981; font-weight: 700;">FREE</span>
                     </div>
+                    @if(isset($taxName) && isset($taxRate) && $taxAmount > 0)
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem; font-size: 0.95rem; color: var(--text-muted);">
+                        <span>{{ $taxName }} ({{ $taxRate }}%)</span>
+                        <span>₹{{ number_format($taxAmount, 2) }}</span>
+                    </div>
+                    @endif
                     <div style="border-top: 2px solid var(--border-color); padding-top: 1rem; display: flex; justify-content: space-between; font-size: 1.4rem; font-weight: 800; color: var(--primary-color);">
                         <span>Grand Total</span>
                         <span>₹{{ number_format($total, 2) }}</span>
@@ -153,6 +175,73 @@
 
 @section('scripts')
 <script>
+    function detectLocation() {
+        const btn = document.getElementById('btn-geolocation');
+        const originalHtml = btn.innerHTML;
+
+        if (!navigator.geolocation) {
+            alert('Geolocation is not supported by your browser.');
+            return;
+        }
+
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Getting Location...';
+        btn.disabled = true;
+
+        navigator.geolocation.getCurrentPosition(
+            function(position) {
+                const lat = position.coords.latitude;
+                const lon = position.coords.longitude;
+
+                $.ajax({
+                    url: `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`,
+                    method: 'GET',
+                    headers: {
+                        'Accept-Language': 'en'
+                    },
+                    success: function(data) {
+                        if (data && data.address) {
+                            const addr = data.address;
+                            const street = addr.road || addr.suburb || addr.neighbourhood || addr.city_district || '';
+                            const houseNumber = addr.house_number || '';
+                            const fullStreet = (houseNumber + ' ' + street).trim() || data.display_name;
+                            const city = addr.city || addr.town || addr.village || addr.municipality || '';
+                            const state = addr.state || addr.province || '';
+                            const pincode = addr.postcode || '';
+
+                            document.getElementsByName('address')[0].value = fullStreet;
+                            document.getElementsByName('city')[0].value = city;
+                            document.getElementsByName('state')[0].value = state;
+                            document.getElementsByName('pincode')[0].value = pincode;
+                        } else {
+                            alert('Could not resolve coordinates to address.');
+                        }
+                        btn.innerHTML = originalHtml;
+                        btn.disabled = false;
+                    },
+                    error: function() {
+                        alert('Could not connect to location lookup service.');
+                        btn.innerHTML = originalHtml;
+                        btn.disabled = false;
+                    }
+                });
+            },
+            function(error) {
+                let msg = 'Failed to retrieve location.';
+                if (error.code === error.PERMISSION_DENIED) {
+                    msg = 'Permission denied. Please grant location access in your browser settings.';
+                }
+                alert(msg);
+                btn.innerHTML = originalHtml;
+                btn.disabled = false;
+            },
+            {
+                enableHighAccuracy: true,
+                timeout: 10000,
+                maximumAge: 0
+            }
+        );
+    }
+
     $(document).ready(function() {
         $('#main-checkout-form').on('submit', function(e) {
             e.preventDefault();

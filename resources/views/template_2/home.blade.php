@@ -6,13 +6,85 @@
 
 @section('content')
     <!-- Hero Banner Section -->
-    <div class="hero-banner" style="background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%); padding: 4rem 3rem; border-radius: 2rem; display: flex; flex-direction: column; align-items: center; text-align: center; justify-content: center; margin-bottom: 2rem; border: 1px solid rgba(16, 185, 129, 0.1);">
-        <div class="hero-content" style="max-width: 800px; margin: 0 auto;">
-            <h1 class="hero-title" style="font-size: 3.2rem; font-weight: 800; color: #064e3b; line-height: 1.15; margin-bottom: 1.5rem;">Farm Fresh Groceries <br><span style="color: var(--accent-color);">Delivered Daily</span></h1>
-            <p class="hero-subtitle" style="font-size: 1.15rem; color: #065f46; margin-bottom: 2.5rem; line-height: 1.6;">Shop organic fruits, fresh vegetables, dairy, bakery items, and daily household essentials from the comfort of your home. Enjoy super-fast home delivery and unbeatable prices.</p>
-            <a href="{{ route('v3.all-products') }}" class="btn-primary" style="background: var(--accent-color); color: #fff; padding: 0.95rem 2.5rem; border-radius: 9999px; font-weight: 700; text-decoration: none; display: inline-block; box-shadow: 0 10px 20px rgba(16, 185, 129, 0.2); transition: all 0.2s ease;">Start Shopping <i class="fa-solid fa-arrow-right ms-2"></i></a>
+    <style>
+        .hero-slider::-webkit-scrollbar {
+            display: none;
+        }
+        .hero-slider {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .slider-dot.active {
+            background: #fff !important;
+            width: 20px !important;
+            border-radius: 5px !important;
+        }
+    </style>
+    <div class="hero-slider-container" style="margin-bottom: 2rem; border-radius: 2rem; overflow: hidden; position: relative;">
+        <div class="hero-slider" style="display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; border-radius: 2rem;">
+            @forelse($sliders as $slider)
+                <div class="hero-slide" style="flex: 0 0 100%; width: 100%; scroll-snap-align: start; position: relative; line-height: 0;">
+                    <picture style="width: 100%; display: block;">
+                        @php
+                            $mobileUrl = Str::startsWith($slider->image_mobile, 'http') ? $slider->image_mobile : (Str::startsWith($slider->image_mobile, 'Images/') ? asset($slider->image_mobile) : \Illuminate\Support\Facades\Storage::url($slider->image_mobile));
+                            $desktopUrl = Str::startsWith($slider->image_desktop, 'http') ? $slider->image_desktop : (Str::startsWith($slider->image_desktop, 'Images/') ? asset($slider->image_desktop) : \Illuminate\Support\Facades\Storage::url($slider->image_desktop));
+                        @endphp
+                        <source media="(max-width: 768px)" srcset="{{ $mobileUrl }}">
+                        <img src="{{ $desktopUrl }}" alt="{{ $slider->title ?? 'Banner' }}" style="width: 100%; height: auto; border-radius: 2rem; object-fit: cover;">
+                    </picture>
+                </div>
+            @empty
+                <div class="hero-slide" style="flex: 0 0 100%; width: 100%; scroll-snap-align: start; position: relative; line-height: 0;">
+                    <picture style="width: 100%; display: block;">
+                        <source media="(max-width: 768px)" srcset="{{ asset('Images/placeholder-grocery.webp') }}">
+                        <img src="{{ asset('Images/placeholder-grocery.webp') }}" alt="Default Banner" style="width: 100%; height: auto; border-radius: 2rem; object-fit: cover;">
+                    </picture>
+                </div>
+            @endforelse
         </div>
+        @if(isset($sliders) && $sliders->count() > 1)
+            <div class="slider-dots" style="position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; z-index: 10;">
+                @foreach($sliders as $index => $slider)
+                    <span class="slider-dot {{ $loop->first ? 'active' : '' }}" onclick="scrollToSlide({{ $index }})" style="width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.5); cursor: pointer; transition: 0.3s;"></span>
+                @endforeach
+            </div>
+        @endif
     </div>
+
+    <script>
+        let currentSlide = 0;
+        const slidesCount = {{ isset($sliders) ? $sliders->count() : 0 }};
+        
+        function scrollToSlide(index) {
+            const slider = document.querySelector('.hero-slider');
+            if (slider) {
+                const slideWidth = slider.clientWidth;
+                slider.scrollTo({
+                    left: slideWidth * index,
+                    behavior: 'smooth'
+                });
+                currentSlide = index;
+                updateDots(index);
+            }
+        }
+        
+        function updateDots(index) {
+            document.querySelectorAll('.slider-dot').forEach((dot, i) => {
+                if (i === index) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            });
+        }
+
+        if (slidesCount > 1) {
+            setInterval(() => {
+                currentSlide = (currentSlide + 1) % slidesCount;
+                scrollToSlide(currentSlide);
+            }, 5000);
+        }
+    </script>
     
     <!-- USP Trust Bar -->
     <div class="usp-bar" style="background: #fff; border: 1px solid var(--border-color); border-radius: 1.5rem; padding: 1.5rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 3rem; box-shadow: 0 4px 15px rgba(0,0,0,0.02);">
@@ -73,7 +145,7 @@
                     <a href="{{ route('v3.collection', ['slug' => $collection->slug]) }}" class="view-all" style="color: var(--accent-color); text-decoration: none; font-weight: 700; font-size: 0.9rem;">View All <i class="fa-solid fa-chevron-right ms-1" style="font-size: 0.75rem;"></i></a>
                 </div>
                 
-                <div class="product-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1.5rem;">
+                <div class="product-grid grid-cols-mobile-{{ $currentTenant->mobile_grid_cols ?? 2 }}">
                     @foreach($collection->products as $product)
                         @include('template_1.partials.product_card', ['product' => $product])
                     @endforeach
@@ -89,7 +161,7 @@
                 <a href="javascript:void(0)" class="view-all" style="color: var(--accent-color); text-decoration: none; font-weight: 700;">View All <i class="fa-solid fa-chevron-right ms-1"></i></a>
             </div>
             
-            <div class="product-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1.5rem;">
+            <div class="product-grid grid-cols-mobile-{{ $currentTenant->mobile_grid_cols ?? 2 }}">
                 @foreach(['Fresh Tomatoes', 'Organic Bananas', 'Whole Wheat Bread', 'Organic Milk'] as $fallbackName)
                 <div class="product-card" style="border: 1px solid var(--border-color); border-radius: 1rem; overflow: hidden; background: #fff; padding: 1rem; text-align: center; position: relative;">
                     <div style="background: #f8fafc; height: 160px; border-radius: 0.5rem; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
@@ -114,11 +186,18 @@
             <a href="{{ route('v3.combos') }}" class="view-all" style="color: var(--accent-color); text-decoration: none; font-weight: 700; font-size: 0.9rem;">View All <i class="fa-solid fa-chevron-right ms-1"></i></a>
         </div>
         
-        <div class="product-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1.5rem;">
+        <div class="product-grid grid-cols-mobile-{{ $currentTenant->mobile_grid_cols ?? 2 }}">
             @forelse($bundles as $bundle)
                 <div class="product-card" style="border: 1px solid var(--border-color); border-radius: 1rem; overflow: hidden; background: #fff; position: relative;">
                     <a href="{{ route('v3.combo', ['id' => $bundle->id]) }}" class="card-img" style="display: block; position: relative; padding-top: 100%; background: #f8fafc;">
-                        <img src="{{ \Illuminate\Support\Facades\Storage::url($bundle->image) }}" alt="{{ $bundle->title }}" onerror="this.src='{{ asset('Images/placeholder-grocery.webp') }}'" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;">
+                        @php
+                            $bundleImg = $bundle->image ? \Illuminate\Support\Facades\Storage::url($bundle->image) : null;
+                            if (!$bundleImg) {
+                                $firstProd = $bundle->products->first();
+                                $bundleImg = $firstProd ? $firstProd->main_image_url : asset('Images/placeholder-grocery.webp');
+                            }
+                        @endphp
+                        <img src="{{ $bundleImg }}" alt="{{ $bundle->title }}" onerror="this.src='{{ asset('Images/placeholder-grocery.webp') }}'" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;">
                         <div style="position: absolute; top: 10px; right: 10px; background: #10b981; color: #fff; padding: 4px 8px; border-radius: 4px; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">
                             Save Bundle
                         </div>

@@ -11,6 +11,9 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->web(append: [
+            \App\Http\Middleware\FormatCurrencyResponse::class,
+        ]);
         $middleware->alias([
             'super_admin' => \App\Http\Middleware\SuperAdminMiddleware::class,
             'identify_tenant' => \App\Http\Middleware\IdentifyTenant::class,

@@ -2,8 +2,12 @@
     <div class="footer-content-wrapper">
         <div class="footer-container">
             <div class="footer-brand">
-                <a href="{{ route('v3.home') }}" class="logo" style="color: var(--accent-color); font-weight: 800; font-size: 1.5rem; text-decoration: none;">
-                    <i class="fa-solid fa-leaf me-2"></i>{{ $currentTenant->name ?? 'Fresh Grocery' }}
+                <a href="{{ route('v3.home') }}" class="logo" style="color: var(--accent-color); font-weight: 800; font-size: 1.5rem; text-decoration: none; display: flex; align-items: center;">
+                    @if($currentTenant->logo)
+                        <img src="{{ Storage::url($currentTenant->logo) }}" alt="{{ $currentTenant->name }}" style="max-height: 40px; width: auto; object-fit: contain;">
+                    @else
+                        <i class="fa-solid fa-leaf me-2"></i>{{ $currentTenant->name ?? 'Fresh Grocery' }}
+                    @endif
                 </a>
                 <p>Bringing fresh, high-quality organic vegetables, fruits, dairy, and daily essentials straight from local farms to your kitchen. Fast delivery guaranteed.</p>
                 <div class="footer-trust">
