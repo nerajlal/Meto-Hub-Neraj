@@ -126,6 +126,29 @@
         </div>
     </div>
 
+    <!-- Shop by Category / Collections Row -->
+    @if(isset($collections) && $collections->count() > 0)
+    <div class="collections-horizontal-scroll" style="margin-bottom: 2rem; padding: 0 1rem;">
+        <h3 style="font-size: 1.1rem; font-weight: 800; color: var(--primary-color); margin-bottom: 1rem;">Shop by Category</h3>
+        <div style="display: flex; gap: 1rem; overflow-x: auto; padding-bottom: 0.5rem; scrollbar-width: none; -ms-overflow-style: none;" class="hide-scroll">
+            <style>
+                .hide-scroll::-webkit-scrollbar { display: none; }
+            </style>
+            @foreach($collections as $c)
+            <a href="{{ route('v3.collection', ['slug' => $c->slug]) }}" style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem; text-decoration: none; min-width: 75px;">
+                <div style="width: 70px; height: 70px; border-radius: 50%; background: #f8fafc; border: 1.5px solid var(--border-color); overflow: hidden; display: flex; align-items: center; justify-content: center; padding: 0.2rem; transition: border-color 0.2s;" onmouseover="this.style.borderColor='var(--accent-color)'" onmouseout="this.style.borderColor='var(--border-color)'">
+                    @php 
+                        $catImage = $c->image ? Storage::url($c->image) : asset('Images/placeholder-grocery.webp');
+                    @endphp
+                    <img src="{{ $catImage }}" alt="{{ $c->name }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                </div>
+                <span style="font-size: 0.75rem; font-weight: 700; color: var(--primary-color); text-align: center; line-height: 1.2;">{{ $c->name }}</span>
+            </a>
+            @endforeach
+        </div>
+    </div>
+    @endif
+
     <!-- Collections Sections (Department Style) -->
     @php 
         $collections = \App\Models\Collection::with(['products' => function($query) {

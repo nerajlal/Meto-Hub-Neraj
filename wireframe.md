@@ -20,6 +20,10 @@ This document outlines the complete section-by-section UI wireframe, CSS variabl
 |                           |  [USP trust bar]           |  |
 |                           |  4 Items (Farm, Express)   |  |
 |                           +----------------------------+  |
+|                           |  [Shop by Category]        |  |
+|                           |  Horizontal scroll row     |  |
+|                           |  (Small rounded images)    |  |
+|                           +----------------------------+  |
 |                           |  [Category Section 1]      |  |
 |                           |  Grid of Product Cards     |  |
 |                           +----------------------------+  |
