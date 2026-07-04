@@ -261,6 +261,17 @@
                                 Number of days for delivery. The expected delivery date will be calculated from today and shown on product pages. Set to 0 for same-day delivery.
                             </div>
                         </div>
+
+                        <div class="mb-3">
+                            <label for="delivery_info" class="form-label fw-semibold">Delivery Details Text</label>
+                            <textarea class="form-control @error('delivery_info') is-invalid @enderror" id="delivery_info" name="delivery_info" rows="3" placeholder="e.g. We deliver fresh groceries directly to your home within 2 hours. Free shipping applies to all orders over ₹499.">{{ old('delivery_info', $tenant->delivery_info) }}</textarea>
+                            @error('delivery_info')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                            <div class="form-text mt-2 small text-muted">
+                                This text will be displayed in the "Delivery Details" section on the product page.
+                            </div>
+                        </div>
                     </div>
                 </div>
 

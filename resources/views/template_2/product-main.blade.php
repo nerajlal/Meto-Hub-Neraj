@@ -429,11 +429,11 @@
                 <p>{!! nl2br(e($product->description)) !!}</p>
             </div>
             <div class="tab-content-minimal d-none" id="tab-shipping" style="font-size: 0.95rem; color: var(--text-muted); line-height: 1.6;">
-                <p>We deliver fresh groceries directly to your home within 2 hours. Free shipping applies to all orders over ₹499. Orders are packed using eco-friendly, hygienically sealed bags.</p>
+                <p>{!! nl2br(e($currentTenant->delivery_info ?? 'We deliver fresh groceries directly to your home within 2 hours. Free shipping applies to all orders over ₹499. Orders are packed using eco-friendly, hygienically sealed bags.')) !!}</p>
             </div>
             @else
             <div class="tab-content-minimal" id="tab-shipping" style="font-size: 0.95rem; color: var(--text-muted); line-height: 1.6;">
-                <p>We deliver fresh groceries directly to your home within 2 hours. Free shipping applies to all orders over ₹499. Orders are packed using eco-friendly, hygienically sealed bags.</p>
+                <p>{!! nl2br(e($currentTenant->delivery_info ?? 'We deliver fresh groceries directly to your home within 2 hours. Free shipping applies to all orders over ₹499. Orders are packed using eco-friendly, hygienically sealed bags.')) !!}</p>
             </div>
             @endif
         </div>

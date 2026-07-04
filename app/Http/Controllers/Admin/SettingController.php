@@ -127,6 +127,7 @@ class SettingController extends Controller
             'tax_name' => 'nullable|string|max:50',
             'tax_rate' => 'nullable|numeric|min:0|max:100',
             'delivery_days' => 'nullable|integer|min:0|max:30',
+            'delivery_info' => 'nullable|string',
         ]);
 
         $updateData = [
@@ -147,6 +148,7 @@ class SettingController extends Controller
             'tax_name' => $request->tax_name,
             'tax_rate' => $request->tax_rate,
             'delivery_days' => $request->delivery_days ?? 2,
+            'delivery_info' => $request->delivery_info,
         ];
 
         if ($request->hasFile('logo')) {
