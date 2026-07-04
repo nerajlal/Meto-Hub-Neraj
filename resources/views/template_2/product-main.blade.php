@@ -429,21 +429,36 @@
         </div>
     </div>
 
-    <!-- Related Products -->
+    <!-- Related Products & Bundles -->
     @php 
-        $related = \App\Models\Product::where('collection_id', $product->collection_id)
-            ->where('id', '!=', $product->id)
+        // 1. Fetch bundles containing this product
+        $relatedBundles = $product->bundles()
+            ->where('status', 'active')
+            ->where('type', '!=', 'pool')
             ->take(4)
-            ->get(); 
+            ->get();
+            
+        // 2. Fetch related products to fill the remaining slots up to 4
+        $remainingSlots = 4 - $relatedBundles->count();
+        $relatedProducts = collect();
+        if ($remainingSlots > 0) {
+            $relatedProducts = \App\Models\Product::where('collection_id', $product->collection_id)
+                ->where('id', '!=', $product->id)
+                ->take($remainingSlots)
+                ->get();
+        }
     @endphp
-    @if($related->count() > 0)
+    @if($relatedBundles->count() > 0 || $relatedProducts->count() > 0)
     <div class="department-section" style="margin-top: 4rem;">
         <div class="section-header" style="margin-bottom: 1.5rem;">
             <h2 class="section-title" style="font-weight: 800; font-size: 1.6rem; color: var(--primary-color);">You Might Also Like</h2>
         </div>
         <div class="product-grid grid-cols-mobile-{{ $currentTenant->mobile_grid_cols ?? 2 }}">
-            @foreach($related as $rel)
-                @include('template_1.partials.product_card', ['product' => $rel])
+            @foreach($relatedBundles as $relBundle)
+                @include('template_1.partials.bundle_card', ['bundle' => $relBundle])
+            @endforeach
+            @foreach($relatedProducts as $relProd)
+                @include('template_1.partials.product_card', ['product' => $relProd])
             @endforeach
         </div>
     </div>
