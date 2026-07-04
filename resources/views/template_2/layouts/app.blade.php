@@ -129,6 +129,14 @@
             toggleNCart(false);
         });
 
+        window.showCartToast = function(msg = 'Added to Cart successfully') {
+            const toast = document.createElement('div');
+            toast.textContent = msg;
+            toast.style.cssText = 'position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background: #10B981; color: white; padding: 10px 20px; border-radius: 20px; font-weight: 600; font-size: 0.9rem; z-index: 9999; box-shadow: 0 4px 12px rgba(0,0,0,0.15); transition: opacity 0.3s;';
+            document.body.appendChild(toast);
+            setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, 2000);
+        };
+
         // Add to Cart handler
         $(document).on('click', '.cart-add-btn', function(e) {
             e.preventDefault();
@@ -157,8 +165,9 @@
                         btn.html('<i class="fa-solid fa-check"></i>');
                         btn.css('background-color', '#10B981');
                         
-                        toggleNCart(true);
-
+                        // toggleNCart(true);
+                        showCartToast();
+                        
                         setTimeout(() => {
                             btn.html('<i class="fa-solid fa-plus"></i>');
                             btn.css('background-color', '');
@@ -231,5 +240,7 @@
             <i class="fa-brands fa-whatsapp"></i>
         </a>
     @endif
+    
+    @include('template_2.partials.mobile_bottom_nav')
 </body>
 </html>

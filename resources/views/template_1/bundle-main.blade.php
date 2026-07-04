@@ -177,7 +177,7 @@
                     btn.style.background = '#10B981';
                     
                     // Open Cart Drawer
-                    toggleNCart(true);
+                    showCartToast();
 
                     setTimeout(() => {
                         btn.innerHTML = originalHtml;

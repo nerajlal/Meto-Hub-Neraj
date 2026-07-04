@@ -8,8 +8,8 @@
             @endif
         </a>
 
-        {{-- Search Bar with autocomplete --}}
-        <div class="search-bar" style="flex-grow: 1; max-width: 600px; position: relative;">
+        {{-- Search Bar with autocomplete (Desktop) --}}
+        <div class="search-bar hide-on-mobile" style="flex-grow: 1; max-width: 600px; position: relative;">
             <form id="t2-search-form" action="{{ route('v3.all-products') }}" method="GET" autocomplete="off" style="display: flex; align-items: center; width: 100%; position: relative;">
                 <i class="fa-solid fa-magnifying-glass search-icon" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); pointer-events: none;"></i>
                 <input
@@ -38,7 +38,11 @@
             </div>
         </div>
 
-        <div class="header-actions" style="display: flex; align-items: center; gap: 1.5rem; flex-shrink: 0;">
+        <button class="mobile-search-toggle show-on-mobile" style="background: none; border: none; font-size: 1.25rem; color: var(--primary-color); cursor: pointer; display: none;">
+            <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
+
+        <div class="header-actions hide-on-mobile" style="display: flex; align-items: center; gap: 1.5rem; flex-shrink: 0;">
             @auth
                 <a href="{{ route('account.index') }}" class="action-btn text-decoration-none" style="display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 600; color: var(--primary-color); text-align: center; gap: 2px; text-transform: none; text-decoration: none; padding: 0.25rem 0.5rem; background: none; border-radius: 0;">
                     <i class="fa-regular fa-user" style="font-size: 1.25rem; color: var(--primary-color);"></i>
@@ -76,7 +80,7 @@
     </div>
 
     <!-- Dynamic Horizontal Top Navigation Menu Bar -->
-    <nav class="top-nav-menu-bar" style="border-top: 1px solid var(--border-color); margin-top: 0.5rem; background: #fafafb;">
+    <nav class="top-nav-menu-bar hide-on-mobile" style="border-top: 1px solid var(--border-color); margin-top: 0.5rem; background: #fafafb;">
         <div style="max-width: 1400px; margin: 0 auto; display: flex; align-items: center; gap: 2rem; padding: 0.75rem 2rem; overflow-x: auto; white-space: nowrap;">
             <a href="{{ route('v3.home') }}" style="color: var(--primary-color); font-weight: 700; text-decoration: none; font-size: 0.95rem; transition: 0.2s;" class="nav-link-item hover-green">
                 <i class="fa-solid fa-house me-1"></i> Home
@@ -95,9 +99,36 @@
             @endforeach
         </div>
     </nav>
+    <!-- Mobile Expandable Search Bar -->
+    <div id="mobile-search-container" style="display: none; padding: 10px 15px; background: #fff; border-bottom: 1px solid var(--border-color); width: 100%; position: absolute; z-index: 999; top: 100%; left: 0;">
+        <form id="t2-mobile-search-form" action="{{ route('v3.all-products') }}" method="GET" autocomplete="off" style="display: flex; align-items: center; width: 100%; position: relative;">
+            <i class="fa-solid fa-magnifying-glass search-icon" style="position: absolute; left: 1rem; color: #9ca3af;"></i>
+            <input
+                type="text"
+                name="q"
+                id="t2-mobile-search-input"
+                class="search-input"
+                placeholder="Search for products..."
+                value="{{ request('q') }}"
+                autocomplete="off"
+                style="width: 100%; padding: 0.75rem 1rem 0.75rem 2.5rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.95rem; outline: none;"
+            >
+            <button type="button" class="mobile-search-toggle" style="position: absolute; right: 0.75rem; border: none; background: none; color: #9ca3af; font-size: 1.25rem; padding: 0.25rem;">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </form>
+    </div>
 </header>
 
 <style>
+@media (max-width: 768px) {
+    .hide-on-mobile {
+        display: none !important;
+    }
+    .show-on-mobile {
+        display: block !important;
+    }
+}
     .hover-green:hover {
         color: var(--accent-color) !important;
     }
@@ -194,6 +225,24 @@
 </style>
 
 <script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Toggle mobile search
+    const mobileSearchToggles = document.querySelectorAll('.mobile-search-toggle');
+    const mobileSearchContainer = document.getElementById('mobile-search-container');
+    const mobileSearchInput = document.getElementById('t2-mobile-search-input');
+    
+    mobileSearchToggles.forEach(toggle => {
+        toggle.addEventListener('click', function() {
+            if (mobileSearchContainer.style.display === 'none') {
+                mobileSearchContainer.style.display = 'block';
+                mobileSearchInput.focus();
+            } else {
+                mobileSearchContainer.style.display = 'none';
+            }
+        });
+    });
+});
+
 (function () {
     const HISTORY_KEY = 't2_search_history';
     const MAX_HISTORY = 8;

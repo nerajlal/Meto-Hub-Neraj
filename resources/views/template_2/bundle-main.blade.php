@@ -175,7 +175,7 @@
                     btn.innerHTML = 'ADDED COMBO!';
                     btn.style.background = '#10B981';
                     
-                    toggleNCart(true);
+                    showCartToast();
 
                     setTimeout(() => {
                         btn.innerHTML = originalHtml;

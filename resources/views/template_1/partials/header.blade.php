@@ -11,8 +11,8 @@
             @endif
         </a>
 
-        {{-- Search Bar with autocomplete --}}
-        <div class="search-bar" style="position: relative; flex: 1; max-width: 520px;">
+        {{-- Search Bar with autocomplete (Desktop) --}}
+        <div class="search-bar hide-on-mobile" style="position: relative; flex: 1; max-width: 520px;">
             <form id="t1-search-form" action="{{ route('v3.all-products') }}" method="GET" autocomplete="off" style="display: flex; align-items: center; width: 100%; position: relative;">
                 <i class="fa-solid fa-magnifying-glass search-icon"></i>
                 <input
@@ -41,12 +41,30 @@
             </div>
         </div>
 
-        <div class="header-actions" style="display: flex; align-items: center; gap: 0.5rem;">
+        <button class="mobile-search-toggle show-on-mobile" style="background: none; border: none; font-size: 1.25rem; color: var(--primary-color); cursor: pointer; display: none;">
+            <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
+
+        <div class="header-actions hide-on-mobile" style="display: flex; align-items: center; gap: 0.5rem;">
             @auth
-                <a href="{{ route('account.index') }}" class="action-btn text-decoration-none" style="display: flex; align-items: center;">
-                    <i class="fa-regular fa-user"></i>
-                    <span class="action-text">Account</span>
-                </a>
+                <div class="user-dropdown" style="position: relative;">
+                    <a href="javascript:void(0)" class="action-btn text-decoration-none" onclick="document.getElementById('user-menu').classList.toggle('d-none')" style="display: flex; align-items: center;">
+                        <i class="fa-regular fa-user"></i>
+                        <span class="action-text">{{ explode(' ', auth()->user()->name)[0] }}</span>
+                        <i class="fa-solid fa-chevron-down" style="font-size: 0.7rem; margin-left: 0.3rem;"></i>
+                    </a>
+                    <div id="user-menu" class="d-none" style="position: absolute; top: calc(100% + 10px); right: 0; background: #fff; box-shadow: 0 4px 20px rgba(0,0,0,0.1); border-radius: 12px; min-width: 180px; z-index: 1000; overflow: hidden; border: 1px solid var(--border-color);">
+                        <a href="{{ route('account.index') }}" style="display: block; padding: 0.85rem 1.25rem; color: var(--primary-color); text-decoration: none; font-size: 0.9rem; font-weight: 600; border-bottom: 1px solid var(--border-color);">
+                            <i class="fa-solid fa-box-open me-2" style="color: var(--accent-color); width: 20px;"></i> My Orders
+                        </a>
+                        <form action="{{ route('logout') }}" method="POST" style="margin: 0;">
+                            @csrf
+                            <button type="submit" style="width: 100%; text-align: left; background: none; border: none; padding: 0.85rem 1.25rem; color: #ef4444; font-size: 0.9rem; font-weight: 600; cursor: pointer;">
+                                <i class="fa-solid fa-arrow-right-from-bracket me-2" style="width: 20px;"></i> Logout
+                            </button>
+                        </form>
+                    </div>
+                </div>
             @else
                 <a href="{{ route('login') }}" class="action-btn text-decoration-none" style="display: flex; align-items: center;">
                     <i class="fa-regular fa-user"></i>
@@ -79,9 +97,39 @@
             </a>
         </div>
     </div>
+    <!-- Mobile Expandable Search Bar -->
+    <div id="mobile-search-container" style="display: none; padding: 10px 15px; background: #fff; border-bottom: 1px solid var(--border-color); width: 100%; position: absolute; z-index: 999; top: 100%; left: 0;">
+        <form id="t1-mobile-search-form" action="{{ route('v3.all-products') }}" method="GET" autocomplete="off" style="display: flex; align-items: center; width: 100%; position: relative;">
+            <i class="fa-solid fa-magnifying-glass search-icon" style="position: absolute; left: 1rem; color: #9ca3af;"></i>
+            <input
+                type="text"
+                name="q"
+                id="t1-mobile-search-input"
+                class="search-input"
+                placeholder="Search for products..."
+                value="{{ request('q') }}"
+                autocomplete="off"
+                style="width: 100%; padding: 0.75rem 1rem 0.75rem 2.5rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.95rem; outline: none;"
+            >
+            <button type="button" class="mobile-search-toggle" style="position: absolute; right: 0.75rem; border: none; background: none; color: #9ca3af; font-size: 1.25rem; padding: 0.25rem;">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </form>
+    </div>
 </header>
 
 <style>
+.d-none {
+    display: none !important;
+}
+@media (max-width: 768px) {
+    .hide-on-mobile {
+        display: none !important;
+    }
+    .show-on-mobile {
+        display: block !important;
+    }
+}
 .search-dropdown {
     position: absolute;
     top: calc(100% + 6px);
@@ -146,6 +194,24 @@
 </style>
 
 <script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Toggle mobile search
+    const mobileSearchToggles = document.querySelectorAll('.mobile-search-toggle');
+    const mobileSearchContainer = document.getElementById('mobile-search-container');
+    const mobileSearchInput = document.getElementById('t1-mobile-search-input');
+    
+    mobileSearchToggles.forEach(toggle => {
+        toggle.addEventListener('click', function() {
+            if (mobileSearchContainer.style.display === 'none') {
+                mobileSearchContainer.style.display = 'block';
+                mobileSearchInput.focus();
+            } else {
+                mobileSearchContainer.style.display = 'none';
+            }
+        });
+    });
+});
+
 (function () {
     const HISTORY_KEY = 't1_search_history';
     const MAX_HISTORY = 8;

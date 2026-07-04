@@ -422,16 +422,26 @@
 
             <!-- Description Tabs -->
             <div class="p-tabs-minimal" style="display: flex; gap: 2rem; border-bottom: 2px solid var(--border-color); margin-bottom: 1.5rem;">
+                @if(!empty($product->description))
                 <button class="tab-link active" onclick="switchTab('desc', this)" style="background: none; border: none; padding: 1rem 0; font-size: 0.85rem; font-weight: 700; color: var(--text-muted); cursor: pointer; position: relative;">DESCRIPTION</button>
                 <button class="tab-link" onclick="switchTab('shipping', this)" style="background: none; border: none; padding: 1rem 0; font-size: 0.85rem; font-weight: 700; color: var(--text-muted); cursor: pointer; position: relative;">DELIVERY DETAILS</button>
+                @else
+                <button class="tab-link active" onclick="switchTab('shipping', this)" style="background: none; border: none; padding: 1rem 0; font-size: 0.85rem; font-weight: 700; color: var(--text-muted); cursor: pointer; position: relative;">DELIVERY DETAILS</button>
+                @endif
             </div>
             
+            @if(!empty($product->description))
             <div class="tab-content-minimal" id="tab-desc" style="font-size: 0.95rem; color: var(--text-muted); line-height: 1.6;">
-                <p>{{ $product->description }}</p>
+                <p>{!! nl2br(e($product->description)) !!}</p>
             </div>
             <div class="tab-content-minimal d-none" id="tab-shipping" style="font-size: 0.95rem; color: var(--text-muted); line-height: 1.6;">
                 <p>We deliver fresh groceries directly to your home within 2 hours. Free shipping applies to all orders over ₹499. Orders are packed using eco-friendly, hygienically sealed bags.</p>
             </div>
+            @else
+            <div class="tab-content-minimal" id="tab-shipping" style="font-size: 0.95rem; color: var(--text-muted); line-height: 1.6;">
+                <p>We deliver fresh groceries directly to your home within 2 hours. Free shipping applies to all orders over ₹499. Orders are packed using eco-friendly, hygienically sealed bags.</p>
+            </div>
+            @endif
         </div>
     </div>
 
@@ -551,7 +561,7 @@
                     btn.style.background = '#10B981';
                     
                     // Open Cart Drawer
-                    toggleNCart(true);
+                    showCartToast();
 
                     setTimeout(() => {
                         btn.innerHTML = originalHtml;
@@ -636,7 +646,7 @@
                     btn.style.background = '#10B981';
                     
                     // Open Cart Drawer
-                    toggleNCart(true);
+                    showCartToast();
                     
                     setTimeout(() => {
                         btn.innerHTML = originalHtml;
