@@ -434,7 +434,26 @@ class PageController extends Controller
         }
         $total = $subtotal + $taxAmount;
 
-        return view($view, compact('cart', 'total', 'subtotal', 'savings', 'address', 'layout', 'taxAmount', 'taxRate', 'taxName'));
+        // Delivery Dates Logic
+        $deliveryDaysDelay = $tenant ? (int) $tenant->delivery_days : 0;
+        $deliveryDates = [];
+        $startDate = now()->addDays($deliveryDaysDelay);
+        for ($i = 0; $i < 3; $i++) {
+            $date = $startDate->copy()->addDays($i);
+            $deliveryDates[] = [
+                'value' => $date->format('Y-m-d'),
+                'label' => $date->format('D, M d'),
+                'is_today' => $date->isToday()
+            ];
+        }
+
+        $deliveryTimeSlots = [
+            '09:00 AM - 01:00 PM',
+            '01:00 PM - 05:00 PM',
+            '05:00 PM - 09:00 PM'
+        ];
+
+        return view($view, compact('cart', 'total', 'subtotal', 'savings', 'address', 'layout', 'taxAmount', 'taxRate', 'taxName', 'deliveryDates', 'deliveryTimeSlots'));
     }
 
     private function getActiveCoupon($product)

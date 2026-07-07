@@ -120,6 +120,12 @@
                      <span>Storefront Pages</span>
                  </a>
              </li>
+             <li>
+                  <a href="{{ route('admin.settings.checkout-fields') }}" class="sidebar-item {{ request()->routeIs('admin.settings.checkout-fields*') ? 'active' : '' }}">
+                     <i class="fa-solid fa-cash-register"></i>
+                     <span>Custom Checkout</span>
+                 </a>
+             </li>
         </ul>
 
     </nav>

@@ -162,7 +162,7 @@
             </div>
 
              <!-- Notes Card -->
-             <div class="card border shadow-sm overflow-hidden">
+             <div class="card border shadow-sm overflow-hidden mb-4">
                 <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center py-3">
                     <h2 class="h6 fw-semibold text-secondary mb-0">Notes</h2>
                 </div>
@@ -170,6 +170,48 @@
                     <p class="small text-muted fst-italic mb-0">{{ $order->notes ?? 'No notes from customer' }}</p>
                 </div>
             </div>
+
+            <!-- Custom Data Card -->
+            @if($order->custom_checkout_data && count($order->custom_checkout_data) > 0)
+            <div class="card border shadow-sm overflow-hidden mb-4">
+               <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center py-3">
+                   <h2 class="h6 fw-semibold text-secondary mb-0">Additional Information</h2>
+               </div>
+               <div class="card-body p-3">
+                   @foreach($order->custom_checkout_data as $key => $value)
+                       <div class="mb-2">
+                           <span class="small fw-semibold text-muted text-uppercase d-block">{{ ucwords(str_replace('_', ' ', $key)) }}</span>
+                           <span class="small text-dark">{{ $value }}</span>
+                       </div>
+                   @endforeach
+               </div>
+           </div>
+           @endif
+
+            <!-- Delivery Schedule Card -->
+            @if($order->delivery_date || $order->delivery_time_slot)
+            <div class="card border shadow-sm overflow-hidden mb-4">
+                <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center py-3">
+                    <h2 class="h6 fw-semibold text-secondary mb-0"><i class="fa-regular fa-calendar-check text-primary me-2"></i> Delivery Schedule</h2>
+                </div>
+                <div class="card-body p-3 bg-light bg-opacity-50">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <span class="small fw-semibold text-muted text-uppercase d-block mb-1">Scheduled Date</span>
+                            <span class="fw-bold text-dark fs-5">{{ $order->delivery_date ? \Carbon\Carbon::parse($order->delivery_date)->format('D, M d, Y') : 'N/A' }}</span>
+                        </div>
+                        <div class="text-end">
+                            <span class="small fw-semibold text-muted text-uppercase d-block mb-1">Time Slot</span>
+                            @if($order->delivery_time_slot)
+                            <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 px-3 py-2 fs-6 rounded-pill">{{ $order->delivery_time_slot }}</span>
+                            @else
+                            <span class="fw-bold text-dark fs-6">N/A</span>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endif
 
         </div>
     </div>

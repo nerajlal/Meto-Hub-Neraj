@@ -34,16 +34,55 @@ class OrderController extends Controller
         }
 
         // 1. Validate Input
-        $request->validate([
-            'name' => 'required',
-            'email' => 'required|email',
-            'address' => 'required',
-            'city' => 'required',
-            'state' => 'required',
-            'pincode' => 'required',
-            'phone' => 'required',
-            'payment_method' => 'required'
-        ]);
+        $tenantId = session('active_tenant_id') ?? 1;
+        $tenant = \App\Models\Tenant::find($tenantId);
+        $cf = $tenant ? ($tenant->checkout_fields ?? []) : [];
+        
+        $rules = [
+            'payment_method' => 'required',
+        ];
+
+        // Delivery schedule validation
+        $deliveryDateEnabled = !isset($cf['delivery_date']) || (isset($cf['delivery_date']['enabled']) && $cf['delivery_date']['enabled']);
+        if ($deliveryDateEnabled) {
+            $rules['delivery_date'] = 'required|date';
+        }
+        
+        $deliveryTimeSlotEnabled = !isset($cf['delivery_time_slot']) || (isset($cf['delivery_time_slot']['enabled']) && $cf['delivery_time_slot']['enabled']);
+        if ($deliveryTimeSlotEnabled) {
+            $rules['delivery_time_slot'] = 'required|string';
+        }
+
+        // Standard fields validation based on configuration
+        $standardFields = ['name', 'email', 'phone', 'address', 'city', 'state', 'pincode'];
+        foreach ($standardFields as $f) {
+            $isEnabled = !isset($cf[$f]) || (isset($cf[$f]['enabled']) && $cf[$f]['enabled']);
+            $isRequired = !isset($cf[$f]) || (isset($cf[$f]['required']) && $cf[$f]['required']);
+            
+            if ($isEnabled && $isRequired) {
+                $rules[$f] = ($f === 'email') ? 'required|email' : 'required';
+            } elseif ($isEnabled && $f === 'email') {
+                $rules[$f] = 'nullable|email';
+            }
+        }
+
+        if (isset($cf['alternate_phone']['enabled']) && $cf['alternate_phone']['enabled'] && isset($cf['alternate_phone']['required']) && $cf['alternate_phone']['required']) {
+            $rules['alternate_phone'] = 'required';
+        }
+        if (isset($cf['company_name']['enabled']) && $cf['company_name']['enabled'] && isset($cf['company_name']['required']) && $cf['company_name']['required']) {
+            $rules['company_name'] = 'required';
+        }
+        if (isset($cf['gst_number']['enabled']) && $cf['gst_number']['enabled'] && isset($cf['gst_number']['required']) && $cf['gst_number']['required']) {
+            $rules['gst_number'] = 'required';
+        }
+        if (isset($cf['landmark']['enabled']) && $cf['landmark']['enabled'] && isset($cf['landmark']['required']) && $cf['landmark']['required']) {
+            $rules['landmark'] = 'required';
+        }
+        if (isset($cf['order_notes']['enabled']) && $cf['order_notes']['enabled'] && isset($cf['order_notes']['required']) && $cf['order_notes']['required']) {
+            $rules['order_notes'] = 'required';
+        }
+
+        $request->validate($rules);
 
         try {
             // 2. Get Cart Data
@@ -154,6 +193,24 @@ class OrderController extends Controller
         $firstName = $nameParts[0];
         $lastName = isset($nameParts[1]) ? $nameParts[1] : '';
 
+        // Extract custom checkout data
+        $customCheckoutData = [];
+        if (isset($cf['alternate_phone']['enabled']) && $cf['alternate_phone']['enabled'] && $request->filled('alternate_phone')) {
+            $customCheckoutData['alternate_phone'] = $request->alternate_phone;
+        }
+        if (isset($cf['company_name']['enabled']) && $cf['company_name']['enabled'] && $request->filled('company_name')) {
+            $customCheckoutData['company_name'] = $request->company_name;
+        }
+        if (isset($cf['gst_number']['enabled']) && $cf['gst_number']['enabled'] && $request->filled('gst_number')) {
+            $customCheckoutData['gst_number'] = $request->gst_number;
+        }
+        if (isset($cf['landmark']['enabled']) && $cf['landmark']['enabled'] && $request->filled('landmark')) {
+            $customCheckoutData['landmark'] = $request->landmark;
+        }
+        if (isset($cf['order_notes']['enabled']) && $cf['order_notes']['enabled'] && $request->filled('order_notes')) {
+            $customCheckoutData['order_notes'] = $request->order_notes;
+        }
+
         // 4. Create Order
         $order = Order::create([
             'user_id' => Auth::id(),
@@ -177,7 +234,10 @@ class OrderController extends Controller
                 'state' => $request->state,
                 'zip' => $request->pincode,
             ],
-            'notes' => $request->notes,
+            'custom_checkout_data' => $customCheckoutData,
+            'delivery_date' => $request->delivery_date,
+            'delivery_time_slot' => $request->delivery_time_slot,
+            'notes' => $request->order_notes ?? $request->notes,
             'placed_at' => now(),
         ]);
 

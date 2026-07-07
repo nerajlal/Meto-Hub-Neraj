@@ -163,4 +163,107 @@ class SettingController extends Controller
 
         return redirect()->back()->with('success', 'Storefront pages settings updated successfully.');
     }
+
+    /**
+     * Show the checkout fields settings page.
+     */
+    public function checkoutFields()
+    {
+        $tenantId = auth()->user()->tenant_id ?? session('active_tenant_id') ?? 1;
+        $tenant = Tenant::findOrFail($tenantId);
+        
+        $fields = $tenant->checkout_fields ?? [];
+        
+        return view('admin.settings.checkout_fields', compact('tenant', 'fields'));
+    }
+
+    /**
+     * Update the checkout fields configuration.
+     */
+    public function checkoutFieldsUpdate(Request $request)
+    {
+        $tenantId = auth()->user()->tenant_id ?? session('active_tenant_id') ?? 1;
+        $tenant = Tenant::findOrFail($tenantId);
+
+        $fieldsData = $request->input('fields', []);
+        
+        // Ensure standard structure
+        $checkoutFields = [
+            // Standard Fields
+            'name' => [
+                'enabled' => isset($fieldsData['name']['enabled']),
+                'required' => isset($fieldsData['name']['required']),
+            ],
+            'email' => [
+                'enabled' => isset($fieldsData['email']['enabled']),
+                'required' => isset($fieldsData['email']['required']),
+            ],
+            'phone' => [
+                'enabled' => isset($fieldsData['phone']['enabled']),
+                'required' => isset($fieldsData['phone']['required']),
+            ],
+            'use_current_location' => [
+                'enabled' => isset($fieldsData['use_current_location']['enabled']),
+                'required' => false,
+            ],
+            'delivery_date' => [
+                'enabled' => isset($fieldsData['delivery_date']['enabled']),
+                'required' => true,
+            ],
+            'delivery_time_slot' => [
+                'enabled' => isset($fieldsData['delivery_time_slot']['enabled']),
+                'required' => true,
+            ],
+            'cash_on_delivery' => [
+                'enabled' => isset($fieldsData['cash_on_delivery']['enabled']),
+                'required' => false,
+            ],
+            'pay_online' => [
+                'enabled' => isset($fieldsData['pay_online']['enabled']),
+                'required' => false,
+            ],
+            'address' => [
+                'enabled' => isset($fieldsData['address']['enabled']),
+                'required' => isset($fieldsData['address']['required']),
+            ],
+            'city' => [
+                'enabled' => isset($fieldsData['city']['enabled']),
+                'required' => isset($fieldsData['city']['required']),
+            ],
+            'state' => [
+                'enabled' => isset($fieldsData['state']['enabled']),
+                'required' => isset($fieldsData['state']['required']),
+            ],
+            'pincode' => [
+                'enabled' => isset($fieldsData['pincode']['enabled']),
+                'required' => isset($fieldsData['pincode']['required']),
+            ],
+            
+            // Custom Extended Fields
+            'company_name' => [
+                'enabled' => isset($fieldsData['company_name']['enabled']),
+                'required' => isset($fieldsData['company_name']['required']),
+            ],
+            'gst_number' => [
+                'enabled' => isset($fieldsData['gst_number']['enabled']),
+                'required' => isset($fieldsData['gst_number']['required']),
+            ],
+            'alternate_phone' => [
+                'enabled' => isset($fieldsData['alternate_phone']['enabled']),
+                'required' => isset($fieldsData['alternate_phone']['required']),
+            ],
+            'landmark' => [
+                'enabled' => isset($fieldsData['landmark']['enabled']),
+                'required' => isset($fieldsData['landmark']['required']),
+            ],
+            'order_notes' => [
+                'enabled' => isset($fieldsData['order_notes']['enabled']),
+                'required' => isset($fieldsData['order_notes']['required']),
+            ]
+        ];
+
+        $tenant->update(['checkout_fields' => $checkoutFields]);
+
+        return redirect()->back()->with('success', 'Checkout fields configuration updated successfully.');
+    }
 }

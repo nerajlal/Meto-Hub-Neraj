@@ -77,6 +77,7 @@ When creating a new theme matching this structure, define these core styling tok
   - Search history stored in `localStorage` under keys like `t1_search_history` or `t2_search_history` (per theme). Max 8 entries, newest first.
   - When clicking on a recent search or suggestion, the form auto-fills and submits.
   - JS logic for handling search interactions and history management.
+  - **Mobile Search**: A search icon is displayed on the right for mobile views. When clicked, a full-width search container expands immediately beneath the sticky header using absolute positioning.
 - **Right**: User profile action button + Shopping Cart Action Trigger displaying the dynamically calculated item quantity badge.
 
 ### Search Dropdown Component (Header)
@@ -112,7 +113,7 @@ When creating a new theme matching this structure, define these core styling tok
   - Price: Bold, colored in green accent.
   - Title: 2-line truncated text clamp.
   - Meta: Product type + unit weight/size (e.g. `Vegetables • 500g`).
-- **Action Button**: Floating circular absolute button (`+` icon) to add directly to cart.
+- **Action Button**: Floating circular absolute button (`+` icon) to add directly to cart. Triggers a sleek "Added to Cart" toast notification at the bottom of the screen instead of opening the cart drawer.
 
 ### E. Combo / Bundle Card Component
 - **Image Section**: Square product grouping thumbnail with a "Save Bundle" ribbon.
@@ -295,6 +296,7 @@ For individual product specifications, sizing options, and bulk pack offers.
 ```
 
 ### Components specific to this page:
+- **Delivery Details Text**: A custom text section displaying `{{ $currentTenant->delivery_info }}` if configured by the merchant in the Admin panel. Falls back to a default descriptive message about 2-hour delivery and eco-friendly packing.
 - **Delivery Date Note**: Shows `🚛 Delivered by [Date]` dynamically calculated using `Carbon::now()->addDays($currentTenant->delivery_days ?? 2)->format('D, M d')`. The `delivery_days` value is configurable from the admin settings panel.
 - **Variant Selector**: Dynamic pill elements allowing selection of weight options (e.g. `500g`, `1kg`) which update the displayed price dynamically.
 - **Volume Pack Deals**: Highlighted DAShed card rows displaying special bulk pack offers (e.g. `Pack of 3 - Save ₹60 instantly`) linked to the bundle cart controller.
@@ -502,6 +504,7 @@ Allows authenticated users to save products they want to buy later. Supports lis
 ### Frontend Component Requirements:
 - **Product Cards**: A heart icon button overlaid on the image. Clicking toggles the wishlist status via AJAX.
 - **Header Action**: A heart icon link displaying the dynamic count of wishlisted items (styled as a small circular counter badge). If not logged in, clicking the link or the heart icon redirects the user to the login page.
+- **Mobile Bottom Navigation**: The wishlist icon in the fixed mobile bottom bar also displays this synced dynamic count badge.
 - **Wishlist Page (`/wishlist`)**: Displays all wishlisted items in a standard product grid. Users can quickly remove items or add them to the cart directly from this page.
 
 ---
@@ -609,6 +612,31 @@ Both themes must have account pages for profile management and order tracking!
 - When reorder button is clicked, all items (products + bundles) are added back to the cart
 - After reorder, user is redirected to the checkout page with a success message
 
+---
 
+## 17. Custom Checkout Fields Builder
 
+Provides merchants with the ability to dynamically configure extra fields to collect specific information during the checkout process (e.g., Company Name, GST Number, Landmark).
 
+### Database Schema Additions:
+- **`tenants` table**: `checkout_fields` (JSON) - Stores the configuration state (enabled/required) for each available extended field.
+- **`orders` table**: `custom_checkout_data` (JSON) - Stores the actual customer input for the configured fields upon successful order placement.
+
+### Admin Configuration (Settings → Custom Checkout):
+Merchants can toggle the visibility and requirement status for the following standard extended fields:
+- **Company Name** (B2B/Corporate orders)
+- **GST Number** (Taxation/Invoicing)
+- **Alternate Phone** (Secondary contact)
+- **Landmark** (Delivery assistance)
+- **Order Notes** (Special instructions)
+
+### Frontend Integration (`checkout.blade.php`):
+- Fields are dynamically injected into the checkout form ONLY if enabled in the tenant's configuration.
+- The `required` HTML attribute and visual asterisks (`*`) are applied dynamically based on the configuration.
+
+### Backend Processing (`OrderController@store`):
+- Dynamic validation rules are built on the fly before processing the request. If an active field is marked as required, validation will block the order if it is missing.
+- Custom input is collected, structured, and saved seamlessly into the `$order->custom_checkout_data` column.
+
+### Admin Fulfillment Display (`show.blade.php`):
+- If an order has `custom_checkout_data`, an **Additional Information** card is automatically rendered below the Customer Notes in the order details view, providing the fulfillment team with all the collected information.

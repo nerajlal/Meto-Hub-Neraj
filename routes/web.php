@@ -238,6 +238,8 @@ Route::prefix('{tenant}/admin')->name('admin.')->middleware(['identify_tenant', 
 
     Route::get('/settings/storefront', [App\Http\Controllers\Admin\SettingController::class, 'storefrontIndex'])->name('settings.storefront');
     Route::post('/settings/storefront', [App\Http\Controllers\Admin\SettingController::class, 'storefrontUpdate'])->name('settings.storefront.update');
+    Route::get('/settings/checkout-fields', [App\Http\Controllers\Admin\SettingController::class, 'checkoutFields'])->name('settings.checkout-fields');
+    Route::post('/settings/checkout-fields', [App\Http\Controllers\Admin\SettingController::class, 'checkoutFieldsUpdate'])->name('settings.checkout-fields.update');
 });
 
 

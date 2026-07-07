@@ -25,19 +25,24 @@ class Order extends Model
         'shipping_address',
         'billing_address',
         'notes',
+        'delivery_date',
+        'delivery_time_slot',
         'placed_at',
         'tracking_number',
         'delivery_partner_id',
         'tenant_id',
         'tax_name',
         'tax_rate',
-        'tax_amount'
+        'tax_amount',
+        'custom_checkout_data'
     ];
 
     protected $casts = [
         'shipping_address' => 'array',
         'billing_address' => 'array',
+        'custom_checkout_data' => 'array',
         'placed_at' => 'datetime',
+        'delivery_date' => 'date',
     ];
 
     public function items()

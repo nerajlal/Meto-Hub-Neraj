@@ -29,6 +29,12 @@ class Tenant extends Model
         'tax_rate',
         'delivery_days',
         'delivery_info',
+        'checkout_fields',
+    ];
+
+    protected $casts = [
+        'settings' => 'array',
+        'checkout_fields' => 'array',
     ];
 
     public function admin()
