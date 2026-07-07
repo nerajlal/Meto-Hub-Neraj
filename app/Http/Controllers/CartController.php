@@ -311,14 +311,23 @@ class CartController extends Controller
             }
 
             $count = 0;
-            foreach($cart as $item) $count += $item['quantity'];
+            $cartItemsMap = [];
+            $cartImages = [];
+            foreach($cart as $key => $item) {
+                $count += $item['quantity'];
+                $cartItemsMap[$key] = $item['quantity'];
+                if (isset($item['image']) && $item['image']) $cartImages[] = $item['image'];
+            }
+            $cartImages = array_slice(array_unique($cartImages), 0, 3);
             $cartData = $this->calculateTotal($cart);
 
             return response()->json([
                 'success' => true, 
                 'message' => 'Collection added to Bag!',
                 'cartCount' => $count,
-                'cartTotal' => $cartData['total']
+                'cartTotal' => $cartData['total'],
+                'cartItemsMap' => $cartItemsMap,
+                'cartImages' => $cartImages
             ]);
         }
 
@@ -375,12 +384,21 @@ class CartController extends Controller
              
             // Calculate count
             $count = 0;
-            foreach($cart as $item) $count += $item['quantity'];
+            $cartItemsMap = [];
+            $cartImages = [];
+            foreach($cart as $key => $item) {
+                $count += $item['quantity'];
+                $cartItemsMap[$key] = $item['quantity'];
+                if (isset($item['image']) && $item['image']) $cartImages[] = $item['image'];
+            }
+            $cartImages = array_slice(array_unique($cartImages), 0, 3);
             
             return response()->json([
                 'success' => true, 
                 'message' => 'Bundle added to cart!',
-                'cartCount' => $count
+                'cartCount' => $count,
+                'cartItemsMap' => $cartItemsMap,
+                'cartImages' => $cartImages
             ]);
         } 
         
@@ -481,14 +499,23 @@ class CartController extends Controller
         
         // Calculate count
         $count = 0;
+        $cartItemsMap = [];
+        $cartImages = [];
         $cartData = $this->calculateTotal($cart);
-        foreach($cart as $item) $count += $item['quantity'];
+        foreach($cart as $key => $item) {
+            $count += $item['quantity'];
+            $cartItemsMap[$key] = $item['quantity'];
+            if (isset($item['image']) && $item['image']) $cartImages[] = $item['image'];
+        }
+        $cartImages = array_slice(array_unique($cartImages), 0, 3);
         
         return response()->json([
             'success' => true, 
             'message' => 'Product added to cart!',
             'cartCount' => $count,
-            'cartTotal' => $cartData['total']
+            'cartTotal' => $cartData['total'],
+            'cartItemsMap' => $cartItemsMap,
+            'cartImages' => $cartImages
         ]);
     }
 
@@ -568,9 +595,14 @@ class CartController extends Controller
             $cartData = $this->calculateTotal($cart);
             $cartTotalBeforeTax = $cartData['total'];
             $count = 0;
-            foreach($cart as $item) {
+            $cartItemsMap = [];
+            $cartImages = [];
+            foreach($cart as $key => $item) {
                 $count += $item['quantity'];
+                $cartItemsMap[$key] = $item['quantity'];
+                if (isset($item['image']) && $item['image']) $cartImages[] = $item['image'];
             }
+            $cartImages = array_slice(array_unique($cartImages), 0, 3);
             
             $tenantId = session('active_tenant_id') ?? (auth()->check() ? auth()->user()->tenant_id : null) ?? 1;
             $tenant = \App\Models\Tenant::find($tenantId);
@@ -588,7 +620,9 @@ class CartController extends Controller
                 'taxAmount' => $taxAmount,
                 'cartCount' => $count,
                 'savings' => $cartData['savings'],
-                'subtotal' => $cartData['subtotal']
+                'subtotal' => $cartData['subtotal'],
+                'cartItemsMap' => $cartItemsMap,
+                'cartImages' => $cartImages
             ]);
         }
         
@@ -631,11 +665,18 @@ class CartController extends Controller
             $cartData = $this->calculateTotal($cart);
             $cartTotalBeforeTax = $cartData['total'];
             $count = 0;
+            $cartItemsMap = [];
+            $cartImages = [];
             if($cart) {
-                foreach($cart as $item) {
+                foreach($cart as $key => $item) {
                     $count += $item['quantity'];
+                    $cartItemsMap[$key] = $item['quantity'];
+                    if (isset($item['image']) && $item['image']) {
+                        $cartImages[] = $item['image'];
+                    }
                 }
             }
+            $cartImages = array_slice(array_unique($cartImages), 0, 3);
             
             $tenantId = session('active_tenant_id') ?? (auth()->check() ? auth()->user()->tenant_id : null) ?? 1;
             $tenant = \App\Models\Tenant::find($tenantId);
@@ -653,7 +694,9 @@ class CartController extends Controller
                 'cartCount' => $count,
                 'isEmpty' => empty($cart),
                 'savings' => $cartData['savings'],
-                'subtotal' => $cartData['subtotal']
+                'subtotal' => $cartData['subtotal'],
+                'cartItemsMap' => $cartItemsMap,
+                'cartImages' => $cartImages
             ]);
         }
         
@@ -768,6 +811,49 @@ class CartController extends Controller
         }
         
         return $cart;
+    }
+
+    /**
+     * Get the JSON representation of the cart state.
+     */
+    public function state(Request $request)
+    {
+        if (Auth::check()) {
+            $cart = $this->getCartFromDb();
+        } else {
+            $cart = session()->get('cart', []);
+        }
+        
+        $cartData = $this->calculateTotal($cart);
+        $cartTotalBeforeTax = $cartData['total'];
+        
+        $count = 0;
+        $cartItemsMap = [];
+        $cartImages = [];
+        if($cart) {
+            foreach($cart as $key => $item) {
+                $count += $item['quantity'];
+                $cartItemsMap[$key] = $item['quantity'];
+                if (isset($item['image']) && $item['image']) $cartImages[] = $item['image'];
+            }
+        }
+        $cartImages = array_slice(array_unique($cartImages), 0, 3);
+        
+        $tenantId = session('active_tenant_id') ?? (auth()->check() ? auth()->user()->tenant_id : null) ?? 1;
+        $tenant = \App\Models\Tenant::find($tenantId);
+        $taxAmount = 0.00;
+        if ($tenant && $tenant->tax_name && $tenant->tax_rate > 0) {
+            $taxAmount = round($cartTotalBeforeTax * ($tenant->tax_rate / 100), 2);
+        }
+        $total = $cartTotalBeforeTax + $taxAmount;
+
+        return response()->json([
+            'success' => true,
+            'cartCount' => $count,
+            'cartTotal' => $total,
+            'cartItemsMap' => $cartItemsMap,
+            'cartImages' => $cartImages
+        ]);
     }
 
     /**

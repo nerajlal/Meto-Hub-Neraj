@@ -122,4 +122,96 @@ class AnalyticsController extends Controller
         }
         return (($current - $previous) / $previous) * 100;
     }
+
+    public function export(Request $request)
+    {
+        $tenantId = auth()->user()->tenant_id ?? session('active_tenant_id') ?? 1;
+        $period = $request->get('period', '30_days');
+        
+        $startDate = match($period) {
+            '7_days' => now()->subDays(7),
+            '30_days' => now()->subDays(30),
+            '90_days' => now()->subDays(90),
+            'year' => now()->subYear(),
+            default => now()->subDays(30)
+        };
+
+        // Current Period Metrics
+        $currentOrders = Order::where('created_at', '>=', $startDate)
+            ->whereNotIn('status', ['cancelled'])
+            ->get();
+            
+        $totalSales = $currentOrders->sum('total_amount');
+        $totalOrders = $currentOrders->count();
+        $avgOrderValue = $totalOrders > 0 ? $totalSales / $totalOrders : 0;
+
+        // Top Products
+        $topProducts = OrderItem::select('product_id', 'name', DB::raw('SUM(quantity) as total_qty'), DB::raw('SUM(total) as total_revenue'))
+            ->whereHas('order', function($q) use ($startDate) {
+                $q->where('created_at', '>=', $startDate)
+                  ->whereNotIn('status', ['cancelled']);
+            })
+            ->whereNotNull('product_id')
+            ->groupBy('product_id', 'name')
+            ->orderByDesc('total_qty')
+            ->limit(50)
+            ->get();
+
+        // Store Stats
+        $totalProducts = Product::where('status', 'active')->count();
+        $totalCustomers = User::where('tenant_id', $tenantId)->where('type', '!=', 'admin')->count();
+        $totalInventory = ProductVariant::whereHas('product', fn($q) => $q->where('tenant_id', $tenantId))->sum('stock');
+        
+        $orderStatusBreakdown = Order::select('status', DB::raw('count(*) as count'))
+            ->groupBy('status')
+            ->pluck('count', 'status')
+            ->toArray();
+
+        $fileName = 'analytics_report_' . $period . '_' . date('Y_m_d') . '.csv';
+        
+        $headers = array(
+            "Content-type"        => "text/csv",
+            "Content-Disposition" => "attachment; filename=$fileName",
+            "Pragma"              => "no-cache",
+            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+            "Expires"             => "0"
+        );
+
+        $callback = function() use($period, $totalSales, $totalOrders, $avgOrderValue, $topProducts, $totalProducts, $totalCustomers, $totalInventory, $orderStatusBreakdown) {
+            $file = fopen('php://output', 'w');
+            
+            // Section 1: Summary
+            fputcsv($file, ['ANALYTICS REPORT', 'Period: ' . $period]);
+            fputcsv($file, []);
+            fputcsv($file, ['SUMMARY METRICS']);
+            fputcsv($file, ['Total Sales (INR)', 'Total Orders', 'Average Order Value (INR)']);
+            fputcsv($file, [$totalSales, $totalOrders, round($avgOrderValue, 2)]);
+            fputcsv($file, []);
+            
+            // Section 2: Store Overview
+            fputcsv($file, ['STORE OVERVIEW']);
+            fputcsv($file, ['Active Products', 'Total Customers', 'Total Inventory Stock']);
+            fputcsv($file, [$totalProducts, $totalCustomers, $totalInventory]);
+            fputcsv($file, []);
+
+            // Section 3: Order Status
+            fputcsv($file, ['ORDER STATUS BREAKDOWN']);
+            fputcsv($file, ['Status', 'Count']);
+            foreach ($orderStatusBreakdown as $status => $count) {
+                fputcsv($file, [ucfirst($status), $count]);
+            }
+            fputcsv($file, []);
+
+            // Section 4: Top Products
+            fputcsv($file, ['TOP PERFORMING PRODUCTS']);
+            fputcsv($file, ['Product Name', 'Quantity Sold', 'Total Revenue Generated']);
+            foreach ($topProducts as $product) {
+                fputcsv($file, [$product->name, $product->total_qty, $product->total_revenue]);
+            }
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
 }

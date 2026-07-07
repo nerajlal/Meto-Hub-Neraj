@@ -30,6 +30,7 @@ Route::post('/cart/add', [App\Http\Controllers\CartController::class, 'add'])->n
 Route::post('/cart/update', [App\Http\Controllers\CartController::class, 'update'])->name('cart.update');
 Route::post('/cart/remove', [App\Http\Controllers\CartController::class, 'remove'])->name('cart.remove');
 Route::get('/cart/fetch', [App\Http\Controllers\CartController::class, 'fetch'])->name('cart.fetch');
+Route::get('/cart/state', [App\Http\Controllers\CartController::class, 'state'])->name('cart.state');
 Route::post('/order/place', [App\Http\Controllers\OrderController::class, 'store'])->name('order.place');
 
 // v1 Nurah Theme Routes
@@ -152,6 +153,7 @@ Route::prefix('{tenant}/admin')->name('admin.')->middleware(['identify_tenant', 
     Route::delete('/attributes/{id}', [App\Http\Controllers\Admin\AttributeController::class, 'destroy'])->name('attributes.destroy');
 
     Route::get('/products', [App\Http\Controllers\Admin\ProductController::class, 'index'])->name('products');
+    Route::post('/products/import', [App\Http\Controllers\Admin\ProductController::class, 'import'])->name('products.import');
     Route::get('/products/create', [App\Http\Controllers\Admin\ProductController::class, 'create'])->name('products.create');
     Route::post('/products', [App\Http\Controllers\Admin\ProductController::class, 'store'])->name('products.store');
     Route::get('/products/{id}/edit', [App\Http\Controllers\Admin\ProductController::class, 'edit'])->name('products.edit');
@@ -173,6 +175,7 @@ Route::prefix('{tenant}/admin')->name('admin.')->middleware(['identify_tenant', 
     Route::get('/carts', [App\Http\Controllers\Admin\CartController::class, 'index'])->name('carts');
 
     Route::get('/analytics', [App\Http\Controllers\Admin\AnalyticsController::class, 'index'])->name('analytics');
+    Route::get('/analytics/export', [App\Http\Controllers\Admin\AnalyticsController::class, 'export'])->name('analytics.export');
     Route::get('/analytics/{type}', function ($type) {
         $titles = [
             'sales' => ['title' => 'Total Sales', 'value' => '₹45,231.00', 'metricLabel' => 'Revenue'],

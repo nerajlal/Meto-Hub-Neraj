@@ -5,7 +5,11 @@
 @section('content')
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h1 class="h3 mb-0 text-dark">Analytics</h1>
-    <div class="dropdown">
+    <div class="d-flex align-items-center gap-2">
+        <a href="{{ route('admin.analytics.export', ['period' => request('period', '30_days')]) }}" class="btn btn-white border shadow-sm fw-medium d-flex align-items-center gap-2" style="font-size: 13px; border-radius: 6px;">
+            <i class="fa-solid fa-file-export fs-6"></i> Export Report
+        </a>
+        <div class="dropdown">
         <div class="d-flex align-items-center gap-2 border rounded bg-white px-3 py-1 shadow-sm text-sm cursor-pointer hover-bg-light dropdown-toggle" data-bs-toggle="dropdown">
             <i class="far fa-calendar text-secondary"></i>
             <span class="text-dark">{{ $periodLabel }}</span>
@@ -16,6 +20,7 @@
             <li><a class="dropdown-item small {{ $period == '90_days' ? 'active bg-light text-dark fw-bold' : '' }}" href="{{ route('admin.analytics', ['period' => '90_days']) }}">Last 90 days</a></li>
             <li><a class="dropdown-item small {{ $period == 'year' ? 'active bg-light text-dark fw-bold' : '' }}" href="{{ route('admin.analytics', ['period' => 'year']) }}">Last Year</a></li>
         </ul>
+    </div>
     </div>
 </div>
 

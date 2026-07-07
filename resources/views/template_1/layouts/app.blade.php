@@ -315,6 +315,7 @@
     @endif
 
     @include('template_1.partials.mobile_bottom_nav')
+    @include('template_1.partials.floating_cart_summary')
 </body>
 
 </html>

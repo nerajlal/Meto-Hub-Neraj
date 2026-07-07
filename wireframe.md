@@ -113,12 +113,24 @@ When creating a new theme matching this structure, define these core styling tok
   - Price: Bold, colored in green accent.
   - Title: 2-line truncated text clamp.
   - Meta: Product type + unit weight/size (e.g. `Vegetables • 500g`).
-- **Action Button**: Floating circular absolute button (`+` icon) to add directly to cart. Triggers a sleek "Added to Cart" toast notification at the bottom of the screen instead of opening the cart drawer.
+- **Action Button / Inline Quantity Adjuster**: 
+  - Initially a floating circular absolute button (`+` icon) to add directly to cart.
+  - On interaction (add to cart), it elegantly expands into an inline `- [Qty] +` pill, allowing quantity adjustments directly from the product grid.
+  - Features a 5-second auto-collapse timer to revert back to the clean `+` icon on inactivity.
 
 ### E. Combo / Bundle Card Component
 - **Image Section**: Square product grouping thumbnail with a "Save Bundle" ribbon.
 - **Details Section**: Price, title, and quantity of products included.
 - **Action Button**: Add to cart with type indicator set to `'bundle'`.
+
+### F. Floating Cart Summary Pill Component (Global)
+- **Design**: Highly rounded, premium white pill with soft shadow (`shadow-lg`), pinned to the bottom center of the screen (above mobile navigation).
+- **Behavior**: Hidden by default. Pops up dynamically when an item is added or updated in the cart. Auto-hides after 5 seconds of inactivity.
+- **Content Structure**:
+  - *Left Stack*: Dynamically fetches and displays overlapping thumbnail images of the last 3 distinct items added to the cart.
+  - *Middle Text*: Bold "VIEW CART" with the total item count underneath.
+  - *Right Arrow*: A chevron indicator to prompt the user to open the cart drawer.
+- **Action**: Clicking anywhere on the pill opens the standard sliding cart drawer.
 
 ---
 

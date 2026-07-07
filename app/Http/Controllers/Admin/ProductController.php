@@ -386,4 +386,90 @@ class ProductController extends Controller
         $product = Product::with('variants')->findOrFail($id);
         return response()->json($product->variants);
     }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'import_file' => 'required|file|mimes:csv,txt|max:10240',
+        ]);
+
+        $file = $request->file('import_file');
+        $path = $file->getRealPath();
+
+        $data = array_map('str_getcsv', file($path));
+        if (count($data) < 2) {
+            return back()->withErrors(['import_file' => 'The uploaded file is empty or invalid.']);
+        }
+
+        $header = array_map('trim', array_map('strtolower', array_shift($data)));
+
+        // Tally-to-System Mapping
+        $titleKeys = ['title', 'name', 'item name', 'product name'];
+        $skuKeys = ['sku', 'part no', 'alias', 'item code'];
+        $priceKeys = ['price', 'rate', 'standard price', 'mrp'];
+        $stockKeys = ['stock', 'qty', 'closing balance', 'quantity'];
+
+        $titleIdx = -1;
+        $skuIdx = -1;
+        $priceIdx = -1;
+        $stockIdx = -1;
+
+        foreach ($header as $index => $colName) {
+            if ($titleIdx === -1 && in_array($colName, $titleKeys)) $titleIdx = $index;
+            if ($skuIdx === -1 && in_array($colName, $skuKeys)) $skuIdx = $index;
+            if ($priceIdx === -1 && in_array($colName, $priceKeys)) $priceIdx = $index;
+            if ($stockIdx === -1 && in_array($colName, $stockKeys)) $stockIdx = $index;
+        }
+
+        if ($titleIdx === -1 || $priceIdx === -1) {
+            return back()->withErrors(['import_file' => 'Could not find required columns (Name, Price) in your CSV. Ensure your file has valid headers.']);
+        }
+
+        $tenantId = session('active_tenant_id') ?? request()->route('tenant') ?? 1;
+        $importedCount = 0;
+
+        \Illuminate\Support\Facades\DB::beginTransaction();
+        try {
+            foreach ($data as $row) {
+                if (count($row) <= $titleIdx) continue;
+                
+                $title = trim($row[$titleIdx]);
+                if (empty($title)) continue;
+
+                $price = isset($row[$priceIdx]) ? (float) preg_replace('/[^0-9.]/', '', $row[$priceIdx]) : 0;
+                $sku = ($skuIdx !== -1 && isset($row[$skuIdx])) ? trim($row[$skuIdx]) : '';
+                $stock = ($stockIdx !== -1 && isset($row[$stockIdx])) ? (int) preg_replace('/[^0-9.-]/', '', $row[$stockIdx]) : 0;
+
+                // Create or update Product
+                $product = Product::firstOrCreate([
+                    'title' => $title,
+                    'tenant_id' => $tenantId,
+                ], [
+                    'status' => 'active',
+                    'type' => 'product'
+                ]);
+
+                // Create Variant
+                if (empty($sku)) {
+                    $sku = \Illuminate\Support\Str::slug($title) . '-' . rand(100, 999);
+                }
+
+                $product->variants()->updateOrCreate([
+                    'sku' => $sku
+                ], [
+                    'size' => 'Standard',
+                    'price' => $price,
+                    'stock' => $stock
+                ]);
+
+                $importedCount++;
+            }
+            \Illuminate\Support\Facades\DB::commit();
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\DB::rollBack();
+            return back()->withErrors(['import_file' => 'Error during import: ' . $e->getMessage()]);
+        }
+
+        return redirect()->back()->with('success', "Successfully imported {$importedCount} products.");
+    }
 }
