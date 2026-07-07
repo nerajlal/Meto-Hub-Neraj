@@ -23,7 +23,7 @@ class IdentifyStorefrontTenant
         }
 
         if ($request->query('preview') == 1) {
-            session(['active_tenant_id' => 1]);
+            session(['active_tenant_id' => $request->query('tenant_id') ?? 2]);
         } elseif ($request->has('tenant_id')) {
             session(['active_tenant_id' => $request->query('tenant_id')]);
         } elseif ($request->has('tenant')) {
@@ -34,7 +34,7 @@ class IdentifyStorefrontTenant
         $tenantId = session('active_tenant_id') 
             ?? (auth()->check() ? auth()->user()->tenant_id : null) 
             ?? session('demo_tenant_id') 
-            ?? 1;
+            ?? 2;
         $tenant = Tenant::find($tenantId);
         if ($tenant) {
             view()->share('currentTenant', $tenant);

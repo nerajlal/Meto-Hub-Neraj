@@ -77,7 +77,7 @@
                     <i class="fa-regular fa-heart"></i>
                     @auth
                         @php
-                            $wishlistCount = \App\Models\Wishlist::where('user_id', auth()->id())->where('tenant_id', $currentTenant->id ?? 1)->count();
+                            $wishlistCount = \App\Models\Wishlist::where('user_id', auth()->id())->where('tenant_id', $currentTenant->id ?? 2)->count();
                         @endphp
                         <span id="wishlist-count" class="badge rounded-circle position-absolute" style="font-size: 0.6rem; top: -8px; right: -8px; width: 15px; height: 15px; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; border: 1.5px solid #fff; background: #ef4444; border-radius: 50%;">{{ $wishlistCount }}</span>
                     @endauth
@@ -88,7 +88,7 @@
             <a href="javascript:void(0)" class="action-btn cart-btn text-decoration-none" onclick="toggleNCart(true)" style="display: flex; align-items: center;">
                 <i class="fa-solid fa-cart-shopping"></i>
                 @php
-                    $tenantId = $currentTenant->id ?? 1;
+                    $tenantId = $currentTenant->id ?? 2;
                     $cartCount = auth()->check()
                         ? \App\Models\Cart::where('tenant_id', $tenantId)->where('user_id', auth()->id())->sum('quantity')
                         : collect(session()->get('cart', []))->sum('quantity');
@@ -224,7 +224,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('t1-search-form');
 
     // --- Products data from blade for suggestions ---
-    const allProductNames = @json(\App\Models\Product::where('tenant_id', $currentTenant->id ?? 1)->where('status','active')->pluck('title'));
+    const allProductNames = @json(\App\Models\Product::where('tenant_id', $currentTenant->id ?? 2)->where('status','active')->pluck('title'));
 
     function getHistory() {
         try { return JSON.parse(localStorage.getItem(HISTORY_KEY)) || []; } catch(e) { return []; }

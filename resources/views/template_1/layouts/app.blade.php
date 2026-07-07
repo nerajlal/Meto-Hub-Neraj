@@ -95,7 +95,7 @@
             </button>
             <h2 class="sidebar-title">Categories</h2>
             <ul class="sidebar-menu">
-                @php $sidebarCollections = \App\Models\Collection::where('status', 1)->get(); @endphp
+                @php $sidebarCollections = \App\Models\Collection::where('tenant_id', $currentTenant->id ?? 2)->where('status', 1)->get(); @endphp
                 <li class="menu-item">
                     <a href="{{ route('v1.all-products') }}" class="menu-link">
                         <i class="fa-solid fa-border-all"></i> All Products

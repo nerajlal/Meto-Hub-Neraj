@@ -105,7 +105,7 @@
                 <span>Wishlist</span>
                 @auth
                     @php
-                        $tenantId = $currentTenant->id ?? 1;
+                        $tenantId = $currentTenant->id ?? 2;
                         $bottomWishlistCount = \App\Models\Wishlist::where('tenant_id', $tenantId)->where('user_id', auth()->id())->count();
                     @endphp
                     @if($bottomWishlistCount > 0)
@@ -121,7 +121,7 @@
                 <i class="fa-solid fa-cart-shopping"></i>
                 <span>Cart</span>
                 @php
-                    $tenantId = $currentTenant->id ?? 1;
+                    $tenantId = $currentTenant->id ?? 2;
                     $bottomCartCount = auth()->check()
                         ? \App\Models\Cart::where('tenant_id', $tenantId)->where('user_id', auth()->id())->sum('quantity')
                         : collect(session()->get('cart', []))->sum('quantity');

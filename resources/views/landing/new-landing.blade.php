@@ -65,7 +65,7 @@
     }
 
     section {
-      padding: 96px 0;
+      padding: 40px 0;
     }
 
     h1,
@@ -755,6 +755,24 @@
       font-size: 13px;
       color: var(--ink-faint);
     }
+    
+    .nav-icon { 
+      display: none; 
+    }
+    
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 32px;
+    }
+
+    .contact-card {
+      text-align: center;
+      padding: 48px 32px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+    }
 
     @media (max-width:920px) {
       section {
@@ -790,6 +808,10 @@
         grid-template-columns: 1fr;
       }
 
+      .contact-card {
+        padding: 24px 16px;
+      }
+
       .template-grid {
         grid-template-columns: 1fr;
       }
@@ -807,6 +829,13 @@
         text-align: center;
         padding: 48px 28px;
       }
+
+      .contact-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .nav-text { display: none; }
+      .nav-icon { display: inline-block !important; }
     }
   </style>
 </head>
@@ -823,8 +852,17 @@
         <a href="#faq">FAQ</a>
       </div>
       <div class="nav-cta">
-        <a href="{{ route('admin.common.login') }}" class="btn btn-ghost">Log in</a>
-        <a href="javascript:void(0)" class="btn btn-primary pricing-btn-trigger" data-plan="sprout">Start free</a>
+        <a href="{{ route('admin.common.login') }}" class="btn btn-ghost" style="display: inline-flex; align-items: center; justify-content: center;">
+          <span class="nav-text">Log in</span>
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 20px; height: 20px;">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+        </a>
+        <a href="javascript:void(0)" class="btn btn-primary pricing-btn-trigger" data-plan="sprout">
+          <span class="nav-text">Start free</span>
+          <span class="nav-icon">Start</span>
+        </a>
       </div>
     </nav>
   </header>
@@ -1001,7 +1039,7 @@
         <p>Every template ships with real grocery structure already in place — swap colors, fonts, and your logo.</p>
       </div>
       <div class="template-grid">
-        <div class="template-card" data-demo-url="{{ route('v3.home') }}?preview=1">
+        <div class="template-card" data-demo-url="{{ route('v3.home') }}?preview=1&tenant_id=2">
           <div class="template-preview"
             style="background:linear-gradient(180deg,#F7F5F0 0%,#F7F5F0 60%,#fff 60%);padding:16px;">
             <div style="font-family:'Archivo';font-weight:700;font-size:13px;margin-bottom:8px;">Market Basic</div>
@@ -1015,7 +1053,7 @@
             <h4>Market basic</h4><span>Minimal</span>
           </div>
         </div>
-        <div class="template-card" data-demo-url="{{ route('velvet.home') }}?preview=1">
+        <div class="template-card" data-demo-url="{{ route('velvet.home') }}?preview=1&tenant_id=2">
           <div class="template-preview" style="background:#1C231B;padding:16px;">
             <div style="font-family:'Archivo';font-weight:700;font-size:13px;margin-bottom:8px;color:#fff;">Night Grocer
             </div>
@@ -1027,19 +1065,6 @@
           </div>
           <div class="template-info">
             <h4>Night grocer</h4><span>Bold</span>
-          </div>
-        </div>
-        <div class="template-card" data-demo-url="{{ route('v4.home') }}?preview=1">
-          <div class="template-preview" style="background:#fff;padding:16px;border-bottom:1px solid #DDD8CB;">
-            <div style="font-family:'Archivo';font-weight:700;font-size:13px;margin-bottom:8px;">Farm Stand</div>
-            <div style="display:flex;gap:6px;">
-              <div style="width:30%;height:60px;background:#C7DDB0;border-radius:6px;"></div>
-              <div style="width:30%;height:60px;background:#D69B7E;border-radius:6px;"></div>
-              <div style="width:30%;height:60px;background:#EAE0A8;border-radius:6px;"></div>
-            </div>
-          </div>
-          <div class="template-info">
-            <h4>Farm stand</h4><span>Warm</span>
           </div>
         </div>
       </div>
@@ -1138,6 +1163,39 @@
       </div>
     </div>
   </section>
+  <section id="contact">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Contact us</span>
+        <h2>We're here to help</h2>
+        <p>Have questions before you start or need technical support? Reach out to our team.</p>
+      </div>
+      <div class="contact-grid">
+        <div class="contact-card">
+          <div class="feature-icon" style="margin: 0 auto 20px;"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"
+              stroke="currentColor">
+              <path
+                d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z">
+              </path>
+            </svg></div>
+          <h3>Talk to Sales</h3>
+          <p style="margin-bottom:24px;">Need a custom plan or a live demo? We're available Mon-Fri, 9am-6pm.</p>
+          <a href="tel:+18001234567" class="btn btn-outline">Call +91 70126 39646</a>
+        </div>
+        <div class="contact-card">
+          <div class="feature-icon" style="margin: 0 auto 20px;"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"
+              stroke="currentColor">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+              <polyline points="22,6 12,13 2,6"></polyline>
+            </svg></div>
+          <h3>Email Support</h3>
+          <p style="margin-bottom:24px;">Current customer needing technical help? Drop us a line anytime.</p>
+          <a href="mailto:support@greengrocer.com" class="btn btn-outline">support@task19.com</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
 
   <section style="padding-top:0;">
     <div class="wrap">

@@ -151,7 +151,7 @@
 
     <!-- Collections Sections (Department Style) -->
     @php 
-        $collections = \App\Models\Collection::with(['products' => function($query) {
+        $collections = \App\Models\Collection::where('tenant_id', $currentTenant->id ?? 2)->with(['products' => function($query) {
             $query->where('status', 'active')->take(8);
         }])->where('status', 1)->get(); 
         $hasProducts = $collections->contains(function($c) {

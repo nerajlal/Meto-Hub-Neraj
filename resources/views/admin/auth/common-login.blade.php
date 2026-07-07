@@ -209,9 +209,15 @@
             font-size:13px;color:var(--ink-faint);
         }
 
+        .nav-icon { 
+          display: none; 
+        }
+
         @media (max-width:920px){
             .nav-links{display:none;}
             .footer-grid{grid-template-columns:1fr 1fr;}
+            .nav-text { display: none; }
+            .nav-icon { display: inline-block !important; }
         }
         @media (max-width:480px){
             .login-card{padding:28px 22px;}
@@ -232,8 +238,17 @@
           <a href="{{ route('landing') }}#faq">FAQ</a>
         </div>
         <div class="nav-cta">
-          <a href="{{ route('admin.common.login') }}" class="btn btn-ghost">Log in</a>
-          <a href="{{ route('landing') }}?get_started=1" class="btn btn-primary">Start free</a>
+          <a href="{{ route('admin.common.login') }}" class="btn btn-ghost" style="display: inline-flex; align-items: center; justify-content: center;">
+            <span class="nav-text">Log in</span>
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 20px; height: 20px;">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+          </a>
+          <a href="{{ route('landing') }}?get_started=1" class="btn btn-primary">
+            <span class="nav-text">Start free</span>
+            <span class="nav-icon">Start</span>
+          </a>
         </div>
       </nav>
     </header>

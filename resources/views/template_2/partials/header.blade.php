@@ -60,7 +60,7 @@
                 <span class="action-text" style="color: var(--primary-color);">Wishlist</span>
                 @auth
                     @php
-                        $wishlistCount = \App\Models\Wishlist::where('user_id', auth()->id())->where('tenant_id', $currentTenant->id ?? 1)->count();
+                        $wishlistCount = \App\Models\Wishlist::where('user_id', auth()->id())->where('tenant_id', $currentTenant->id ?? 2)->count();
                     @endphp
                     <span id="wishlist-count" class="badge rounded-circle" style="font-size: 0.6rem; top: 0px; right: 2px; width: 15px; height: 15px; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; border: 1px solid #fff; background: #ef4444; position: absolute;">{{ $wishlistCount }}</span>
                 @endauth
@@ -91,7 +91,7 @@
             <a href="{{ route('v3.combos') }}" style="color: var(--primary-color); font-weight: 700; text-decoration: none; font-size: 0.95rem; transition: 0.2s;" class="nav-link-item hover-green">
                 <i class="fa-solid fa-tags me-1"></i> Weekly Combos
             </a>
-            @php $topCollections = \App\Models\Collection::where('status', 1)->get(); @endphp
+            @php $topCollections = \App\Models\Collection::where('tenant_id', $currentTenant->id ?? 2)->where('status', 1)->get(); @endphp
             @foreach($topCollections as $col)
                 <a href="{{ route('v3.collection', ['slug' => $col->slug]) }}" style="color: var(--primary-color); font-weight: 600; text-decoration: none; font-size: 0.95rem; transition: 0.2s;" class="nav-link-item hover-green">
                     {{ $col->name }}
@@ -254,7 +254,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const sugList     = document.getElementById('t2-suggestions-list');
     const form        = document.getElementById('t2-search-form');
 
-    const allProductNames = @json(\App\Models\Product::where('tenant_id', $currentTenant->id ?? 1)->where('status','active')->pluck('title'));
+    const allProductNames = @json(\App\Models\Product::where('tenant_id', $currentTenant->id ?? 2)->where('status','active')->pluck('title'));
 
     function getHistory() {
         try { return JSON.parse(localStorage.getItem(HISTORY_KEY)) || []; } catch(e) { return []; }

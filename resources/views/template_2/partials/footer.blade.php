@@ -26,7 +26,7 @@
             <div class="footer-group">
                 <h3 class="footer-heading">Shop Categories</h3>
                 <ul class="footer-links">
-                    @php $footerCols = \App\Models\Collection::where('status', 1)->take(5)->get(); @endphp
+                    @php $footerCols = \App\Models\Collection::where('tenant_id', $currentTenant->id ?? 2)->where('status', 1)->take(5)->get(); @endphp
                     @foreach($footerCols as $col)
                         <li><a href="{{ route('v3.collection', ['slug' => $col->slug]) }}">{{ $col->name }}</a></li>
                     @endforeach

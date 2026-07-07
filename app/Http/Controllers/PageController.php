@@ -8,10 +8,11 @@ class PageController extends Controller
 {
     private function tenantId()
     {
-        return session('active_tenant_id') 
+        return request('tenant_id') 
+            ?? session('active_tenant_id') 
             ?? (auth()->check() ? auth()->user()->tenant_id : null) 
             ?? session('demo_tenant_id') 
-            ?? 1;
+            ?? 2;
     }
 
     private function getView($name)
@@ -294,7 +295,7 @@ class PageController extends Controller
         $packBundles = $product->bundles()->where('status', 'active')->where('type', 'pack')->get();
         $poolBundles = $product->bundles()->where('status', 'active')->where('type', 'pool')->with('products')->get();
         $collections = \App\Models\Collection::where('tenant_id', $tenantId)->where('status', 1)->get();
-        return view('velvet.product-main', compact('product', 'bundle', 'packBundles', 'poolBundles', 'collections'));
+        return view('template_2.product-main', compact('product', 'bundle', 'packBundles', 'poolBundles', 'collections'));
     }
 
     public function shippingPolicy() { return view($this->getView('shipping-policy')); }

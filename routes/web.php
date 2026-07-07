@@ -246,10 +246,11 @@ Route::prefix('{tenant}/admin')->name('admin.')->middleware(['identify_tenant', 
 // v2 Velvet Theme Routes
 Route::prefix('v2')->name('velvet.')->middleware([\App\Http\Middleware\IdentifyStorefrontTenant::class])->group(function () {
     Route::get('/', function() {
-        $tenantId = session('active_tenant_id') 
+        $tenantId = request('tenant_id') 
+            ?? session('active_tenant_id') 
             ?? (auth()->check() ? auth()->user()->tenant_id : null) 
             ?? session('demo_tenant_id') 
-            ?? 1;
+            ?? 2;
         $bestsellers = \App\Models\HomeProduct::where('tenant_id', $tenantId)
             ->with(['product.variants', 'product.images', 'product.discounts'])
             ->orderBy('sort_order', 'asc')
@@ -262,49 +263,54 @@ Route::prefix('v2')->name('velvet.')->middleware([\App\Http\Middleware\IdentifyS
             ->latest()
             ->take(4)
             ->get();
+        $sliders = \App\Models\Slider::where('tenant_id', $tenantId)->where('status', true)->orderBy('order', 'asc')->get();
             
-        return view('velvet.home', compact('bestsellers', 'collections', 'bundles'));
+        return view('template_2.home', compact('sliders', 'bestsellers', 'collections', 'bundles'));
     })->name('home');
 
     Route::get('/all-products', function() {
-        $tenantId = session('active_tenant_id') 
+        $tenantId = request('tenant_id') 
+            ?? session('active_tenant_id') 
             ?? (auth()->check() ? auth()->user()->tenant_id : null) 
             ?? session('demo_tenant_id') 
-            ?? 1;
+            ?? 2;
         $products = \App\Models\Product::where('tenant_id', $tenantId)->where('status', 'active')->with(['variants', 'images'])->latest()->get();
         $collections = \App\Models\Collection::where('tenant_id', $tenantId)->where('status', 1)->get();
-        return view('velvet.all-products', compact('products', 'collections'));
+        return view('template_2.all-products', compact('products', 'collections'));
     })->name('all-products');
 
     Route::get('/collection/{slug}', function($slug) {
-        $tenantId = session('active_tenant_id') 
+        $tenantId = request('tenant_id') 
+            ?? session('active_tenant_id') 
             ?? (auth()->check() ? auth()->user()->tenant_id : null) 
             ?? session('demo_tenant_id') 
-            ?? 1;
+            ?? 2;
         $collection = \App\Models\Collection::where('tenant_id', $tenantId)->where('slug', $slug)->firstOrFail();
         $products = $collection->products()->where('status', 'active')->with(['variants', 'images'])->get();
         $collections = \App\Models\Collection::where('tenant_id', $tenantId)->where('status', 1)->get();
-        return view('velvet.collection', compact('collection', 'products', 'collections'));
+        return view('template_2.collection', compact('collection', 'products', 'collections'));
     })->name('collection');
 
     Route::get('/combos', function() {
-        $tenantId = session('active_tenant_id') 
+        $tenantId = request('tenant_id') 
+            ?? session('active_tenant_id') 
             ?? (auth()->check() ? auth()->user()->tenant_id : null) 
             ?? session('demo_tenant_id') 
-            ?? 1;
+            ?? 2;
         $bundles = \App\Models\Bundle::where('tenant_id', $tenantId)->where('status', 'active')->where('type', 'bundle')->with(['products.variants'])->latest()->get();
         $collections = \App\Models\Collection::where('tenant_id', $tenantId)->where('status', 1)->get();
-        return view('velvet.combos', compact('bundles', 'collections'));
+        return view('template_2.combos', compact('bundles', 'collections'));
     })->name('combos');
 
     Route::get('/combo/{slug}', function($slug) {
-        $tenantId = session('active_tenant_id') 
+        $tenantId = request('tenant_id') 
+            ?? session('active_tenant_id') 
             ?? (auth()->check() ? auth()->user()->tenant_id : null) 
             ?? session('demo_tenant_id') 
-            ?? 1;
+            ?? 2;
         $bundle = \App\Models\Bundle::where('tenant_id', $tenantId)->where('slug', $slug)->with(['products.variants', 'products.images'])->firstOrFail();
         $collections = \App\Models\Collection::where('tenant_id', $tenantId)->where('status', 1)->get();
-        return view('velvet.combo-detail', compact('bundle', 'collections'));
+        return view('template_2.combo-detail', compact('bundle', 'collections'));
     })->name('combo');
 
     Route::get('/product/{id}', [PageController::class, 'velvetProduct'])->name('product');

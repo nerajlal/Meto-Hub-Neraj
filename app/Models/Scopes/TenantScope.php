@@ -22,8 +22,8 @@ class TenantScope implements Scope
         $tenantId = null;
 
         if (request()->query('preview') == 1) {
-            $tenantId = 1;
-            session(['active_tenant_id' => 1]);
+            $tenantId = request()->query('tenant_id') ?? 2;
+            session(['active_tenant_id' => $tenantId]);
         } elseif (request()->has('tenant_id')) {
             $tenantId = request()->query('tenant_id');
             session(['active_tenant_id' => $tenantId]);
