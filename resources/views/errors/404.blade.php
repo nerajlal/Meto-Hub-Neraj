@@ -3,211 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Page Not Found | Fresh Grocery</title>
-    <!-- Google Fonts -->
+    <title>Page Not Found | Greengrocer</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
-    <!-- FontAwesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --bg-color: #FAF9F6;
-            --text-primary: #111111;
-            --text-secondary: #555555;
-            --accent-color: #C5A880; /* Gold */
-            --accent-hover: #b4966e;
-            --border-color: rgba(0, 0, 0, 0.08);
+        :root{
+            --paper:#FDFCFA;--paper-dim:#F7F5F0;--ink:#1C231B;--ink-soft:#4B5245;--ink-faint:#7C8177;
+            --green:#3F6C4E;--green-deep:#2A4A35;--green-pale:#E7EFE7;
+            --yellow:#E8B93F;--yellow-deep:#8A6414;--line:#DDD8CB;--card:#FFFFFF;--radius:14px;
+            --font-display:'Archivo', sans-serif;--font-body:'Inter', sans-serif;--font-mono:'IBM Plex Mono', monospace;
         }
-
-        /* Dark mode fallback check */
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --bg-color: #0A0A0A;
-                --text-primary: #FFFFFF;
-                --text-secondary: #A0A0A0;
-                --border-color: rgba(255, 255, 255, 0.08);
-            }
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-primary);
-            font-family: 'Outfit', sans-serif;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            position: relative;
-        }
-
-        /* Premium Aesthetic Background Accents */
-        .ambient-glow {
-            position: absolute;
-            width: 400px;
-            height: 400px;
-            background: radial-gradient(circle, rgba(197, 168, 128, 0.1) 0%, rgba(0, 0, 0, 0) 70%);
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 1;
-            pointer-events: none;
-            filter: blur(50px);
-        }
-
-        .container {
-            max-width: 600px;
-            padding: 40px;
-            text-align: center;
-            position: relative;
-            z-index: 2;
-        }
-
-        .brand-name {
-            font-family: 'Playfair Display', Georgia, serif;
-            font-size: 24px;
-            font-weight: 700;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            color: var(--text-primary);
-            margin-bottom: 40px;
-            opacity: 0.9;
-        }
-
-        .error-code {
-            font-family: 'Playfair Display', Georgia, serif;
-            font-size: 130px;
-            font-weight: 300;
-            line-height: 1;
-            color: var(--accent-color);
-            margin-bottom: 20px;
-            letter-spacing: -2px;
-            animation: floatAnimation 6s ease-in-out infinite;
-        }
-
-        .error-title {
-            font-family: 'Playfair Display', Georgia, serif;
-            font-size: 28px;
-            font-weight: 600;
-            margin-bottom: 16px;
-            letter-spacing: -0.5px;
-        }
-
-        .error-description {
-            font-size: 16px;
-            line-height: 1.7;
-            color: var(--text-secondary);
-            margin-bottom: 40px;
-            font-weight: 300;
-        }
-
-        /* Gold Divider Line */
-        .divider {
-            width: 60px;
-            height: 1px;
-            background-color: var(--accent-color);
-            margin: 24px auto;
-            opacity: 0.6;
-        }
-
-        .cta-button {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            background-color: var(--text-primary);
-            color: var(--bg-color);
-            text-decoration: none;
-            padding: 14px 32px;
-            font-size: 13px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            border-radius: 4px;
-            border: 1px solid var(--text-primary);
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-
-        .cta-button:hover {
-            background-color: transparent;
-            color: var(--text-primary);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-        }
-
-        @keyframes floatAnimation {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-            100% { transform: translateY(0px); }
-        }
-
-        @media (max-width: 480px) {
-            .error-code {
-                font-size: 100px;
-            }
-            .error-title {
-                font-size: 22px;
-            }
-            .container {
-                padding: 24px;
-            }
-        }
+        *{box-sizing:border-box;margin:0;padding:0;}
+        body{background:var(--paper);color:var(--ink);font-family:var(--font-body);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh;display:flex;flex-direction:column;}
+        a{color:inherit;text-decoration:none;}
+        .error-content{flex:1;display:flex;align-items:center;justify-content:center;padding:80px 20px;text-align:center;}
+        .error-inner{max-width:520px;}
+        .error-code{font-family:var(--font-display);font-size:120px;font-weight:800;line-height:1;color:var(--green);margin-bottom:16px;letter-spacing:-4px;animation:float 6s ease-in-out infinite;}
+        .error-title{font-family:var(--font-display);font-size:28px;font-weight:700;letter-spacing:-0.02em;margin-bottom:12px;}
+        .error-divider{width:48px;height:3px;background:var(--yellow);margin:20px auto;border-radius:2px;}
+        .error-desc{font-size:15px;color:var(--ink-soft);margin-bottom:36px;max-width:400px;margin-left:auto;margin-right:auto;}
+        .error-btn{display:inline-flex;align-items:center;gap:10px;font-family:var(--font-body);font-weight:600;font-size:14.5px;padding:13px 28px;border-radius:9px;background:var(--ink);color:var(--paper);border:none;cursor:pointer;transition:background .15s ease, transform .15s ease;}
+        .error-btn:hover{background:var(--green-deep);transform:translateY(-1px);}
+        .error-btn svg{width:16px;height:16px;}
+        @keyframes float{0%{transform:translateY(0);}50%{transform:translateY(-8px);}100%{transform:translateY(0);}}
+        @media (max-width:920px){.error-code{font-size:90px;}}
+        @media (max-width:480px){.error-code{font-size:72px;}.error-title{font-size:22px;}}
     </style>
 </head>
 <body>
-
-    <div class="ambient-glow"></div>
-
-    @php
-        $tenantId = session('active_tenant_id') 
-            ?? (auth()->check() ? auth()->user()->tenant_id : null) 
-            ?? session('demo_tenant_id') 
-            ?? 1;
-        $tenant = \App\Models\Tenant::find($tenantId);
-        
-        $homeUrl = '/';
-        $brand = 'Fresh Grocery';
-        if ($tenant) {
-            $brand = $tenant->name;
-            $theme = $tenant->theme;
-            if ($theme === 'velvet_dark') {
-                $homeUrl = route('velvet.home');
-            } elseif ($theme === 'aura_luxe') {
-                $homeUrl = route('v3.home');
-            } elseif ($theme === 'editorial_cream') {
-                $homeUrl = route('v4.home');
-            } elseif ($theme === 'modern_minimal') {
-                $homeUrl = route('v1.home');
-            }
-        }
-    @endphp
-
-    <div class="container">
-        <div class="brand-name">{{ $brand }}</div>
-        
-        <div class="error-code">404</div>
-        
-        <h1 class="error-title">Page Not Found</h1>
-        
-        <div class="divider"></div>
-        
-        <p class="error-description">
-            The page you are looking for does not exist. Let us guide you back to our fresh groceries catalog.
-        </p>
-        
-        <a href="{{ $homeUrl }}" class="cta-button">
-            Continue Shopping
-            <i class="fa-solid fa-arrow-right"></i>
-        </a>
+    <div class="error-content">
+        <div class="error-inner">
+            <div class="error-code">404</div>
+            <h1 class="error-title">Page Not Found</h1>
+            <div class="error-divider"></div>
+            <p class="error-desc">The page you're looking for doesn't exist. Let's get you back to fresh groceries.</p>
+            <button onclick="history.back()" class="error-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"/></svg>
+                Go Back
+            </button>
+        </div>
     </div>
-
 </body>
 </html>

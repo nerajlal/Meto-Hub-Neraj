@@ -1,2048 +1,852 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Vespr — Launch Your Grocery Store</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap"
-    rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Greengrocer — Launch your grocery store</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FDFCFA;
+    --paper-dim:#F7F5F0;
+    --ink:#1C231B;
+    --ink-soft:#4B5245;
+    --ink-faint:#7C8177;
+    --green:#3F6C4E;
+    --green-deep:#2A4A35;
+    --green-pale:#E7EFE7;
+    --yellow:#E8B93F;
+    --yellow-deep:#8A6414;
+    --line:#DDD8CB;
+    --card:#FFFFFF;
+    --radius:14px;
+    --font-display:'Archivo', sans-serif;
+    --font-body:'Inter', sans-serif;
+    --font-mono:'IBM Plex Mono', monospace;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--font-body);
+    font-size:16px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;text-decoration:none;}
+  img{max-width:100%;display:block;}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 32px;}
+  section{padding:96px 0;}
+  h1,h2,h3{font-family:var(--font-display);margin:0;letter-spacing:-0.02em;}
+  .eyebrow{
+    font-family:var(--font-mono);
+    font-size:12.5px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--green-deep);
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    margin-bottom:18px;
+  }
+  .eyebrow::before{
+    content:"";
+    width:7px;height:7px;border-radius:50%;
+    background:var(--yellow);
+    display:inline-block;
+  }
+
+  /* Shelf-line divider: a hairline with barcode-style ticks */
+  .shelf-line{
+    display:flex;align-items:center;gap:3px;
+    height:14px;margin:0;
+  }
+  .shelf-line span{
+    display:block;width:1.5px;height:100%;background:var(--line);
+  }
+  .shelf-line span:nth-child(3n){height:60%;}
+  .shelf-line span:nth-child(5n){height:40%;}
+
+  /* Price tag signature shape */
+  .price-tag{
+    position:relative;
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    background:var(--yellow);
+    color:var(--yellow-deep);
+    font-family:var(--font-mono);
+    font-size:13px;
+    font-weight:500;
+    padding:6px 14px 6px 20px;
+    clip-path:polygon(14px 0, 100% 0, 100% 100%, 14px 100%, 0 50%);
+  }
+  .price-tag::before{
+    content:"";
+    position:absolute;
+    left:6px;top:50%;
+    width:4px;height:4px;
+    border-radius:50%;
+    background:var(--paper);
+    transform:translateY(-50%);
+  }
+
+  /* NAV */
+  header{
+    position:sticky;top:0;z-index:50;
+    background:rgba(253,252,250,0.88);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  nav{
+    max-width:1180px;margin:0 auto;padding:0 32px;
+    height:76px;display:flex;align-items:center;justify-content:space-between;
+  }
+  .logo{
+    font-family:var(--font-display);font-weight:800;font-size:21px;
+    display:flex;align-items:center;gap:8px;
+  }
+  .logo-mark{
+    width:22px;height:22px;background:var(--green);
+    clip-path:polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  }
+  .nav-links{display:flex;gap:36px;font-size:14.5px;color:var(--ink-soft);}
+  .nav-links a:hover{color:var(--ink);}
+  .nav-cta{display:flex;align-items:center;gap:20px;}
+  .btn{
+    font-family:var(--font-body);font-weight:600;font-size:14.5px;
+    padding:11px 22px;border-radius:9px;
+    display:inline-block;border:1px solid transparent;
+    cursor:pointer;transition:transform .15s ease, background .15s ease;
+  }
+  .btn:hover{transform:translateY(-1px);}
+  .btn-primary{background:var(--ink);color:var(--paper);}
+  .btn-primary:hover{background:var(--green-deep);}
+  .btn-ghost{color:var(--ink);}
+  .btn-outline{border-color:var(--line);color:var(--ink);}
+  .btn-outline:hover{border-color:var(--ink);}
+
+  /* HERO */
+  .hero{padding:88px 0 60px;}
+  .hero-grid{
+    display:grid;grid-template-columns:1.05fr 0.95fr;gap:64px;align-items:center;
+  }
+  .hero h1{
+    font-size:56px;line-height:1.04;font-weight:700;
+    margin-bottom:22px;
+  }
+  .hero h1 em{
+    font-style:normal;color:var(--green);
+    position:relative;
+  }
+  .hero p.lede{
+    font-size:18px;color:var(--ink-soft);max-width:460px;margin-bottom:32px;
+  }
+  .hero-actions{display:flex;gap:14px;align-items:center;margin-bottom:28px;}
+  .hero-note{font-size:13.5px;color:var(--ink-faint);font-family:var(--font-mono);}
+
+  /* Hero mockup: a little grocery site preview with browser chrome + price tags */
+  .mockup{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:16px;
+    overflow:hidden;
+    position:relative;
+  }
+  .mockup-bar{
+    height:38px;display:flex;align-items:center;gap:6px;
+    padding:0 14px;border-bottom:1px solid var(--line);background:var(--paper-dim);
+  }
+  .mockup-bar span{width:9px;height:9px;border-radius:50%;background:var(--line);}
+  .mockup-body{padding:22px;position:relative;}
+  .mockup-store-name{font-family:var(--font-display);font-weight:700;font-size:19px;margin-bottom:4px;}
+  .mockup-store-sub{font-size:12.5px;color:var(--ink-faint);margin-bottom:18px;}
+  .mockup-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+  .produce-card{
+    background:var(--paper-dim);border-radius:10px;padding:14px 12px;position:relative;
+    border:1px solid var(--line);
+  }
+  .produce-swatch{
+    width:100%;height:56px;border-radius:7px;margin-bottom:10px;
+  }
+  .produce-name{font-size:13px;font-weight:600;margin-bottom:2px;}
+  .produce-tag{
+    font-family:var(--font-mono);font-size:11.5px;color:var(--green-deep);
+  }
+  .floating-tag{
+    position:absolute;top:-14px;right:18px;
+    transform:rotate(4deg);
+    z-index:5;
+  }
+
+  /* HOW IT WORKS */
+  .steps{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:0;
+    border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  }
+  .step{
+    padding:40px 36px;border-right:1px solid var(--line);
+  }
+  .step:last-child{border-right:none;}
+  .step-num{
+    font-family:var(--font-mono);font-size:13px;color:var(--green);
+    margin-bottom:16px;display:block;
+  }
+  .step h3{font-size:20px;margin-bottom:10px;font-weight:600;}
+  .step p{color:var(--ink-soft);font-size:14.5px;margin:0;}
+
+  /* SECTION HEADS */
+  .section-head{max-width:560px;margin-bottom:56px;}
+  .section-head h2{font-size:36px;font-weight:700;line-height:1.15;margin-bottom:14px;}
+  .section-head p{color:var(--ink-soft);font-size:16.5px;margin:0;}
+
+  /* FEATURES */
+  .feature-grid{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:1px;
+    background:var(--line);border:1px solid var(--line);border-radius:16px;overflow:hidden;
+  }
+  .feature{background:var(--card);padding:32px;}
+  .feature-icon{
+    width:38px;height:38px;border-radius:9px;background:var(--green-pale);
+    display:flex;align-items:center;justify-content:center;margin-bottom:18px;
+  }
+  .feature-icon svg{width:19px;height:19px;stroke:var(--green-deep);}
+  .feature h3{font-size:16.5px;font-weight:600;margin-bottom:8px;}
+  .feature p{font-size:14px;color:var(--ink-soft);margin:0;line-height:1.55;}
+
+  /* TEMPLATES */
+  .template-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
+  .template-card{
+    border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--card);
+    transition:border-color .15s ease;
+  }
+  .template-card:hover{border-color:var(--ink-faint);}
+  .template-preview{height:170px;position:relative;overflow:hidden;}
+  .template-info{padding:16px 18px;display:flex;justify-content:space-between;align-items:center;}
+  .template-info h4{font-size:14.5px;font-weight:600;margin:0;}
+  .template-info span{font-family:var(--font-mono);font-size:12px;color:var(--ink-faint);}
+
+  /* PRICING — receipt style */
+  .pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;align-items:start;}
+  .plan{
+    background:var(--card);border:1px solid var(--line);border-radius:16px;padding:32px;
+    position:relative;
+  }
+  .plan.featured{border:2px solid var(--green);}
+  .plan-badge{
+    position:absolute;top:-13px;left:32px;
+    background:var(--green);color:var(--paper);
+    font-family:var(--font-mono);font-size:11px;letter-spacing:.05em;
+    padding:4px 12px;border-radius:999px;text-transform:uppercase;
+  }
+  .plan h3{font-size:15px;font-weight:600;color:var(--ink-soft);margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em;font-family:var(--font-mono);font-weight:500;}
+  .plan-price{font-family:var(--font-display);font-size:40px;font-weight:700;margin-bottom:4px;}
+  .plan-price span{font-family:var(--font-body);font-size:15px;font-weight:400;color:var(--ink-faint);}
+  .plan-desc{font-size:13.5px;color:var(--ink-faint);margin-bottom:24px;}
+  .receipt-divider{
+    border:none;border-top:1.5px dashed var(--line);margin:22px 0;
+  }
+  .plan-list{list-style:none;padding:0;margin:0 0 28px;font-family:var(--font-mono);font-size:13px;}
+  .plan-list li{
+    display:flex;justify-content:space-between;padding:7px 0;color:var(--ink-soft);
+  }
+  .plan-list li b{color:var(--ink);font-weight:500;}
+
+  /* FAQ */
+  .faq-item{
+    border-bottom:1px solid var(--line);padding:26px 0;cursor:pointer;
+  }
+  .faq-q{
+    display:flex;justify-content:space-between;align-items:center;
+    font-size:16.5px;font-weight:600;font-family:var(--font-display);
+  }
+  .faq-plus{
+    font-family:var(--font-mono);font-size:20px;color:var(--green);
+    transition:transform .2s ease;
+  }
+  .faq-item.open .faq-plus{transform:rotate(45deg);}
+  .faq-a{
+    max-height:0;overflow:hidden;transition:max-height .25s ease;
+    color:var(--ink-soft);font-size:14.5px;line-height:1.65;
+  }
+  .faq-item.open .faq-a{max-height:200px;padding-top:14px;}
+
+  /* CTA BAND */
+  .cta-band{
+    background:var(--ink);color:var(--paper);border-radius:20px;
+    padding:64px 56px;display:flex;justify-content:space-between;align-items:center;
+    gap:40px;
+  }
+  .cta-band h2{font-size:32px;font-weight:700;color:var(--paper);margin-bottom:10px;}
+  .cta-band p{color:#B9BEB2;font-size:15px;margin:0;}
+  .cta-band .btn-primary{background:var(--yellow);color:var(--yellow-deep);flex-shrink:0;}
+  .cta-band .btn-primary:hover{background:#f0c95c;}
+
+  /* FOOTER */
+  footer{border-top:1px solid var(--line);padding:56px 0 40px;}
+  .footer-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:32px;margin-bottom:48px;}
+  .footer-col h5{font-family:var(--font-mono);font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-faint);margin-bottom:16px;font-weight:500;}
+  .footer-col a{display:block;font-size:14px;color:var(--ink-soft);margin-bottom:10px;}
+  .footer-col a:hover{color:var(--ink);}
+  .footer-bottom{
+    display:flex;justify-content:space-between;align-items:center;
+    padding-top:28px;border-top:1px solid var(--line);
+    font-size:13px;color:var(--ink-faint);
+  }
+
+  @media (max-width:920px){
+    section{padding:64px 0;}
+    .nav-links{display:none;}
+    .hero-grid{grid-template-columns:1fr;}
+    .hero h1{font-size:38px;}
+    .steps{grid-template-columns:1fr;}
+    .step{border-right:none;border-bottom:1px solid var(--line);}
+    .step:last-child{border-bottom:none;}
+    .feature-grid{grid-template-columns:1fr;}
+    .template-grid{grid-template-columns:1fr;}
+    .pricing-grid{grid-template-columns:1fr;}
+    .footer-grid{grid-template-columns:1fr 1fr;}
+    .cta-band{flex-direction:column;text-align:center;padding:48px 28px;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <nav>
+    <div class="logo"><span class="logo-mark"></span>Greengrocer</div>
+    <div class="nav-links">
+      <a href="#how">How it works</a>
+      <a href="#templates">Templates</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <div class="nav-cta">
+      <a href="{{ route('admin.common.login') }}" class="btn btn-ghost">Log in</a>
+      <a href="javascript:void(0)" class="btn btn-primary pricing-btn-trigger" data-plan="sprout">Start free</a>
+    </div>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div>
+        <span class="eyebrow">Built for independent grocers</span>
+        <h1>Stock the shelves.<br>We'll build <em>the store.</em></h1>
+        <p class="lede">Greengrocer turns your inventory into a real online grocery store — orders, delivery zones, and payments included. No code, no developer, live by tonight.</p>
+        <div class="hero-actions">
+          <a href="javascript:void(0)" class="btn btn-primary pricing-btn-trigger" data-plan="sprout">Start your store — free</a>
+          <a href="#templates" class="btn btn-outline">See templates</a>
+        </div>
+        <span class="hero-note">No card required · 14-day trial · cancel anytime</span>
+      </div>
+
+      <div class="mockup">
+        <div class="floating-tag">
+          <div class="price-tag">fresh today</div>
+        </div>
+        <div class="mockup-bar"><span></span><span></span><span></span></div>
+        <div class="mockup-body">
+          <div class="mockup-store-name">Corner Market Co.</div>
+          <div class="mockup-store-sub">Open now · Delivers to 5 zip codes</div>
+          <div class="mockup-grid">
+            <div class="produce-card">
+              <div class="produce-swatch" style="background:#C7DDB0"></div>
+              <div class="produce-name">Avocados</div>
+              <div class="produce-tag">$1.20 / ea</div>
+            </div>
+            <div class="produce-card">
+              <div class="produce-swatch" style="background:#E7C77E"></div>
+              <div class="produce-name">Sourdough</div>
+              <div class="produce-tag">$5.50 / loaf</div>
+            </div>
+            <div class="produce-card">
+              <div class="produce-swatch" style="background:#D69B7E"></div>
+              <div class="produce-name">Heirloom tomatoes</div>
+              <div class="produce-tag">$3.90 / lb</div>
+            </div>
+            <div class="produce-card">
+              <div class="produce-swatch" style="background:#BFD4E0"></div>
+              <div class="produce-name">Whole milk</div>
+              <div class="produce-tag">$4.10 / gal</div>
+            </div>
+            <div class="produce-card">
+              <div class="produce-swatch" style="background:#EAE0A8"></div>
+              <div class="produce-name">Farm eggs</div>
+              <div class="produce-tag">$6.20 / dz</div>
+            </div>
+            <div class="produce-card">
+              <div class="produce-swatch" style="background:#C9A7C4"></div>
+              <div class="produce-name">Red grapes</div>
+              <div class="produce-tag">$2.80 / lb</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="wrap"><div class="shelf-line">
+  <script>document.write(Array(90).fill('<span></span>').join(''))</script>
+</div></div>
+
+<section id="how" style="padding-top:64px;">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">The process</span>
+      <h2>From spreadsheet to storefront</h2>
+      <p>Three steps, in the order they actually happen when you open a store.</p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <span class="step-num">01 · stock</span>
+        <h3>Add your inventory</h3>
+        <p>Import a spreadsheet or add items one by one — name, price, unit, photo. Greengrocer organizes it into aisles automatically.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">02 · set terms</span>
+        <h3>Set prices and delivery zones</h3>
+        <p>Draw your delivery radius on a map, set fees and minimums, and choose which payment methods you accept.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">03 · open</span>
+        <h3>Open the doors</h3>
+        <p>Publish to your own domain. Orders land in one dashboard — pack, mark ready, and hand off to your driver.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">What's included</span>
+      <h2>Everything a grocery order actually needs</h2>
+      <p>Not a generic store builder with grocery icons bolted on — every feature here exists because a real order needs it.</p>
+    </div>
+    <div class="feature-grid">
+      <div class="feature">
+        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M3 9h18M3 15h18M9 3v18M15 3v18" stroke-linecap="round"/></svg></div>
+        <h3>Aisle-based catalog</h3>
+        <p>Organize items by aisle and category the way shoppers already think — produce, dairy, pantry, frozen.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M3 12a9 9 0 1018 0 9 9 0 00-18 0z" /><path d="M12 7v5l3 3" stroke-linecap="round"/></svg></div>
+        <h3>Live stock counts</h3>
+        <p>Mark items out of stock in seconds so no one orders the last bunch of kale you sold an hour ago.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M3 6h18M6 6v13a1 1 0 001 1h10a1 1 0 001-1V6M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg></div>
+        <h3>Weight and substitutions</h3>
+        <p>Price by pound or unit, and let shoppers approve substitutes before checkout — no surprise swaps.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M20 12H4M14 6l6 6-6 6"/></svg></div>
+        <h3>Delivery zone maps</h3>
+        <p>Draw exactly where you deliver, set per-zone fees, and block orders from outside your reach.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18"/></svg></div>
+        <h3>Built-in payments</h3>
+        <p>Accept cards, wallets, and SNAP/EBT where supported — funds settle straight to your bank.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M4 4h16v4H4zM4 10h16v10H4z" /><path d="M9 14h6"/></svg></div>
+        <h3>One order dashboard</h3>
+        <p>See every order from cart to doorstep — pack, print labels, and hand off without switching tabs.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="templates">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Storefront templates</span>
+      <h2>Pick a layout, then make it yours</h2>
+      <p>Every template ships with real grocery structure already in place — swap colors, fonts, and your logo.</p>
+    </div>
+    <div class="template-grid">
+      <div class="template-card" data-demo-url="{{ route('v3.home') }}?preview=1">
+        <div class="template-preview" style="background:linear-gradient(180deg,#F7F5F0 0%,#F7F5F0 60%,#fff 60%);padding:16px;">
+          <div style="font-family:'Archivo';font-weight:700;font-size:13px;margin-bottom:8px;">Market Basic</div>
+          <div style="display:flex;gap:6px;">
+            <div style="width:30%;height:60px;background:#DDD8CB;border-radius:6px;"></div>
+            <div style="width:30%;height:60px;background:#E7EFE7;border-radius:6px;"></div>
+            <div style="width:30%;height:60px;background:#F2E4C4;border-radius:6px;"></div>
+          </div>
+        </div>
+        <div class="template-info"><h4>Market basic</h4><span>Minimal</span></div>
+      </div>
+      <div class="template-card" data-demo-url="{{ route('velvet.home') }}?preview=1">
+        <div class="template-preview" style="background:#1C231B;padding:16px;">
+          <div style="font-family:'Archivo';font-weight:700;font-size:13px;margin-bottom:8px;color:#fff;">Night Grocer</div>
+          <div style="display:flex;gap:6px;">
+            <div style="width:30%;height:60px;background:#3F6C4E;border-radius:6px;"></div>
+            <div style="width:30%;height:60px;background:#4B5245;border-radius:6px;"></div>
+            <div style="width:30%;height:60px;background:#E8B93F;border-radius:6px;"></div>
+          </div>
+        </div>
+        <div class="template-info"><h4>Night grocer</h4><span>Bold</span></div>
+      </div>
+      <div class="template-card" data-demo-url="{{ route('v4.home') }}?preview=1">
+        <div class="template-preview" style="background:#fff;padding:16px;border-bottom:1px solid #DDD8CB;">
+          <div style="font-family:'Archivo';font-weight:700;font-size:13px;margin-bottom:8px;">Farm Stand</div>
+          <div style="display:flex;gap:6px;">
+            <div style="width:30%;height:60px;background:#C7DDB0;border-radius:6px;"></div>
+            <div style="width:30%;height:60px;background:#D69B7E;border-radius:6px;"></div>
+            <div style="width:30%;height:60px;background:#EAE0A8;border-radius:6px;"></div>
+          </div>
+        </div>
+        <div class="template-info"><h4>Farm stand</h4><span>Warm</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="pricing">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Pricing</span>
+      <h2>One plan for one store. Simple as a receipt.</h2>
+      <p>Every plan includes the storefront, orders, and payments. Higher tiers add more zones, staff, and volume.</p>
+    </div>
+    <div class="pricing-grid">
+      <div class="plan">
+        <h3>Corner store</h3>
+        <div class="plan-price">$0<span>/mo</span></div>
+        <div class="plan-desc">For testing the waters — one delivery zone, up to 100 items.</div>
+        <hr class="receipt-divider">
+        <ul class="plan-list">
+          <li><span>Storefront</span><b>1</b></li>
+          <li><span>Delivery zones</span><b>1</b></li>
+          <li><span>Catalog items</span><b>100</b></li>
+          <li><span>Staff accounts</span><b>1</b></li>
+          <li><span>Transaction fee</span><b>2.9%</b></li>
+        </ul>
+        <a href="#" class="btn btn-outline" style="width:100%;text-align:center;">Start free</a>
+      </div>
+      <div class="plan featured">
+        <span class="plan-badge">most chosen</span>
+        <h3>Full aisle</h3>
+        <div class="plan-price">$49<span>/mo</span></div>
+        <div class="plan-desc">For a store that's actually taking orders every day.</div>
+        <hr class="receipt-divider">
+        <ul class="plan-list">
+          <li><span>Storefront</span><b>1</b></li>
+          <li><span>Delivery zones</span><b>10</b></li>
+          <li><span>Catalog items</span><b>Unlimited</b></li>
+          <li><span>Staff accounts</span><b>5</b></li>
+          <li><span>Transaction fee</span><b>1.5%</b></li>
+        </ul>
+        <a href="#" class="btn btn-primary" style="width:100%;text-align:center;">Start your store</a>
+      </div>
+      <div class="plan">
+        <h3>Warehouse</h3>
+        <div class="plan-price">$149<span>/mo</span></div>
+        <div class="plan-desc">For multi-location grocers and growing chains.</div>
+        <hr class="receipt-divider">
+        <ul class="plan-list">
+          <li><span>Storefronts</span><b>5</b></li>
+          <li><span>Delivery zones</span><b>Unlimited</b></li>
+          <li><span>Catalog items</span><b>Unlimited</b></li>
+          <li><span>Staff accounts</span><b>Unlimited</b></li>
+          <li><span>Transaction fee</span><b>0.9%</b></li>
+        </ul>
+        <a href="#" class="btn btn-outline" style="width:100%;text-align:center;">Talk to us</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="wrap" style="max-width:760px;">
+    <div class="section-head" style="max-width:100%;">
+      <span class="eyebrow">Questions</span>
+      <h2>Before you open your store</h2>
+    </div>
+    <div class="faq-item open">
+      <div class="faq-q"><span>Do I need any code to set this up?</span><span class="faq-plus">+</span></div>
+      <div class="faq-a">No. Add your catalog, pick a template, set your delivery zones, and publish. Most stores go live in under an hour.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q"><span>Can I use my own domain?</span><span class="faq-plus">+</span></div>
+      <div class="faq-a">Yes — connect a domain you already own, or buy one during setup. Every plan supports a custom domain.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q"><span>How does delivery actually work?</span><span class="faq-plus">+</span></div>
+      <div class="faq-a">You draw your delivery zones on a map and set fees per zone. Orders route to your dashboard, where you mark them packed and ready for your own drivers or a courier partner.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q"><span>What happens after the trial?</span><span class="faq-plus">+</span></div>
+      <div class="faq-a">Your store stays live. Pick a plan that fits, or downgrade to Corner store — nothing is deleted.</div>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:0;">
+  <div class="wrap">
+    <div class="cta-band">
+      <div>
+        <h2>Your shelves are ready. Is your store?</h2>
+        <p>Set up your first storefront in the time it takes to restock a display.</p>
+      </div>
+      <a href="javascript:void(0)" class="btn btn-primary pricing-btn-trigger" data-plan="sprout">Start your store — free</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <div class="logo" style="margin-bottom:14px;"><span class="logo-mark"></span>Greengrocer</div>
+        <p style="font-size:13.5px;color:var(--ink-faint);max-width:240px;">The storefront builder for independent grocers, made for real inventory and real delivery routes.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Product</h5>
+        <a href="#how">How it works</a>
+        <a href="#templates">Templates</a>
+        <a href="#pricing">Pricing</a>
+      </div>
+      <div class="footer-col">
+        <h5>Company</h5>
+        <a href="#">About</a>
+        <a href="#">Contact</a>
+        <a href="#">Careers</a>
+      </div>
+      <div class="footer-col">
+        <h5>Legal</h5>
+        <a href="#">Terms</a>
+        <a href="#">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Greengrocer. Made for grocers.</span>
+      <span>Kayamkulam · Remote</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  document.querySelectorAll('.faq-item').forEach(item=>{
+    item.addEventListener('click', ()=>{
+      const wasOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(i=>i.classList.remove('open'));
+      if(!wasOpen) item.classList.add('open');
+    });
+  });
+</script>
+
+
+
+  <!-- SAAS SIGN-UP MODAL -->
+  <div class="saas-modal-overlay" id="saasModal">
+    <div class="saas-modal-card">
+      <button class="saas-modal-close" id="closeSaasBtn" aria-label="Close Registration">&times;</button>
+
+      <!-- STAGE 2: Sign-Up Form (Multi-Step Onboarding) -->
+      <div id="saasStageSignUp" class="saas-stage active">
+        <form id="saasRegisterForm" onsubmit="handleSaasRegister(event)">
+
+          <!-- STEP 1: Tell us about yourself -->
+          <div id="saasFormStep1" class="saas-form-step active">
+            <div class="saas-modal-header">
+              <span class="saas-badge class-plan-badge">Starter</span>
+              <h2>Tell us about yourself</h2>
+              <p class="saas-lead">Provide your details to initiate your premium grocery store</p>
+            </div>
+
+            <div class="saas-form-group">
+              <label for="saas_name">Full Name *</label>
+              <input type="text" id="saas_name" placeholder="e.g. Priya Sharma" required />
+              <span class="saas-error" id="err_name"></span>
+            </div>
+
+            <div class="saas-form-group">
+              <label for="saas_email">Email Address *</label>
+              <input type="email" id="saas_email" placeholder="you@yourbrand.com" required />
+              <span class="saas-error" id="err_email"></span>
+            </div>
+          </div>
+
+          <!-- STEP 2: Tell us about your brand -->
+          <div id="saasFormStep2" class="saas-form-step">
+            <div class="saas-modal-header">
+              <span class="saas-badge class-plan-badge">Starter</span>
+              <h2>Tell us about your brand</h2>
+              <p class="saas-lead">We will optimize your dashboard tailored to your company goals</p>
+            </div>
+
+            <div class="saas-form-group">
+              <label for="saas_business">Business / Brand Name *</label>
+              <input type="text" id="saas_business" placeholder="e.g. Noir Atelier" required />
+              <span class="saas-error" id="err_business"></span>
+            </div>
+
+            <div class="saas-form-grid">
+              <div class="saas-form-group">
+                <label for="saas_country">Country *</label>
+                <select id="saas_country" required>
+                  <option value="" disabled selected>Select country</option>
+                  <option value="India">India</option>
+                  <option value="United Arab Emirates">United Arab Emirates</option>
+                  <option value="Saudi Arabia">Saudi Arabia</option>
+                  <option value="United Kingdom">United Kingdom</option>
+                  <option value="United States">United States</option>
+                  <option value="France">France</option>
+                  <option value="Singapore">Singapore</option>
+                  <option value="Australia">Australia</option>
+                  <option value="Other">Other</option>
+                </select>
+                <span class="saas-error" id="err_country"></span>
+              </div>
+
+              <div class="saas-form-group">
+                <label for="saas_whatsapp">WhatsApp Number *</label>
+                <div class="saas-phone-input-wrapper">
+                  <select id="saas_phone_code" class="saas-phone-code">
+                    <option value="+91" selected>🇮🇳 +91</option>
+                    <option value="+971">🇦🇪 +971</option>
+                    <option value="+966">🇸🇦 +966</option>
+                    <option value="+44">🇬🇧 +44</option>
+                    <option value="+1">🇺🇸 +1</option>
+                    <option value="+33">🇫🇷 +33</option>
+                    <option value="+65">🇸🇬 +65</option>
+                    <option value="+61">🇦🇺 +61</option>
+                  </select>
+                  <input type="tel" id="saas_whatsapp" placeholder="98765 43210" required />
+                </div>
+                <span class="saas-error" id="err_whatsapp"></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- STEP 3: Configure your credentials & theme -->
+          <div id="saasFormStep3" class="saas-form-step">
+            <div class="saas-modal-header">
+              <span class="saas-badge class-plan-badge">Starter</span>
+              <h2>Configure store settings</h2>
+              <p class="saas-lead">Secure your brand dashboard and select your pricing plan</p>
+            </div>
+
+            <div class="saas-form-grid">
+              <div class="saas-form-group">
+                <label for="saas_password">Password *</label>
+                <input type="password" id="saas_password" name="password" autocomplete="new-password"
+                  placeholder="At least 8 characters" required />
+                <span class="saas-error" id="err_password"></span>
+              </div>
+
+              <div class="saas-form-group">
+                <label for="saas_confirm_password">Confirm Password *</label>
+                <input type="password" id="saas_confirm_password" name="password_confirmation"
+                  autocomplete="new-password" placeholder="Re-enter password" required />
+                <span class="saas-error" id="err_confirm_password"></span>
+              </div>
+            </div>
+
+
+            <div class="saas-form-grid">
+              <div class="saas-form-group" style="grid-column: 1 / -1;">
+                <label for="saas_plan">Plan Selection (Optional)</label>
+                <select id="saas_plan">
+                  <option value="sprout">Sprout — $9/month (20 products)</option>
+                  <option value="maison">Maison — $19/month (100 products)</option>
+                  <option value="heritage">Heritage — $49/month (Unlimited)</option>
+                  <option value="not_sure">Not sure yet</option>
+                </select>
+              </div>
+              <input type="hidden" id="saas_theme" value="aura_luxe" />
+            </div>
+          </div>
+
+          <!-- PROGRESS STEPS NAVIGATION BAR -->
+          <div class="saas-step-nav">
+            <div class="saas-dots" id="saasStepDots">
+              <span class="saas-dot active" onclick="goToStep(1)"></span>
+              <span class="saas-dot" onclick="goToStep(2)"></span>
+              <span class="saas-dot" onclick="goToStep(3)"></span>
+            </div>
+
+            <div class="saas-nav-actions">
+              <button type="button" class="saas-back-btn" id="saasBackBtn" onclick="prevStep()">Back</button>
+              <button type="button" class="saas-next-btn" id="saasNextBtn" onclick="handleStepNavNext()">Next</button>
+            </div>
+          </div>
+
+        </form>
+      </div>
+
+      <!-- STAGE 3: Email Verification -->
+      <div id="saasStageVerify" class="saas-stage">
+        <div class="saas-verify-container">
+          <div class="saas-verify-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+              <polyline points="22,6 12,13 2,6" />
+            </svg>
+          </div>
+
+          <h2>Check your inbox</h2>
+          <p class="saas-verify-desc">We've sent a verification link to <strong id="verifyEmailDisplay">your
+              email</strong>. Please click the link to verify your email and continue setting up your store.</p>
+
+          <div class="saas-verify-meta">
+            <p>Didn't receive the email?</p>
+            <button id="resendBtn" class="saas-resend-btn" onclick="handleResendCode()">Resend link</button>
+            <p id="resendCountdown" class="saas-countdown-label"></p>
+          </div>
+
+          <!-- Simulation Tool to Help User Verify Frontend Flow -->
+          <div class="saas-simulation-box">
+            <span class="sim-badge">SaaS Simulation Tool</span>
+            <p>Click below to simulate clicking the verification link in your email.</p>
+            <button onclick="simulateVerificationSuccess()" class="saas-simulate-btn">Simulate Email Verification Link
+              Click ✓</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- STAGE 4: Success / Welcome Screen -->
+      <div id="saasStageSuccess" class="saas-stage">
+        <div class="saas-success-container">
+          <div class="saas-success-icon-check">✓</div>
+          <h2>Account Verified!</h2>
+          <p>Your email has been verified successfully. Welcome to Greengrocer! Let's get started setting up your customized
+            grocery store.</p>
+          <button onclick="closeSaaSModal()" class="saas-success-finish-btn">Go to your SaaS dashboard →</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
   <style>
-    *,
-    *::before,
-    *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    :root {
-      --black: #0A0A0A;
+.saas-modal-overlay, .demo-modal-overlay {
+      --black: #1C231B;
       --white: #FFFFFF;
-      --cream: #FAF8F4;
-      --gold: #C9A84C;
-      --gold-light: #F0E4C2;
-      --gold-dark: #8B6914;
-      --gray-100: #F5F4F0;
-      --gray-200: #E8E6E0;
-      --gray-400: #9E9C96;
-      --gray-600: #5C5A54;
-      --gray-800: #2A2924;
-      --text: #0A0A0A;
-      --text-muted: #5C5A54;
-      --border: #E0DDD6;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      font-family: 'Inter', sans-serif;
-      font-size: 14px;
-      font-weight: 400;
-      line-height: 1.7;
-      color: var(--text);
-      background: var(--white);
-      -webkit-font-smoothing: antialiased;
-    }
-
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
-      font-family: 'Inter', sans-serif;
-      line-height: 1.2;
-      color: var(--black);
-    }
-
-    /* NAV SYSTEM */
-    nav {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      width: 100%;
-      z-index: 1000;
-      padding: 0 40px;
-      height: 64px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      transition: background-color 0.3s ease, border-color 0.3s ease, backdrop-filter 0.3s ease;
-    }
-
-    /* Transparent state over Dark Hero */
-    nav.nav-transparent {
-      background: transparent;
-      border-bottom: 1px solid transparent;
-      backdrop-filter: none;
-    }
-
-    nav.nav-transparent.nav-transparent-blur {
-      background: rgba(6, 6, 8, 0.45);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    }
-
-    nav.nav-transparent .nav-logo {
-      color: var(--white);
-    }
-
-    nav.nav-transparent .nav-links a {
-      color: rgba(255, 255, 255, 0.7);
-    }
-
-    nav.nav-transparent .nav-links a:hover {
-      color: var(--white);
-    }
-
-    nav.nav-transparent .nav-login-link {
-      color: rgba(255, 255, 255, 0.7);
-    }
-
-    nav.nav-transparent .nav-login-link:hover {
-      color: var(--white);
-    }
-
-    nav.nav-transparent .btn-nav-action {
-      background: var(--gold);
-      color: var(--black);
-    }
-
-    nav.nav-transparent .btn-nav-action:hover {
-      background: #D4A83F;
-      transform: translateY(-1px);
-    }
-
-    /* Scrolled light state */
-    nav.nav-scrolled {
-      background: rgba(255, 255, 255, 0.96);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid var(--border);
-    }
-
-    nav.nav-scrolled .nav-logo {
-      color: var(--black);
-    }
-
-    nav.nav-scrolled .nav-links a {
-      color: var(--text-muted);
-    }
-
-    nav.nav-scrolled .nav-links a:hover {
-      color: var(--black);
-    }
-
-    nav.nav-scrolled .nav-login-link {
-      color: var(--text-muted);
-    }
-
-    nav.nav-scrolled .nav-login-link:hover {
-      color: var(--black);
-    }
-
-    nav.nav-scrolled .btn-nav-action {
-      background: var(--black);
-      color: var(--white);
-    }
-
-    nav.nav-scrolled .btn-nav-action:hover {
-      background: var(--gray-800);
-      transform: translateY(-1px);
-    }
-
-    /* Base nav elements style */
-    .nav-logo {
-      font-size: 20px;
-      font-weight: 700;
-      letter-spacing: -0.5px;
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      transition: color 0.2s;
-    }
-
-    .nav-logo span {
-      color: var(--gold);
-    }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 32px;
-      list-style: none;
-    }
-
-    .nav-links a {
-      font-size: 14px;
-      font-weight: 500;
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-
-    .nav-login-link {
-      font-size: 14px;
-      font-weight: 500;
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-
-    .btn-nav-action {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-family: 'Inter', sans-serif;
-      font-size: 14px;
-      font-weight: 500;
-      padding: 10px 22px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      text-decoration: none;
-      transition: background 0.2s, transform 0.15s, color 0.2s;
-    }
-
-    .btn-primary {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: var(--black);
-      color: var(--white);
-      font-family: 'Inter', sans-serif;
-      font-size: 14px;
-      font-weight: 500;
-      padding: 10px 22px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      text-decoration: none;
-      transition: background 0.2s, transform 0.15s;
-    }
-
-    .btn-primary:hover {
-      background: var(--gray-800);
-      transform: translateY(-1px);
-    }
-
-    .btn-outline {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: transparent;
-      color: var(--black);
-      font-family: 'Inter', sans-serif;
-      font-size: 14px;
-      font-weight: 500;
-      padding: 10px 22px;
-      border: 1.5px solid var(--black);
-      border-radius: 6px;
-      cursor: pointer;
-      text-decoration: none;
-      transition: background 0.2s;
-    }
-
-    .btn-outline:hover {
-      background: var(--gray-100);
-    }
-
-    /* HERO */
-    .hero {
-      background: radial-gradient(circle at center, #1b1222 0%, #060608 80%);
-      color: var(--white);
-      padding: 120px 40px 100px;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .hero::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(201, 168, 76, 0.15) 0%, transparent 70%);
-      pointer-events: none;
-    }
-
-    .hero-eyebrow {
-      display: inline-block;
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 32px;
-    }
-
-    .hero h1 {
-      font-family: 'Playfair Display', 'Didot', 'Bodoni MT', 'Cinzel', Georgia, serif;
-      font-size: 60px;
-      font-weight: 400;
-      color: var(--white);
-      letter-spacing: -0.5px;
-      max-width: 900px;
-      margin: 0 auto 24px;
-      line-height: 1.25;
-    }
-
-    .hero h1 em {
-      font-family: 'Playfair Display', 'Didot', 'Bodoni MT', 'Cinzel', Georgia, serif;
-      font-style: italic;
-      color: var(--gold);
-      font-weight: 400;
-    }
-
-    .hero-sub {
-      font-size: 18px;
-      font-weight: 400;
-      color: rgba(255, 255, 255, 0.65);
-      max-width: 600px;
-      margin: 0 auto 40px;
-      line-height: 1.6;
-    }
-
-    .hero-cta {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
-
-    .btn-gold {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: var(--gold);
-      color: var(--black);
-      font-family: 'Inter', sans-serif;
-      font-size: 14px;
-      font-weight: 700;
-      padding: 14px 30px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      text-decoration: none;
-      transition: background 0.2s, transform 0.15s;
-    }
-
-    .btn-gold:hover {
-      background: #D4A83F;
-      transform: translateY(-1px);
-    }
-
-    .btn-ghost {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: transparent;
-      color: rgba(255, 255, 255, 0.8);
-      font-family: 'Inter', sans-serif;
-      font-size: 14px;
-      font-weight: 500;
-      padding: 14px 28px;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: 6px;
-      cursor: pointer;
-      text-decoration: none;
-      transition: border-color 0.2s, color 0.2s;
-    }
-
-    .btn-ghost:hover {
-      border-color: rgba(255, 255, 255, 0.5);
-      color: var(--white);
-    }
-
-    .hero-bullets {
-      display: flex;
-      justify-content: center;
-      gap: 28px;
-      margin-top: 56px;
-      font-size: 13px;
-      color: rgba(255, 255, 255, 0.45);
-      flex-wrap: wrap;
-    }
-
-    .hero-bullets span {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    /* SECTIONS */
-    section {
-      padding: 96px 40px;
-    }
-
-    .section-inner {
-      max-width: 1080px;
-      margin: 0 auto;
-    }
-
-    .section-label {
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 16px;
-    }
-
-    .section-title {
-      font-family: 'Playfair Display', 'Didot', 'Bodoni MT', 'Cinzel', Georgia, serif;
-      font-size: 44px;
-      font-weight: 400;
-      letter-spacing: -0.5px;
-      color: var(--black);
-      line-height: 1.2;
-      margin-bottom: 16px;
-    }
-
-    .section-title em {
-      font-family: 'Playfair Display', 'Didot', 'Bodoni MT', 'Cinzel', Georgia, serif;
-      font-style: italic;
-      color: var(--gold);
-      font-weight: 400;
-    }
-
-    .section-sub {
-      font-size: 17px;
-      font-weight: 400;
-      color: var(--text-muted);
-      max-width: 560px;
-      line-height: 1.6;
-      margin-bottom: 56px;
-    }
-
-    .subheading {
-      font-size: 24px;
-      font-weight: 700;
-      letter-spacing: -0.5px;
-      color: var(--black);
-      margin-bottom: 10px;
-    }
-
-    /* HOW IT WORKS */
-    .steps-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 24px;
-    }
-
-    .step-card {
-      padding: 32px 28px;
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      position: relative;
-    }
-
-    .step-number {
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--gold);
-      letter-spacing: 1.5px;
-      margin-bottom: 20px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .step-number::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: var(--gold-light);
-    }
-
-    .step-card h3 {
-      font-size: 16px;
-      font-weight: 700;
-      margin-bottom: 10px;
-    }
-
-    .step-card p {
-      font-size: 14px;
-      color: var(--text-muted);
-      line-height: 1.6;
-    }
-
-    .step-time {
-      display: inline-block;
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--gold-dark);
-      background: var(--gold-light);
-      padding: 3px 10px;
-      border-radius: 20px;
-      margin-top: 16px;
-    }
-
-    /* FEATURES */
-    .features-bg {
-      background: var(--cream);
-    }
-
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 2px;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      overflow: hidden;
-    }
-
-    .feature-cell {
-      background: var(--white);
-      padding: 36px 32px;
-      border-right: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-      transition: background 0.2s;
-    }
-
-    .feature-cell:hover {
-      background: var(--gray-100);
-    }
-
-    .feature-cell:nth-child(3n) {
-      border-right: none;
-    }
-
-    .feature-cell:nth-last-child(-n+3) {
-      border-bottom: none;
-    }
-
-    .feature-icon {
-      width: 44px;
-      height: 44px;
-      background: var(--black);
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 20px;
-      font-size: 20px;
-    }
-
-    .feature-cell h3 {
-      font-size: 16px;
-      font-weight: 700;
-      margin-bottom: 10px;
-    }
-
-    .feature-cell p {
-      font-size: 14px;
-      color: var(--text-muted);
-      line-height: 1.65;
-    }
-
-    .integrations-bar {
-      background: radial-gradient(circle at center, #1b1222 0%, #060608 80%);
-      padding: 60px 40px;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-      border-top: 1px solid rgba(255, 255, 255, 0.05);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    }
-
-    .integrations-bar::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(201, 168, 76, 0.1) 0%, transparent 70%);
-      pointer-events: none;
-    }
-
-    .integrations-label {
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: rgba(255, 255, 255, 0.4);
-      margin-bottom: 24px;
-    }
-
-    .integrations-list {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .integration-pill {
-      font-size: 13px;
-      font-weight: 500;
-      color: rgba(255, 255, 255, 0.7);
-      background: rgba(255, 255, 255, 0.07);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      padding: 7px 16px;
-      border-radius: 20px;
-    }
-
-    /* TEMPLATES SECTION */
-    #templates {
-      background: var(--white);
-      color: var(--text);
-      padding: 80px 40px;
-      position: relative;
-    }
-
-    .templates-header-wrapper {
-      display: grid;
-      grid-template-columns: 1.2fr 1fr;
-      gap: 48px;
-      align-items: flex-start;
-      margin-bottom: 56px;
-    }
-
-    .templates-header-left {
-      text-align: left;
-    }
-
-    .templates-header-left .section-label {
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 20px;
-      display: inline-block;
-    }
-
-    .templates-header-left .section-title {
-      font-family: 'Playfair Display', 'Didot', 'Bodoni MT', 'Cinzel', Georgia, serif;
-      font-size: 44px;
-      font-weight: 400;
-      color: var(--black);
-      line-height: 1.2;
-      margin-bottom: 24px;
-      letter-spacing: -0.5px;
-    }
-
-    .templates-header-left .section-title em {
-      font-family: 'Playfair Display', 'Didot', 'Bodoni MT', 'Cinzel', Georgia, serif;
-      font-style: italic;
-      color: var(--gold);
-      font-weight: 400;
-    }
-
-    .templates-header-left .section-sub {
-      font-size: 16px;
-      color: var(--text-muted);
-      line-height: 1.6;
-      margin-bottom: 0;
-      max-width: 580px;
-    }
-
-    .templates-header-right {
-      display: flex;
-      justify-content: flex-end;
-      align-items: center;
-      height: 100%;
-      padding-top: 48px;
-    }
-
-    .templates-highlight-box {
-      background: var(--gray-100);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 20px 24px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      width: 100%;
-      max-width: 320px;
-    }
-
-    .template-highlight-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 13.5px;
-      font-weight: 500;
-      color: var(--black);
-      text-align: left;
-    }
-
-    .templates-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 24px;
-    }
-
-    @media (max-width: 1200px) {
-      .templates-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    .template-card {
-      border: 1px solid var(--border);
-      background: var(--white);
-      border-radius: 12px;
-      overflow: hidden;
-      transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
-      cursor: pointer;
-    }
-
-    .template-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
-      border-color: rgba(201, 168, 76, 0.3);
-    }
-
-    .template-preview {
-      height: 220px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      overflow: hidden;
-      font-size: 13px;
-      font-weight: 500;
-      color: rgba(255, 255, 255, 0.6);
-      letter-spacing: 1px;
-    }
-
-    .template-preview-label {
-      position: absolute;
-      bottom: 16px;
-      left: 16px;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      color: rgba(255, 255, 255, 0.6);
-      background: rgba(0, 0, 0, 0.4);
-      padding: 4px 10px;
-      border-radius: 4px;
-    }
-
-    .template-info {
-      padding: 20px 24px;
-      background: var(--white);
-      border-top: 1px solid var(--border);
-    }
-
-    .template-info h3 {
-      font-size: 15px;
-      font-weight: 700;
-      margin-bottom: 6px;
-      color: var(--black);
-    }
-
-    .template-info p {
-      font-size: 13px;
-      color: var(--text-muted);
-      margin-bottom: 14px;
-    }
-
-    .template-tag {
-      font-size: 11px;
-      font-weight: 700;
-      padding: 3px 10px;
-      border-radius: 4px;
-      letter-spacing: 0.5px;
-    }
-
-    /* PRODUCT SHOWCASE */
-    .showcase-container {
-      display: grid;
-      grid-template-columns: 1fr 1.8fr 1fr;
-      gap: 24px;
-      align-items: center;
-      margin-top: 24px;
-    }
-
-    .showcase-side-tabs {
-      display: flex;
-      flex-direction: column;
-      gap: 24px;
-    }
-
-    .showcase-tab {
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 16px 20px;
-      cursor: pointer;
-      text-align: left;
-      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-      position: relative;
-    }
-
-    .showcase-tab:hover {
-      border-color: rgba(201, 168, 76, 0.4);
-      transform: translateY(-2px);
-    }
-
-    .showcase-tab.active {
-      border-color: var(--gold);
-      background: var(--white);
-      box-shadow: 0 12px 32px rgba(201, 168, 76, 0.06);
-    }
-
-    /* left active tab indicator */
-    .showcase-side-left .showcase-tab.active::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 24px;
-      bottom: 24px;
-      width: 3px;
-      background: var(--gold);
-      border-radius: 0 4px 4px 0;
-    }
-
-    /* right active tab indicator */
-    .showcase-side-right .showcase-tab.active::before {
-      content: '';
-      position: absolute;
-      right: 0;
-      top: 24px;
-      bottom: 24px;
-      width: 3px;
-      background: var(--gold);
-      border-radius: 4px 0 0 4px;
-    }
-
-    .showcase-tab-tag {
-      font-size: 9px;
-      font-weight: 700;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      color: var(--gold-dark);
-      background: var(--gold-light);
-      padding: 2px 8px;
-      border-radius: 4px;
-      display: inline-block;
-      margin-bottom: 8px;
-    }
-
-    .showcase-tab h3 {
-      font-size: 16px;
-      font-weight: 700;
-      color: var(--black);
-      margin-bottom: 8px;
-    }
-
-    .showcase-tab p {
-      font-size: 13px;
-      color: var(--text-muted);
-      line-height: 1.5;
-      margin: 0;
-    }
-
-    .showcase-preview-panel {
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 16px;
-      box-shadow: 0 20px 48px rgba(0, 0, 0, 0.04);
-      overflow: hidden;
-      aspect-ratio: 16/10;
-      position: relative;
-      cursor: zoom-in;
-    }
-
-    .showcase-preview-panel::after {
-      content: '🔍 Click to expand';
-      position: absolute;
-      bottom: 24px;
-      right: 24px;
-      background: rgba(10, 10, 10, 0.7);
-      backdrop-filter: blur(8px);
-      color: #fff;
-      font-size: 12px;
-      font-family: 'Inter', sans-serif;
-      padding: 6px 14px;
-      border-radius: 20px;
-      opacity: 0;
-      transition: opacity 0.3s ease, transform 0.3s ease;
-      transform: translateY(5px);
-      pointer-events: none;
-      z-index: 10;
-    }
-
-    .showcase-preview-panel:hover::after {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    /* Lightbox Modal */
-    .lightbox-overlay {
-      display: none;
-      position: fixed;
-      z-index: 9999;
-      padding: 40px;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      background-color: rgba(10, 10, 10, 0.95);
-      backdrop-filter: blur(12px);
-      opacity: 0;
-      transition: opacity 0.3s ease;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-    }
-
-    .lightbox-overlay.active {
-      display: flex;
-      opacity: 1;
-    }
-
-    .lightbox-content {
-      margin: auto;
-      display: block;
-      max-width: 90%;
-      max-height: 80vh;
-      border-radius: 12px;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-      transform: scale(0.95);
-      transition: transform 0.3s ease;
-      object-fit: contain;
-    }
-
-    .lightbox-overlay.active .lightbox-content {
-      transform: scale(1);
-    }
-
-    .lightbox-close {
-      position: absolute;
-      top: 30px;
-      right: 35px;
-      color: #f1f1f1;
-      font-size: 40px;
-      font-weight: 300;
-      transition: 0.3s;
-      cursor: pointer;
-      line-height: 1;
-    }
-
-    .lightbox-close:hover {
-      color: var(--gold);
-      transform: scale(1.1);
-    }
-
-    #lightbox-caption {
-      margin-top: 20px;
-      text-align: center;
-      color: #ccc;
-      font-size: 16px;
-      font-family: 'Inter', sans-serif;
-    }
-
-    .showcase-image-wrapper {
-      position: absolute;
-      inset: 16px;
-      opacity: 0;
-      transform: scale(0.98);
-      transition: opacity 0.4s ease, transform 0.4s ease;
-      pointer-events: none;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .showcase-image-wrapper.active {
-      opacity: 1;
-      transform: scale(1);
-      pointer-events: auto;
-    }
-
-    .showcase-desktop-img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      border-radius: 8px;
-      transition: transform 0.3s ease;
-    }
-
-    .showcase-mobile-mockup {
-      position: absolute;
-      bottom: -4%;
-      right: 4%;
-      width: 25%;
-      height: 82%;
-      min-width: 60px;
-      min-height: 120px;
-      background: #09090b;
-      border: 3px solid #1c1c1e;
-      border-radius: 12px;
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
-      overflow: hidden;
-      z-index: 5;
-      transform: translateY(0);
-      transition: transform 0.3s ease, border-color 0.3s ease;
-      cursor: zoom-in;
-    }
-
-    .showcase-mobile-mockup:hover {
-      transform: translateY(-8px) scale(1.03);
-      border-color: var(--gold);
-    }
-
-    .showcase-mobile-mockup img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    /* Product Features Conversion Banner */
-    .showcase-features-banner {
-      margin-top: 24px;
-      padding: 24px 32px;
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.02);
-    }
-
-    .features-banner-title {
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-      color: var(--gold-dark);
-      margin-bottom: 16px;
-      text-align: center;
-    }
-
-    .features-banner-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 24px;
-    }
-
-    .features-banner-item {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .features-banner-icon {
-      font-size: 24px;
-      color: var(--gold);
-      line-height: 1;
-    }
-
-    .features-banner-item h4 {
-      font-size: 15px;
-      font-weight: 700;
-      color: var(--black);
-      margin: 0;
-    }
-
-    .features-banner-item p {
-      font-size: 13px;
-      color: var(--text-muted);
-      margin: 0;
-      line-height: 1.6;
-    }
-
-    @media (max-width: 991px) {
-      .features-banner-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 24px;
-      }
-    }
-
-    @media (max-width: 576px) {
-      .features-banner-grid {
-        grid-template-columns: 1fr;
-        gap: 20px;
-      }
-
-      .showcase-features-banner {
-        padding: 24px;
-      }
-    }
-
-    .pricing-bg {
-      background: var(--white);
-    }
-
-    .pricing-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
-    }
-
-    .price-card {
-      background: var(--cream);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 36px 32px;
-      position: relative;
-      transition: transform 0.2s;
-    }
-
-    .price-card:hover {
-      transform: translateY(-3px);
-    }
-
-    .price-card.featured {
-      border: 2px solid var(--black);
-      background: var(--black);
-      color: var(--white);
-    }
-
-    .price-badge {
-      position: absolute;
-      top: -13px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      background: var(--gold);
-      color: var(--black);
-      padding: 4px 14px;
-      border-radius: 20px;
-      white-space: nowrap;
-    }
-
-    .price-tier {
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 8px;
-    }
-
-    .price-name {
-      font-size: 24px;
-      font-weight: 700;
-      color: inherit;
-      margin-bottom: 6px;
-    }
-
-    .price-card.featured .price-desc {
-      color: rgba(255, 255, 255, 0.55);
-    }
-
-    .price-desc {
-      font-size: 14px;
-      color: var(--text-muted);
-      margin-bottom: 28px;
-      line-height: 1.5;
-    }
-
-    .price-amount {
-      display: flex;
-      align-items: flex-end;
-      gap: 4px;
-      margin-bottom: 28px;
-      padding-bottom: 28px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .price-card.featured .price-amount {
-      border-bottom-color: rgba(255, 255, 255, 0.15);
-    }
-
-    .price-currency {
-      font-size: 20px;
-      font-weight: 700;
-      color: var(--gold);
-      line-height: 1.3;
-    }
-
-    .price-number {
-      font-size: 48px;
-      font-weight: 700;
-      letter-spacing: -2px;
-      line-height: 1;
-      color: inherit;
-    }
-
-    .price-period {
-      font-size: 13px;
-      color: var(--text-muted);
-      margin-bottom: 8px;
-    }
-
-    .price-card.featured .price-period {
-      color: rgba(255, 255, 255, 0.5);
-    }
-
-    .price-features {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      margin-bottom: 32px;
-    }
-
-    .price-features li {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      font-size: 14px;
-      color: inherit;
-    }
-
-    .price-card.featured .price-features li {
-      color: rgba(255, 255, 255, 0.85);
-    }
-
-    .check {
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      background: var(--gold-light);
-      color: var(--gold-dark);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 11px;
-      flex-shrink: 0;
-      margin-top: 2px;
-      font-weight: 700;
-    }
-
-    .price-card.featured .check {
-      background: rgba(201, 168, 76, 0.2);
-      color: var(--gold);
-    }
-
-    .btn-pricing {
-      display: block;
-      width: 100%;
-      text-align: center;
-      padding: 13px;
-      border-radius: 7px;
-      font-family: 'Inter', sans-serif;
-      font-size: 14px;
-      font-weight: 700;
-      cursor: pointer;
-      text-decoration: none;
-      transition: all 0.2s;
-      border: none;
-    }
-
-    .btn-pricing-default {
-      background: var(--gray-100);
-      color: var(--black);
-      border: 1px solid var(--border);
-    }
-
-    .btn-pricing-default:hover {
-      background: var(--gray-200);
-    }
-
-    .btn-pricing-featured {
-      background: var(--gold);
-      color: var(--black);
-    }
-
-    .btn-pricing-featured:hover {
-      background: #D4A83F;
-    }
-
-    /* TESTIMONIALS */
-    .testimonials-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
-    }
-
-    .testimonial-card {
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 32px 28px;
-    }
-
-    .stars {
-      color: var(--gold);
-      font-size: 14px;
-      letter-spacing: 2px;
-      margin-bottom: 16px;
-    }
-
-    .testimonial-text {
-      font-size: 15px;
-      line-height: 1.7;
-      color: var(--text);
-      margin-bottom: 24px;
-    }
-
-    .testimonial-author {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .author-avatar {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: var(--black);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--gold);
-      flex-shrink: 0;
-    }
-
-    .author-name {
-      font-size: 14px;
-      font-weight: 700;
-      margin-bottom: 2px;
-    }
-
-    .author-role {
-      font-size: 12px;
-      color: var(--text-muted);
-    }
-
-    /* CONTACT */
-    .contact-bg {
-      background: var(--cream);
-    }
-
-    .contact-layout {
-      display: grid;
-      grid-template-columns: 1fr 1.4fr;
-      gap: 72px;
-      align-items: start;
-    }
-
-    .contact-info h2 {
-      font-size: 45px;
-      font-weight: 700;
-      letter-spacing: -1.5px;
-      line-height: 1.1;
-      margin-bottom: 20px;
-    }
-
-    .contact-info p {
-      font-size: 16px;
-      color: var(--text-muted);
-      line-height: 1.7;
-      margin-bottom: 36px;
-    }
-
-    .contact-detail {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-size: 14px;
-      color: var(--text-muted);
-      margin-bottom: 12px;
-    }
-
-    .contact-detail strong {
-      color: var(--black);
-    }
-
-    .contact-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--gold);
-      flex-shrink: 0;
-    }
-
-    .contact-form {
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 44px 40px;
-    }
-
-    .form-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-    }
-
-    .form-group {
-      margin-bottom: 20px;
-    }
-
-    .form-group label {
-      display: block;
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--black);
-      margin-bottom: 7px;
-      letter-spacing: 0.2px;
-    }
-
-    .form-group input,
-    .form-group select {
-      width: 100%;
-      height: 46px;
-      padding: 0 16px;
-      font-family: 'Inter', sans-serif;
-      font-size: 14px;
-      color: var(--black);
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: 7px;
-      outline: none;
-      transition: border-color 0.2s;
-      appearance: none;
-    }
-
-    .form-group input:focus,
-    .form-group select:focus {
-      border-color: var(--black);
-    }
-
-    .form-group input::placeholder {
-      color: var(--gray-400);
-    }
-
-    .form-submit {
-      width: 100%;
-      padding: 15px;
-      background: var(--black);
-      color: var(--white);
-      font-family: 'Inter', sans-serif;
-      font-size: 15px;
-      font-weight: 700;
-      border: none;
-      border-radius: 7px;
-      cursor: pointer;
-      transition: background 0.2s;
-      margin-top: 8px;
-    }
-
-    .form-submit:hover {
-      background: var(--gray-800);
-    }
-
-    .form-note {
-      font-size: 12px;
-      color: var(--gray-400);
-      text-align: center;
-      margin-top: 14px;
-    }
-
-    /* FAQ */
-    .faq-grid-wrapper {
-      display: grid;
-      grid-template-columns: 1fr 1.5fr;
-      gap: 72px;
-      align-items: flex-start;
-    }
-
-    .faq-header-left {
-      text-align: left;
-      position: sticky;
-      top: 100px;
-    }
-
-    .faq-header-left .section-label {
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 20px;
-      display: inline-block;
-    }
-
-    .faq-header-left .section-title {
-      font-family: 'Playfair Display', 'Didot', 'Bodoni MT', 'Cinzel', Georgia, serif;
-      font-size: 44px;
-      font-weight: 400;
-      color: var(--black);
-      line-height: 1.2;
-      margin-bottom: 24px;
-      letter-spacing: -0.5px;
-    }
-
-    .faq-header-left .section-title em {
-      font-family: 'Playfair Display', 'Didot', 'Bodoni MT', 'Cinzel', Georgia, serif;
-      font-style: italic;
-      color: var(--gold);
-      font-weight: 400;
-    }
-
-    .faq-header-left .section-sub {
-      font-size: 16px;
-      color: var(--text-muted);
-      line-height: 1.6;
-      margin-bottom: 32px;
-      max-width: 380px;
-    }
-
-    .btn-faq-contact {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      background: transparent;
-      color: var(--black);
-      font-family: 'Inter', sans-serif;
-      font-size: 14px;
-      font-weight: 600;
-      padding: 12px 28px;
-      border: 1px solid rgba(10, 10, 10, 0.15);
-      border-radius: 6px;
-      cursor: pointer;
-      text-decoration: none;
-      transition: border-color 0.2s, background 0.2s;
-    }
-
-    .btn-faq-contact:hover {
-      border-color: var(--black);
-      background: rgba(10, 10, 10, 0.03);
-    }
-
-    .faq-list {
-      width: 100%;
-    }
-
-    .faq-item {
-      border-bottom: 1px solid var(--border);
-      padding: 24px 0;
-    }
-
-    .faq-question {
-      font-size: 16px;
-      font-weight: 700;
-      color: var(--black);
-      cursor: pointer;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 16px;
-      user-select: none;
-      list-style: none;
-    }
-
-    .faq-question::-webkit-details-marker {
-      display: none;
-    }
-
-    details[open] .faq-toggle {
-      transform: rotate(45deg);
-    }
-
-    .faq-toggle {
-      font-size: 22px;
-      color: var(--gold);
-      transition: transform 0.2s;
-      flex-shrink: 0;
-      font-weight: 300;
-    }
-
-    .faq-answer {
-      font-size: 14px;
-      color: var(--text-muted);
-      line-height: 1.75;
-      padding-top: 14px;
-    }
-
-    /* CTA BANNER */
-    .cta-banner {
-      background: radial-gradient(circle at center, #1b1222 0%, #060608 80%);
-      padding: 96px 40px;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-      border-top: 1px solid rgba(255, 255, 255, 0.05);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    }
-
-    .cta-banner::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(201, 168, 76, 0.15) 0%, transparent 70%);
-      pointer-events: none;
-    }
-
-    .cta-banner h2 {
-      font-family: 'Playfair Display', 'Didot', 'Bodoni MT', 'Cinzel', Georgia, serif;
-      font-size: 45px;
-      font-weight: 400;
-      letter-spacing: -0.5px;
-      color: var(--white);
-      margin-bottom: 20px;
-      line-height: 1.2;
-    }
-
-    .cta-banner h2 em {
-      font-family: 'Playfair Display', 'Didot', 'Bodoni MT', 'Cinzel', Georgia, serif;
-      font-style: italic;
-      color: var(--gold);
-      font-weight: 400;
-    }
-
-    .cta-banner p {
-      font-size: 17px;
-      color: rgba(255, 255, 255, 0.65);
-      margin-bottom: 36px;
-      max-width: 480px;
-      margin-left: auto;
-      margin-right: auto;
-      line-height: 1.6;
-    }
-
-    .cta-actions {
-      display: flex;
-      justify-content: center;
-      gap: 14px;
-      flex-wrap: wrap;
-    }
-
-    /* FOOTER */
-    footer {
-      background: var(--black);
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
-      padding: 48px 40px 32px;
-    }
-
-    .footer-inner {
-      max-width: 1080px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: 2fr 1fr 1fr;
-      gap: 48px;
-      margin-bottom: 48px;
-    }
-
-    .footer-brand {
-      font-size: 20px;
-      font-weight: 700;
-      color: var(--white);
-      margin-bottom: 12px;
-    }
-
-    .footer-brand span {
-      color: var(--gold);
-    }
-
-    .footer-tagline {
-      font-size: 14px;
-      color: rgba(255, 255, 255, 0.4);
-      max-width: 280px;
-      line-height: 1.6;
-    }
-
-    .footer-col h4 {
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      color: rgba(255, 255, 255, 0.4);
-      margin-bottom: 16px;
-    }
-
-    .footer-col ul {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .footer-col a {
-      font-size: 14px;
-      color: rgba(255, 255, 255, 0.65);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-
-    .footer-col a:hover {
-      color: var(--white);
-    }
-
-    .footer-bottom {
-      max-width: 1080px;
-      margin: 0 auto;
-      padding-top: 24px;
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .footer-bottom p {
-      font-size: 13px;
-      color: rgba(255, 255, 255, 0.3);
-    }
-
-    /* Form success */
-    .form-success {
-      display: none;
-      text-align: center;
-      padding: 48px 24px;
-    }
-
-    .success-icon {
-      width: 56px;
-      height: 56px;
-      background: var(--gold-light);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 20px;
-      font-size: 24px;
-    }
-
-    .form-success h3 {
-      font-size: 22px;
-      font-weight: 700;
-      margin-bottom: 10px;
-    }
-
-    .form-success p {
-      font-size: 14px;
-      color: var(--text-muted);
-    }
-
-    @media (max-width: 900px) {
-      nav {
-        padding: 0 20px;
-      }
-
-      .nav-links {
-        display: none;
-      }
-
-      section {
-        padding: 64px 20px;
-      }
-
-      .hero {
-        padding: 72px 20px 64px;
-      }
-
-      .hero h1 {
-        font-size: 34px;
-      }
-
-      .section-title,
-      .contact-info h2,
-      .cta-banner h2 {
-        font-size: 32px;
-      }
-
-      .steps-grid,
-      .features-grid,
-      .templates-grid,
-      .pricing-grid,
-      .testimonials-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .features-grid {
-        border: none;
-        gap: 12px;
-      }
-
-      .feature-cell {
-        border: 1px solid var(--border);
-        border-radius: 10px;
-      }
-
-      .contact-layout {
-        grid-template-columns: 1fr;
-        gap: 40px;
-      }
-
-      .footer-inner {
-        grid-template-columns: 1fr 1fr;
-        gap: 32px;
-      }
-
-      .footer-inner > div:first-child {
-        grid-column: 1 / -1;
-      }
-
-      .form-row {
-        grid-template-columns: 1fr;
-      }
-
-      .hero-stats {
-        gap: 28px;
-      }
-
-      .device-toggle-wrapper {
-        display: none;
-      }
-    }
-
-    /* ── FEATURES LIST SECTION ── */
-    #features {
-      background: var(--cream);
-      color: var(--text);
-      padding: 80px 40px;
-      position: relative;
-    }
-
-    .features-header-wrapper {
-      display: grid;
-      grid-template-columns: 1.2fr 1fr;
-      gap: 48px;
-      align-items: flex-start;
-      margin-bottom: 56px;
-    }
-
-    .features-header-left {
-      text-align: left;
-    }
-
-    .features-header-left .section-label {
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 20px;
-      display: inline-block;
-    }
-
-    .features-header-left .section-title {
-      font-family: 'Playfair Display', 'Didot', 'Bodoni MT', 'Cinzel', Georgia, serif;
-      font-size: 44px;
-      font-weight: 400;
-      color: var(--black);
-      line-height: 1.2;
-      margin-bottom: 24px;
-      letter-spacing: -0.5px;
-    }
-
-    .features-header-left .section-title em {
-      font-family: 'Playfair Display', 'Didot', 'Bodoni MT', 'Cinzel', Georgia, serif;
-      font-style: italic;
-      color: var(--gold);
-      font-weight: 400;
-    }
-
-    .features-header-left .section-sub {
-      font-size: 16px;
-      color: var(--text-muted);
-      line-height: 1.6;
-      margin-bottom: 0;
-      max-width: 580px;
-    }
-
-    .features-header-right {
-      display: flex;
-      align-items: flex-start;
-      height: 100%;
-      padding-top: 48px;
-    }
-
-    .features-quote-box {
-      border-left: 2px solid var(--gold);
-      padding-left: 24px;
-      text-align: left;
-    }
-
-    .features-quote-text {
-      font-family: 'Playfair Display', 'Didot', 'Bodoni MT', 'Cinzel', Georgia, serif;
-      font-size: 20px;
-      font-style: italic;
-      color: var(--black);
-      line-height: 1.6;
-      margin-bottom: 12px;
-    }
-
-    .features-quote-author {
-      font-size: 13px;
-      color: var(--text-muted);
-      letter-spacing: 0.5px;
-      display: block;
-    }
-
-    .features-grid-list {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px 36px;
-    }
-
-    .feature-item-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 14px 20px;
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s, background 0.2s;
-    }
-
-    .feature-item-row:hover {
-      transform: translateY(-2px);
-      background: var(--gray-100);
-      border-color: rgba(201, 168, 76, 0.3);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
-    }
-
-    .feature-item-left {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-
-    .feature-item-icon-box {
-      width: 36px;
-      height: 36px;
-      background: rgba(201, 168, 76, 0.08);
-      border: 1px solid rgba(201, 168, 76, 0.2);
-      border-radius: 6px;
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .feature-item-icon-box svg {
-      width: 18px;
-      height: 18px;
-    }
-
-    .feature-item-title {
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--black);
-    }
-
-    .feature-item-badge {
-      font-size: 10px;
-      font-weight: 700;
-      padding: 3px 8px;
-      border-radius: 4px;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-      background: rgba(201, 168, 76, 0.1);
-      color: var(--gold-dark);
-      border: 1px solid rgba(201, 168, 76, 0.25);
-    }
-
-    @media (max-width: 900px) {
-      #features {
-        padding: 60px 20px;
-      }
-
-      .features-header-wrapper {
-        grid-template-columns: 1fr;
-        gap: 32px;
-        margin-bottom: 40px;
-      }
-
-      .features-header-right {
-        padding-top: 0;
-      }
-
-      .features-header-left .section-title {
-        font-size: 32px;
-      }
-
-      .features-quote-text {
-        font-size: 18px;
-      }
-
-      .features-grid-list {
-        grid-template-columns: 1fr;
-        gap: 10px;
-      }
-
-      /* TEMPLATES MOBILE */
-      #templates {
-        padding: 60px 20px;
-      }
-
-      .templates-header-wrapper {
-        grid-template-columns: 1fr;
-        gap: 32px;
-        margin-bottom: 40px;
-      }
-
-      .templates-header-right {
-        padding-top: 0;
-        justify-content: flex-start;
-      }
-
-      .templates-highlight-box {
-        max-width: 100%;
-      }
-
-      .templates-header-left .section-title {
-        font-size: 32px;
-      }
-
-      /* FAQ MOBILE */
-      #faq {
-        padding: 60px 20px;
-      }
-
-      .faq-grid-wrapper {
-        grid-template-columns: 1fr;
-        gap: 40px;
-      }
-
-      .faq-header-left {
-        position: static;
-      }
-
-      .faq-header-left .section-title {
-        font-size: 32px;
-      }
-
-      .faq-header-left .section-sub {
-        max-width: 100%;
-        margin-bottom: 24px;
-      }
-
-      /* SHOWCASE MOBILE */
-      .showcase-container {
-        grid-template-columns: 1fr;
-        gap: 32px;
-      }
-
-      .showcase-preview-panel {
-        order: -1;
-        aspect-ratio: 16/10;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-
-      .showcase-side-tabs {
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 16px;
-      }
-
-      .showcase-tab {
-        flex: 1 1 280px;
-        max-width: 400px;
-      }
-
-      .showcase-tab.active::before {
-        display: none;
-      }
-    }
-
-    /* ── MOBILE PREVIEW MODAL ── */
+      --cream: #FDFCFA;
+      --gold: #3F6C4E;
+      --gold-light: #E7EFE7;
+      --gold-dark: #2A4A35;
+      --gray-100: #F7F5F0;
+      --gray-200: #DDD8CB;
+      --gray-400: #7C8177;
+      --gray-600: #4B5245;
+      --gray-800: #2A4A35;
+      --text: #1C231B;
+      --text-muted: #4B5245;
+      --border: #DDD8CB;
+    }
+
+/* ── MOBILE PREVIEW MODAL ── */
     .demo-modal-overlay {
       position: fixed;
       top: 0;
@@ -2396,1043 +1200,8 @@
         transform: scale(0.55) translateY(0);
       }
     }
-  </style>
-</head>
+  
 
-<body>
-
-  <!-- NAV -->
-  <nav class="nav-transparent" id="main-nav">
-    <a href="#" class="nav-logo">vespr<span>.</span></a>
-    <ul class="nav-links">
-      <li><a href="#how-it-works">How it works</a></li>
-      <li><a href="#features">Features</a></li>
-      <li><a href="#templates">Templates</a></li>
-      <li><a href="#pricing">Pricing</a></li>
-    </ul>
-    <div style="display: flex; align-items: center; gap: 24px;">
-      <a href="{{ route('admin.common.login') }}" class="nav-login-link">Log in</a>
-      <a href="javascript:void(0)" class="btn-nav-action pricing-btn-trigger" data-plan="sprout">Get started</a>
-    </div>
-  </nav>
-
-  <!-- HERO -->
-  <section class="hero" id="hero">
-    <span class="hero-eyebrow">— ECOMMERCE FOR GROCERY STORES & SUPERMARKETS —</span>
-    <h1>Sell your groceries <br> online. <br> <em>No tech skills needed.</em></h1>
-    <p class="hero-sub">Vespr gives grocery owners, supermarkets, and local shops a ready-to-launch store — beautiful themes, smart inventory tools, and instant delivery features. From $9/month.</p>
-    <div class="hero-cta">
-      <a href="javascript:void(0)" class="btn-gold pricing-btn-trigger" data-plan="sprout">Start Free — 1 Month on
-        Us</a>
-      <a href="#features" class="btn-ghost">Explore Features</a>
-    </div>
-    <div class="hero-bullets">
-      <span>• Unlimited products on all plans</span>
-      <span>• First month free, no credit card</span>
-      <span>• Built for indie & luxury brands</span>
-    </div>
-  </section>
-
-  <!-- HOW IT WORKS -->
-  <section id="how-it-works">
-    <div class="section-inner">
-      <div class="section-label">How it works</div>
-      <h2 class="section-title">Up and selling in <em>four steps</em>.</h2>
-      <p class="section-sub">No developer. No design agency. Go from signup to live store in under an hour.</p>
-      <div class="steps-grid">
-        <div class="step-card">
-          <div class="step-number">01</div>
-          <h3>Create your account</h3>
-          <p>Sign up with your email. No credit card needed to start. Your store is ready instantly.</p>
-          <span class="step-time">2 minutes</span>
-        </div>
-        <div class="step-card">
-          <div class="step-number">02</div>
-          <h3>Pick a theme</h3>
-          <p>Choose from grocery-specific templates built to convert. Every design works on mobile.</p>
-          <span class="step-time">5 minutes</span>
-        </div>
-        <div class="step-card">
-          <div class="step-number">03</div>
-          <h3>Add your products</h3>
-          <p>Upload products, set prices, and organize categories. The editor makes it straightforward.</p>
-          <span class="step-time">15 minutes</span>
-        </div>
-        <div class="step-card">
-          <div class="step-number">04</div>
-          <h3>Go live and sell</h3>
-          <p>Connect your domain, link your payment gateway, and open your store to the world.</p>
-          <span class="step-time">Today</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- INTEGRATIONS BAR -->
-  <div class="integrations-bar">
-    <div class="integrations-label">Works with any tool you already use</div>
-    <div class="integrations-list">
-      <span class="integration-pill">Razorpay</span>
-      <span class="integration-pill">Stripe</span>
-      <span class="integration-pill">PayPal</span>
-      <span class="integration-pill">PayU</span>
-      <span class="integration-pill">Cashfree</span>
-      <span class="integration-pill">Delhivery</span>
-      <span class="integration-pill">WhatsApp Business</span>
-      <span class="integration-pill">Shiprocket</span>
-      <span class="integration-pill">Bluedart</span>
-      <span class="integration-pill">Custom gateways</span>
-      <span class="integration-pill">+ any payment or shipping partner</span>
-    </div>
-  </div>
-
-  <!-- FEATURES -->
-  <section id="features" class="features-bg">
-    <div class="section-inner">
-      <div class="features-header-wrapper">
-        <div class="features-header-left">
-          <span class="section-label">Features</span>
-          <h2 class="section-title">Every feature your <br> <em>grocery store</em> needs</h2>
-          <p class="section-sub">General ecommerce platforms treat groceries like arbitrary items. <br> Vespr
-            understands that fresh groceries need local delivery, batch tracking, and weight-based pricing.</p>
-        </div>
-        <div class="features-header-right">
-          <div class="features-quote-box">
-            <p class="features-quote-text">"We saw a 40% lift in daily orders after switching to Vespr's local delivery system."</p>
-            <span class="features-quote-author">— Supermarket, UAE</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="features-grid-list">
-        <!-- Item 1: Grocery-first themes -->
-        <div class="feature-item-row">
-          <div class="feature-item-left">
-            <div class="feature-item-icon-box">
-              <svg viewBox="0 0 24 24" fill="none" stroke="var(--gold-dark)" stroke-width="2" stroke-linecap="round"
-                stroke-linejoin="round">
-                <path
-                  d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 14.7255 3.09032 17.1962 4.85857 19C5.35122 19.5 5.2539 20.5 4.5 20.5C3.7461 20.5 3 21.2539 3 22" />
-                <circle cx="7.5" cy="10.5" r="1" fill="var(--gold-dark)" />
-                <circle cx="11.5" cy="7.5" r="1" fill="var(--gold-dark)" />
-                <circle cx="16.5" cy="9.5" r="1" fill="var(--gold-dark)" />
-                <circle cx="15.5" cy="14.5" r="1" fill="var(--gold-dark)" />
-              </svg>
-            </div>
-            <span class="feature-item-title">Grocery-first themes</span>
-          </div>
-          <span class="feature-item-badge">Design</span>
-        </div>
-
-        <!-- Item 2: Secure checkout -->
-        <div class="feature-item-row">
-          <div class="feature-item-left">
-            <div class="feature-item-icon-box">
-              <svg viewBox="0 0 24 24" fill="none" stroke="var(--gold-dark)" stroke-width="2" stroke-linecap="round"
-                stroke-linejoin="round">
-                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-              </svg>
-            </div>
-            <span class="feature-item-title">Secure checkout</span>
-          </div>
-          <span class="feature-item-badge">Trust</span>
-        </div>
-
-        <!-- Item 3: Grocery bundle builder -->
-        <div class="feature-item-row">
-          <div class="feature-item-left">
-            <div class="feature-item-icon-box">
-              <svg viewBox="0 0 24 24" fill="none" stroke="var(--gold-dark)" stroke-width="2" stroke-linecap="round"
-                stroke-linejoin="round">
-                <path
-                  d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
-                <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
-                <line x1="12" y1="22.08" x2="12" y2="12" />
-              </svg>
-            </div>
-            <span class="feature-item-title">Grocery combo builder</span>
-          </div>
-          <span class="feature-item-badge">Sales</span>
-        </div>
-
-        <!-- Item 4: Fast-loading stores -->
-        <div class="feature-item-row">
-          <div class="feature-item-left">
-            <div class="feature-item-icon-box">
-              <svg viewBox="0 0 24 24" fill="none" stroke="var(--gold-dark)" stroke-width="2" stroke-linecap="round"
-                stroke-linejoin="round">
-                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
-              </svg>
-            </div>
-            <span class="feature-item-title">Fast-loading stores</span>
-          </div>
-          <span class="feature-item-badge">Perf</span>
-        </div>
-
-        <!-- Item 5: Multi-brand dashboard -->
-        <div class="feature-item-row">
-          <div class="feature-item-left">
-            <div class="feature-item-icon-box">
-              <svg viewBox="0 0 24 24" fill="none" stroke="var(--gold-dark)" stroke-width="2" stroke-linecap="round"
-                stroke-linejoin="round">
-                <rect x="3" y="3" width="7" height="9" />
-                <rect x="14" y="3" width="7" height="5" />
-                <rect x="14" y="12" width="7" height="9" />
-                <rect x="3" y="16" width="7" height="5" />
-              </svg>
-            </div>
-            <span class="feature-item-title">Multi-brand dashboard</span>
-          </div>
-          <span class="feature-item-badge">Manage</span>
-        </div>
-
-        <!-- Item 6: WhatsApp integration -->
-        <div class="feature-item-row">
-          <div class="feature-item-left">
-            <div class="feature-item-icon-box">
-              <svg viewBox="0 0 24 24" fill="none" stroke="var(--gold-dark)" stroke-width="2" stroke-linecap="round"
-                stroke-linejoin="round">
-                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-              </svg>
-            </div>
-            <span class="feature-item-title">WhatsApp integration</span>
-          </div>
-          <span class="feature-item-badge">Support</span>
-        </div>
-
-        <!-- Item 7: Grocery discovery SEO -->
-        <div class="feature-item-row">
-          <div class="feature-item-left">
-            <div class="feature-item-icon-box">
-              <svg viewBox="0 0 24 24" fill="none" stroke="var(--gold-dark)" stroke-width="2" stroke-linecap="round"
-                stroke-linejoin="round">
-                <circle cx="11" cy="11" r="8" />
-                <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                <line x1="11" y1="8" x2="11" y2="14" />
-                <line x1="8" y1="11" x2="14" y2="11" />
-              </svg>
-            </div>
-            <span class="feature-item-title">Local discovery SEO</span>
-          </div>
-          <span class="feature-item-badge">Growth</span>
-        </div>
-
-        <!-- Item 8: Any shipping partner -->
-        <div class="feature-item-row">
-          <div class="feature-item-left">
-            <div class="feature-item-icon-box">
-              <svg viewBox="0 0 24 24" fill="none" stroke="var(--gold-dark)" stroke-width="2" stroke-linecap="round"
-                stroke-linejoin="round">
-                <rect x="1" y="3" width="15" height="13" />
-                <polygon points="16 8 20 8 23 11 23 16 16 16 16 8" />
-                <circle cx="5.5" cy="18.5" r="2.5" />
-                <circle cx="18.5" cy="18.5" r="2.5" />
-              </svg>
-            </div>
-            <span class="feature-item-title">Any shipping partner</span>
-          </div>
-          <span class="feature-item-badge">Ship</span>
-        </div>
-
-        <!-- Item 9: Inventory and analytics -->
-        <div class="feature-item-row">
-          <div class="feature-item-left">
-            <div class="feature-item-icon-box">
-              <svg viewBox="0 0 24 24" fill="none" stroke="var(--gold-dark)" stroke-width="2" stroke-linecap="round"
-                stroke-linejoin="round">
-                <line x1="18" y1="20" x2="18" y2="10" />
-                <line x1="12" y1="20" x2="12" y2="4" />
-                <line x1="6" y1="20" x2="6" y2="14" />
-              </svg>
-            </div>
-            <span class="feature-item-title">Inventory and analytics</span>
-          </div>
-          <span class="feature-item-badge">Insights</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- TEMPLATES -->
-  <section id="templates">
-    <div class="section-inner">
-      <div class="templates-header-wrapper">
-        <div class="templates-header-left">
-          <span class="section-label">Store templates</span>
-          <h2 class="section-title">Choose your <em>aesthetic</em></h2>
-          <p class="section-sub">Every template ships with product category pages, filterable search, and quick cart features
-            pre-built. Pick the visual identity that matches your brand, then customise from there.</p>
-        </div>
-        <div class="templates-header-right">
-          <div class="templates-highlight-box">
-            <div class="template-highlight-item">
-              <svg viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2.5" stroke-linecap="round"
-                stroke-linejoin="round" style="width:16px;height:16px;flex-shrink:0;">
-                <polyline points="20 6 9 17 4 12"></polyline>
-              </svg>
-              <span>100% Customizable layout</span>
-            </div>
-            <div class="template-highlight-item">
-              <svg viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2.5" stroke-linecap="round"
-                stroke-linejoin="round" style="width:16px;height:16px;flex-shrink:0;">
-                <polyline points="20 6 9 17 4 12"></polyline>
-              </svg>
-              <span>Fully mobile responsive</span>
-            </div>
-            <div class="template-highlight-item">
-              <svg viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2.5" stroke-linecap="round"
-                stroke-linejoin="round" style="width:16px;height:16px;flex-shrink:0;">
-                <polyline points="20 6 9 17 4 12"></polyline>
-              </svg>
-              <span>Pre-built category layouts</span>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="templates-grid">
-
-        <div class="template-card" data-demo-url="{{ route('v3.home') }}?preview=1">
-          <div class="template-preview"
-            style="background: linear-gradient(135deg, #1a101e 0%, #372044 50%, #1a101e 100%);">
-            <div style="text-align:center;">
-              <div style="font-size:11px;letter-spacing:3px;color:rgba(216,180,254,0.7);margin-bottom:8px;">AURA ATELIER
-              </div>
-              <div style="font-size:26px;font-weight:700;color:#C9A84C;letter-spacing:-1px;">Aura Luxe</div>
-              <div style="width:40px;height:1px;background:#C9A84C;margin:12px auto;opacity:0.5;"></div>
-              <div style="font-size:11px;color:rgba(255,255,255,0.35);letter-spacing:1px;">Symmetry. Light. Presence.
-              </div>
-            </div>
-            <span class="template-preview-label">Modern Luxury</span>
-          </div>
-          <div class="template-info">
-            <h3>Aura Luxe</h3>
-            <p>Central header navigation and high-impact layout, ideal for modern designer brands.</p>
-            <span class="template-tag" style="background:#F3E8FF;color:#6B21A8;">Luxury</span>
-          </div>
-        </div>
-
-        <div class="template-card" data-demo-url="{{ route('velvet.home') }}?preview=1">
-          <div class="template-preview"
-            style="background: linear-gradient(135deg, #1a1208 0%, #3d2b0e 50%, #1a1208 100%);">
-            <div style="text-align:center;">
-              <div style="font-size:11px;letter-spacing:3px;color:rgba(201,168,76,0.7);margin-bottom:8px;">MAISON NOIR
-              </div>
-              <div style="font-size:26px;font-weight:700;color:#C9A84C;letter-spacing:-1px;">Velvet Dark</div>
-              <div style="width:40px;height:1px;background:#C9A84C;margin:12px auto;opacity:0.5;"></div>
-              <div style="font-size:11px;color:rgba(255,255,255,0.35);letter-spacing:1px;">Exclusive. Rare. Refined.
-              </div>
-            </div>
-            <span class="template-preview-label">Dark luxury</span>
-          </div>
-          <div class="template-info">
-            <h3>Velvet Dark</h3>
-            <p>Deep blacks and gold accents. Built for exclusive collections and boutique ateliers.</p>
-            <span class="template-tag" style="background:#1A1A1A;color:#C9A84C;">Dark</span>
-          </div>
-        </div>
-
-        <div class="template-card" data-demo-url="{{ route('v4.home') }}?preview=1">
-          <div class="template-preview" style="background: linear-gradient(160deg, #fdfaf6 0%, #f0e8d8 100%);">
-            <div style="text-align:center;">
-              <div style="font-size:11px;letter-spacing:3px;color:#9E8A6E;margin-bottom:8px;">HERITAGE ATELIER</div>
-              <div style="font-size:26px;font-weight:700;color:#3d2b0e;letter-spacing:-1px;">Editorial Cream</div>
-              <div style="width:40px;height:1px;background:#C9A84C;margin:12px auto;opacity:0.6;"></div>
-              <div style="font-size:11px;color:#9E8A6E;letter-spacing:1px;">Classic craftsmanship</div>
-            </div>
-            <span class="template-preview-label"
-              style="color:rgba(0,0,0,0.5);background:rgba(255,255,255,0.6);">Editorial light</span>
-          </div>
-          <div class="template-info">
-            <h3>Editorial Cream</h3>
-            <p>Warm ivory tones with editorial typography. Perfect for organic and artisanal groceries.</p>
-            <span class="template-tag" style="background:#F0E8D8;color:#8B6914;">Elegant</span>
-          </div>
-        </div>
-
-        <div class="template-card" data-demo-url="{{ route('v1.home') }}?preview=1">
-          <div class="template-preview"
-            style="background: linear-gradient(135deg, #0f1923 0%, #1a2d3d 50%, #0f1923 100%);">
-            <div style="text-align:center;">
-              <div style="font-size:11px;letter-spacing:3px;color:rgba(100,180,220,0.6);margin-bottom:8px;">FRESH STUDIO
-              </div>
-              <div style="font-size:26px;font-weight:700;color:#fff;letter-spacing:-1px;">Modern Minimal</div>
-              <div style="width:40px;height:1px;background:rgba(255,255,255,0.3);margin:12px auto;"></div>
-              <div style="font-size:11px;color:rgba(255,255,255,0.3);letter-spacing:1px;">Clean. Contemporary.</div>
-            </div>
-            <span class="template-preview-label">Minimal</span>
-          </div>
-          <div class="template-info">
-            <h3>Modern Minimal</h3>
-            <p>Clean grids and sharp contrast. Lets your product photography do the talking.</p>
-            <span class="template-tag" style="background:#E6EFF8;color:#185FA5;">Modern</span>
-          </div>
-        </div>
-
-      </div>
-      <!-- <div style="text-align:center;margin-top:40px;">
-      <a href="#contact" class="btn-outline">Request a demo of all templates →</a>
-    </div> -->
-    </div>
-  </section>
-
-  <!-- PRODUCT PAGES SHOWCASE -->
-  <section id="product-showcase" class="features-bg"
-    style="border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
-    <div class="section-inner">
-      <div style="text-align: center; margin-bottom: 32px;">
-        <span class="section-label">Product Pages</span>
-        <h2 class="section-title"
-          style="font-family: 'Playfair Display', serif; font-weight: 400; font-size: 44px; color: var(--black); margin-bottom: 16px;">
-          Product-first layout, <em>designed to convert</em></h2>
-        <p class="section-sub" style="margin: 0 auto; max-width: 620px;">Vespr showcases your product details, freshness tags, and key attributes in a beautiful, structured layout that is easy to navigate.</p>
-      </div>
-
-      <div class="showcase-container">
-        <!-- Left Side: Tabs 1 & 2 -->
-        <div class="showcase-side-tabs showcase-side-left">
-          <div class="showcase-tab active" data-target="grocery-details">
-            <span class="showcase-tab-tag">Interactive</span>
-            <h3>Category Grid Layout</h3>
-            <p>Highlight categories, freshness indicators, and weight/quantity options directly next to the product image.</p>
-          </div>
-          <div class="showcase-tab" data-target="editorial-bold">
-            <span class="showcase-tab-tag">Modern</span>
-            <h3>Clean Minimal style</h3>
-            <p>Modern layout featuring clean product images, large pricing, and quick add-to-cart actions.</p>
-          </div>
-        </div>
-
-        <!-- Middle: Preview Panel -->
-        <div class="showcase-preview-panel">
-          <div class="showcase-image-wrapper active has-mobile" id="grocery-details">
-            <img class="showcase-desktop-img" src="{{ asset('Images/product pages/1.png') }}" alt="Category Grid Layout">
-            <div class="showcase-mobile-mockup">
-              <img src="{{ asset('Images/product pages/m1.png') }}" alt="Category Grid Layout (Mobile)">
-            </div>
-          </div>
-          <div class="showcase-image-wrapper" id="luxury-split">
-            <img class="showcase-desktop-img" src="{{ asset('Images/product pages/2.png') }}" alt="Luxury Split Grid">
-          </div>
-          <div class="showcase-image-wrapper has-mobile" id="editorial-bold">
-            <img class="showcase-desktop-img" src="{{ asset('Images/product pages/3.png') }}" alt="Clean Minimal style">
-            <div class="showcase-mobile-mockup">
-              <img src="{{ asset('Images/product pages/m2.png') }}" alt="Clean Minimal style (Mobile)">
-            </div>
-          </div>
-          <div class="showcase-image-wrapper has-mobile" id="bangalore-bloom">
-            <img class="showcase-desktop-img" src="{{ asset('Images/product pages/4.png') }}" alt="Modern Grocery Attributes">
-            <div class="showcase-mobile-mockup">
-              <img src="{{ asset('Images/product pages/m3.png') }}" alt="Modern Grocery Attributes (Mobile)">
-            </div>
-          </div>
-        </div>
-
-        <!-- Right Side: Tabs 3 & 4 -->
-        <div class="showcase-side-tabs showcase-side-right">
-          <div class="showcase-tab" data-target="luxury-split">
-            <span class="showcase-tab-tag">Luxury</span>
-            <h3>Interactive Grocery Grid</h3>
-            <p>Split screen layout showcasing fresh grocery items alongside pricing, collections, and weight selectors.
-            </p>
-          </div>
-          <div class="showcase-tab" data-target="bangalore-bloom">
-            <span class="showcase-tab-tag">Signature</span>
-            <h3>Modern Grocery Attributes</h3>
-            <p>Display organic status, freshness window, and volume deals to maximize order sizes.</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Conversion Boosters Banner -->
-      <div class="showcase-features-banner">
-        <div class="features-banner-title">Premium Conversion Boosters Included</div>
-        <div class="features-banner-grid">
-          <div class="features-banner-item">
-            <div class="features-banner-icon"><i class="fa-solid fa-credit-card"></i></div>
-            <h4>Split Payment Badging</h4>
-            <p>Built-in integrations for Tabby & Tamara displaying interest-free splits to reduce cart abandonment.</p>
-          </div>
-          <div class="features-banner-item">
-            <div class="features-banner-icon"><i class="fa-solid fa-truck-fast"></i></div>
-            <h4>Delivery Date Estimator</h4>
-            <p>Dynamic expected arrival countdowns (e.g. "Get it by tomorrow") showing immediate delivery timelines.</p>
-          </div>
-          <div class="features-banner-item">
-            <div class="features-banner-icon"><i class="fa-solid fa-tags"></i></div>
-            <h4>Volume Tier Discounts</h4>
-            <p>Automatic triggers (e.g. buy 2 get 15% off) to increase Average Order Value (AOV).</p>
-          </div>
-          <div class="features-banner-item">
-            <div class="features-banner-icon"><i class="fa-solid fa-fire-flame-curved"></i></div>
-            <h4>Stock Scarcity Flags</h4>
-            <p>High-conversion scarcity highlights and live-viewer counters to drive immediate conversions.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- LIGHTBOX MODAL FOR SHOWCASE IMAGES -->
-  <div id="showcase-lightbox" class="lightbox-overlay">
-    <span class="lightbox-close">&times;</span>
-    <img class="lightbox-content" id="lightbox-img" src="" alt="Expanded View">
-    <div id="lightbox-caption"></div>
-  </div>
-
-  <!-- PRICING -->
-  <section id="pricing" class="pricing-bg">
-    <div class="section-inner">
-      <div class="section-label">Pricing</div>
-      <h2 class="section-title">Straightforward pricing. <em>No surprises</em>.</h2>
-      <p class="section-sub">Start with the plan that fits your size. Upgrade any time. We never take a cut of your
-        revenue.</p>
-      <div class="pricing-grid">
-
-        <!-- Starter -->
-        <div class="price-card">
-          <div class="price-tier">Starter</div>
-          <div class="price-name">Sprout</div>
-          <p class="price-desc">For new grocery sellers getting started.</p>
-          <div class="price-amount">
-            <span class="price-currency">$</span>
-            <span class="price-number">9</span>
-            <span class="price-period">/month</span>
-          </div>
-          <ul class="price-features">
-            <li><span class="check">✓</span>Up to 20 products</li>
-            <li><span class="check">✓</span>All store themes</li>
-            <li><span class="check">✓</span>Custom domain</li>
-            <li><span class="check">✓</span>Any payment gateway</li>
-            <li><span class="check">✓</span>Any shipping partner</li>
-            <li><span class="check">✓</span>WhatsApp integration</li>
-            <li><span class="check">✓</span>Order management</li>
-            <li><span class="check">✓</span>Email support</li>
-          </ul>
-          <a href="javascript:void(0)" class="btn-pricing btn-pricing-default pricing-btn-trigger"
-            data-plan="sprout">Get started</a>
-        </div>
-
-        <!-- Growth -->
-        <div class="price-card featured">
-          <div class="price-badge">Most popular</div>
-          <div class="price-tier">Growth</div>
-          <div class="price-name">Market</div>
-          <p class="price-desc">For growing stores with an expanding catalogue.</p>
-          <div class="price-amount">
-            <span class="price-currency">$</span>
-            <span class="price-number">19</span>
-            <span class="price-period">/month</span>
-          </div>
-          <ul class="price-features">
-            <li><span class="check">✓</span>Up to 100 products</li>
-            <li><span class="check">✓</span>All store themes</li>
-            <li><span class="check">✓</span>Custom domain</li>
-            <li><span class="check">✓</span>Any payment gateway</li>
-            <li><span class="check">✓</span>Any shipping partner</li>
-            <li><span class="check">✓</span>WhatsApp integration</li>
-            <li><span class="check">✓</span>Grocery combo builder</li>
-            <li><span class="check">✓</span>Advanced SEO tools</li>
-            <li><span class="check">✓</span>Priority WhatsApp support</li>
-          </ul>
-          <a href="javascript:void(0)" class="btn-pricing btn-pricing-featured pricing-btn-trigger"
-            data-plan="maison">Get started</a>
-        </div>
-
-        <!-- Pro -->
-        <div class="price-card">
-          <div class="price-tier">Pro</div>
-          <div class="price-name">Supermarket</div>
-          <p class="price-desc">For established chains with no limits.</p>
-          <div class="price-amount">
-            <span class="price-currency">$</span>
-            <span class="price-number">49</span>
-            <span class="price-period">/month</span>
-          </div>
-          <ul class="price-features">
-            <li><span class="check">✓</span>Unlimited products</li>
-            <li><span class="check">✓</span>All store themes</li>
-            <li><span class="check">✓</span>Custom domain + SSL</li>
-            <li><span class="check">✓</span>Any payment gateway</li>
-            <li><span class="check">✓</span>Any shipping partner</li>
-            <li><span class="check">✓</span>WhatsApp integration</li>
-            <li><span class="check">✓</span>Multi-brand dashboard</li>
-            <li><span class="check">✓</span>White-label store</li>
-            <li><span class="check">✓</span>API & webhook access</li>
-            <li><span class="check">✓</span>Dedicated account partner</li>
-          </ul>
-          <a href="javascript:void(0)" class="btn-pricing btn-pricing-default pricing-btn-trigger"
-            data-plan="heritage">Get started</a>
-        </div>
-      </div>
-
-      <!-- Pricing note -->
-      <div style="text-align:center;margin-top:32px;">
-        <p style="font-size:14px;color:var(--text-muted);">All plans include a 0% commission rate. You keep every rupee
-          you earn. Free setup, no hidden fees.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- TESTIMONIALS -->
-  <section id="testimonials" class="features-bg">
-    <div class="section-inner">
-      <div class="section-label">Success stories</div>
-      <h2 class="section-title">Trusted by <em>grocery stores</em>.</h2>
-      <p class="section-sub">Independent stores and local supermarkets selling online with Vespr.</p>
-      <div class="testimonials-grid">
-        <div class="testimonial-card">
-          <div class="stars">★★★★★</div>
-          <p class="testimonial-text">"Vespr understood the nuance of local grocery retail. Our online store now
-            feels extremely premium and user-friendly. We were live in under a day."</p>
-          <div class="testimonial-author">
-            <div class="author-avatar">MA</div>
-            <div>
-              <div class="author-name">Marc-Antoine</div>
-              <div class="author-role">Operations Manager, L'Amour Grocers</div>
-            </div>
-          </div>
-        </div>
-        <div class="testimonial-card">
-          <div class="stars">★★★★★</div>
-          <p class="testimonial-text">"The combo builder alone increased our average order value by 45%. It's the only
-            platform that actually understands how grocery customers buy."</p>
-          <div class="testimonial-author">
-            <div class="author-avatar">ER</div>
-            <div>
-              <div class="author-name">Elena Rossi</div>
-              <div class="author-role">Founder, Fresh & Fast</div>
-            </div>
-          </div>
-        </div>
-        <div class="testimonial-card">
-          <div class="stars">★★★★★</div>
-          <p class="testimonial-text">"We moved from Shopify in a weekend. The themes look far more premium, and
-            managing all our brands from one dashboard is a real game-changer."</p>
-          <div class="testimonial-author">
-            <div class="author-avatar">JT</div>
-            <div>
-              <div class="author-name">James Thorne</div>
-              <div class="author-role">CEO, Thorne Grocery Group</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- FAQ -->
-  <section id="faq">
-    <div class="section-inner">
-      <div class="faq-grid-wrapper">
-        <div class="faq-header-left">
-          <span class="section-label">FAQ</span>
-          <h2 class="section-title">Common <em>questions</em></h2>
-          <p class="section-sub">Still not sure? Reach out to the Vespr team — we typically respond within a few hours.
-          </p>
-          <a href="#contact" class="btn-faq-contact">Contact us</a>
-        </div>
-        <div class="faq-list">
-
-          <details class="faq-item">
-            <summary class="faq-question">
-              Do I need a developer to set up my store?
-              <span class="faq-toggle">+</span>
-            </summary>
-            <p class="faq-answer">No. Vespr is built for business owners, not developers. You choose a theme, upload
-              your
-              products, connect your payment gateway, and go live. The whole process takes less than an hour.</p>
-          </details>
-
-          <details class="faq-item">
-            <summary class="faq-question">
-              Which payment gateways can I use?
-              <span class="faq-toggle">+</span>
-            </summary>
-            <p class="faq-answer">Any. Vespr integrates with Razorpay, Stripe, PayPal, PayU, Cashfree, and any other
-              gateway you prefer. We don't lock you into a specific processor. You connect the one you already use or
-              trust.</p>
-          </details>
-
-          <details class="faq-item">
-            <summary class="faq-question">
-              Can I use my own domain name?
-              <span class="faq-toggle">+</span>
-            </summary>
-            <p class="faq-answer">Yes. You can connect your existing domain on all plans. We handle the SSL certificate
-              automatically so your store is secure from day one.</p>
-          </details>
-
-          <details class="faq-item">
-            <summary class="faq-question">
-              Does Vespr take a percentage of my sales?
-              <span class="faq-toggle">+</span>
-            </summary>
-            <p class="faq-answer">No. Vespr charges a flat monthly fee only. We never take a commission on your sales.
-              The
-              only transaction fee is whatever your payment gateway charges, which goes directly to them — not to us.
-            </p>
-          </details>
-
-          <details class="faq-item">
-            <summary class="faq-question">
-              Can I sell internationally?
-              <span class="faq-toggle">+</span>
-            </summary>
-            <p class="faq-answer">Yes. You can connect any international shipping partner and accept payments in
-              multiple
-              currencies depending on your payment gateway. Vespr puts no geographic restrictions on your store.</p>
-          </details>
-
-          <details class="faq-item">
-            <summary class="faq-question">
-              What is WhatsApp integration used for?
-              <span class="faq-toggle">+</span>
-            </summary>
-            <p class="faq-answer">You can connect WhatsApp Business to send order updates, answer customer queries,
-              recover abandoned carts, and handle support — all from your store dashboard. It works with any WhatsApp
-              Business account.</p>
-          </details>
-
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- CONTACT -->
-  {{--
-  <section id="contact" class="contact-bg">
-    <div class="section-inner">
-      <div class="contact-layout">
-        <div class="contact-info">
-          <div class="section-label">Get in touch</div>
-          <h2>Ready to launch your grocery store?</h2>
-          <p>Fill in your details and we'll get back to you on WhatsApp or email — usually within a few hours.</p>
-          <div class="contact-detail">
-            <span class="contact-dot"></span>
-            <span>We'll reach out on <strong>WhatsApp or email</strong></span>
-          </div>
-          <div class="contact-detail">
-            <span class="contact-dot"></span>
-            <span>Free setup help included on all plans</span>
-          </div>
-          <div class="contact-detail">
-            <span class="contact-dot"></span>
-            <span>No commitment. No credit card needed to start.</span>
-          </div>
-          <div
-            style="margin-top:40px;padding:24px;background:var(--white);border:1px solid var(--border);border-radius:10px;">
-            <div
-              style="font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--gray-400);margin-bottom:16px;">
-              Starting from</div>
-            <div style="display:flex;gap:24px;flex-wrap:wrap;">
-              <div>
-                <div style="font-size:28px;font-weight:700;color:var(--black);">$9<span
-                    style="font-size:14px;font-weight:400;color:var(--text-muted);">/mo</span></div>
-                <div style="font-size:12px;color:var(--text-muted);">20 products</div>
-              </div>
-              <div>
-                <div style="font-size:28px;font-weight:700;color:var(--black);">$19<span
-                    style="font-size:14px;font-weight:400;color:var(--text-muted);">/mo</span></div>
-                <div style="font-size:12px;color:var(--text-muted);">100 products</div>
-              </div>
-              <div>
-                <div style="font-size:28px;font-weight:700;color:var(--black);">$49<span
-                    style="font-size:14px;font-weight:400;color:var(--text-muted);">/mo</span></div>
-                <div style="font-size:12px;color:var(--text-muted);">Unlimited</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="contact-form">
-          <div id="form-fields">
-            <h3 class="subheading" style="margin-bottom:28px;">Tell us about your brand</h3>
-            <div class="form-row">
-              <div class="form-group">
-                <label for="name">Your name *</label>
-                <input type="text" id="name" placeholder="e.g. Priya Sharma" required />
-              </div>
-              <div class="form-group">
-                <label for="business">Business name *</label>
-                <input type="text" id="business" placeholder="e.g. Noir Atelier" required />
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="country">Country *</label>
-              <select id="country" required>
-                <option value="" disabled selected>Select your country</option>
-                <option>India</option>
-                <option>United Arab Emirates</option>
-                <option>Saudi Arabia</option>
-                <option>United Kingdom</option>
-                <option>United States</option>
-                <option>France</option>
-                <option>Singapore</option>
-                <option>Australia</option>
-                <option>Other</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="email">Best email address *</label>
-              <input type="email" id="email" placeholder="you@yourbrand.com" required />
-            </div>
-            <div class="form-group">
-              <label for="whatsapp">WhatsApp number *</label>
-              <input type="tel" id="whatsapp" placeholder="+91 98765 43210" required />
-            </div>
-            <div class="form-group">
-              <label for="plan">Plan you're interested in</label>
-              <select id="plan">
-                <option value="" disabled selected>Select a plan</option>
-                <option>Sprout — $9/month (20 products)</option>
-                <option>Maison — $19/month (100 products)</option>
-                <option>Heritage — $49/month (Unlimited)</option>
-                <option>Not sure yet</option>
-              </select>
-            </div>
-            <button class="form-submit" onclick="submitForm()">Send message →</button>
-            <p class="form-note">We'll reply on WhatsApp or email within a few hours.</p>
-          </div>
-
-          <div class="form-success" id="form-success">
-            <div class="success-icon">✓</div>
-            <h3>Message sent!</h3>
-            <p>We'll reach out on WhatsApp or email shortly. Looking forward to helping you launch.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-  --}}
-
-  <!-- CTA BANNER -->
-  <div class="cta-banner">
-    <h2>Your grocery store, <em>live today.</em></h2>
-    <p>Join grocery brands already selling with Vespr. No setup fee. No developer needed.</p>
-    <div class="cta-actions">
-      <a href="#pricing" class="btn-gold">Start for free →</a>
-      <a href="#pricing" class="btn-ghost">View pricing</a>
-    </div>
-  </div>
-
-  <!-- FOOTER -->
-  <footer>
-    <div class="footer-inner">
-      <div>
-        <div class="footer-brand">vespr<span>.</span></div>
-        <p class="footer-tagline">The e-commerce platform built for grocers and supermarkets. From local shops to global
-          chains.</p>
-        <p style="font-size:13px;color:rgba(255,255,255,0.35);margin-top:16px;">support@vespr.com</p>
-      </div>
-      <div class="footer-col">
-        <h4>Platform</h4>
-        <ul>
-          <li><a href="#how-it-works">How it works</a></li>
-          <li><a href="#features">Features</a></li>
-          <li><a href="#templates">Templates</a></li>
-          <li><a href="#pricing">Pricing</a></li>
-          <li><a href="#faq">FAQ</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h4>Company</h4>
-        <ul>
-          <li><a href="#contact">Contact</a></li>
-          <li><a href="#">Privacy policy</a></li>
-          <li><a href="#">Terms of service</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <p>© 2026 Vespr. All rights reserved.</p>
-      <p>Built for grocery brands worldwide.</p>
-    </div>
-  </footer>
-
-  <!-- SAAS SIGN-UP MODAL -->
-  <div class="saas-modal-overlay" id="saasModal">
-    <div class="saas-modal-card">
-      <button class="saas-modal-close" id="closeSaasBtn" aria-label="Close Registration">&times;</button>
-
-      <!-- STAGE 2: Sign-Up Form (Multi-Step Onboarding) -->
-      <div id="saasStageSignUp" class="saas-stage active">
-        <form id="saasRegisterForm" onsubmit="handleSaasRegister(event)">
-
-          <!-- STEP 1: Tell us about yourself -->
-          <div id="saasFormStep1" class="saas-form-step active">
-            <div class="saas-modal-header">
-              <span class="saas-badge class-plan-badge">Starter</span>
-              <h2>Tell us about yourself</h2>
-              <p class="saas-lead">Provide your details to initiate your premium grocery store</p>
-            </div>
-
-            <div class="saas-form-group">
-              <label for="saas_name">Full Name *</label>
-              <input type="text" id="saas_name" placeholder="e.g. Priya Sharma" required />
-              <span class="saas-error" id="err_name"></span>
-            </div>
-
-            <div class="saas-form-group">
-              <label for="saas_email">Email Address *</label>
-              <input type="email" id="saas_email" placeholder="you@yourbrand.com" required />
-              <span class="saas-error" id="err_email"></span>
-            </div>
-          </div>
-
-          <!-- STEP 2: Tell us about your brand -->
-          <div id="saasFormStep2" class="saas-form-step">
-            <div class="saas-modal-header">
-              <span class="saas-badge class-plan-badge">Starter</span>
-              <h2>Tell us about your brand</h2>
-              <p class="saas-lead">We will optimize your dashboard tailored to your company goals</p>
-            </div>
-
-            <div class="saas-form-group">
-              <label for="saas_business">Business / Brand Name *</label>
-              <input type="text" id="saas_business" placeholder="e.g. Noir Atelier" required />
-              <span class="saas-error" id="err_business"></span>
-            </div>
-
-            <div class="saas-form-grid">
-              <div class="saas-form-group">
-                <label for="saas_country">Country *</label>
-                <select id="saas_country" required>
-                  <option value="" disabled selected>Select country</option>
-                  <option value="India">India</option>
-                  <option value="United Arab Emirates">United Arab Emirates</option>
-                  <option value="Saudi Arabia">Saudi Arabia</option>
-                  <option value="United Kingdom">United Kingdom</option>
-                  <option value="United States">United States</option>
-                  <option value="France">France</option>
-                  <option value="Singapore">Singapore</option>
-                  <option value="Australia">Australia</option>
-                  <option value="Other">Other</option>
-                </select>
-                <span class="saas-error" id="err_country"></span>
-              </div>
-
-              <div class="saas-form-group">
-                <label for="saas_whatsapp">WhatsApp Number *</label>
-                <div class="saas-phone-input-wrapper">
-                  <select id="saas_phone_code" class="saas-phone-code">
-                    <option value="+91" selected>🇮🇳 +91</option>
-                    <option value="+971">🇦🇪 +971</option>
-                    <option value="+966">🇸🇦 +966</option>
-                    <option value="+44">🇬🇧 +44</option>
-                    <option value="+1">🇺🇸 +1</option>
-                    <option value="+33">🇫🇷 +33</option>
-                    <option value="+65">🇸🇬 +65</option>
-                    <option value="+61">🇦🇺 +61</option>
-                  </select>
-                  <input type="tel" id="saas_whatsapp" placeholder="98765 43210" required />
-                </div>
-                <span class="saas-error" id="err_whatsapp"></span>
-              </div>
-            </div>
-          </div>
-
-          <!-- STEP 3: Configure your credentials & theme -->
-          <div id="saasFormStep3" class="saas-form-step">
-            <div class="saas-modal-header">
-              <span class="saas-badge class-plan-badge">Starter</span>
-              <h2>Configure store settings</h2>
-              <p class="saas-lead">Secure your brand dashboard and select your pricing plan</p>
-            </div>
-
-            <div class="saas-form-grid">
-              <div class="saas-form-group">
-                <label for="saas_password">Password *</label>
-                <input type="password" id="saas_password" name="password" autocomplete="new-password"
-                  placeholder="At least 8 characters" required />
-                <span class="saas-error" id="err_password"></span>
-              </div>
-
-              <div class="saas-form-group">
-                <label for="saas_confirm_password">Confirm Password *</label>
-                <input type="password" id="saas_confirm_password" name="password_confirmation"
-                  autocomplete="new-password" placeholder="Re-enter password" required />
-                <span class="saas-error" id="err_confirm_password"></span>
-              </div>
-            </div>
-
-
-            <div class="saas-form-grid">
-              <div class="saas-form-group" style="grid-column: 1 / -1;">
-                <label for="saas_plan">Plan Selection (Optional)</label>
-                <select id="saas_plan">
-                  <option value="sprout">Sprout — $9/month (20 products)</option>
-                  <option value="maison">Maison — $19/month (100 products)</option>
-                  <option value="heritage">Heritage — $49/month (Unlimited)</option>
-                  <option value="not_sure">Not sure yet</option>
-                </select>
-              </div>
-              <input type="hidden" id="saas_theme" value="aura_luxe" />
-            </div>
-          </div>
-
-          <!-- PROGRESS STEPS NAVIGATION BAR -->
-          <div class="saas-step-nav">
-            <div class="saas-dots" id="saasStepDots">
-              <span class="saas-dot active" onclick="goToStep(1)"></span>
-              <span class="saas-dot" onclick="goToStep(2)"></span>
-              <span class="saas-dot" onclick="goToStep(3)"></span>
-            </div>
-
-            <div class="saas-nav-actions">
-              <button type="button" class="saas-back-btn" id="saasBackBtn" onclick="prevStep()">Back</button>
-              <button type="button" class="saas-next-btn" id="saasNextBtn" onclick="handleStepNavNext()">Next</button>
-            </div>
-          </div>
-
-        </form>
-      </div>
-
-      <!-- STAGE 3: Email Verification -->
-      <div id="saasStageVerify" class="saas-stage">
-        <div class="saas-verify-container">
-          <div class="saas-verify-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-              <polyline points="22,6 12,13 2,6" />
-            </svg>
-          </div>
-
-          <h2>Check your inbox</h2>
-          <p class="saas-verify-desc">We've sent a verification link to <strong id="verifyEmailDisplay">your
-              email</strong>. Please click the link to verify your email and continue setting up your store.</p>
-
-          <div class="saas-verify-meta">
-            <p>Didn't receive the email?</p>
-            <button id="resendBtn" class="saas-resend-btn" onclick="handleResendCode()">Resend link</button>
-            <p id="resendCountdown" class="saas-countdown-label"></p>
-          </div>
-
-          <!-- Simulation Tool to Help User Verify Frontend Flow -->
-          <div class="saas-simulation-box">
-            <span class="sim-badge">SaaS Simulation Tool</span>
-            <p>Click below to simulate clicking the verification link in your email.</p>
-            <button onclick="simulateVerificationSuccess()" class="saas-simulate-btn">Simulate Email Verification Link
-              Click ✓</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- STAGE 4: Success / Welcome Screen -->
-      <div id="saasStageSuccess" class="saas-stage">
-        <div class="saas-success-container">
-          <div class="saas-success-icon-check">✓</div>
-          <h2>Account Verified!</h2>
-          <p>Your email has been verified successfully. Welcome to Vespr! Let's get started setting up your customized
-            grocery store.</p>
-          <button onclick="closeSaaSModal()" class="saas-success-finish-btn">Go to your SaaS dashboard →</button>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <style>
     /* SaaS Modal Styling */
     .saas-modal-overlay {
       position: fixed;
@@ -4540,6 +2309,8 @@
     // Start auto-rotation initially
     startAutoRotation();
   </script>
-</body>
 
+
+
+</body>
 </html>
