@@ -248,20 +248,20 @@
 </div>
 
 <!-- Beautiful custom toast notification with a golden border and green icon -->
-<div id="vesprToast" style="position: fixed; top: 24px; right: 24px; z-index: 9999; display: flex; align-items: center; gap: 12px; background: #ffffff; border: 2px solid #C9A84C; border-radius: 8px; padding: 14px 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); transform: translateY(-20px); opacity: 0; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); pointer-events: none;">
-    <div id="vesprToastIcon" style="width: 24px; height: 24px; background: #34A853; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #ffffff; flex-shrink: 0; font-size: 11px;">
+<div id="toast" style="position: fixed; top: 24px; right: 24px; z-index: 9999; display: flex; align-items: center; gap: 12px; background: #ffffff; border: 2px solid #C9A84C; border-radius: 8px; padding: 14px 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); transform: translateY(-20px); opacity: 0; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); pointer-events: none;">
+    <div id="toastIcon" style="width: 24px; height: 24px; background: #34A853; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #ffffff; flex-shrink: 0; font-size: 11px;">
         <i class="fas fa-check"></i>
     </div>
-    <span id="vesprToastMessage" style="font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 550; color: #1a1a1a;"></span>
+    <span id="toastMessage" style="font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 550; color: #1a1a1a;"></span>
 </div>
 
 <script>
     let orderStatus = '{{ $order->status }}';
 
-    function showVesprToast(message, isSuccess = true) {
-        const toast = document.getElementById('vesprToast');
-        const icon = document.getElementById('vesprToastIcon');
-        const msgSpan = document.getElementById('vesprToastMessage');
+    function showToast(message, isSuccess = true) {
+        const toast = document.getElementById('toast');
+        const icon = document.getElementById('toastIcon');
+        const msgSpan = document.getElementById('toastMessage');
         
         if (toast && msgSpan) {
             msgSpan.textContent = message;
@@ -348,7 +348,7 @@
                     badge.innerText = 'Processing';
                     btn.innerHTML = 'Mark as Shipped';
                     btn.className = 'btn btn-info text-white shadow-sm btn-sm fw-medium'; 
-                    showVesprToast('Order marked as Processing!');
+                    showToast('Order marked as Processing!');
 
                 } else if (orderStatus === 'shipped') {
                     badge.className = 'badge bg-info bg-opacity-10 text-info border border-info border-opacity-10 text-uppercase';
@@ -361,7 +361,7 @@
                     document.getElementById('trackingNumberDisplay').innerText = trackingId;
                     trackingDisplay.classList.remove('d-none');
                     
-                    showVesprToast('Order marked as Shipped!');
+                    showToast('Order marked as Shipped!');
 
                 } else if (orderStatus === 'delivered') {
                     badge.className = 'badge bg-success bg-opacity-10 text-success border border-success border-opacity-10 text-uppercase';
@@ -369,17 +369,17 @@
                     btn.innerHTML = 'Completed';
                     btn.className = 'btn btn-light text-muted border shadow-sm btn-sm fw-medium disabled';
                     btn.disabled = true;
-                    showVesprToast('Order marked as Delivered!');
+                    showToast('Order marked as Delivered!');
                 }
             } else {
-                showVesprToast('Something went wrong. Please try again.', false);
+                showToast('Something went wrong. Please try again.', false);
                 btn.innerHTML = originalText;
                 btn.disabled = false;
             }
         })
         .catch(error => {
             console.error('Error:', error);
-            showVesprToast('An error occurred.', false);
+            showToast('An error occurred.', false);
             btn.innerHTML = originalText;
             btn.disabled = false;
         });

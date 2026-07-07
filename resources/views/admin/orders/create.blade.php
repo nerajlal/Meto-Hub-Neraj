@@ -269,10 +269,29 @@
                 </div>
             </div>
 
-            <!-- Notes Card -->
+            <!-- Delivery & Notes Card -->
             <div class="card border shadow-sm p-4 mb-4" style="border-radius: 8px;">
-                <h3 class="h6 fw-bold mb-3">Additional Notes</h3>
-                <textarea class="form-control" name="notes" id="notes" rows="4" placeholder="Special instructions, delivery requests..."></textarea>
+                <h3 class="h6 fw-bold mb-3">Delivery & Notes</h3>
+                
+                <div class="mb-3">
+                    <label for="delivery_date" class="form-label">Delivery Date</label>
+                    <input type="date" class="form-control" id="delivery_date" name="delivery_date">
+                </div>
+                
+                <div class="mb-3">
+                    <label for="delivery_time_slot" class="form-label">Delivery Time Slot</label>
+                    <select class="form-select" id="delivery_time_slot" name="delivery_time_slot">
+                        <option value="">Any time</option>
+                        <option value="09:00 AM - 01:00 PM">09:00 AM - 01:00 PM</option>
+                        <option value="01:00 PM - 05:00 PM">01:00 PM - 05:00 PM</option>
+                        <option value="05:00 PM - 09:00 PM">05:00 PM - 09:00 PM</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="notes" class="form-label">Additional Notes</label>
+                    <textarea class="form-control" name="notes" id="notes" rows="3" placeholder="Special instructions, delivery requests..."></textarea>
+                </div>
             </div>
 
             <!-- Save buttons -->

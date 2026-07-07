@@ -119,6 +119,7 @@ Route::get('/login', function() {
 Route::prefix('{tenant}/admin')->name('admin.')->middleware(['identify_tenant', 'auth'])->group(function () {
     Route::get('/', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
     Route::get('/orders', [App\Http\Controllers\Admin\OrderController::class, 'index'])->name('orders');
+    Route::get('/orders/export', [App\Http\Controllers\Admin\OrderController::class, 'export'])->name('orders.export');
     Route::get('/orders/create', [App\Http\Controllers\Admin\OrderController::class, 'create'])->name('orders.create');
     Route::post('/orders', [App\Http\Controllers\Admin\OrderController::class, 'store'])->name('orders.store');
     Route::get('/orders/{id}', [App\Http\Controllers\Admin\OrderController::class, 'show'])->name('orders.show');

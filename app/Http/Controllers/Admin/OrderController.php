@@ -9,13 +9,48 @@ use App\Models\DeliveryPartner;
 
 class OrderController extends Controller
 {
+    private function applyFilters($query, Request $request)
+    {
+        if ($request->has('status') && $request->status != 'all') {
+            $query->where('status', $request->status);
+        }
+
+        $dateFilter = $request->input('date_filter', 'this_month'); // Default to this month
+
+        switch ($dateFilter) {
+            case 'today':
+                $query->whereDate('created_at', \Carbon\Carbon::today());
+                break;
+            case 'this_week':
+                $query->whereBetween('created_at', [\Carbon\Carbon::now()->startOfWeek(), \Carbon\Carbon::now()->endOfWeek()]);
+                break;
+            case 'this_month':
+                $query->whereBetween('created_at', [\Carbon\Carbon::now()->startOfMonth(), \Carbon\Carbon::now()->endOfMonth()]);
+                break;
+            case 'this_year':
+                $query->whereBetween('created_at', [\Carbon\Carbon::now()->startOfYear(), \Carbon\Carbon::now()->endOfYear()]);
+                break;
+            case 'custom':
+                if ($request->filled('start_date') && $request->filled('end_date')) {
+                    $start = \Carbon\Carbon::parse($request->start_date)->startOfDay();
+                    $end = \Carbon\Carbon::parse($request->end_date)->endOfDay();
+                    $query->whereBetween('created_at', [$start, $end]);
+                }
+                break;
+            case 'all':
+            default:
+                // No date filter for 'all'
+                break;
+        }
+
+        return $query;
+    }
+
     public function index(Request $request)
     {
         $query = Order::with('user')->withCount('items')->latest();
 
-        if ($request->has('status') && $request->status != 'all') {
-            $query->where('status', $request->status);
-        }
+        $query = $this->applyFilters($query, $request);
 
         $orders = $query->paginate(20)->withQueryString();
         
@@ -105,6 +140,8 @@ class OrderController extends Controller
             'shipping_cost' => 'required|numeric|min:0',
             'discount_amount' => 'required|numeric|min:0',
             'notes' => 'nullable|string',
+            'delivery_date' => 'nullable|date',
+            'delivery_time_slot' => 'nullable|string|max:100',
             
             // Items
             'items' => 'required|array|min:1',
@@ -167,6 +204,8 @@ class OrderController extends Controller
                 'shipping_address' => $shippingAddress,
                 'billing_address' => $billingAddress,
                 'notes' => $validated['notes'],
+                'delivery_date' => $validated['delivery_date'] ?? null,
+                'delivery_time_slot' => $validated['delivery_time_slot'] ?? null,
                 'placed_at' => now(),
                 'tenant_id' => $tenantId,
             ]);
@@ -191,5 +230,70 @@ class OrderController extends Controller
 
         $tenant = request()->route('tenant');
         return redirect()->route('admin.orders', ['tenant' => $tenant])->with('success', 'Order created successfully.');
+    }
+
+    public function export(Request $request)
+    {
+        $tenantId = session('active_tenant_id') ?? request()->route('tenant') ?? 1;
+
+        $query = Order::with(['items', 'user'])->where('tenant_id', $tenantId)->latest();
+
+        $query = $this->applyFilters($query, $request);
+
+        $orders = $query->get();
+
+        $fileName = 'orders_export_' . date('Y_m_d_H_i_s') . '.csv';
+        
+        $headers = array(
+            "Content-type"        => "text/csv",
+            "Content-Disposition" => "attachment; filename=$fileName",
+            "Pragma"              => "no-cache",
+            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+            "Expires"             => "0"
+        );
+
+        $columns = [
+            'Order No', 'Date', 'Name', 'Email', 'Phone', 
+            'Address', 'Shipping Method', 'Payment', 'Products', 'Order Total', 'Status', 'Payment Status'
+        ];
+
+        $callback = function() use($orders, $columns) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, $columns);
+
+            foreach ($orders as $order) {
+                $productsList = $order->items->map(function ($item) {
+                    $variant = $item->size ? " ({$item->size})" : '';
+                    return "{$item->quantity} x {$item->name}{$variant}";
+                })->implode("\n");
+
+                $address = "";
+                if (is_array($order->shipping_address)) {
+                    $addressParts = [];
+                    if (!empty($order->shipping_address['address'])) $addressParts[] = $order->shipping_address['address'];
+                    if (!empty($order->shipping_address['city'])) $addressParts[] = $order->shipping_address['city'];
+                    $address = implode(', ', $addressParts);
+                }
+
+                $row = [
+                    $order->order_number,
+                    $order->placed_at ? $order->placed_at->format('d/m/Y') : $order->created_at->format('d/m/Y'),
+                    $order->customer_name,
+                    $order->customer_email,
+                    $order->customer_phone,
+                    $address,
+                    'Delivery',
+                    ucwords(str_replace('_', ' ', $order->payment_method)),
+                    $productsList,
+                    $order->total_amount,
+                    ucfirst($order->status),
+                    $order->payment_status === 'paid' ? 'Paid' : '-'
+                ];
+                fputcsv($file, $row);
+            }
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
     }
 }
