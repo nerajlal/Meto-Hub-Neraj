@@ -28,6 +28,12 @@ class Product extends Model
         'min_order_qty',
         'max_order_qty',
         'tenant_id',
+        'continue_selling_when_out_of_stock',
+        'tags',
+    ];
+
+    protected $casts = [
+        'tags' => 'array',
     ];
 
     protected static function boot()

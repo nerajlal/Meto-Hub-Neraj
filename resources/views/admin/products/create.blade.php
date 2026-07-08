@@ -425,10 +425,16 @@
             <div class="card border shadow-sm mb-4">
                 <div class="card-body p-4">
                     <h2 class="h6 fw-semibold text-secondary mb-3">Product Status</h2>
-                    <select name="status" class="form-select shadow-sm">
+                    <select name="status" class="form-select shadow-sm mb-3">
                         <option value="active" selected>Active</option>
                         <option value="draft">Draft</option>
                     </select>
+                    
+                    <div class="form-check form-switch mt-4">
+                        <input class="form-check-input" type="checkbox" role="switch" id="continue_selling" name="continue_selling_when_out_of_stock" value="1">
+                        <label class="form-check-label fw-medium text-secondary small" for="continue_selling">Open when out of stock</label>
+                        <div class="form-text text-muted extra-small">Allow customers to purchase this item even when stock reaches 0.</div>
+                    </div>
                 </div>
             </div>
 
@@ -449,6 +455,11 @@
                                     <option value="{{ $collection->id }}">{{ $collection->name }}</option>
                                 @endforeach
                             </select>
+                        </div>
+                        <div>
+                            <label class="form-label fw-medium text-secondary small mb-1">Tags</label>
+                            <input name="tags_json" class="form-control shadow-sm" placeholder="e.g. New, Bestseller">
+                            <div class="form-text text-muted extra-small">Add tags to categorize this product. The last tag will appear on product cards.</div>
                         </div>
                 </div>
                 </div>
@@ -483,10 +494,31 @@
         </div> <!-- Close row g-4 -->
     </form>
 </div>
+
+<!-- Tagify CSS & JS -->
+<link href="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.css" rel="stylesheet" type="text/css" />
+<script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var input = document.querySelector('input[name=tags_json]');
+        var whitelist = {!! json_encode($allTags ?? []) !!};
+        
+        new Tagify(input, {
+            whitelist: whitelist,
+            dropdown: {
+                maxItems: 20,           // <- mixumum allowed rendered suggestions
+                classname: "tags-look", // <- custom classname for this dropdown, so it could be targeted
+                enabled: 0,             // <- show suggestions on focus
+                closeOnSelect: false    // <- do not hide the suggestions dropdown once an item has been selected
+            }
+        });
+    });
+</script>
+@endsection
 <style>
     .group-hover-visible { visibility: hidden; }
     .group-hover-container:hover .group-hover-visible { visibility: visible; opacity: 1 !important; }
     .extra-small { font-size: 0.75rem; }
     .hover-bg-light:hover { background-color: var(--bs-light) !important; }
     .cursor-pointer { cursor: pointer; }
-</style>@endsection
+</style>

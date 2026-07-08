@@ -11,19 +11,30 @@
                     ->where('product_id', $product->id)
                     ->exists();
             }
+            
+            $initialStock = $product->variants->count() > 0 ? $product->variants->first()->stock : $product->variants->sum('stock');
+            $isOut = $initialStock <= 0 && !$product->continue_selling_when_out_of_stock;
         @endphp
-        <img src="{{ $imagePath }}" alt="{{ $product->title }}" onerror="this.src='{{ asset('Images/placeholder-grocery.webp') }}'" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;">
+        <img src="{{ $imagePath }}" alt="{{ $product->title }}" onerror="this.src='{{ asset('Images/placeholder-grocery.webp') }}'" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; {{ $isOut ? 'opacity: 0.6; filter: grayscale(100%);' : '' }}">
+        
+        @if($isOut)
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.7); color: #fff; padding: 6px 12px; border-radius: 4px; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; z-index: 10; white-space: nowrap;">
+            Out of Stock
+        </div>
+        @endif
         
         <!-- Wishlist Button -->
         <button class="wishlist-toggle-btn" onclick="toggleWishlist(event, {{ $product->id }})" style="position: absolute; top: 10px; right: 10px; z-index: 10; width: 32px; height: 32px; border-radius: 50%; background: rgba(255,255,255,0.95); border: none; display: flex; align-items: center; justify-content: center; color: {{ $isWishlisted ? '#ef4444' : '#64748b' }}; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
             <i class="{{ $isWishlisted ? 'fa-solid' : 'fa-regular' }} fa-heart"></i>
         </button>
 
-        <!-- Social Proof bought count -->
+        <!-- Dynamic Tag -->
+        @if(!empty($product->tags) && is_array($product->tags) && count($product->tags) > 0)
         <div class="social-proof-tag" style="position: absolute; bottom: 10px; left: 10px; background: rgba(255, 255, 255, 0.9); padding: 4px 8px; border-radius: 20px; font-size: 0.65rem; font-weight: 700; color: #059669; display: flex; align-items: center; gap: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); white-space: nowrap; max-width: 90%; overflow: hidden; text-overflow: ellipsis;">
-            <i class="fa-solid fa-bolt" style="color: #10b981;"></i>
-            <span>Popular</span>
+            <i class="fa-solid fa-tag" style="color: #10b981;"></i>
+            <span>{{ last($product->tags) }}</span>
         </div>
+        @endif
 
         <!-- Pack Offer indicator badge -->
         @if($product->bundles->where('type', 'pack')->isNotEmpty())
@@ -45,10 +56,12 @@
     </div>
     
     <div class="product-action-wrapper" data-cart-key="{{ $product->id }}{{ isset($product->variants->first()->size) && $product->variants->first()->size ? '-' . $product->variants->first()->size : '' }}" style="position: absolute; bottom: 10px; right: 10px; z-index: 15;">
+        @if(!$isOut)
         <!-- Default Add Button -->
         <button class="inline-add-btn shadow-sm" onclick="updateInlineCart('{{ $product->id }}{{ isset($product->variants->first()->size) && $product->variants->first()->size ? '-' . $product->variants->first()->size : '' }}', 1)" style="width: 36px; height: 36px; border-radius: 50%; background: #f1f5f9; border: none; display: flex; align-items: center; justify-content: center; color: var(--primary-color); cursor: pointer; transition: all 0.2s ease;">
             <i class="fa-solid fa-plus"></i>
         </button>
+        @endif
         
         <!-- Quantity Controller (Hidden by default) -->
         <div class="qty-controller shadow-sm" style="display: none; align-items: center; justify-content: space-between; width: 90px; height: 36px; background: #fff; border: 1px solid var(--border-color); border-radius: 20px; padding: 0 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">

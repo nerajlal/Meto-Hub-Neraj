@@ -142,6 +142,12 @@
                     $('.cart-count-v').text(response.cartCount);
                     refreshDrawer();
                 }
+            }).fail(function(xhr) {
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    alert(xhr.responseJSON.message);
+                } else {
+                    alert('Error updating cart');
+                }
             });
         }
 
@@ -222,9 +228,18 @@
                             btn.style.color = '';
                             btn.disabled = false;
                         }, 2000);
+                    } else {
+                        alert(response.message || 'Error adding item');
+                        btn.innerHTML = originalHtml;
+                        btn.disabled = false;
                     }
                 },
-                error: function() {
+                error: function(xhr) {
+                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                        alert(xhr.responseJSON.message);
+                    } else {
+                        alert('Error adding item');
+                    }
                     btn.innerHTML = originalHtml;
                     btn.disabled = false;
                 }

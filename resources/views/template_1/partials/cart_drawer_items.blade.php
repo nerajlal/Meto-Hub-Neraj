@@ -16,6 +16,16 @@
                         </div>
                         <span class="n-item-price">₹{{ number_format($item['price'] * $item['quantity'], 0) }}</span>
                     </div>
+                    @if((isset($item['min_order_qty']) && $item['min_order_qty']) || (isset($item['max_order_qty']) && $item['max_order_qty']))
+                    <div style="font-size: 0.75rem; color: #64748b; margin-top: 0.4rem;">
+                        @if(isset($item['min_order_qty']) && $item['min_order_qty'])
+                            <span style="margin-right: 8px;"><i class="fa-solid fa-arrow-down-1-9"></i> Min: {{ $item['min_order_qty'] }}</span>
+                        @endif
+                        @if(isset($item['max_order_qty']) && $item['max_order_qty'])
+                            <span><i class="fa-solid fa-arrow-up-9-1"></i> Max: {{ $item['max_order_qty'] }}</span>
+                        @endif
+                    </div>
+                    @endif
                 </div>
                 <button class="n-item-remove" onclick="removeNCartItem('{{ $key }}')">
                     <i class="fa-solid fa-trash-can"></i>
@@ -46,7 +56,33 @@
             <span>₹{{ number_format($total, 0) }}</span>
         </div>
         
-        <a href="{{ route('v1.checkout') }}" class="n-checkout-btn">PROCEED TO CHECKOUT</a>
+        @if(isset($minOrderValue) && $minOrderValue > 0)
+        @php
+            $percentage = min(100, ($total / $minOrderValue) * 100);
+            $diff = $minOrderValue - $total;
+        @endphp
+        <div class="n-min-order-container" style="margin-top: 1rem;">
+            <div class="n-summary-line" style="margin-bottom: 0.2rem; font-size: 0.8rem;">
+                @if($diff > 0)
+                    <span>Add <strong>₹{{ number_format($diff, 2) }}</strong> more to checkout</span>
+                @else
+                    <span><strong>Minimum reached! 🎉</strong></span>
+                @endif
+                <span>₹{{ number_format($minOrderValue, 0) }}</span>
+            </div>
+            <div style="height: 6px; border-radius: 999px; background: #e2e8f0;">
+                <div style="width: {{ $percentage }}%; background: {{ $diff > 0 ? 'var(--accent-color)' : '#10b981' }}; height: 100%; border-radius: 999px; transition: width 0.3s ease;"></div>
+            </div>
+        </div>
+        
+            @if($total < $minOrderValue)
+                <a href="javascript:void(0)" class="n-checkout-btn" style="opacity: 0.5; cursor: not-allowed; pointer-events: none;">PROCEED TO CHECKOUT</a>
+            @else
+                <a href="{{ route('v1.checkout') }}" class="n-checkout-btn">PROCEED TO CHECKOUT</a>
+            @endif
+        @else
+            <a href="{{ route('v1.checkout') }}" class="n-checkout-btn">PROCEED TO CHECKOUT</a>
+        @endif
     </div>
 @else
     <div class="n-empty-cart">

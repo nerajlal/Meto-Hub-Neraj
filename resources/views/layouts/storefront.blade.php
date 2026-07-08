@@ -213,6 +213,12 @@
                     $('#cart-count').text(response.cartCount);
                     refreshNCart();
                 }
+            }).fail(function(xhr) {
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    alert(xhr.responseJSON.message);
+                } else {
+                    alert('Error updating cart');
+                }
             });
         }
 

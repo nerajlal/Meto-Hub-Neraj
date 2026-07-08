@@ -302,6 +302,26 @@
                     </div>
                 </div>
 
+                <!-- Checkout Constraints -->
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header py-3 d-flex align-items-center">
+                        <i class="fa-solid fa-money-bill-wave me-2 shopify-green"></i>
+                        <h5 class="m-0 fw-bold">Checkout Constraints</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="min_order_value" class="form-label fw-semibold">Minimum Order Value</label>
+                            <input type="number" step="0.01" class="form-control @error('min_order_value') is-invalid @enderror" id="min_order_value" name="min_order_value" value="{{ old('min_order_value', $tenant->min_order_value) }}" placeholder="e.g. 500.00 (Leave empty or 0 to disable)">
+                            @error('min_order_value')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                            <div class="form-text mt-2 small text-muted">
+                                Customers will not be able to proceed to checkout if their cart total is below this amount.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Submit Card -->
                 <div class="card shadow-sm mb-4">
                     <div class="card-body text-center p-4">

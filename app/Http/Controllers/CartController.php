@@ -38,6 +38,10 @@ class CartController extends Controller
                         } else {
                             $item['stock'] = $product->variants->sum('stock');
                         }
+                        
+                        if ($product->continue_selling_when_out_of_stock) {
+                            $item['stock'] = 999;
+                        }
                     }
                 } elseif (isset($item['type']) && $item['type'] == 'bundle' && isset($item['bundle_id'])) {
                     $bundle = Bundle::find($item['bundle_id']);
@@ -65,7 +69,8 @@ class CartController extends Controller
         }
         $total = $cartTotalBeforeTax + $taxAmount;
         
-        return view('template_1.cart', compact('cart', 'total', 'subtotal', 'savings', 'taxAmount', 'taxRate', 'taxName', 'cartTotalBeforeTax'));
+        $minOrderValue = $tenant ? ($tenant->min_order_value ?? 0) : 0;
+        return view('template_1.cart', compact('cart', 'total', 'subtotal', 'savings', 'taxAmount', 'taxRate', 'taxName', 'cartTotalBeforeTax', 'minOrderValue'));
     }
 
     /**
@@ -93,6 +98,10 @@ class CartController extends Controller
                             $item['stock'] = $variant ? $variant->stock : 0;
                         } else {
                             $item['stock'] = $product->variants->sum('stock');
+                        }
+                        
+                        if ($product->continue_selling_when_out_of_stock) {
+                            $item['stock'] = 999;
                         }
                     }
                 } elseif (isset($item['type']) && $item['type'] == 'bundle' && isset($item['bundle_id'])) {
@@ -124,7 +133,8 @@ class CartController extends Controller
         }
         $total = $cartTotalBeforeTax + $taxAmount;
 
-        return view($view, compact('cart', 'total', 'subtotal', 'savings', 'taxAmount', 'taxRate', 'taxName', 'cartTotalBeforeTax'));
+        $minOrderValue = $tenant ? ($tenant->min_order_value ?? 0) : 0;
+        return view($view, compact('cart', 'total', 'subtotal', 'savings', 'taxAmount', 'taxRate', 'taxName', 'cartTotalBeforeTax', 'minOrderValue'));
     }
 
     /**
@@ -151,6 +161,10 @@ class CartController extends Controller
                             $item['stock'] = $variant ? $variant->stock : 0;
                         } else {
                             $item['stock'] = $product->variants->sum('stock');
+                        }
+                        
+                        if ($product->continue_selling_when_out_of_stock) {
+                            $item['stock'] = 999;
                         }
                     }
                 } elseif (isset($item['type']) && $item['type'] == 'bundle' && isset($item['bundle_id'])) {
@@ -179,7 +193,8 @@ class CartController extends Controller
         }
         $total = $cartTotalBeforeTax + $taxAmount;
         
-        return view('v4.cart', compact('cart', 'total', 'subtotal', 'savings', 'taxAmount', 'taxRate', 'taxName', 'cartTotalBeforeTax'));
+        $minOrderValue = $tenant ? ($tenant->min_order_value ?? 0) : 0;
+        return view('v4.cart', compact('cart', 'total', 'subtotal', 'savings', 'taxAmount', 'taxRate', 'taxName', 'cartTotalBeforeTax', 'minOrderValue'));
     }
 
     /**
@@ -208,6 +223,10 @@ class CartController extends Controller
                         } else {
                             $item['stock'] = $product->variants->sum('stock');
                         }
+                        
+                        if ($product->continue_selling_when_out_of_stock) {
+                            $item['stock'] = 999;
+                        }
                     }
                 } elseif (isset($item['type']) && $item['type'] == 'bundle' && isset($item['bundle_id'])) {
                     $bundle = Bundle::find($item['bundle_id']);
@@ -235,7 +254,8 @@ class CartController extends Controller
         }
         $total = $cartTotalBeforeTax + $taxAmount;
         
-        return view('v5.cart', compact('cart', 'total', 'subtotal', 'savings', 'taxAmount', 'taxRate', 'taxName', 'cartTotalBeforeTax'));
+        $minOrderValue = $tenant ? ($tenant->min_order_value ?? 0) : 0;
+        return view('v5.cart', compact('cart', 'total', 'subtotal', 'savings', 'taxAmount', 'taxRate', 'taxName', 'cartTotalBeforeTax', 'minOrderValue'));
     }
 
     private function calculateTotal(&$cart)
@@ -429,6 +449,12 @@ class CartController extends Controller
 
         $targetQty = $currentQty + $quantity;
 
+        // Auto-boost initial addition to minimum required quantity to prevent blocking UX
+        if ($currentQty == 0 && $product->min_order_qty && $targetQty < $product->min_order_qty) {
+            $quantity = $product->min_order_qty;
+            $targetQty = $product->min_order_qty;
+        }
+
         if ($product->min_order_qty && $targetQty < $product->min_order_qty) {
             return response()->json([
                 'success' => false,
@@ -441,6 +467,24 @@ class CartController extends Controller
                 'success' => false,
                 'message' => "Maximum order quantity for {$product->title} is {$product->max_order_qty}."
             ], 400);
+        }
+        
+        // Stock Validation
+        if (!$product->continue_selling_when_out_of_stock) {
+            $availableStock = 0;
+            if ($size) {
+                $variant = $product->variants()->where('size', $size)->first();
+                if ($variant) $availableStock = $variant->stock;
+            } else {
+                $availableStock = $product->variants()->sum('stock');
+            }
+
+            if ($targetQty > $availableStock) {
+                return response()->json([
+                    'success' => false,
+                    'message' => "Cannot add more than available stock."
+                ], 400);
+            }
         }
         
         // Price Logic
@@ -477,21 +521,22 @@ class CartController extends Controller
             $cart = $this->getCartFromDb();
             
         } else {
-            // Session Logic
             $cart = session()->get('cart', []);
             
             if(isset($cart[$cartKey])) {
                 $cart[$cartKey]['quantity'] += $quantity;
             } else {
                 $cart[$cartKey] = [
-                    "product_id" => $product->id,
+                    "product_id" => $id,
                     "variant_id" => $request->variant_id,
                     "name" => $product->title,
                     "quantity" => $quantity,
                     "price" => $price,
                     "image" => $product->main_image_url,
                     "size" => $size,
-                    "type" => "product"
+                    "type" => "product",
+                    "min_order_qty" => $product->min_order_qty,
+                    "max_order_qty" => $product->max_order_qty
                 ];
             }
             session()->put('cart', $cart);
@@ -546,6 +591,27 @@ class CartController extends Controller
                             'success' => false,
                             'message' => "Maximum order quantity for {$product->title} is {$product->max_order_qty}."
                         ], 400);
+                    }
+                    
+                    // Stock Validation
+                    if (!$product->continue_selling_when_out_of_stock) {
+                        $availableStock = 0;
+                        $parts = explode('-', $request->id);
+                        $size = isset($parts[1]) ? $parts[1] : null;
+                        
+                        if ($size) {
+                            $variant = $product->variants()->where('size', $size)->first();
+                            if ($variant) $availableStock = $variant->stock;
+                        } else {
+                            $availableStock = $product->variants()->sum('stock');
+                        }
+
+                        if ($request->quantity > $availableStock) {
+                            return response()->json([
+                                'success' => false,
+                                'message' => "Cannot add more than available stock."
+                            ], 400);
+                        }
                     }
                 }
             }
@@ -795,6 +861,10 @@ class CartController extends Controller
                     }
                 }
                 
+                if ($item->product->continue_selling_when_out_of_stock) {
+                    $stock = 999;
+                }
+                
                 $cart[$key] = [
                     "product_id" => $item->product_id,
                     "variant_id" => $item->product_variant_id,
@@ -805,7 +875,9 @@ class CartController extends Controller
                     "size" => $item->size,
                     "type" => "product",
                     "coupon" => $this->getActiveCoupon($item->product),
-                    "stock" => $stock
+                    "stock" => $stock,
+                    "min_order_qty" => $item->product->min_order_qty,
+                    "max_order_qty" => $item->product->max_order_qty
                 ];
             }
         }
@@ -1023,7 +1095,8 @@ class CartController extends Controller
             $view = 'template_1.partials.cart_drawer_items';
         }
 
-        return view($view, compact('cart', 'total', 'subtotal', 'savings', 'taxAmount', 'taxRate', 'taxName', 'cartTotalBeforeTax'))->render();
+        $minOrderValue = $tenant ? ($tenant->min_order_value ?? 0) : 0;
+        return view($view, compact('cart', 'total', 'subtotal', 'savings', 'taxAmount', 'taxRate', 'taxName', 'cartTotalBeforeTax', 'minOrderValue'))->render();
     }
 
     private function getActiveCoupon($product)

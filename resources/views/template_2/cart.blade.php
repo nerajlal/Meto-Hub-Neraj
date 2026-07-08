@@ -43,6 +43,16 @@
                         </div>
                         <span class="item-price-lg" id="price-{{ $id }}" style="font-size: 1.25rem; font-weight: 800; color: var(--accent-color);">₹{{ number_format($item['price'] * $item['quantity'], 2) }}</span>
                     </div>
+                    @if((isset($item['min_order_qty']) && $item['min_order_qty']) || (isset($item['max_order_qty']) && $item['max_order_qty']))
+                    <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem; text-align: left;">
+                        @if(isset($item['min_order_qty']) && $item['min_order_qty'])
+                            <span style="margin-right: 8px;"><i class="fa-solid fa-arrow-down-1-9"></i> Min: {{ $item['min_order_qty'] }}</span>
+                        @endif
+                        @if(isset($item['max_order_qty']) && $item['max_order_qty'])
+                            <span><i class="fa-solid fa-arrow-up-9-1"></i> Max: {{ $item['max_order_qty'] }}</span>
+                        @endif
+                    </div>
+                    @endif
 
                     @if(isset($item['coupon']))
                     <div class="item-promo-badge" style="align-self: flex-start; margin-top: 0.5rem; font-size: 0.75rem; font-weight: 700; color: #10b981; background: #ecfdf5; padding: 2px 8px; border-radius: 4px;">
@@ -85,9 +95,23 @@
                 <hr class="summary-hr" style="border: none; border-top: 1px solid rgba(255,255,255,0.1); margin: 1rem 0;">
                 <div class="summary-row-lg grand-total" style="display: flex; justify-content: space-between; font-size: 1.5rem; font-weight: 800; color: #fff;">
                     <span>Total</span>
-                    <span id="total-val">₹{{ number_format($total, 2) }}</span>
+                    <span id="total-val" data-val="{{ $total }}">₹{{ number_format($total, 2) }}</span>
                 </div>
-                <a href="{{ route('v3.checkout') }}" class="btn-checkout-lg" style="display: block; width: 100%; background: var(--accent-color); color: #fff; text-align: center; padding: 1rem; border-radius: 99px; font-weight: 800; font-size: 1.1rem; text-decoration: none; margin-top: 2rem; border: none; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15); transition: 0.2s;">
+
+                @if(isset($minOrderValue) && $minOrderValue > 0)
+                <div class="min-order-progress-container mt-3 mb-2">
+                    <div class="d-flex justify-content-between mb-2" style="font-size: 0.85rem; color: #E2E8F0;">
+                        <span id="min-order-msg">Calculating...</span>
+                        <span>₹{{ number_format($minOrderValue, 2) }}</span>
+                    </div>
+                    <div class="progress" style="height: 6px; border-radius: 999px; background: rgba(255,255,255,0.15);">
+                        <div id="min-order-bar" class="progress-bar" role="progressbar" style="width: 0%; background: var(--accent-color); border-radius: 999px; transition: width 0.3s ease;"></div>
+                    </div>
+                </div>
+                @endif
+
+                <input type="hidden" id="min-order-value" value="{{ $minOrderValue ?? 0 }}">
+                <a href="{{ route('v3.checkout') }}" id="checkout-btn" class="btn-checkout-lg" style="display: block; width: 100%; background: var(--accent-color); color: #fff; text-align: center; padding: 1rem; border-radius: 99px; font-weight: 800; font-size: 1.1rem; text-decoration: none; margin-top: 2rem; border: none; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15); transition: 0.2s;">
                     Checkout Now <i class="fa-solid fa-arrow-right ms-2"></i>
                 </a>
                 <div class="summary-trust" style="text-align: center; font-size: 0.8rem; color: #64748b; margin-top: 1rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
@@ -121,6 +145,39 @@
 </style>
 
 <script>
+    function checkMinOrder(totalVal) {
+        let minVal = parseFloat(document.getElementById('min-order-value').value);
+        let btn = document.getElementById('checkout-btn');
+        let bar = document.getElementById('min-order-bar');
+        let msg = document.getElementById('min-order-msg');
+        
+        if (minVal > 0) {
+            let percentage = (totalVal / minVal) * 100;
+            if (percentage > 100) percentage = 100;
+            
+            if (bar) bar.style.width = percentage + '%';
+            
+            if (totalVal < minVal) {
+                let diff = minVal - totalVal;
+                if (msg) msg.innerHTML = `Add <strong>₹${new Intl.NumberFormat().format(diff)}</strong> more to checkout`;
+                btn.style.opacity = '0.5';
+                btn.style.pointerEvents = 'none';
+                if (bar) bar.style.background = 'var(--accent-color)';
+            } else {
+                if (msg) msg.innerHTML = `<strong>Minimum reached! 🎉</strong>`;
+                btn.style.opacity = '1';
+                btn.style.pointerEvents = 'auto';
+                if (bar) bar.style.background = '#10b981'; // Green when complete
+            }
+        }
+    }
+
+    // Run on initial load
+    document.addEventListener("DOMContentLoaded", function() {
+        let initialTotal = parseFloat(document.getElementById('total-val').getAttribute('data-val') || 0);
+        checkMinOrder(initialTotal);
+    });
+
     function updateCartQty(id, delta) {
         let qtyEl = document.getElementById('qty-' + id);
         let currentQty = parseInt(qtyEl.innerText);
@@ -152,6 +209,15 @@
                 } else {
                     document.getElementById('savings-row').style.display = 'none';
                 }
+                
+                checkMinOrder(response.cartTotal);
+            },
+            error: function(xhr) {
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    alert(xhr.responseJSON.message);
+                } else {
+                    alert('Error updating cart');
+                }
             }
         });
     }
@@ -179,6 +245,7 @@
                         }
                         document.getElementById('total-val').innerText = '₹' + new Intl.NumberFormat().format(response.cartTotal);
                         $('#cart-count').text(response.cartCount);
+                        checkMinOrder(response.cartTotal);
                     }, 300);
                 }
             }

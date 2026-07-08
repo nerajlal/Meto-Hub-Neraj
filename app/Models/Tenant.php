@@ -30,6 +30,7 @@ class Tenant extends Model
         'delivery_days',
         'delivery_info',
         'checkout_fields',
+        'min_order_value',
     ];
 
     protected $casts = [

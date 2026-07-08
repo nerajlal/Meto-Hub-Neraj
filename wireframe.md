@@ -106,8 +106,9 @@ When creating a new theme matching this structure, define these core styling tok
 
 ### D. Product Card Component
 - **Image Section**: Square ratio `100% padding-top` wrapper. Renders product thumbnail with fallback support.
+  - *Out of Stock State*: If the product stock is `<= 0` and the "Open when out of stock" (backorder) flag is disabled, the image is faded (60% opacity, grayscale), an "OUT OF STOCK" overlay appears in the center, and the cart action buttons are completely hidden to prevent interaction.
 - **Badges**:
-  - *Popular / Trend Badge*: Bottom-left overlaid label.
+  - *Dynamic Product Tag*: Bottom-left overlaid label. Displays the **last added tag** from the product's tag list. If no tags are assigned, this badge is hidden. (Replaced the static "Popular" tag).
   - *Pack Deal Badge*: Top-left purple/blue badge (`<i class="fa-solid fa-boxes-stacked"></i>` + "Pack Deal") visible only if volume/bundle discounts exist.
 - **Details Section**:
   - Price: Bold, colored in green accent.
@@ -652,3 +653,64 @@ Merchants can toggle the visibility and requirement status for the following sta
 
 ### Admin Fulfillment Display (`show.blade.php`):
 - If an order has `custom_checkout_data`, an **Additional Information** card is automatically rendered below the Customer Notes in the order details view, providing the fulfillment team with all the collected information.
+
+---
+
+## 18. Minimum Order Value Constraint
+
+Provides merchants with the ability to define a minimum subtotal threshold that customers must meet before they can proceed to checkout.
+
+### Database Schema Additions:
+- **`tenants` table**: `min_order_value` (decimal) - Stores the minimum order amount threshold. Defaults to `0` (disabled).
+
+### Frontend Integration (Cart Pages & Drawers):
+- If `$minOrderValue > 0`, a dynamic progress bar is rendered above the checkout button in the cart summary.
+- The progress bar calculates how close the customer's cart total is to the threshold: `($total / $minOrderValue) * 100`.
+- The progress bar automatically fills with the `var(--accent-color)` and displays the remaining amount needed: "Add ₹X more to checkout".
+- Once the threshold is reached, the progress bar turns green (`#10b981`) with a success message ("Minimum reached! 🎉").
+- **JavaScript Dynamics**: The progress bar and messages update in real-time as the customer increments or decrements product quantities inline without reloading the page.
+- **Button Disabling**: The "Checkout Now" button's opacity is reduced to `0.5` and `pointer-events: none` is applied if the minimum has not been met.
+
+### Backend Validation (`PageController@handleCheckout`):
+- As an additional layer of security, backend validation intercepts requests to the `/checkout` route.
+- If a customer attempts to force-load the checkout page when their cart total is below the `min_order_value`, the controller redirects them back to the cart with an error flash message: "Your order total must be at least ₹X to proceed to checkout."
+
+---
+
+## 19. Purchase Limits (Wholesale/Promo)
+
+Provides merchants with the ability to define minimum and maximum order quantities on a per-product basis to facilitate wholesale or promotional constraints.
+
+### Database Schema Additions:
+- **`products` table**: `min_order_qty` (integer, nullable) - Minimum units required per cart addition.
+- **`products` table**: `max_order_qty` (integer, nullable) - Maximum units allowed per cart addition.
+
+### Frontend Integration (Cart Pages & Drawers):
+- **Visual Indicators**: Cart pages and drawers (across templates) display explicit limits right beneath the item price and quantity toggles (e.g., `↓ Min: 5   ↑ Max: 10`) for any item configured with these limits.
+- **Frontend Enforcement**: 
+  - The `+` and `-` quantity buttons visually snap back to allowed thresholds and display an error toast if a customer attempts to bypass limits.
+  - Initial `Add to Cart` interactions automatically boost the cart quantity to the `min_order_qty` requirement, ensuring a seamless flow that doesn't block the user.
+
+### Backend Validation (`CartController@add` & `update`):
+- Backend ensures strict enforcement of both `min_order_qty` and `max_order_qty`. If a violation occurs, the controller intercepts it and returns a `400 Bad Request` with an appropriate error message to populate the frontend toast.
+
+---
+
+## 20. Product Catalog Filtering
+
+Provides a comprehensive filtering interface for the All Products page (`/v3/all-products`).
+
+### Frontend Integration
+- **Dynamic Layout**: The catalog view utilizes a CSS grid layout, featuring a sticky left-hand sidebar on desktop, and a dedicated mobile "Filters & Sort" pill button that toggles a slide-down filter panel on smaller screens.
+- **Filter Mechanisms**:
+  - *Sort By*: A `<select>` dropdown offering chronological, price-based (asc/desc), and alphabetical sorting.
+  - *Price Range*: Dual `<input type="number">` fields for precise `min_price` and `max_price` limits.
+  - *Popular Tags*: A scrollable list of checkboxes populated dynamically by parsing all tags active within the tenant's product database.
+- **Behavior**: Filter changes (like checking a tag or changing a sort option) trigger an immediate, seamless `GET` submission via JavaScript `onchange`, applying the query strings without needing a separate manual "Apply" click (except for manual number inputs).
+
+### Backend Processing (`PageController@handleAllProducts`)
+- **Query Parsing**: The controller intercepts HTTP `GET` parameters: `sort`, `min_price`, `max_price`, and `tags[]`.
+- **Dynamic Eloquent Queries**: 
+  - `min_price` and `max_price` bounds are applied to the `starting_price` column.
+  - Sorting modifies the `ORDER BY` clause to support `latest`, `price_asc`, `price_desc`, `name_asc`, and `name_desc`.
+  - JSON querying (`orWhereJsonContains`) is utilized to accurately filter products if they possess any of the selected `tags`.

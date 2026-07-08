@@ -349,7 +349,7 @@
                 <span class="p-section-label" style="display: block; font-size: 0.85rem; font-weight: 800; color: var(--primary-color); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1rem;">SELECT OPTION</span>
                 <div class="size-rect-grid" style="display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem;">
                     @foreach($product->variants as $variant)
-                        <div class="size-rect {{ $loop->first ? 'active' : '' }}" onclick="selectVariant(this, {{ $variant->price }}, '{{ $variant->size }}', {{ $variant->id }})" style="border: 2px solid {{ $loop->first ? 'var(--accent-color)' : 'var(--border-color)' }}; border-radius: 0.75rem; padding: 0.75rem 1.25rem; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 1rem; background: #fff;">
+                        <div class="size-rect {{ $loop->first ? 'active' : '' }}" onclick="selectVariant(this, {{ $variant->price }}, '{{ $variant->size }}', {{ $variant->id }}, {{ $variant->stock }}, {{ $product->continue_selling_when_out_of_stock ? 'true' : 'false' }})" style="border: 2px solid {{ $loop->first ? 'var(--accent-color)' : 'var(--border-color)' }}; border-radius: 0.75rem; padding: 0.75rem 1.25rem; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 1rem; background: #fff;">
                             <span class="s-size" style="font-weight: 700; color: var(--primary-color);">{{ $variant->size }}</span>
                             <span class="s-price" style="color: var(--text-muted);">₹{{ number_format($variant->price, 2) }}</span>
                         </div>
@@ -390,6 +390,10 @@
             </div>
             @endif
 
+            @php
+                $initialStock = $product->variants->count() > 0 ? $product->variants->first()->stock : $product->variants->sum('stock');
+                $isOut = $initialStock <= 0 && !$product->continue_selling_when_out_of_stock;
+            @endphp
             <!-- Add to Cart actions row -->
             <div class="p-actions-row" style="display: flex; gap: 1rem; margin-bottom: 1.5rem; height: 3.5rem;">
                 <div class="qty-control" style="background: #fff; border: 2px solid var(--border-color); border-radius: 0.75rem; display: flex; flex-direction: row; align-items: center; justify-content: center; padding: 0.25rem 0.75rem; min-width: 70px; height: 100%;">
@@ -399,12 +403,16 @@
                         <button onclick="changePageQty(-1)" style="border: none; background: none; padding: 0; font-size: 0.75rem; cursor: pointer; color: var(--text-muted); line-height: 1;"><i class="fa-solid fa-chevron-down"></i></button>
                     </div>
                 </div>
-                <button class="btn-add-to-cart add-to-cart-btn" id="add-to-cart-page-btn" style="flex-grow: 1; height: 100%; background: var(--accent-color); color: #fff; border: none; border-radius: 0.75rem; font-weight: 800; font-size: 1rem; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.5rem; white-space: nowrap;">
-                    ADD TO CART <span class="btn-price-display">₹{{ number_format($product->starting_price, 2) }}</span>
+                <button class="btn-add-to-cart add-to-cart-btn" id="add-to-cart-page-btn" {{ $isOut ? 'disabled' : '' }} style="flex-grow: 1; height: 100%; background: {{ $isOut ? '#cbd5e1' : 'var(--accent-color)' }}; color: #fff; border: none; border-radius: 0.75rem; font-weight: 800; font-size: 1rem; cursor: {{ $isOut ? 'not-allowed' : 'pointer' }}; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.5rem; white-space: nowrap;">
+                    @if($isOut)
+                        OUT OF STOCK
+                    @else
+                        ADD TO CART <span class="btn-price-display">₹{{ number_format($product->starting_price, 2) }}</span>
+                    @endif
                 </button>
             </div>
             <div class="secondary-actions-row" style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
-                <button id="buy-now-btn" style="flex-grow: 1; background: var(--primary-color); color: #fff; border: none; padding: 1rem; border-radius: 0.75rem; font-weight: 800; font-size: 1rem; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                <button id="buy-now-btn" {{ $isOut ? 'disabled' : '' }} style="flex-grow: 1; background: {{ $isOut ? '#e2e8f0' : 'var(--primary-color)' }}; color: {{ $isOut ? '#94a3b8' : '#fff' }}; border: none; padding: 1rem; border-radius: 0.75rem; font-weight: 800; font-size: 1rem; cursor: {{ $isOut ? 'not-allowed' : 'pointer' }}; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
                     <i class="fa-solid fa-bolt"></i> BUY NOW
                 </button>
                 @php
@@ -494,23 +502,45 @@
         el.style.borderColor = 'var(--accent-color)';
     }
 
-    function selectVariant(element, price, size, id) {
-        // Update active style
+    function selectVariant(element, price, size, id, stock = 999, continueSelling = true) {
         element.parentElement.querySelectorAll('.size-rect').forEach(card => {
             card.style.borderColor = 'var(--border-color)';
         });
         element.style.borderColor = 'var(--accent-color)';
 
-        // Update Price displays
         const formattedPrice = new Intl.NumberFormat('en-IN', {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2
         }).format(price);
         
         document.getElementById('p-price-display').innerText = '₹' + formattedPrice;
-        document.querySelector('.btn-price-display').innerText = '₹' + formattedPrice;
         
-        // Update hidden input
+        let isOut = stock <= 0 && !continueSelling;
+        let btn = document.getElementById('add-to-cart-page-btn');
+        let buyBtn = document.getElementById('buy-now-btn');
+        
+        if (isOut) {
+            btn.innerHTML = 'OUT OF STOCK';
+            btn.style.background = '#cbd5e1';
+            btn.style.cursor = 'not-allowed';
+            btn.disabled = true;
+            
+            buyBtn.style.background = '#e2e8f0';
+            buyBtn.style.color = '#94a3b8';
+            buyBtn.style.cursor = 'not-allowed';
+            buyBtn.disabled = true;
+        } else {
+            btn.innerHTML = 'ADD TO CART <span class="btn-price-display">₹' + formattedPrice + '</span>';
+            btn.style.background = 'var(--accent-color)';
+            btn.style.cursor = 'pointer';
+            btn.disabled = false;
+            
+            buyBtn.style.background = 'var(--primary-color)';
+            buyBtn.style.color = '#fff';
+            buyBtn.style.cursor = 'pointer';
+            buyBtn.disabled = false;
+        }
+        
         document.getElementById('selected-variant-id').value = id;
     }
 

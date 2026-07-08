@@ -114,7 +114,7 @@ class PageController extends Controller
         $products = $query->latest()->get();
         $counts = ['stock_in' => 0, 'stock_out' => 0, 'gender_him' => 0, 'gender_her' => 0, 'gender_unisex' => 0, 'size_50ml' => 0, 'size_100ml' => 0];
         foreach($products as $product) {
-            $inStock = $product->variants->sum('stock') > 0;
+            $inStock = $product->variants->sum('stock') > 0 || $product->continue_selling_when_out_of_stock;
             if($inStock) $counts['stock_in']++; else $counts['stock_out']++;
             $g = strtolower($product->gender);
             if(in_array($g, ['men', 'man', 'him', 'male'])) $counts['gender_him']++;
@@ -154,15 +154,55 @@ class PageController extends Controller
             });
         }
 
-        $products = $query->latest()->get();
+        // Price filters
+        if ($request->filled('min_price')) {
+            $query->where('starting_price', '>=', $request->min_price);
+        }
+        if ($request->filled('max_price')) {
+            $query->where('starting_price', '<=', $request->max_price);
+        }
 
+        // Tags filter
+        if ($request->has('tags') && is_array($request->tags)) {
+            $query->where(function($q) use ($request) {
+                foreach($request->tags as $tag) {
+                    $q->orWhereJsonContains('tags', $tag);
+                }
+            });
+        }
+
+        // Sorting
+        $sort = $request->query('sort', 'latest');
+        if ($sort === 'price_asc') {
+            $query->orderBy('starting_price', 'asc');
+        } elseif ($sort === 'price_desc') {
+            $query->orderBy('starting_price', 'desc');
+        } elseif ($sort === 'name_asc') {
+            $query->orderBy('title', 'asc');
+        } elseif ($sort === 'name_desc') {
+            $query->orderBy('title', 'desc');
+        } else {
+            $query->latest();
+        }
+
+        $products = $query->get();
+
+        // Get all unique tags for the filter UI
+        $allTags = \App\Models\Product::where('tenant_id', $tenantId)
+                        ->where('status', 'active')
+                        ->whereNotNull('tags')
+                        ->pluck('tags')
+                        ->flatten()
+                        ->unique()
+                        ->values()
+                        ->toArray();
         $counts = [
             'stock_in'       => 0, 'stock_out'    => 0,
             'gender_him'     => 0, 'gender_her'   => 0, 'gender_unisex' => 0,
             'size_50ml'      => 0, 'size_100ml'   => 0,
         ];
         foreach ($products as $product) {
-            $inStock = $product->variants->sum('stock') > 0;
+            $inStock = $product->variants->sum('stock') > 0 || $product->continue_selling_when_out_of_stock;
             if ($inStock) $counts['stock_in']++; else $counts['stock_out']++;
             $g = strtolower($product->gender ?? '');
             if (in_array($g, ['men', 'man', 'him']))         $counts['gender_him']++;
@@ -195,6 +235,11 @@ class PageController extends Controller
             'counts'   => $counts,
             'bundles'  => $bundles,
             'keyword'  => $keyword,
+            'allTags'  => $allTags,
+            'currentSort' => $sort,
+            'currentMinPrice' => $request->min_price,
+            'currentMaxPrice' => $request->max_price,
+            'currentTags' => $request->tags ?? [],
         ]);
     }
 
@@ -384,6 +429,10 @@ class PageController extends Controller
                     }
                     else { $stock = $item->product->variants->sum('stock'); }
                     
+                    if ($item->product->continue_selling_when_out_of_stock) {
+                        $stock = 999;
+                    }
+                    
                     if($stock > 0) {
                         $cart[$item->product_id . '-' . $item->size] = [
                             "name" => $item->product->title, 
@@ -413,6 +462,11 @@ class PageController extends Controller
                         $stock = 0;
                         if(isset($item['size']) && $item['size']) { $variant = $product->variants->where('size', $item['size'])->first(); $stock = $variant ? $variant->stock : 0; }
                         else { $stock = $product->variants->sum('stock'); }
+                        
+                        if ($product->continue_selling_when_out_of_stock) {
+                            $stock = 999;
+                        }
+                        
                         if($stock > 0) { $item['coupon'] = $this->getActiveCoupon($product); $cart[$key] = $item; }
                     }
                 } elseif(isset($item['type']) && $item['type'] == 'bundle') {
@@ -434,6 +488,20 @@ class PageController extends Controller
             $taxAmount = round($subtotal * ($taxRate / 100), 2);
         }
         $total = $subtotal + $taxAmount;
+
+        // Minimum Order Value Check
+        $minOrderValue = $tenant ? ($tenant->min_order_value ?? 0) : 0;
+        if ($minOrderValue > 0 && $total < $minOrderValue) {
+            $formattedMin = '₹' . number_format($minOrderValue, 2);
+            $theme = $tenant ? $tenant->theme : 'template_1';
+            $cartRoute = match(true) {
+                $theme === 'template_2' || $theme === 'v3' => 'v3.cart',
+                $theme === 'v4' => 'v4.cart',
+                $theme === 'v5' => 'v5.cart',
+                default => 'v1.cart'
+            };
+            return redirect()->route($cartRoute)->with('error', "Your order total must be at least {$formattedMin} to proceed to checkout.");
+        }
 
         // Delivery Dates Logic
         $deliveryDaysDelay = $tenant ? (int) $tenant->delivery_days : 0;

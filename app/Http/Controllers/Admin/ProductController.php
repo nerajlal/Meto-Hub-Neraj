@@ -84,7 +84,8 @@ class ProductController extends Controller
         $families = Attribute::where('type', 'family')->get();
         $notes = Attribute::where('type', 'note')->get();
         $packDeals = collect();
-        return view('admin.products.create', compact('collections', 'families', 'notes', 'packDeals'));
+        $allTags = Product::whereNotNull('tags')->pluck('tags')->flatten()->unique()->values()->toArray();
+        return view('admin.products.create', compact('collections', 'families', 'notes', 'packDeals', 'allTags'));
     }
 
     public function store(Request $request)
@@ -102,8 +103,16 @@ class ProductController extends Controller
             'title', 'description', 'status', 'type', 'vendor', 
             'collection_id', 'gender', 'olfactory_family', 
             'intensity', 'oil_concentration', 'notes_top', 'notes_heart', 'notes_base',
-            'min_order_qty', 'max_order_qty'
+            'min_order_qty', 'max_order_qty', 'continue_selling_when_out_of_stock'
         ]));
+
+        if ($request->has('tags_json')) {
+            $tagsData = json_decode($request->tags_json, true);
+            if (is_array($tagsData)) {
+                $product->tags = array_column($tagsData, 'value');
+                $product->save();
+            }
+        }
 
         // Handle Variants
         if ($request->has('variants')) {
@@ -190,7 +199,8 @@ class ProductController extends Controller
         $collections = Collection::all();
         $families = Attribute::where('type', 'family')->get();
         $notes = Attribute::where('type', 'note')->get();
-        return view('admin.products.edit', compact('product', 'collections', 'families', 'notes', 'packDeals'));
+        $allTags = Product::whereNotNull('tags')->pluck('tags')->flatten()->unique()->values()->toArray();
+        return view('admin.products.edit', compact('product', 'collections', 'families', 'notes', 'packDeals', 'allTags'));
     }
 
     public function update(Request $request, $id)
@@ -216,8 +226,22 @@ class ProductController extends Controller
             'title', 'description', 'status', 'type', 'vendor', 
             'collection_id', 'gender', 'olfactory_family', 
             'intensity', 'oil_concentration', 'notes_top', 'notes_heart', 'notes_base',
-            'min_order_qty', 'max_order_qty'
+            'min_order_qty', 'max_order_qty', 'continue_selling_when_out_of_stock'
         ]));
+
+        if ($request->has('tags_json')) {
+            $tagsData = json_decode($request->tags_json, true);
+            if (is_array($tagsData)) {
+                $product->tags = array_column($tagsData, 'value');
+                $product->save();
+            }
+        } else {
+            // If empty, it won't send tags_json usually or sends empty array
+            if ($request->exists('tags_json') && empty($request->tags_json)) {
+                $product->tags = [];
+                $product->save();
+            }
+        }
 
         // Sync Variants
         if ($request->has('variants')) {

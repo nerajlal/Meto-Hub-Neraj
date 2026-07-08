@@ -164,6 +164,12 @@
                     } else {
                         showCartToast(response.message || 'Error adding item');
                     }
+                }).fail(function(xhr) {
+                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                        showCartToast(xhr.responseJSON.message);
+                    } else {
+                        showCartToast('Error adding item');
+                    }
                 });
             } else {
                 // Update
@@ -183,6 +189,12 @@
                         refreshNCart();
                     } else {
                         showCartToast(response.message || 'Error updating item');
+                    }
+                }).fail(function(xhr) {
+                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                        showCartToast(xhr.responseJSON.message);
+                    } else {
+                        showCartToast('Error updating item');
                     }
                 });
             }

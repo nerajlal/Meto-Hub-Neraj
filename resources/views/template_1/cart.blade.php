@@ -44,6 +44,17 @@
                         <span class="item-price-lg" id="price-{{ $id }}">₹{{ number_format($item['price'] * $item['quantity'], 2) }}</span>
                     </div>
 
+                    @if((isset($item['min_order_qty']) && $item['min_order_qty']) || (isset($item['max_order_qty']) && $item['max_order_qty']))
+                    <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem; text-align: left;">
+                        @if(isset($item['min_order_qty']) && $item['min_order_qty'])
+                            <span class="me-2"><i class="fa-solid fa-arrow-down-1-9"></i> Min: {{ $item['min_order_qty'] }}</span>
+                        @endif
+                        @if(isset($item['max_order_qty']) && $item['max_order_qty'])
+                            <span><i class="fa-solid fa-arrow-up-9-1"></i> Max: {{ $item['max_order_qty'] }}</span>
+                        @endif
+                    </div>
+                    @endif
+
                     @if(isset($item['coupon']))
                     <div class="item-promo-badge">
                         <i class="fa-solid fa-gift"></i> {{ $item['coupon']->code }} Applied
@@ -85,9 +96,23 @@
                 <hr class="summary-hr">
                 <div class="summary-row-lg grand-total">
                     <span>Total</span>
-                    <span id="total-val">₹{{ number_format($total, 2) }}</span>
+                    <span id="total-val" data-val="{{ $total }}">₹{{ number_format($total, 2) }}</span>
                 </div>
-                <a href="{{ route('v1.checkout') }}" class="btn-checkout-lg">
+
+                @if(isset($minOrderValue) && $minOrderValue > 0)
+                <div class="min-order-progress-container mt-3 mb-2">
+                    <div class="d-flex justify-content-between mb-2" style="font-size: 0.85rem; color: #E2E8F0;">
+                        <span id="min-order-msg">Calculating...</span>
+                        <span>₹{{ number_format($minOrderValue, 2) }}</span>
+                    </div>
+                    <div class="progress" style="height: 6px; border-radius: 999px; background: rgba(255,255,255,0.15);">
+                        <div id="min-order-bar" class="progress-bar" role="progressbar" style="width: 0%; background: var(--accent-color); border-radius: 999px; transition: width 0.3s ease;"></div>
+                    </div>
+                </div>
+                @endif
+
+                <input type="hidden" id="min-order-value" value="{{ $minOrderValue ?? 0 }}">
+                <a href="{{ route('v1.checkout') }}" id="checkout-btn" class="btn-checkout-lg">
                     Checkout Now <i class="fa-solid fa-arrow-right ms-2"></i>
                 </a>
                 <div class="summary-trust">
@@ -187,6 +212,39 @@
 </style>
 
 <script>
+    function checkMinOrder(totalVal) {
+        let minVal = parseFloat(document.getElementById('min-order-value').value);
+        let btn = document.getElementById('checkout-btn');
+        let bar = document.getElementById('min-order-bar');
+        let msg = document.getElementById('min-order-msg');
+        
+        if (minVal > 0) {
+            let percentage = (totalVal / minVal) * 100;
+            if (percentage > 100) percentage = 100;
+            
+            if (bar) bar.style.width = percentage + '%';
+            
+            if (totalVal < minVal) {
+                let diff = minVal - totalVal;
+                if (msg) msg.innerHTML = `Add <strong>₹${new Intl.NumberFormat().format(diff)}</strong> more to checkout`;
+                btn.style.opacity = '0.5';
+                btn.style.pointerEvents = 'none';
+                if (bar) bar.style.background = 'var(--accent-color)';
+            } else {
+                if (msg) msg.innerHTML = `<strong>Minimum reached! 🎉</strong>`;
+                btn.style.opacity = '1';
+                btn.style.pointerEvents = 'auto';
+                if (bar) bar.style.background = '#10b981'; // Green when complete
+            }
+        }
+    }
+
+    // Run on initial load
+    document.addEventListener("DOMContentLoaded", function() {
+        let initialTotal = parseFloat(document.getElementById('total-val').getAttribute('data-val') || 0);
+        checkMinOrder(initialTotal);
+    });
+
     function updateCartQty(id, delta) {
         let qtyEl = document.getElementById('qty-' + id);
         let currentQty = parseInt(qtyEl.innerText);
@@ -219,6 +277,14 @@
                     document.getElementById('savings-row').style.display = 'none';
                 }
                 
+                checkMinOrder(response.cartTotal);
+            },
+            error: function(xhr) {
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    alert(xhr.responseJSON.message);
+                } else {
+                    alert('Error updating cart');
+                }
             }
         });
     }
@@ -246,6 +312,7 @@
                         }
                         document.getElementById('total-val').innerText = '₹' + new Intl.NumberFormat().format(response.cartTotal);
                         $('#cart-count').text(response.cartCount);
+                        checkMinOrder(response.cartTotal);
                     }, 300);
                 }
             }
