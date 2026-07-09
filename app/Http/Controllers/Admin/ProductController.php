@@ -75,7 +75,10 @@ class ProductController extends Controller
         $types = Product::distinct()->whereNotNull('type')->pluck('type');
         $vendors = Product::distinct()->whereNotNull('vendor')->pluck('vendor');
 
-        return view('admin.products.index', compact('products', 'total', 'active', 'draft', 'archived', 'types', 'vendors'));
+        $tenantId = session('active_tenant_id') ?? request()->route('tenant') ?? 1;
+        $zohoConnected = \App\Models\TenantZohoToken::where('tenant_id', $tenantId)->exists();
+
+        return view('admin.products.index', compact('products', 'total', 'active', 'draft', 'archived', 'types', 'vendors', 'zohoConnected'));
     }
 
     public function create()
@@ -414,40 +417,95 @@ class ProductController extends Controller
     public function import(Request $request)
     {
         $request->validate([
-            'import_file' => 'required|file|mimes:csv,txt|max:10240',
+            'import_file' => 'required|file|mimes:csv,txt,xlsx,xls|max:10240',
         ]);
 
         $file = $request->file('import_file');
         $path = $file->getRealPath();
+        $extension = $file->getClientOriginalExtension();
 
-        $data = array_map('str_getcsv', file($path));
+        if (in_array(strtolower($extension), ['xlsx', 'xls'])) {
+            $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($path);
+            $data = $spreadsheet->getActiveSheet()->toArray(null, true, true, false);
+        } else {
+            $data = array_map('str_getcsv', file($path));
+        }
+        
+        // Clean up data to remove purely empty rows
+        $data = array_filter($data, function($row) {
+            return count(array_filter($row, fn($cell) => trim((string)$cell) !== '')) > 0;
+        });
+        $data = array_values($data); // Re-index
+
         if (count($data) < 2) {
             return back()->withErrors(['import_file' => 'The uploaded file is empty or invalid.']);
         }
 
-        $header = array_map('trim', array_map('strtolower', array_shift($data)));
-
-        // Tally-to-System Mapping
-        $titleKeys = ['title', 'name', 'item name', 'product name'];
-        $skuKeys = ['sku', 'part no', 'alias', 'item code'];
-        $priceKeys = ['price', 'rate', 'standard price', 'mrp'];
-        $stockKeys = ['stock', 'qty', 'closing balance', 'quantity'];
-
+        // --- INTELLIGENT HEADER DETECTION ---
+        // Tally exports often have 10-15 rows of company metadata before the actual headers.
+        // We will scan the first 20 rows to find the headers.
+        $headerRowIndex = 0;
         $titleIdx = -1;
         $skuIdx = -1;
         $priceIdx = -1;
         $stockIdx = -1;
+        $isTallyStockSummary = false;
 
-        foreach ($header as $index => $colName) {
-            if ($titleIdx === -1 && in_array($colName, $titleKeys)) $titleIdx = $index;
-            if ($skuIdx === -1 && in_array($colName, $skuKeys)) $skuIdx = $index;
-            if ($priceIdx === -1 && in_array($colName, $priceKeys)) $priceIdx = $index;
-            if ($stockIdx === -1 && in_array($colName, $stockKeys)) $stockIdx = $index;
+        $titleKeys = ['title', 'name', 'item name', 'product name', 'particulars'];
+        $skuKeys = ['sku', 'part no', 'alias', 'item code'];
+        $priceKeys = ['price', 'rate', 'standard price', 'mrp'];
+        $stockKeys = ['stock', 'qty', 'closing balance', 'quantity'];
+
+        for ($i = 0; $i < min(20, count($data)); $i++) {
+            $row = array_map('trim', array_map('strtolower', array_map('strval', $data[$i])));
+            
+            // Check if this row is the start of a Tally Stock Summary ("Closing Balance" super-header)
+            if (in_array('closing balance', $row) && in_array('opening balance', $row)) {
+                $isTallyStockSummary = true;
+                $closingBalanceIdx = array_search('closing balance', $row);
+                $inwardsIdx = array_search('inwards', $row);
+                $openingIdx = array_search('opening balance', $row);
+                
+                // The actual data headers are usually on the NEXT row in Tally
+                if (isset($data[$i+1])) {
+                    $nextRow = array_map('trim', array_map('strtolower', array_map('strval', $data[$i+1])));
+                    // Find "Particulars" (Item Name) which might be on the previous row or this row at index 0
+                    $titleIdx = 0; 
+                    
+                    // The "Quantity", "Rate", "Value" under "Closing Balance"
+                    // Tally puts Quantity at $closingBalanceIdx, Rate at $closingBalanceIdx + 1
+                    $stockIdx = $closingBalanceIdx; 
+                    $priceIdx = $closingBalanceIdx + 1;
+
+                    // Fallback price indices
+                    $inwardsPriceIdx = $inwardsIdx !== false ? $inwardsIdx + 1 : -1;
+                    $openingPriceIdx = $openingIdx !== false ? $openingIdx + 1 : -1;
+                    
+                    $headerRowIndex = $i + 1; // Data starts after the sub-header
+                    break;
+                }
+            }
+
+            // Standard flat CSV/Excel header detection
+            foreach ($row as $index => $colName) {
+                if ($titleIdx === -1 && in_array($colName, $titleKeys)) $titleIdx = $index;
+                if ($skuIdx === -1 && in_array($colName, $skuKeys)) $skuIdx = $index;
+                if ($priceIdx === -1 && in_array($colName, $priceKeys)) $priceIdx = $index;
+                if ($stockIdx === -1 && in_array($colName, $stockKeys)) $stockIdx = $index;
+            }
+
+            if ($titleIdx !== -1 && ($priceIdx !== -1 || $stockIdx !== -1)) {
+                $headerRowIndex = $i;
+                break;
+            }
         }
 
         if ($titleIdx === -1 || $priceIdx === -1) {
-            return back()->withErrors(['import_file' => 'Could not find required columns (Name, Price) in your CSV. Ensure your file has valid headers.']);
+            return back()->withErrors(['import_file' => 'Could not find required columns (Name/Particulars, Rate/Price) in your file. Ensure your file has valid headers.']);
         }
+
+        // Remove the header rows from data so we only process the items
+        $data = array_slice($data, $headerRowIndex + 1);
 
         $tenantId = session('active_tenant_id') ?? request()->route('tenant') ?? 1;
         $importedCount = 0;
@@ -457,12 +515,25 @@ class ProductController extends Controller
             foreach ($data as $row) {
                 if (count($row) <= $titleIdx) continue;
                 
-                $title = trim($row[$titleIdx]);
+                $title = trim((string) $row[$titleIdx]);
                 if (empty($title)) continue;
 
-                $price = isset($row[$priceIdx]) ? (float) preg_replace('/[^0-9.]/', '', $row[$priceIdx]) : 0;
-                $sku = ($skuIdx !== -1 && isset($row[$skuIdx])) ? trim($row[$skuIdx]) : '';
-                $stock = ($stockIdx !== -1 && isset($row[$stockIdx])) ? (int) preg_replace('/[^0-9.-]/', '', $row[$stockIdx]) : 0;
+                // Grab raw strings
+                $rawPrice = isset($row[$priceIdx]) ? trim((string) $row[$priceIdx]) : '';
+                $rawStock = ($stockIdx !== -1 && isset($row[$stockIdx])) ? trim((string) $row[$stockIdx]) : '';
+                
+                // If it's a Tally export and closing rate is empty, fallback to inwards or opening rate
+                if ($isTallyStockSummary && empty($rawPrice)) {
+                    if (isset($inwardsPriceIdx) && $inwardsPriceIdx !== -1 && isset($row[$inwardsPriceIdx]) && trim((string)$row[$inwardsPriceIdx]) !== '') {
+                        $rawPrice = (string) $row[$inwardsPriceIdx];
+                    } elseif (isset($openingPriceIdx) && $openingPriceIdx !== -1 && isset($row[$openingPriceIdx]) && trim((string)$row[$openingPriceIdx]) !== '') {
+                        $rawPrice = (string) $row[$openingPriceIdx];
+                    }
+                }
+
+                $price = (float) preg_replace('/[^0-9.]/', '', $rawPrice);
+                $sku = ($skuIdx !== -1 && isset($row[$skuIdx])) ? trim((string) $row[$skuIdx]) : '';
+                $stock = (int) preg_replace('/[^0-9.-]/', '', $rawStock);
 
                 // Create or update Product
                 $product = Product::firstOrCreate([

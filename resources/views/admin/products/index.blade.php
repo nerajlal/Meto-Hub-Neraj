@@ -6,6 +6,19 @@
 <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
     <h1 class="h3 fw-bold text-dark mb-0">Products</h1>
     <div class="d-flex gap-2">
+        @if(isset($zohoConnected) && $zohoConnected)
+            <form action="{{ route('admin.zoho.sync', request()->route('tenant') ?? 1) }}" method="POST" class="d-inline">
+                @csrf
+                <button type="submit" class="btn btn-white border shadow-sm fw-medium text-primary">
+                    <i class="fas fa-sync-alt me-1"></i> Sync from Zoho
+                </button>
+            </form>
+        @else
+            <a href="{{ route('admin.zoho.connect', request()->route('tenant') ?? 1) }}" class="btn btn-white border shadow-sm fw-medium text-primary">
+                <i class="fas fa-plug me-1"></i> Connect Zoho
+            </a>
+        @endif
+        
         <button type="button" class="btn btn-white border shadow-sm fw-medium" data-bs-toggle="modal" data-bs-target="#importModal">
             <i class="fas fa-file-import me-1"></i> Import Products
         </button>
@@ -188,12 +201,12 @@
                 </div>
                 <div class="modal-body">
                     <p class="text-muted small mb-4">
-                        Upload a CSV file containing your product data. 
+                        Upload an Excel (.xlsx, .xls) or CSV (.csv) file containing your product data. 
                         We automatically map standard exports (like Tally) if they use column headers such as <strong>Item Name</strong>, <strong>Rate</strong>, <strong>Closing Balance</strong>, or <strong>Part No</strong>.
                     </p>
                     <div class="mb-3">
-                        <label for="import_file" class="form-label fw-medium">Select CSV File</label>
-                        <input type="file" class="form-control form-control-lg bg-light" id="import_file" name="import_file" accept=".csv,.txt" required>
+                        <label for="import_file" class="form-label fw-medium">Select File</label>
+                        <input type="file" class="form-control form-control-lg bg-light" id="import_file" name="import_file" accept=".csv,.txt,.xlsx,.xls" required>
                     </div>
                 </div>
                 <div class="modal-footer border-top-0 pt-0">

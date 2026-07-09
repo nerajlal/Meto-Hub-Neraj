@@ -295,10 +295,10 @@
                                         </td>
                                     </tr>
 
-                                    <!-- GST Number -->
+                                    <!-- Registration Number -->
                                     <tr>
                                         <td class="ps-4 fw-semibold"><i
-                                                class="fa-solid fa-file-invoice-dollar text-muted me-2"></i> GST Number</td>
+                                                class="fa-solid fa-file-invoice-dollar text-muted me-2"></i> Registration Number</td>
                                         <td class="text-muted small">For tax invoice purposes.</td>
                                         <td class="text-center">
                                             <div class="form-check form-switch d-inline-block">

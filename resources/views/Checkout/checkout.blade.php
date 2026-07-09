@@ -132,9 +132,9 @@
                         @endif
                         @if(isset($cf['gst_number']['enabled']) && $cf['gst_number']['enabled'])
                         <div class="form-group-lg full">
-                            <label style="display: block; font-size: 0.8rem; font-weight: 800; color: var(--text-muted); margin-bottom: 0.5rem; text-transform: uppercase;">GST Number {!! isset($cf['gst_number']['required']) && $cf['gst_number']['required'] ? '<span style="color:red;">*</span>' : '' !!}</label>
-                            <input type="text" name="gst_number" {{ isset($cf['gst_number']['required']) && $cf['gst_number']['required'] ? 'required' : '' }} placeholder="e.g. 22AAAAA0000A1Z5" style="width: 100%; padding: 0.85rem 1.25rem; border: 2px solid var(--border-color); border-radius: 0.75rem; font-size: 1rem; outline: none;">
-                        </div>
+                                <label style="display: block; font-size: 0.8rem; font-weight: 800; color: var(--text-muted); margin-bottom: 0.5rem; text-transform: uppercase;">Registration Number {!! isset($cf['gst_number']['required']) && $cf['gst_number']['required'] ? '<span style="color:red;">*</span>' : '' !!}</label>
+                                <input type="text" name="gst_number" {{ isset($cf['gst_number']['required']) && $cf['gst_number']['required'] ? 'required' : '' }} placeholder="e.g. Registration/VAT Number" style="width: 100%; padding: 0.85rem 1.25rem; border: 2px solid var(--border-color); border-radius: 0.75rem; font-size: 1rem; outline: none;">
+                            </div>
                         @endif
                     </div>
                 </div>

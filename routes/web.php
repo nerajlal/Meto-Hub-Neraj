@@ -116,6 +116,9 @@ Route::get('/login', function() {
     return redirect()->route('admin.common.login');
 })->name('login');
 
+// Global Zoho Callback (Zoho doesn't know tenant URL prefix initially)
+Route::get('/admin/integrations/zoho/callback', [App\Http\Controllers\Admin\ZohoController::class, 'callback'])->name('admin.zoho.callback');
+
 // Protected Admin Panel Routes
 Route::prefix('{tenant}/admin')->name('admin.')->middleware(['identify_tenant', 'auth'])->group(function () {
     Route::get('/', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
@@ -159,6 +162,10 @@ Route::prefix('{tenant}/admin')->name('admin.')->middleware(['identify_tenant', 
     Route::get('/products/{id}/edit', [App\Http\Controllers\Admin\ProductController::class, 'edit'])->name('products.edit');
     Route::put('/products/{id}', [App\Http\Controllers\Admin\ProductController::class, 'update'])->name('products.update');
     Route::delete('/products/{id}', [App\Http\Controllers\Admin\ProductController::class, 'destroy'])->name('products.destroy');
+
+    // Zoho Integration Routes
+    Route::get('/integrations/zoho/connect', [App\Http\Controllers\Admin\ZohoController::class, 'connect'])->name('zoho.connect');
+    Route::post('/products/zoho-sync', [App\Http\Controllers\Admin\ZohoController::class, 'syncProducts'])->name('zoho.sync');
 
     Route::view('/reviews', 'admin.reviews.index')->name('reviews');
 

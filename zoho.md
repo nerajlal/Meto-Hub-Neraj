@@ -13,7 +13,7 @@
 
 ## Zoho Integration Guide
 ### Step 1: Set Up Your Zoho Developer Account (App Owner Only - Do This Once!)
-1. Go to [Zoho Developer Console](https://developer.zoho.com/)
+1. Go to the [Zoho API Console](https://api-console.zoho.com/)
 2. Sign up or log in with **your own Zoho account** (this is for your master app registration)
 3. Click **Add Client** → Choose **Server-based Applications**
 4. Fill in the details:
