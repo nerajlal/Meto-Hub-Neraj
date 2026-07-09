@@ -1498,24 +1498,60 @@ body.menu-open {
         padding: 0.5rem 0.75rem;
     }
 
-    /* Grid 2 Columns - More compact for mobile */
-    .product-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 0.75rem;
+    /* Grid 3 Columns - Extremely compact for mobile */
+    .product-grid, .product-grid.grid-cols-mobile-2, .product-grid.grid-cols-mobile-3 {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.5rem;
     }
 
     .product-grid.grid-cols-mobile-1 {
         grid-template-columns: 1fr;
     }
 
-    .product-grid.grid-cols-mobile-3 {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 0.5rem;
+    .product-card {
+        padding: 0.4rem;
+        border-radius: 0.5rem;
+    }
+    
+    .product-card .card-info {
+        padding: 0.25rem !important;
+        gap: 0.1rem !important;
     }
 
-    .product-card {
-        padding: 0.5rem;
-        border-radius: 0.75rem;
+    .product-card .p-price {
+        font-size: 0.85rem !important;
+    }
+
+    .product-card .p-name {
+        font-size: 0.7rem !important;
+        line-height: 0.9rem !important;
+        height: 2.7rem !important; /* 3 lines max */
+        margin-bottom: 0.25rem !important;
+    }
+    
+    .product-card .p-meta {
+        font-size: 0.6rem !important;
+    }
+
+    .product-action-wrapper .inline-add-btn {
+        width: 28px !important;
+        height: 28px !important;
+    }
+    
+    .product-action-wrapper .qty-controller {
+        width: 70px !important;
+        height: 28px !important;
+    }
+    
+    .product-action-wrapper .qty-btn-minus, 
+    .product-action-wrapper .qty-btn-plus {
+        width: 20px !important;
+        height: 20px !important;
+        font-size: 0.7rem !important;
+    }
+    
+    .product-action-wrapper .qty-value {
+        font-size: 0.75rem !important;
     }
 
     .card-img {
@@ -1523,25 +1559,7 @@ body.menu-open {
     }
 
     .card-info {
-        padding: 0 0.25rem 0.25rem;
-    }
-
-    .p-name {
-        font-size: 0.8rem;
-        line-height: 1.4;
-        margin-bottom: 0.25rem;
-    }
-
-    .p-price {
-        font-size: 0.95rem;
-    }
-
-    .p-meta {
-        font-size: 0.65rem;
-        display: block;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        /* overridden above */
     }
 
     .cart-add-btn {
