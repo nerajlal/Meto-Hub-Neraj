@@ -9,7 +9,7 @@
         <p style="color: var(--text-muted); margin-top: 0.5rem; font-size: 1.1rem;">Freshly stocked, locally sourced fruits, vegetables, and household essentials in this collection.</p>
     </div>
     <div class="collection-stats" style="font-weight: 600; color: var(--text-muted); background: #fff; border: 1px solid var(--border-color); padding: 0.5rem 1rem; border-radius: 0.75rem; font-size: 0.9rem;">
-        {{ $products->count() }} items available
+        {{ $products->total() }} items available
     </div>
 </div>
 
@@ -19,6 +19,9 @@
             @foreach($products as $product)
                 @include('template_1.partials.product_card', ['product' => $product])
             @endforeach
+        </div>
+        <div style="display: flex; justify-content: center; margin-top: 3rem; margin-bottom: 3rem;">
+            {{ $products->links('pagination::bootstrap-5') }}
         </div>
     @else
         <div class="empty-state" style="text-align: center; padding: 6rem 2rem; background: #fff; border-radius: 2rem; border: 1px solid var(--border-color); color: var(--text-muted);">

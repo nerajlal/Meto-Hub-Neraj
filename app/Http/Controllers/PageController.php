@@ -111,21 +111,10 @@ class PageController extends Controller
             elseif ($gender == 'for-her') { $title = 'Perfumes For Her'; $query->whereIn('gender', ['Women', 'Female', 'Her']); }
             elseif ($gender == 'unisex') { $title = 'Unisex Collection'; $query->whereIn('gender', ['Unisex', 'All']); }
         }
-        $products = $query->latest()->get();
-        $counts = ['stock_in' => 0, 'stock_out' => 0, 'gender_him' => 0, 'gender_her' => 0, 'gender_unisex' => 0, 'size_50ml' => 0, 'size_100ml' => 0];
-        foreach($products as $product) {
-            $inStock = $product->variants->sum('stock') > 0 || $product->continue_selling_when_out_of_stock;
-            if($inStock) $counts['stock_in']++; else $counts['stock_out']++;
-            $g = strtolower($product->gender);
-            if(in_array($g, ['men', 'man', 'him', 'male'])) $counts['gender_him']++;
-            elseif(in_array($g, ['women', 'woman', 'her', 'female'])) $counts['gender_her']++;
-            else $counts['gender_unisex']++;
-            $sizes = $product->variants->pluck('size')->map(fn($s) => strtolower($s))->toArray();
-            if(in_array('50ml', $sizes)) $counts['size_50ml']++;
-            if(in_array('100ml', $sizes)) $counts['size_100ml']++;
-        }
+        $products = $query->latest()->paginate(24)->withQueryString();
+        
         $bundles = \App\Models\Bundle::where('tenant_id', $tenantId)->where('status', 'active')->where('type', '!=', 'pool')->with(['products.variants'])->latest()->get();
-        return view($view, ['title' => $title, 'products' => $products, 'counts' => $counts, 'bundles' => $bundles]);
+        return view($view, ['title' => $title, 'products' => $products, 'bundles' => $bundles]);
     }
 
     public function allProducts(Request $request)
@@ -185,7 +174,7 @@ class PageController extends Controller
             $query->latest();
         }
 
-        $products = $query->get();
+        $products = $query->paginate(24)->withQueryString();
 
         // Get all unique tags for the filter UI
         $allTags = \App\Models\Product::where('tenant_id', $tenantId)
@@ -196,22 +185,6 @@ class PageController extends Controller
                         ->unique()
                         ->values()
                         ->toArray();
-        $counts = [
-            'stock_in'       => 0, 'stock_out'    => 0,
-            'gender_him'     => 0, 'gender_her'   => 0, 'gender_unisex' => 0,
-            'size_50ml'      => 0, 'size_100ml'   => 0,
-        ];
-        foreach ($products as $product) {
-            $inStock = $product->variants->sum('stock') > 0 || $product->continue_selling_when_out_of_stock;
-            if ($inStock) $counts['stock_in']++; else $counts['stock_out']++;
-            $g = strtolower($product->gender ?? '');
-            if (in_array($g, ['men', 'man', 'him']))         $counts['gender_him']++;
-            elseif (in_array($g, ['women', 'woman', 'her'])) $counts['gender_her']++;
-            else                                              $counts['gender_unisex']++;
-            $sizes = $product->variants->pluck('size')->map(fn($s) => strtolower($s))->toArray();
-            if (in_array('50ml', $sizes))  $counts['size_50ml']++;
-            if (in_array('100ml', $sizes)) $counts['size_100ml']++;
-        }
 
         $bundlesQuery = \App\Models\Bundle::where('tenant_id', $tenantId)
                         ->where('status', 'active')
@@ -232,7 +205,6 @@ class PageController extends Controller
         return view($view, [
             'title'    => $keyword ? "Search results for \"$keyword\"" : 'All Products',
             'products' => $products,
-            'counts'   => $counts,
             'bundles'  => $bundles,
             'keyword'  => $keyword,
             'allTags'  => $allTags,

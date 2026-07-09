@@ -9,14 +9,14 @@
             <h1 class="collection-title" style="font-size: 2.5rem; font-weight: 800; color: var(--primary-color); line-height: 1.2;">
                 <i class="fa-solid fa-magnifying-glass me-2" style="font-size: 2rem; opacity: 0.6;"></i>"{{ $keyword }}"
             </h1>
-            <p style="color: var(--text-muted); margin-top: 0.5rem; font-size: 1.1rem;">{{ $products->count() }} result{{ $products->count() !== 1 ? 's' : '' }} found &mdash; <a href="{{ route('v3.all-products') }}" style="color: var(--accent-color); font-weight: 600;">Clear search</a></p>
+            <p style="color: var(--text-muted); margin-top: 0.5rem; font-size: 1.1rem;">{{ $products->total() }} result{{ $products->total() !== 1 ? 's' : '' }} found &mdash; <a href="{{ route('v3.all-products') }}" style="color: var(--accent-color); font-weight: 600;">Clear search</a></p>
         @else
             <h1 class="collection-title" style="font-size: 2.5rem; font-weight: 800; color: var(--primary-color); line-height: 1.2;">Grocery Catalog</h1>
             <p style="color: var(--text-muted); margin-top: 0.5rem; font-size: 1.1rem;">Explore our complete range of farm fresh vegetables, organic fruits, daily essentials, and household items.</p>
         @endif
     </div>
     <div class="collection-stats" style="font-weight: 600; color: var(--text-muted); background: #fff; border: 1px solid var(--border-color); padding: 0.5rem 1rem; border-radius: 0.75rem; font-size: 0.9rem;">
-        {{ $products->count() }} items available
+        {{ $products->total() }} items available
     </div>
 </div>
 
@@ -112,6 +112,9 @@
             @foreach($products as $product)
                 @include('template_1.partials.product_card', ['product' => $product])
             @endforeach
+        </div>
+        <div style="display: flex; justify-content: center; margin-top: 3rem; margin-bottom: 3rem;">
+            {{ $products->links('pagination::bootstrap-5') }}
         </div>
     @else
         <div class="empty-state" style="text-align: center; padding: 6rem 2rem; background: #fff; border-radius: 2rem; border: 1px solid var(--border-color); color: var(--text-muted);">
