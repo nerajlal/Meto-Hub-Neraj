@@ -26,9 +26,10 @@ class AccountController extends Controller
             ?? 1;
         $tenant = \App\Models\Tenant::find($tenantId);
         $theme = $tenant ? $tenant->theme : 'template_1';
-        if (!in_array($theme, ['template_1', 'template_2'])) {
+        if (!in_array($theme, ['template_1', 'template_2', 'template_3', 'v3', 'app'])) {
             $theme = 'template_1';
         }
+        if (in_array($theme, ['v3', 'app'])) $theme = 'template_3';
 
         $view = "{$theme}.account.index";
         return view($view, compact('user', 'address'));
@@ -69,9 +70,10 @@ class AccountController extends Controller
             ?? 1;
         $tenant = \App\Models\Tenant::find($tenantId);
         $theme = $tenant ? $tenant->theme : 'template_1';
-        if (!in_array($theme, ['template_1', 'template_2'])) {
+        if (!in_array($theme, ['template_1', 'template_2', 'template_3', 'v3', 'app'])) {
             $theme = 'template_1';
         }
+        if (in_array($theme, ['v3', 'app'])) $theme = 'template_3';
 
         $view = "{$theme}.account.orders";
         return view($view, compact('orders'));

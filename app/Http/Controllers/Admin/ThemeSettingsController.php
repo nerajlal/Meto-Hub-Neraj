@@ -35,6 +35,14 @@ class ThemeSettingsController extends Controller
                 'preview_img' => '/Images/landing/v3-template.png',
                 'preview_route' => 'v3.home',
             ],
+            [
+                'id' => 'template_3',
+                'name' => 'Mobile App Interface',
+                'version' => 'Compact Category Grids',
+                'description' => 'Premium, mobile-first design featuring tight 3-column product grids, glassmorphism, category-based homepage, and a beautiful app-like feel.',
+                'preview_img' => '/Images/landing/v3-template.png',
+                'preview_route' => 'v3.home',
+            ],
         ];
 
         return view('admin.settings.theme', compact('tenant', 'themes'));
@@ -48,7 +56,7 @@ class ThemeSettingsController extends Controller
         $request->validate([
             'theme' => [
                 'required',
-                Rule::in(['aura_luxe', 'template_2'])
+                Rule::in(['aura_luxe', 'template_2', 'template_3'])
             ]
         ]);
 

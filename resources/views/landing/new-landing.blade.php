@@ -1039,7 +1039,7 @@
         <p>Every template ships with real grocery structure already in place — swap colors, fonts, and your logo.</p>
       </div>
       <div class="template-grid">
-        <div class="template-card" data-demo-url="{{ route('v3.home') }}?preview=1&tenant_id=2">
+        <div class="template-card" data-demo-url="{{ route('v1.home') }}?preview=1&tenant_id=2">
           <div class="template-preview"
             style="background:linear-gradient(180deg,#F7F5F0 0%,#F7F5F0 60%,#fff 60%);padding:16px;">
             <div style="font-family:'Archivo';font-weight:700;font-size:13px;margin-bottom:8px;">Market Basic</div>
@@ -1065,6 +1065,20 @@
           </div>
           <div class="template-info">
             <h4>Night grocer</h4><span>Bold</span>
+          </div>
+        </div>
+        <div class="template-card" data-demo-url="{{ route('v3.home') }}?preview=1&tenant_id=2">
+          <div class="template-preview" style="background:#F4F6F8;padding:16px; border-bottom: 1px solid var(--line);">
+            <div style="font-family:'Archivo';font-weight:700;font-size:13px;margin-bottom:8px;color:#111827;">Fresh App
+            </div>
+            <div style="display:flex;gap:6px;">
+              <div style="width:30%;height:60px;background:#10B981;border-radius:12px;"></div>
+              <div style="width:30%;height:60px;background:#EF4444;border-radius:12px;"></div>
+              <div style="width:30%;height:60px;background:#F59E0B;border-radius:12px;"></div>
+            </div>
+          </div>
+          <div class="template-info">
+            <h4>Fresh App</h4><span>Modern Mobile</span>
           </div>
         </div>
       </div>

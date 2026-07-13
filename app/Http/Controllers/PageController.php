@@ -20,10 +20,18 @@ class PageController extends Controller
         $tenantId = $this->tenantId();
         $tenant = \App\Models\Tenant::find($tenantId);
         $theme = $tenant ? $tenant->theme : 'template_1';
-        
-        if ($theme === 'template_2') {
-            return "template_2.{$name}";
+
+        $routeName = request()->route() ? request()->route()->getName() : '';
+        if (str_starts_with($routeName, 'v3.')) {
+            $theme = 'template_3';
+        } elseif (str_starts_with($routeName, 'velvet.')) {
+            $theme = 'template_2';
         }
+        
+        if (view()->exists("{$theme}.{$name}")) {
+            return "{$theme}.{$name}";
+        }
+        
         return "template_1.{$name}";
     }
 
@@ -42,7 +50,12 @@ class PageController extends Controller
         $tenantId = $this->tenantId();
         $sliders = \App\Models\Slider::where('tenant_id', $tenantId)->where('status', true)->orderBy('order', 'asc')->get();
         $bestsellers = \App\Models\HomeProduct::where('tenant_id', $tenantId)->with(['product.variants', 'product.images'])->orderBy('sort_order', 'asc')->get();
-        $collections = \App\Models\Collection::where('tenant_id', $tenantId)->where('status', true)->get();
+        $collections = \App\Models\Collection::where('tenant_id', $tenantId)
+                            ->where('status', true)
+                            ->with(['products' => function($q) {
+                                $q->where('status', 'active')->with(['variants', 'images'])->limit(10);
+                            }])
+                            ->get();
         $bundles = \App\Models\Bundle::where('tenant_id', $tenantId)->where('status', 'active')->where('type', 'bundle')->with(['products.variants'])->latest()->take(4)->get();
         return view($this->getView('home'), compact('sliders', 'bestsellers', 'collections', 'bundles'));
     }

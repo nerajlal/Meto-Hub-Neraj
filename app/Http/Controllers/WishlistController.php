@@ -72,6 +72,8 @@ class WishlistController extends Controller
         $viewPrefix = 'template_1';
         if (in_array($theme, ['template_2', 'v2', 'velvet'])) {
             $viewPrefix = 'template_2';
+        } elseif (in_array($theme, ['template_3', 'v3', 'app'])) {
+            $viewPrefix = 'template_3';
         }
 
         $wishlists = Wishlist::where('user_id', Auth::id())
