@@ -213,6 +213,10 @@
                     } else {
                         showCartToast('Error updating item');
                     }
+                    // Expand UI to show current qty so user can access the minus button
+                    if (currentQty > 0) {
+                        updateProductCardUI(key, currentQty);
+                    }
                 }).always(function() {
                     window.pendingCartRequests[key] = false;
                 });

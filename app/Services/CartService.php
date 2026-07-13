@@ -19,6 +19,9 @@ class CartService
 
         // 1. Calculate base subtotal and individual Pack (Volume) savings
         foreach ($cart as $key => &$item) {
+            $item['price'] = is_numeric($item['price']) ? (float) $item['price'] : 0;
+            $item['quantity'] = is_numeric($item['quantity']) ? (int) $item['quantity'] : 0;
+            
             $item['line_subtotal'] = $item['price'] * $item['quantity'];
             $item['line_savings'] = 0;
             $item['pack_offer_applied'] = false;
