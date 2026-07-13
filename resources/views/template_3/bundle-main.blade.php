@@ -111,6 +111,20 @@
             @endif
         </div>
     </div>
+
+    <!-- Related Combos Section -->
+    @if(isset($relatedBundles) && $relatedBundles->count() > 0)
+    <div style="margin-top: 4rem;">
+        <h2 style="font-size: 1.5rem; font-weight: 800; margin-bottom: 1.5rem; color: var(--text-main);">
+            You May Also Like
+        </h2>
+        <div class="bundle-grid">
+            @foreach($relatedBundles as $relatedBundle)
+                @include('template_1.partials.bundle_card', ['bundle' => $relatedBundle])
+            @endforeach
+        </div>
+    </div>
+    @endif
 </div>
 @endsection
 

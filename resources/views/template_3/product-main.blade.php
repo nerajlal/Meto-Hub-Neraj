@@ -121,6 +121,20 @@
             </div>
         </div>
     </div>
+
+    <!-- Recently Viewed Section -->
+    @if(isset($relatedProducts) && $relatedProducts->count() > 0)
+    <div style="margin-top: 4rem;">
+        <h2 style="font-size: 1.5rem; font-weight: 800; margin-bottom: 1.5rem; color: var(--text-main);">
+            Recently Viewed
+        </h2>
+        <div class="product-grid">
+            @foreach($relatedProducts as $relatedProduct)
+                @include('template_3.partials.product_card', ['product' => $relatedProduct])
+            @endforeach
+        </div>
+    </div>
+    @endif
 </div>
 @endsection
 
