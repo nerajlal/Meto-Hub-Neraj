@@ -125,7 +125,11 @@
     });
 
     // Custom inline cart updater
+    window.pendingCartRequests = {};
     window.updateInlineCart = function(key, delta) {
+        if (window.pendingCartRequests[key]) return; // Prevent double clicks
+        window.pendingCartRequests[key] = true;
+        
         let currentQty = window.cartItemsMap[key] || 0;
         let newQty = currentQty + delta;
         
@@ -145,6 +149,8 @@
                     syncCartUI(true); // show floating cart
                     refreshNCart(); // update side drawer if open
                 }
+            }).always(function() {
+                window.pendingCartRequests[key] = false;
             });
         } else {
             // Either Add or Update based on if it existed
@@ -179,6 +185,8 @@
                     } else {
                         showCartToast('Error adding item');
                     }
+                }).always(function() {
+                    window.pendingCartRequests[key] = false;
                 });
             } else {
                 // Update
@@ -205,6 +213,8 @@
                     } else {
                         showCartToast('Error updating item');
                     }
+                }).always(function() {
+                    window.pendingCartRequests[key] = false;
                 });
             }
         }
