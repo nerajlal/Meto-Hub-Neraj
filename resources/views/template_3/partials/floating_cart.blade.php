@@ -1,5 +1,5 @@
 <!-- Floating Cart Summary Pill -->
-<div id="floating-cart-summary" class="shadow-lg" style="display: none; position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); width: auto; min-width: 280px; max-width: 90%; background: #ffffff; color: var(--primary-color); border-radius: 50px; padding: 10px 16px 10px 10px; z-index: 999; cursor: pointer; transition: all 0.3s ease; align-items: center; justify-content: space-between; border: 1px solid var(--border-color);" onclick="toggleNCart(true)">
+<div id="floating-cart-summary" class="shadow-lg" style="display: none; position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); width: auto; min-width: 280px; max-width: 90%; background: #ffffff; color: var(--primary-color); border-radius: 50px; padding: 10px 16px 10px 10px; z-index: 999; cursor: pointer; transition: all 0.3s ease; align-items: center; justify-content: space-between; border: 1px solid var(--border-color);" onclick="toggleCartSidebar()">
     
     <div style="display: flex; align-items: center; gap: 12px;">
         <!-- Stacked Images Container -->

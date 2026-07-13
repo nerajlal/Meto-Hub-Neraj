@@ -56,23 +56,25 @@
             <h3 class="p-name">{{ $product->title }}</h3>
         </a>
         
-        <span class="p-meta">{{ $product->variants->first()->size ?? '1 Unit' }}</span>
-        
-        <div class="p-action product-action-wrapper" data-cart-key="{{ $product->id }}{{ isset($product->variants->first()->size) && $product->variants->first()->size ? '-' . $product->variants->first()->size : '' }}">
-            @if(!$isOut)
-            <button class="add-btn inline-add-btn" onclick="event.preventDefault(); updateInlineCart('{{ $product->id }}{{ isset($product->variants->first()->size) && $product->variants->first()->size ? '-' . $product->variants->first()->size : '' }}', 1)">
-                <i class="fa-solid fa-plus"></i>
-            </button>
-            @endif
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: auto;">
+            <span class="p-meta" style="margin-top: 0; margin-bottom: 0;">{{ $product->variants->first()->size ?? '1 Unit' }}</span>
             
-            <div class="qty-control qty-controller" style="display: none;">
-                <button class="qty-btn-minus" onclick="event.preventDefault(); updateInlineCart('{{ $product->id }}{{ isset($product->variants->first()->size) && $product->variants->first()->size ? '-' . $product->variants->first()->size : '' }}', -1)">
-                    <i class="fa-solid fa-minus"></i>
-                </button>
-                <span class="qty-value">1</span>
-                <button class="qty-btn-plus" onclick="event.preventDefault(); updateInlineCart('{{ $product->id }}{{ isset($product->variants->first()->size) && $product->variants->first()->size ? '-' . $product->variants->first()->size : '' }}', 1)">
+            <div class="p-action product-action-wrapper" data-cart-key="{{ $product->id }}{{ isset($product->variants->first()->size) && $product->variants->first()->size ? '-' . $product->variants->first()->size : '' }}">
+                @if(!$isOut)
+                <button class="add-btn inline-add-btn" onclick="event.preventDefault(); updateInlineCart('{{ $product->id }}{{ isset($product->variants->first()->size) && $product->variants->first()->size ? '-' . $product->variants->first()->size : '' }}', 1)">
                     <i class="fa-solid fa-plus"></i>
                 </button>
+                @endif
+                
+                <div class="qty-control qty-controller" style="display: none;">
+                    <button class="qty-btn-minus" onclick="event.preventDefault(); updateInlineCart('{{ $product->id }}{{ isset($product->variants->first()->size) && $product->variants->first()->size ? '-' . $product->variants->first()->size : '' }}', -1)">
+                        <i class="fa-solid fa-minus"></i>
+                    </button>
+                    <span class="qty-value">1</span>
+                    <button class="qty-btn-plus" onclick="event.preventDefault(); updateInlineCart('{{ $product->id }}{{ isset($product->variants->first()->size) && $product->variants->first()->size ? '-' . $product->variants->first()->size : '' }}', 1)">
+                        <i class="fa-solid fa-plus"></i>
+                    </button>
+                </div>
             </div>
         </div>
     </div>

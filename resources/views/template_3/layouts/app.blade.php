@@ -141,11 +141,12 @@
     <!-- Cart Sidebar Component (Assuming it exists or we build it) -->
     @include('template_1.partials.cart_drawer') <!-- Reusing template_1 cart for now to save time -->
 
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
     <!-- Floating Cart Pill Component -->
     @include('template_3.partials.floating_cart')
 
-    <!-- Scripts -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         function toggleCartSidebar() {
             $('#cart-drawer-n').addClass('open');

@@ -49,7 +49,7 @@
 @if($collections && $collections->count() > 0)
     @foreach($collections as $category)
         @if($category->products && $category->products->count() > 0)
-        <div class="container home-category-section" style="background: {{ $loop->even ? '#FFFFFF' : 'transparent' }}; padding: 3rem 2rem;">
+        <div class="container home-category-section" style="background: {{ $loop->even ? '#FFFFFF' : 'transparent' }}; padding: 1.5rem 1rem;">
             <div class="category-header">
                 <h2 class="category-title">
                     {{ $category->name }}

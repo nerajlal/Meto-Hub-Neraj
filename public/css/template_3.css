@@ -352,7 +352,7 @@ button, input {
 
 /* Category Sections on Home */
 .home-category-section {
-    padding: 3rem 0;
+    padding: 1.5rem 0;
     border-bottom: 1px solid var(--border-color);
 }
 
