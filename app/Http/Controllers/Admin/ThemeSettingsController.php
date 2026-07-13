@@ -20,12 +20,12 @@ class ThemeSettingsController extends Controller
         // List of all supported themes in the system
         $themes = [
             [
-                'id' => 'aura_luxe',
+                'id' => 'template_1',
                 'name' => 'Aura Luxe',
                 'version' => 'Modern Luxury',
                 'description' => 'Modern grocery store layout with a clean premium design, responsive category sidebar, weekly combos grid, and farm-fresh typography.',
                 'preview_img' => '/Images/landing/v3-template.png',
-                'preview_route' => 'v3.home',
+                'preview_route' => 'v1.home',
             ],
             [
                 'id' => 'template_2',
@@ -33,7 +33,7 @@ class ThemeSettingsController extends Controller
                 'version' => 'Top Menu Layout',
                 'description' => 'Modern grocery store layout with a horizontal category top navigation menu, no sidebars, full-width content grids, and clean fresh fonts.',
                 'preview_img' => '/Images/landing/v3-template.png',
-                'preview_route' => 'v3.home',
+                'preview_route' => 'v1.home',
             ],
             [
                 'id' => 'template_3',
@@ -41,7 +41,7 @@ class ThemeSettingsController extends Controller
                 'version' => 'Compact Category Grids',
                 'description' => 'Premium, mobile-first design featuring tight 3-column product grids, glassmorphism, category-based homepage, and a beautiful app-like feel.',
                 'preview_img' => '/Images/landing/v3-template.png',
-                'preview_route' => 'v3.home',
+                'preview_route' => 'v1.home',
             ],
         ];
 
@@ -56,7 +56,7 @@ class ThemeSettingsController extends Controller
         $request->validate([
             'theme' => [
                 'required',
-                Rule::in(['aura_luxe', 'template_2', 'template_3'])
+                Rule::in(['template_1', 'template_2', 'template_3'])
             ]
         ]);
 

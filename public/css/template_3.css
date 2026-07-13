@@ -798,7 +798,7 @@ button, input {
 .mobile-filter-toggle {
     display: none;
     position: fixed;
-    bottom: 5rem;
+    bottom: 2rem;
     left: 50%;
     transform: translateX(-50%);
     background: var(--primary-color);

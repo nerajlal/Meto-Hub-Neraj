@@ -197,39 +197,7 @@
             });
         }
         
-        window.updateInlineCart = function (key, qtyDelta) {
-            // Determine if key is a bundle or product
-            let productId = key;
-            let size = null;
-            let type = 'product';
-            
-            if (key.startsWith('bundle_')) {
-                productId = key.replace('bundle_', '');
-                type = 'bundle';
-            } else if (key.includes('-')) {
-                let parts = key.split('-');
-                productId = parts[0];
-                size = parts.slice(1).join('-');
-            }
-            
-            $.ajax({
-                url: "{{ route('cart.add') }}",
-                method: "POST",
-                data: {
-                    _token: "{{ csrf_token() }}",
-                    id: productId,
-                    size: size,
-                    quantity: qtyDelta,
-                    type: type
-                },
-                success: function (response) {
-                    if (response.success) {
-                        $('#cart-count-badge').text(response.cartCount);
-                        showCartToast();
-                    }
-                }
-            });
-        };
+
 
         window.showCartToast = function(msg = 'Added to Cart successfully') {
             const toast = document.createElement('div');

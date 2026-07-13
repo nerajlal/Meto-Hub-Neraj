@@ -22,7 +22,9 @@ class PageController extends Controller
         $theme = $tenant ? $tenant->theme : 'template_1';
 
         $routeName = request()->route() ? request()->route()->getName() : '';
-        if (str_starts_with($routeName, 'v3.')) {
+        if (request()->has('preview_theme')) {
+            $theme = request()->query('preview_theme');
+        } elseif (str_starts_with($routeName, 'v3.')) {
             $theme = 'template_3';
         } elseif (str_starts_with($routeName, 'velvet.')) {
             $theme = 'template_2';

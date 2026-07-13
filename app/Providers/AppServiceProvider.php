@@ -62,9 +62,10 @@ class AppServiceProvider extends ServiceProvider
                 'velvet' => 'velvet.home',
                 'velvet_dark' => 'velvet.home',
                 'v3' => 'v3.home',
-                'aura_luxe' => 'v3.home',
-                'template_1' => 'v3.home',
-                'template_2' => 'v3.home',
+                'aura_luxe' => 'v1.home',
+                'template_1' => 'v1.home',
+                'template_2' => 'v1.home',
+                'template_3' => 'v1.home',
                 'v4' => 'v4.home',
                 'ajmal' => 'v4.home',
                 'editorial_cream' => 'v4.home',
@@ -72,8 +73,8 @@ class AppServiceProvider extends ServiceProvider
                 'afnan' => 'v5.home',
             ];
             
-            $theme = strtolower($currentTenant->theme ?? 'v3');
-            $routeName = $themeToRoute[$theme] ?? 'v3.home';
+            $theme = strtolower($currentTenant->theme ?? 'template_1');
+            $routeName = $themeToRoute[$theme] ?? 'v1.home';
             $view->with('storefrontUrl', route($routeName, ['tenant_id' => $currentTenant->id]));
         });
     }

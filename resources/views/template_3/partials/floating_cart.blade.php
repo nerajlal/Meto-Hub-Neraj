@@ -1,48 +1,212 @@
-<div class="floating-cart-pill" id="global-floating-cart" onclick="toggleCartSidebar()">
-    <div class="floating-cart-images" id="floating-cart-images">
-        <!-- Will be populated dynamically by JS. Example:
-        <img src="path/to/img1.jpg">
-        <img src="path/to/img2.jpg">
-        -->
+<!-- Floating Cart Summary Pill -->
+<div id="floating-cart-summary" class="shadow-lg" style="display: none; position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); width: auto; min-width: 280px; max-width: 90%; background: #ffffff; color: var(--primary-color); border-radius: 50px; padding: 10px 16px 10px 10px; z-index: 999; cursor: pointer; transition: all 0.3s ease; align-items: center; justify-content: space-between; border: 1px solid var(--border-color);" onclick="toggleNCart(true)">
+    
+    <div style="display: flex; align-items: center; gap: 12px;">
+        <!-- Stacked Images Container -->
+        <div id="floating-cart-images" style="display: flex; align-items: center; margin-right: 4px;">
+            <!-- Images will be injected here via JS -->
+        </div>
+        
+        <!-- Text Info -->
+        <div style="display: flex; flex-direction: column; line-height: 1.1;">
+            <span style="font-size: 0.85rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: var(--primary-color);">View Cart</span>
+            <span id="floating-cart-count-text" style="font-size: 0.75rem; font-weight: 500; color: var(--text-muted); margin-top: 2px;">0 items</span>
+        </div>
     </div>
-    <div class="floating-cart-text">
-        <span class="floating-cart-title">VIEW CART</span>
-        <span class="floating-cart-count" id="floating-cart-count">0 items</span>
-    </div>
-    <div class="floating-cart-arrow">
-        <i class="fa-solid fa-chevron-right"></i>
+    
+    <div style="display: flex; align-items: center; margin-left: 20px;">
+        <i class="fa-solid fa-chevron-right" style="font-size: 0.9rem; color: #94a3b8;"></i>
     </div>
 </div>
 
 <script>
-    // Example JS logic to show/hide the floating cart pill
-    // This should ideally hook into the main cart update logic
-    function updateFloatingCartPill(itemCount, recentImages) {
-        const pill = document.getElementById('global-floating-cart');
-        const countSpan = document.getElementById('floating-cart-count');
-        const imagesContainer = document.getElementById('floating-cart-images');
+    window.cartItemsMap = {};
+    window.cartTotalValue = 0;
+    window.cartTotalCount = 0;
+    window.cartImages = [];
+    window.floatingCartTimer = null;
+    window.productCardTimers = {};
+
+    function renderCartImages() {
+        const container = $('#floating-cart-images');
+        container.empty();
         
-        if (itemCount > 0) {
-            countSpan.innerText = itemCount + (itemCount === 1 ? ' item' : ' items');
+        if (!window.cartImages || window.cartImages.length === 0) {
+            container.append(`
+                <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--accent-color); color: white; display: flex; align-items: center; justify-content: center; border: 2px solid #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                    <i class="fa-solid fa-basket-shopping fs-6"></i>
+                </div>
+            `);
+            return;
+        }
+
+        let zIndex = 3;
+        window.cartImages.forEach((imgUrl, index) => {
+            let margin = index > 0 ? '-12px' : '0';
             
-            // Update images
-            imagesContainer.innerHTML = '';
-            recentImages.slice(0, 3).forEach(img => {
-                const imgEl = document.createElement('img');
-                imgEl.src = img;
-                imagesContainer.appendChild(imgEl);
-            });
+            // Generate proper URL
+            let fullUrl = imgUrl;
+            if (!imgUrl.startsWith('http') && !imgUrl.startsWith('/')) {
+                fullUrl = '/' + imgUrl;
+            }
+            if (fullUrl.startsWith('/public/')) {
+                fullUrl = fullUrl.replace('/public/', '/storage/');
+            } else if (!fullUrl.startsWith('/storage/') && !fullUrl.startsWith('/Images/') && !imgUrl.startsWith('http')) {
+                fullUrl = '/storage' + fullUrl;
+            }
             
-            pill.classList.add('visible');
+            container.append(`
+                <div style="width: 34px; height: 34px; border-radius: 50%; background: #f8fafc; border: 2px solid #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-left: ${margin}; z-index: ${zIndex}; overflow: hidden;">
+                    <img src="${fullUrl}" onerror="this.src='{{ asset('Images/placeholder-grocery.webp') }}'" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+            `);
+            zIndex--;
+        });
+    }
+
+    function syncCartUI(showFloatingCart = false) {
+        // Sync Floating Cart logic
+        if (window.cartTotalCount > 0 && showFloatingCart) {
+            renderCartImages();
+            $('#floating-cart-count-text').text(window.cartTotalCount + (window.cartTotalCount === 1 ? ' item' : ' items'));
             
-            // Auto hide after 5 seconds of inactivity (optional behavior)
-            clearTimeout(window.floatingCartTimeout);
-            window.floatingCartTimeout = setTimeout(() => {
-                pill.classList.remove('visible');
+            $('#floating-cart-summary').css('display', 'flex').hide().fadeIn();
+            
+            // Auto hide after 5 seconds
+            clearTimeout(window.floatingCartTimer);
+            window.floatingCartTimer = setTimeout(() => {
+                $('#floating-cart-summary').fadeOut();
             }, 5000);
-            
         } else {
-            pill.classList.remove('visible');
+            $('#floating-cart-summary').fadeOut();
         }
     }
+
+    function updateProductCardUI(key, qty, forceHide = false) {
+        $('.product-action-wrapper[data-cart-key="' + key + '"]').each(function() {
+            if (qty > 0 && !forceHide) {
+                $(this).find('.inline-add-btn').hide();
+                $(this).find('.qty-controller').css('display', 'flex');
+                $(this).find('.qty-value').text(qty);
+                
+                // Auto hide after 5 seconds
+                clearTimeout(window.productCardTimers[key]);
+                window.productCardTimers[key] = setTimeout(() => {
+                    updateProductCardUI(key, qty, true);
+                }, 5000);
+            } else {
+                $(this).find('.qty-controller').hide();
+                $(this).find('.inline-add-btn').css('display', 'flex');
+                clearTimeout(window.productCardTimers[key]);
+            }
+        });
+    }
+
+    // Call on load (syncs product cards but DOES NOT show floating cart)
+    $(document).ready(function() {
+        $.get("{{ route('cart.state') }}", function(response) {
+            if (response.success) {
+                window.cartItemsMap = response.cartItemsMap || {};
+                window.cartTotalCount = response.cartCount;
+                window.cartTotalValue = response.cartTotal;
+                window.cartImages = response.cartImages || [];
+                syncCartUI(false); // don't show floating on initial load
+                
+                // Sync product cards for items already in cart
+                for (let key in window.cartItemsMap) {
+                    if (window.cartItemsMap[key] > 0) {
+                        updateProductCardUI(key, window.cartItemsMap[key], true); // Force hide after 5s or just don't show qty selector initially? 
+                        // Wait, usually we don't want all items to show qty controller on load unless hovered, but in mobile we can just keep them hidden until clicked.
+                        // Actually, let's keep them hidden initially, they only show when you click Add.
+                    }
+                }
+            }
+        });
+    });
+
+    // Custom inline cart updater
+    window.updateInlineCart = function(key, delta) {
+        let currentQty = window.cartItemsMap[key] || 0;
+        let newQty = currentQty + delta;
+        
+        if (newQty <= 0) {
+            // Remove item
+            $.post("{{ route('cart.remove') }}", {
+                _token: $('meta[name="csrf-token"]').attr('content'),
+                id: key
+            }, function(response) {
+                if(response.success) {
+                    window.cartItemsMap = response.cartItemsMap || {};
+                    window.cartTotalCount = response.cartCount;
+                    window.cartTotalValue = response.cartTotal;
+                    window.cartImages = response.cartImages || [];
+                    $('#cart-count-badge').text(response.cartCount);
+                    updateProductCardUI(key, 0); // Hide qty selector
+                    syncCartUI(true); // show floating cart
+                    refreshNCart(); // update side drawer if open
+                }
+            });
+        } else {
+            // Either Add or Update based on if it existed
+            if (currentQty === 0) {
+                // Determine if it's bundle or product
+                let parts = key.toString().split('-');
+                let isBundle = parts[0] === 'bundle';
+                let reqData = {
+                    _token: $('meta[name="csrf-token"]').attr('content'),
+                    id: isBundle ? parts[1] : parts[0],
+                    quantity: newQty,
+                    size: (!isBundle && parts.length > 1) ? parts[1] : null,
+                    type: isBundle ? 'bundle' : 'product'
+                };
+                
+                $.post("{{ route('cart.add') }}", reqData, function(response) {
+                    if (response.success) {
+                        window.cartItemsMap = response.cartItemsMap || {};
+                        window.cartTotalCount = response.cartCount;
+                        window.cartTotalValue = response.cartTotal;
+                        window.cartImages = response.cartImages || [];
+                        $('#cart-count-badge').text(response.cartCount);
+                        updateProductCardUI(key, newQty); // Show qty selector
+                        syncCartUI(true); // show floating cart
+                        refreshNCart();
+                    } else {
+                        showCartToast(response.message || 'Error adding item');
+                    }
+                }).fail(function(xhr) {
+                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                        showCartToast(xhr.responseJSON.message);
+                    } else {
+                        showCartToast('Error adding item');
+                    }
+                });
+            } else {
+                // Update
+                $.post("{{ route('cart.update') }}", {
+                    _token: $('meta[name="csrf-token"]').attr('content'),
+                    id: key,
+                    quantity: newQty
+                }, function(response) {
+                    if(response.success) {
+                        window.cartItemsMap = response.cartItemsMap || {};
+                        window.cartTotalCount = response.cartCount;
+                        window.cartTotalValue = response.cartTotal;
+                        window.cartImages = response.cartImages || [];
+                        $('#cart-count-badge').text(response.cartCount);
+                        updateProductCardUI(key, newQty); // Update qty selector value
+                        syncCartUI(true); // show floating cart
+                        refreshNCart();
+                    } else {
+                        showCartToast(response.message || 'Error updating item');
+                    }
+                }).fail(function(xhr) {
+                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                        showCartToast(xhr.responseJSON.message);
+                    } else {
+                        showCartToast('Error updating item');
+                    }
+                });
+            }
+        }
+    };
 </script>

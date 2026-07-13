@@ -35,7 +35,7 @@
     <div class="row g-4">
         @foreach($themes as $theme)
             @php
-                $previewUrl = route($theme['preview_route'], ['tenant_id' => $tenant->id]) . '?preview=1';
+                $previewUrl = route($theme['preview_route'], ['tenant_id' => $tenant->id]) . '?preview=1&preview_theme=' . $theme['id'];
                 $isActive = $tenant->theme === $theme['id'];
                 
                 // Color badges matching each theme's aesthetic
