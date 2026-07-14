@@ -20,7 +20,7 @@
     <!-- Glassmorphism Header -->
     <header class="store-header">
         <div class="header-container">
-            <a href="{{ route('v3.home') }}" class="logo">
+            <a href="{{ route('v1.home') }}" class="logo">
                 @if(isset($currentTenant) && $currentTenant->logo)
                     <img src="{{ asset('storage/' . $currentTenant->logo) }}" alt="Logo" style="height: 40px;">
                 @else
@@ -30,7 +30,7 @@
             
             <div class="search-bar" style="position: relative;">
                 <i class="fa-solid fa-magnifying-glass"></i>
-                <form action="{{ route('v3.all-products') }}" method="GET" id="t3-search-form" autocomplete="off" style="width: 100%;">
+                <form action="{{ route('v1.all-products') }}" method="GET" id="t3-search-form" autocomplete="off" style="width: 100%;">
                     <input type="text" name="q" id="t3-search-input" placeholder="Search for groceries, vegetables, meat..." value="{{ request('q') }}">
                 </form>
                 <div id="t3-search-dropdown" class="search-dropdown" style="display:none; position: absolute; top: calc(100% + 5px); left: 0; right: 0; background: #fff; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); border: 1px solid var(--border-color); z-index: 1000; padding: 0.5rem 0;">
@@ -59,12 +59,18 @@
                     <i class="fa-regular fa-user"></i>
                 </button>
                 @endauth
-                <button class="action-btn" onclick="window.location.href='{{ route('v3.wishlist') }}'">
+                <button class="action-btn" onclick="window.location.href='{{ route('v1.wishlist') }}'">
                     <i class="fa-regular fa-heart"></i>
                 </button>
                 <button class="action-btn" onclick="toggleCartSidebar()">
                     <i class="fa-solid fa-bag-shopping"></i>
-                    <span class="cart-count" id="cart-count-badge">0</span>
+                    @php
+                        $tenantId = session('tenant_id', 1);
+                        $cartCount = auth()->check()
+                            ? \App\Models\Cart::where('tenant_id', $tenantId)->where('user_id', auth()->id())->sum('quantity')
+                            : collect(session()->get('cart', []))->sum('quantity');
+                    @endphp
+                    <span class="cart-count" id="cart-count-badge">{{ $cartCount }}</span>
                 </button>
             </div>
         </div>
@@ -73,14 +79,14 @@
     <!-- Top Navigation -->
     <nav style="background: #FFFFFF; border-bottom: 1px solid var(--border-color); padding: 0.75rem 0; overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch;">
         <div class="container" style="display: flex; gap: 2rem; align-items: center;">
-            <a href="{{ route('v3.home') }}" style="color: var(--text-main); font-weight: 600; text-decoration: none; font-size: 0.95rem;">Home</a>
-            <a href="{{ route('v3.all-products') }}" style="color: var(--text-main); font-weight: 600; text-decoration: none; font-size: 0.95rem;">All Products</a>
-            <a href="{{ route('v3.combos') }}" style="color: var(--text-main); font-weight: 600; text-decoration: none; font-size: 0.95rem;">Weekly Deals</a>
+            <a href="{{ route('v1.home') }}" style="color: var(--text-main); font-weight: 600; text-decoration: none; font-size: 0.95rem;">Home</a>
+            <a href="{{ route('v1.all-products') }}" style="color: var(--text-main); font-weight: 600; text-decoration: none; font-size: 0.95rem;">All Products</a>
+            <a href="{{ route('v1.combos') }}" style="color: var(--text-main); font-weight: 600; text-decoration: none; font-size: 0.95rem;">Weekly Deals</a>
             @php
                 $collections = \App\Models\Collection::where('tenant_id', session('tenant_id', 1))->where('status', 1)->get();
             @endphp
             @foreach($collections as $cat)
-                <a href="{{ route('v3.collection', ['slug' => $cat->slug]) }}" style="color: var(--text-muted); font-weight: 500; text-decoration: none; font-size: 0.95rem;">{{ $cat->name }}</a>
+                <a href="{{ route('v1.collection', ['slug' => $cat->slug]) }}" style="color: var(--text-muted); font-weight: 500; text-decoration: none; font-size: 0.95rem;">{{ $cat->name }}</a>
             @endforeach
         </div>
     </nav>
@@ -94,7 +100,7 @@
     <footer class="store-footer">
         <div class="container footer-grid">
             <div class="footer-col">
-                <a href="{{ route('v3.home') }}" class="logo" style="margin-bottom: 1rem;">
+                <a href="{{ route('v1.home') }}" class="logo" style="margin-bottom: 1rem;">
                     @if(isset($currentTenant) && $currentTenant->logo)
                         <img src="{{ asset('storage/' . $currentTenant->logo) }}" alt="Logo" style="height: 40px;">
                     @else
@@ -109,8 +115,8 @@
             <div class="footer-col">
                 <h3>Quick Links</h3>
                 <ul class="footer-links">
-                    <li><a href="{{ route('v3.home') }}">Home</a></li>
-                    <li><a href="{{ route('v3.all-products') }}">All Products</a></li>
+                    <li><a href="{{ route('v1.home') }}">Home</a></li>
+                    <li><a href="{{ route('v1.all-products') }}">All Products</a></li>
                     <li><a href="#">Categories</a></li>
                 </ul>
             </div>
@@ -118,10 +124,10 @@
             <div class="footer-col">
                 <h3>Support</h3>
                 <ul class="footer-links">
-                    <li><a href="{{ route('v3.about') }}">About Us</a></li>
-                    <li><a href="{{ route('v3.contact') }}">Contact Support</a></li>
-                    <li><a href="{{ route('v3.shipping-policy') }}">Shipping Policy</a></li>
-                    <li><a href="{{ route('v3.return-policy') }}">Return Policy</a></li>
+                    <li><a href="{{ route('v1.about') }}">About Us</a></li>
+                    <li><a href="{{ route('v1.contact') }}">Contact Support</a></li>
+                    <li><a href="{{ route('v1.shipping-policy') }}">Shipping Policy</a></li>
+                    <li><a href="{{ route('v1.return-policy') }}">Return Policy</a></li>
                 </ul>
             </div>
             
@@ -220,7 +226,7 @@
             @endif
 
             $.ajax({
-                url: "{{ route('v3.wishlist.toggle') }}",
+                url: "{{ route('v1.wishlist.toggle') }}",
                 method: "POST",
                 data: {
                     _token: "{{ csrf_token() }}",

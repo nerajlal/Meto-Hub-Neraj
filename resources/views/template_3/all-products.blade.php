@@ -24,7 +24,7 @@
     <div class="catalog-layout">
         <!-- Sidebar Filter Form -->
         <aside class="sidebar-filter" id="filter-sidebar">
-            <form action="{{ route('v3.all-products') }}" method="GET" id="filter-form">
+            <form action="{{ route('v1.all-products') }}" method="GET" id="filter-form">
                 @if(request('keyword'))
                     <input type="hidden" name="keyword" value="{{ request('keyword') }}">
                 @endif
@@ -93,7 +93,7 @@
                     <i class="fa-solid fa-basket-shopping"></i>
                     <h3>No products found</h3>
                     <p>We couldn't find anything matching your filters or search criteria.</p>
-                    <a href="{{ route('v3.all-products') }}" class="btn-primary">Clear Filters</a>
+                    <a href="{{ route('v1.all-products') }}" class="btn-primary">Clear Filters</a>
                 </div>
             @endif
             

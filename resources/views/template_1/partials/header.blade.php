@@ -3,7 +3,7 @@
         <button id="mobile-menu-toggle" class="mobile-toggle">
             <i class="fa-solid fa-bars"></i>
         </button>
-        <a href="{{ route('v3.home') }}" class="logo" style="color: var(--accent-color); font-weight: 800; font-size: 1.5rem; text-decoration: none; display: flex; align-items: center;">
+        <a href="{{ route('v1.home') }}" class="logo" style="color: var(--accent-color); font-weight: 800; font-size: 1.5rem; text-decoration: none; display: flex; align-items: center;">
             @if($currentTenant->logo)
                 <img src="{{ Storage::url($currentTenant->logo) }}" alt="{{ $currentTenant->name }}" style="max-height: 45px; width: auto; object-fit: contain;">
             @else

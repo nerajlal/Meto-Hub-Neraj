@@ -28,19 +28,23 @@
         <!-- Sidebar Nav -->
         <div class="account-sidebar" style="position: sticky; top: 7rem;">
             <div style="background: var(--section-bg); padding: 1.5rem; border-radius: 2rem; border: 1px solid var(--border-color);">
-                <ul style="list-style: none;">
-                    <li style="margin-bottom: 0.5rem;">
-                        <a href="{{ route('account.profile') }}" style="display: flex; align-items: center; gap: 1rem; padding: 1rem 1.5rem; border-radius: 1rem; background: var(--primary-color); color: #fff; font-weight: 700; text-decoration: none;">
-                            <i class="fa-solid fa-user"></i> Profile Info
-                        </a>
-                    </li>
-                    <li style="margin-bottom: 0.5rem;">
-                        <a href="{{ route('account.orders') }}" style="display: flex; align-items: center; gap: 1rem; padding: 1rem 1.5rem; border-radius: 1rem; color: var(--text-main); font-weight: 600; text-decoration: none; transition: 0.3s;" onmouseover="this.style.background='rgba(0,0,0,0.05)'" onmouseout="this.style.background='transparent'">
-                            <i class="fa-solid fa-bag-shopping"></i> My Orders
-                        </a>
-                    </li>
-                    <!-- Add more as needed -->
-                </ul>
+                    <ul style="list-style: none;">
+                        <li style="margin-bottom: 0.5rem;">
+                            <a href="{{ route('account.profile') }}" style="display: flex; align-items: center; gap: 1rem; padding: 1rem 1.5rem; border-radius: 1rem; background: var(--primary-color); color: #fff; font-weight: 700; text-decoration: none;">
+                                <i class="fa-solid fa-user"></i> Profile Info
+                            </a>
+                        </li>
+                        <li style="margin-bottom: 0.5rem;">
+                            <a href="{{ route('account.orders') }}" style="display: flex; align-items: center; gap: 1rem; padding: 1rem 1.5rem; border-radius: 1rem; color: var(--text-main); font-weight: 600; text-decoration: none; transition: 0.3s;" onmouseover="this.style.background='rgba(0,0,0,0.05)'" onmouseout="this.style.background='transparent'">
+                                <i class="fa-solid fa-bag-shopping"></i> My Orders
+                            </a>
+                        </li>
+                        <li style="margin-bottom: 0.5rem;">
+                            <a href="{{ route('account.reorder') }}" style="display: flex; align-items: center; gap: 1rem; padding: 1rem 1.5rem; border-radius: 1rem; color: var(--text-main); font-weight: 600; text-decoration: none; transition: 0.3s;" onmouseover="this.style.background='rgba(0,0,0,0.05)'" onmouseout="this.style.background='transparent'">
+                                <i class="fa-solid fa-rotate-right"></i> Buy It Again
+                            </a>
+                        </li>
+                    </ul>
             </div>
         </div>
 

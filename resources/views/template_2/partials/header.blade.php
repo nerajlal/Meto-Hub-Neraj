@@ -1,6 +1,6 @@
 <header class="store-header" style="display: flex; flex-direction: column; align-items: stretch; height: auto; box-shadow: 0 4px 12px rgba(0,0,0,0.03); background: #fff; border-bottom: 1px solid var(--border-color); padding: 0.5rem 0;">
     <div class="header-container" style="max-width: 1400px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 0.5rem 2rem; gap: 2rem;">
-        <a href="{{ route('v3.home') }}" class="logo" style="color: var(--accent-color); font-weight: 800; font-size: 1.6rem; text-decoration: none; display: flex; align-items: center; gap: 0.5rem; flex-shrink: 0;">
+        <a href="{{ route('velvet.home') }}" class="logo" style="color: var(--accent-color); font-weight: 800; font-size: 1.6rem; text-decoration: none; display: flex; align-items: center; gap: 0.5rem; flex-shrink: 0;">
             @if($currentTenant->logo)
                 <img src="{{ Storage::url($currentTenant->logo) }}" alt="{{ $currentTenant->name }}" style="max-height: 45px; width: auto; object-fit: contain;">
             @else
@@ -10,7 +10,7 @@
 
         {{-- Search Bar with autocomplete (Desktop) --}}
         <div class="search-bar hide-on-mobile" style="flex-grow: 1; max-width: 600px; position: relative;">
-            <form id="t2-search-form" action="{{ route('v3.all-products') }}" method="GET" autocomplete="off" style="display: flex; align-items: center; width: 100%; position: relative;">
+            <form id="t2-search-form" action="{{ route('velvet.all-products') }}" method="GET" autocomplete="off" style="display: flex; align-items: center; width: 100%; position: relative;">
                 <i class="fa-solid fa-magnifying-glass search-icon" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); pointer-events: none;"></i>
                 <input
                     type="text"
@@ -82,18 +82,18 @@
     <!-- Dynamic Horizontal Top Navigation Menu Bar -->
     <nav class="top-nav-menu-bar hide-on-mobile" style="border-top: 1px solid var(--border-color); margin-top: 0.5rem; background: #fafafb;">
         <div style="max-width: 1400px; margin: 0 auto; display: flex; align-items: center; gap: 2rem; padding: 0.75rem 2rem; overflow-x: auto; white-space: nowrap;">
-            <a href="{{ route('v3.home') }}" style="color: var(--primary-color); font-weight: 700; text-decoration: none; font-size: 0.95rem; transition: 0.2s;" class="nav-link-item hover-green">
+            <a href="{{ route('velvet.home') }}" style="color: var(--primary-color); font-weight: 700; text-decoration: none; font-size: 0.95rem; transition: 0.2s;" class="nav-link-item hover-green">
                 <i class="fa-solid fa-house me-1"></i> Home
             </a>
-            <a href="{{ route('v3.all-products') }}" style="color: var(--primary-color); font-weight: 700; text-decoration: none; font-size: 0.95rem; transition: 0.2s;" class="nav-link-item hover-green">
+            <a href="{{ route('velvet.all-products') }}" style="color: var(--primary-color); font-weight: 700; text-decoration: none; font-size: 0.95rem; transition: 0.2s;" class="nav-link-item hover-green">
                 <i class="fa-solid fa-border-all me-1"></i> All Products
             </a>
-            <a href="{{ route('v3.combos') }}" style="color: var(--primary-color); font-weight: 700; text-decoration: none; font-size: 0.95rem; transition: 0.2s;" class="nav-link-item hover-green">
+            <a href="{{ route('velvet.combos') }}" style="color: var(--primary-color); font-weight: 700; text-decoration: none; font-size: 0.95rem; transition: 0.2s;" class="nav-link-item hover-green">
                 <i class="fa-solid fa-tags me-1"></i> Weekly Combos
             </a>
             @php $topCollections = \App\Models\Collection::where('tenant_id', $currentTenant->id ?? 2)->where('status', 1)->get(); @endphp
             @foreach($topCollections as $col)
-                <a href="{{ route('v3.collection', ['slug' => $col->slug]) }}" style="color: var(--primary-color); font-weight: 600; text-decoration: none; font-size: 0.95rem; transition: 0.2s;" class="nav-link-item hover-green">
+                <a href="{{ route('velvet.collection', ['slug' => $col->slug]) }}" style="color: var(--primary-color); font-weight: 600; text-decoration: none; font-size: 0.95rem; transition: 0.2s;" class="nav-link-item hover-green">
                     {{ $col->name }}
                 </a>
             @endforeach
@@ -101,7 +101,7 @@
     </nav>
     <!-- Mobile Expandable Search Bar -->
     <div id="mobile-search-container" style="display: none; padding: 10px 15px; background: #fff; border-bottom: 1px solid var(--border-color); width: 100%; position: absolute; z-index: 999; top: 100%; left: 0;">
-        <form id="t2-mobile-search-form" action="{{ route('v3.all-products') }}" method="GET" autocomplete="off" style="display: flex; align-items: center; width: 100%; position: relative;">
+        <form id="t2-mobile-search-form" action="{{ route('velvet.all-products') }}" method="GET" autocomplete="off" style="display: flex; align-items: center; width: 100%; position: relative;">
             <i class="fa-solid fa-magnifying-glass search-icon" style="position: absolute; left: 1rem; color: #9ca3af;"></i>
             <input
                 type="text"

@@ -8,7 +8,7 @@
     <h2 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem; color: var(--text-main);">Shop by Aisle</h2>
     <div style="display: flex; gap: 1.5rem; overflow-x: auto; padding-bottom: 1rem; scrollbar-width: none; -webkit-overflow-scrolling: touch;">
         @foreach($collections as $category)
-            <a href="{{ route('v3.collection', ['slug' => $category->slug]) }}" style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem; text-decoration: none; min-width: 80px;">
+            <a href="{{ route('v1.collection', ['slug' => $category->slug]) }}" style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem; text-decoration: none; min-width: 80px;">
                 <div style="width: 70px; height: 70px; border-radius: 50%; background: #F1F5F9; border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; overflow: hidden; transition: var(--transition);" onmouseover="this.style.borderColor='var(--accent-color)'; this.style.boxShadow='0 4px 10px rgba(16, 185, 129, 0.2)';" onmouseout="this.style.borderColor='var(--border-color)'; this.style.boxShadow='none';">
                     @if($category->image)
                         <img src="{{ asset('storage/' . $category->image) }}" alt="{{ $category->name }}" style="width: 100%; height: 100%; object-fit: cover;">
@@ -30,7 +30,7 @@
         <h2 class="category-title">
             <i class="fa-solid fa-fire" style="color: #EF4444;"></i> Trending Now
         </h2>
-        <a href="{{ route('v3.all-products') }}" class="view-all-btn">
+        <a href="{{ route('v1.all-products') }}" class="view-all-btn">
             View All <i class="fa-solid fa-arrow-right"></i>
         </a>
     </div>
@@ -54,7 +54,7 @@
                 <h2 class="category-title">
                     {{ $category->name }}
                 </h2>
-                <a href="{{ route('v3.collection', ['slug' => $category->slug]) }}" class="view-all-btn">
+                <a href="{{ route('v1.collection', ['slug' => $category->slug]) }}" class="view-all-btn">
                     Explore <i class="fa-solid fa-arrow-right"></i>
                 </a>
             </div>

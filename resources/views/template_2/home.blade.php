@@ -135,7 +135,7 @@
                 .hide-scroll::-webkit-scrollbar { display: none; }
             </style>
             @foreach($collections as $c)
-            <a href="{{ route('v3.collection', ['slug' => $c->slug]) }}" style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem; text-decoration: none; min-width: 75px;">
+            <a href="{{ route('velvet.collection', ['slug' => $c->slug]) }}" style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem; text-decoration: none; min-width: 75px;">
                 <div style="width: 70px; height: 70px; border-radius: 50%; background: #f8fafc; border: 1.5px solid var(--border-color); overflow: hidden; display: flex; align-items: center; justify-content: center; padding: 0.2rem; transition: border-color 0.2s;" onmouseover="this.style.borderColor='var(--accent-color)'" onmouseout="this.style.borderColor='var(--border-color)'">
                     @php 
                         $catImage = $c->image ? Storage::url($c->image) : asset('Images/placeholder-grocery.webp');
@@ -165,7 +165,7 @@
             <div class="department-section" id="collection-{{ $collection->id }}" style="margin-bottom: 3rem;">
                 <div class="section-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
                     <h2 class="section-title" style="font-weight: 800; font-size: 1.6rem; color: var(--primary-color); position: relative;">{{ $collection->name }}</h2>
-                    <a href="{{ route('v3.collection', ['slug' => $collection->slug]) }}" class="view-all" style="color: var(--accent-color); text-decoration: none; font-weight: 700; font-size: 0.9rem;">View All <i class="fa-solid fa-chevron-right ms-1" style="font-size: 0.75rem;"></i></a>
+                    <a href="{{ route('velvet.collection', ['slug' => $collection->slug]) }}" class="view-all" style="color: var(--accent-color); text-decoration: none; font-weight: 700; font-size: 0.9rem;">View All <i class="fa-solid fa-chevron-right ms-1" style="font-size: 0.75rem;"></i></a>
                 </div>
                 
                 <div class="product-grid grid-cols-mobile-{{ $currentTenant->mobile_grid_cols ?? 2 }}">
@@ -206,13 +206,13 @@
     <div class="department-section" style="margin-bottom: 3rem;">
         <div class="section-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
             <h2 class="section-title" style="font-weight: 800; font-size: 1.6rem; color: var(--primary-color);">Weekly Grocery Combos</h2>
-            <a href="{{ route('v3.combos') }}" class="view-all" style="color: var(--accent-color); text-decoration: none; font-weight: 700; font-size: 0.9rem;">View All <i class="fa-solid fa-chevron-right ms-1"></i></a>
+            <a href="{{ route('velvet.combos') }}" class="view-all" style="color: var(--accent-color); text-decoration: none; font-weight: 700; font-size: 0.9rem;">View All <i class="fa-solid fa-chevron-right ms-1"></i></a>
         </div>
         
         <div class="product-grid grid-cols-mobile-{{ $currentTenant->mobile_grid_cols ?? 2 }}">
             @forelse($bundles as $bundle)
                 <div class="product-card" style="border: 1px solid var(--border-color); border-radius: 1rem; overflow: hidden; background: #fff; position: relative;">
-                    <a href="{{ route('v3.combo', ['id' => $bundle->id]) }}" class="card-img" style="display: block; position: relative; padding-top: 100%; background: #f8fafc;">
+                    <a href="{{ route('velvet.combo', ['id' => $bundle->id]) }}" class="card-img" style="display: block; position: relative; padding-top: 100%; background: #f8fafc;">
                         @php
                             $bundleImg = $bundle->image ? \Illuminate\Support\Facades\Storage::url($bundle->image) : null;
                             if (!$bundleImg) {
@@ -227,7 +227,7 @@
                     </a>
                     <div class="card-info" style="padding: 1rem; display: flex; flex-direction: column; gap: 0.25rem;">
                         <span class="p-price" style="font-weight: 800; font-size: 1.15rem; color: var(--accent-color);">₹{{ number_format($bundle->total_price, 2) }}</span>
-                        <a href="{{ route('v3.combo', ['id' => $bundle->id]) }}" class="p-name" style="font-weight: 700; font-size: 0.95rem; color: var(--primary-color); text-decoration: none; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; height: 2.6rem;">{{ $bundle->title }}</a>
+                        <a href="{{ route('velvet.combo', ['id' => $bundle->id]) }}" class="p-name" style="font-weight: 700; font-size: 0.95rem; color: var(--primary-color); text-decoration: none; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; height: 2.6rem;">{{ $bundle->title }}</a>
                         <span class="p-meta" style="font-size: 0.75rem; color: var(--text-muted);">{{ $bundle->products->count() }} Products Included</span>
                     </div>
                     <button class="cart-add-btn" data-product-id="{{ $bundle->id }}" data-type="bundle" style="position: absolute; bottom: 10px; right: 10px; width: 36px; height: 36px; border-radius: 50%; background: #f1f5f9; border: none; display: flex; align-items: center; justify-content: center; color: var(--primary-color); cursor: pointer;">

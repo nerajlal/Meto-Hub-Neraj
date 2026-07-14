@@ -4,9 +4,9 @@
 <div class="container" style="padding-top: 2rem; padding-bottom: 4rem;">
     <!-- Breadcrumbs -->
     <div class="breadcrumb">
-        <a href="{{ route('v3.home') }}"><i class="fa-solid fa-house"></i> Home</a> 
+        <a href="{{ route('v1.home') }}"><i class="fa-solid fa-house"></i> Home</a> 
         <span>/</span> 
-        <a href="{{ route('v3.combos') }}">Weekly Combos</a>
+        <a href="{{ route('v1.combos') }}">Weekly Combos</a>
         <span>/</span> 
         <span style="color: var(--text-main); font-weight: 600;">{{ $bundle->title }}</span>
     </div>

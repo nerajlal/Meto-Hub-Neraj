@@ -4,12 +4,12 @@
 <div class="container" style="padding-top: 2rem; padding-bottom: 4rem;">
     <!-- Breadcrumbs -->
     <div class="breadcrumb">
-        <a href="{{ route('v3.home') }}"><i class="fa-solid fa-house"></i> Home</a> 
+        <a href="{{ route('v1.home') }}"><i class="fa-solid fa-house"></i> Home</a> 
         <span>/</span> 
-        <a href="{{ route('v3.all-products') }}">Shop</a>
+        <a href="{{ route('v1.all-products') }}">Shop</a>
         @if($product->collection)
             <span>/</span> 
-            <a href="{{ route('v3.collection', ['slug' => $product->collection->slug]) }}">{{ $product->collection->name }}</a>
+            <a href="{{ route('v1.collection', ['slug' => $product->collection->slug]) }}">{{ $product->collection->name }}</a>
         @endif
         <span>/</span> 
         <span style="color: var(--text-main); font-weight: 600;">{{ $product->title }}</span>

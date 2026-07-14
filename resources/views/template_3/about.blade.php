@@ -127,10 +127,10 @@
                 <p style="font-size: 1.1rem; opacity: 0.8; margin-bottom: 2rem;">Ready to try farm-fresh products? Explore
                     our collections today.</p>
                 <div style="display: flex; gap: 1.5rem; justify-content: center; margin-top: 2rem; flex-wrap: wrap;">
-                    <a href="{{ route('v3.all-products') }}" class="btn-primary"
+                    <a href="{{ route('v1.all-products') }}" class="btn-primary"
                         style="background: var(--accent-color); color: #fff; padding: 0.9rem 2.5rem; border-radius: 99px; text-decoration: none; font-weight: 700; display: inline-block;">Shop
                         All Groceries</a>
-                    <a href="{{ route('v3.combos') }}" class="btn-outline"
+                    <a href="{{ route('v1.combos') }}" class="btn-outline"
                         style="display: inline-block; padding: 0.9rem 2.5rem; border-radius: 99px; border: 2px solid rgba(255,255,255,0.3); color: #fff; text-decoration: none; font-weight: 700; transition: 0.3s;">Weekly
                         Combos</a>
                 </div>

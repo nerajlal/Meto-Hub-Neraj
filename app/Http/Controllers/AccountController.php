@@ -78,4 +78,47 @@ class AccountController extends Controller
         $view = "{$theme}.account.orders";
         return view($view, compact('orders'));
     }
+
+    public function reorder()
+    {
+        $orderItems = \App\Models\OrderItem::whereHas('order', function($q) {
+            $q->where('user_id', Auth::id());
+        })->with(['product', 'bundle'])
+          ->orderBy('created_at', 'desc')
+          ->get();
+          
+        $uniqueProducts = [];
+        $uniqueBundles = [];
+        $reorderItems = [];
+        
+        foreach($orderItems as $item) {
+            if ($item->product_id) {
+                $key = $item->product_id . '-' . $item->size;
+                if (!isset($uniqueProducts[$key])) {
+                    $uniqueProducts[$key] = true;
+                    $reorderItems[] = $item;
+                }
+            } elseif ($item->bundle_id) {
+                $key = $item->bundle_id;
+                if (!isset($uniqueBundles[$key])) {
+                    $uniqueBundles[$key] = true;
+                    $reorderItems[] = $item;
+                }
+            }
+        }
+        
+        $tenantId = session('active_tenant_id') 
+            ?? (Auth::check() ? Auth::user()->tenant_id : null) 
+            ?? session('demo_tenant_id') 
+            ?? 1;
+        $tenant = \App\Models\Tenant::find($tenantId);
+        $theme = $tenant ? $tenant->theme : 'template_1';
+        if (!in_array($theme, ['template_1', 'template_2', 'template_3', 'v3', 'app'])) {
+            $theme = 'template_1';
+        }
+        if (in_array($theme, ['v3', 'app'])) $theme = 'template_3';
+
+        $view = "{$theme}.account.reorder";
+        return view($view, compact('reorderItems'));
+    }
 }

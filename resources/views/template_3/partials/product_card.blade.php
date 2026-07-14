@@ -19,7 +19,7 @@
         <i class="{{ $isWishlisted ? 'fa-solid' : 'fa-regular' }} fa-heart"></i>
     </button>
 
-    <a href="{{ route('v3.product', ['id' => $product->id]) }}" class="card-img-wrap">
+    <a href="{{ route('v1.product', ['id' => $product->id]) }}" class="card-img-wrap">
         @if(isset($product->volume_pricing) && (is_array($product->volume_pricing) ? count($product->volume_pricing) > 0 : $product->volume_pricing->count() > 0))
         <div class="pack-deal-badge">
             <i class="fa-solid fa-boxes-stacked"></i> Pack Deal
@@ -52,7 +52,7 @@
             @endif
         </div>
         
-        <a href="{{ route('v3.product', ['id' => $product->id]) }}">
+        <a href="{{ route('v1.product', ['id' => $product->id]) }}">
             <h3 class="p-name">{{ $product->title }}</h3>
         </a>
         

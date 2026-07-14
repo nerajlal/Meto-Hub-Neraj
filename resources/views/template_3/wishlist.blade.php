@@ -28,7 +28,7 @@
             <i class="fa-regular fa-heart mb-4" style="font-size: 4rem; opacity: 0.2; color: #ef4444;"></i>
             <h2 style="color: var(--primary-color); margin-bottom: 1rem; font-weight: 800;">Your Wishlist is Empty</h2>
             <p>Explore our catalog and click the heart icon on any product to save it here.</p>
-            <a href="{{ route('v3.all-products') }}" class="btn-primary mt-4" style="background: var(--accent-color); color: #fff; padding: 0.75rem 2rem; border-radius: 9999px; text-decoration: none; display: inline-block; font-weight: 700; border: none; margin-top: 1.5rem;">Explore Catalog</a>
+            <a href="{{ route('v1.all-products') }}" class="btn-primary mt-4" style="background: var(--accent-color); color: #fff; padding: 0.75rem 2rem; border-radius: 9999px; text-decoration: none; display: inline-block; font-weight: 700; border: none; margin-top: 1.5rem;">Explore Catalog</a>
         </div>
     @endif
 </div>

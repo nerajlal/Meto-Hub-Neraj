@@ -84,7 +84,7 @@
     <ul>
         <!-- Home -->
         <li class="nav-item">
-            <a href="{{ route('v3.home') }}" class="nav-link {{ request()->routeIs('v3.home') ? 'active' : '' }}">
+            <a href="{{ route('v1.home') }}" class="nav-link {{ request()->routeIs('v3.home') ? 'active' : '' }}">
                 <i class="fa-solid fa-house"></i>
                 <span>Home</span>
             </a>

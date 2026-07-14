@@ -24,7 +24,7 @@
         <i class="fa-solid fa-layer-group mb-4" style="font-size: 4rem; opacity: 0.2; color: var(--accent-color);"></i>
         <h2 style="color: var(--primary-color); margin-bottom: 1rem; font-weight: 800;">No Combos Available</h2>
         <p>We are currently curating new combo packs. Please check back soon!</p>
-        <a href="{{ route('v3.all-products') }}" class="btn-primary mt-4" style="background: var(--accent-color); color: #fff; padding: 0.75rem 2rem; border-radius: 9999px; text-decoration: none; display: inline-block; font-weight: 700; border: none; margin-top: 1.5rem;">Browse All Groceries</a>
+        <a href="{{ route('v1.all-products') }}" class="btn-primary mt-4" style="background: var(--accent-color); color: #fff; padding: 0.75rem 2rem; border-radius: 9999px; text-decoration: none; display: inline-block; font-weight: 700; border: none; margin-top: 1.5rem;">Browse All Groceries</a>
     </div>
 @endif
 @endsection

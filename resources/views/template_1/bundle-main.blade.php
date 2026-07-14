@@ -5,7 +5,7 @@
 @section('content')
 <div class="product-page-container">
     <div class="breadcrumb" style="display: flex; align-items: center; gap: 0.75rem; font-size: 0.85rem; color: #64748b; margin-bottom: 2rem;">
-        <a href="{{ route('v3.home') }}" style="color: inherit; text-decoration: none;">Home</a>
+        <a href="{{ route('v1.home') }}" style="color: inherit; text-decoration: none;">Home</a>
         <i class="fa-solid fa-chevron-right" style="font-size: 0.65rem;"></i>
         <a href="{{ route('v3.combos') }}" style="color: inherit; text-decoration: none;">Weekly Combos</a>
         <i class="fa-solid fa-chevron-right" style="font-size: 0.65rem;"></i>

@@ -43,10 +43,12 @@ Route::prefix('v1')->name('v1.')->middleware([\App\Http\Middleware\IdentifyStore
     Route::get('/combo', [PageController::class, 'combo'])->name('combo');
     Route::get('/cosmopolitan', [PageController::class, 'cosmopolitan'])->name('cosmopolitan');
     Route::get('/product', [PageController::class, 'product'])->name('product');
-    Route::view('/about', 'nurah.about')->name('about');
-    Route::view('/contact', 'nurah.contact')->name('contact');
+    Route::get('/about', [PageController::class, 'about'])->name('about');
+    Route::get('/contact', [PageController::class, 'contact'])->name('contact');
     Route::get('/cart', [App\Http\Controllers\CartController::class, 'index'])->name('cart');
     Route::get('/checkout', [PageController::class, 'checkout'])->name('checkout');
+    Route::post('/wishlist/toggle', [App\Http\Controllers\WishlistController::class, 'toggle'])->name('wishlist.toggle');
+    Route::get('/wishlist', [App\Http\Controllers\WishlistController::class, 'index'])->name('wishlist');
     Route::get('/shipping-policy', [PageController::class, 'shippingPolicy'])->name('shipping-policy');
     Route::get('/return-policy', [PageController::class, 'returnPolicy'])->name('return-policy');
     Route::get('/terms-of-service', [PageController::class, 'termsOfService'])->name('terms-of-service');
@@ -58,6 +60,7 @@ Route::middleware([\App\Http\Middleware\IdentifyStorefrontTenant::class, 'auth']
     Route::get('/account/profile', [App\Http\Controllers\AccountController::class, 'profile'])->name('account.profile');
     Route::post('/account/address', [App\Http\Controllers\AccountController::class, 'updateAddress'])->name('account.address.update');
     Route::get('/account/orders', [App\Http\Controllers\AccountController::class, 'orders'])->name('account.orders');
+    Route::get('/account/reorder', [App\Http\Controllers\AccountController::class, 'reorder'])->name('account.reorder');
     Route::post('/account/orders/reorder/{order}', [App\Http\Controllers\CartController::class, 'reorder'])->name('account.orders.reorder');
 });
 
@@ -279,16 +282,7 @@ Route::prefix('v2')->name('velvet.')->middleware([\App\Http\Middleware\IdentifyS
         return view('template_2.home', compact('sliders', 'bestsellers', 'collections', 'bundles'));
     })->name('home');
 
-    Route::get('/all-products', function() {
-        $tenantId = request('tenant_id') 
-            ?? session('active_tenant_id') 
-            ?? (auth()->check() ? auth()->user()->tenant_id : null) 
-            ?? session('demo_tenant_id') 
-            ?? 2;
-        $products = \App\Models\Product::where('tenant_id', $tenantId)->where('status', 'active')->with(['variants', 'images'])->latest()->get();
-        $collections = \App\Models\Collection::where('tenant_id', $tenantId)->where('status', 1)->get();
-        return view('template_2.all-products', compact('products', 'collections'));
-    })->name('all-products');
+    Route::get('/all-products', [App\Http\Controllers\PageController::class, 'allProducts'])->name('all-products');
 
     Route::get('/collection/{slug}', function($slug) {
         $tenantId = request('tenant_id') 
@@ -297,34 +291,23 @@ Route::prefix('v2')->name('velvet.')->middleware([\App\Http\Middleware\IdentifyS
             ?? session('demo_tenant_id') 
             ?? 2;
         $collection = \App\Models\Collection::where('tenant_id', $tenantId)->where('slug', $slug)->firstOrFail();
-        $products = $collection->products()->where('status', 'active')->with(['variants', 'images'])->get();
+        $products = $collection->products()->where('status', 'active')->with(['variants', 'images'])->paginate(12)->withQueryString();
         $collections = \App\Models\Collection::where('tenant_id', $tenantId)->where('status', 1)->get();
         return view('template_2.collection', compact('collection', 'products', 'collections'));
     })->name('collection');
 
-    Route::get('/combos', function() {
-        $tenantId = request('tenant_id') 
-            ?? session('active_tenant_id') 
-            ?? (auth()->check() ? auth()->user()->tenant_id : null) 
-            ?? session('demo_tenant_id') 
-            ?? 2;
-        $bundles = \App\Models\Bundle::where('tenant_id', $tenantId)->where('status', 'active')->where('type', 'bundle')->with(['products.variants'])->latest()->get();
-        $collections = \App\Models\Collection::where('tenant_id', $tenantId)->where('status', 1)->get();
-        return view('template_2.combos', compact('bundles', 'collections'));
-    })->name('combos');
-
-    Route::get('/combo/{slug}', function($slug) {
-        $tenantId = request('tenant_id') 
-            ?? session('active_tenant_id') 
-            ?? (auth()->check() ? auth()->user()->tenant_id : null) 
-            ?? session('demo_tenant_id') 
-            ?? 2;
-        $bundle = \App\Models\Bundle::where('tenant_id', $tenantId)->where('slug', $slug)->with(['products.variants', 'products.images'])->firstOrFail();
-        $collections = \App\Models\Collection::where('tenant_id', $tenantId)->where('status', 1)->get();
-        return view('template_2.combo-detail', compact('bundle', 'collections'));
-    })->name('combo');
+    Route::get('/combos', [App\Http\Controllers\PageController::class, 'combos'])->name('combos');
+    Route::get('/combo', [App\Http\Controllers\PageController::class, 'combo'])->name('combo');
 
     Route::get('/product/{id}', [PageController::class, 'velvetProduct'])->name('product');
+
+    Route::get('/about', [App\Http\Controllers\PageController::class, 'about'])->name('about');
+    Route::get('/contact', [App\Http\Controllers\PageController::class, 'contact'])->name('contact');
+    Route::post('/wishlist/toggle', [App\Http\Controllers\WishlistController::class, 'toggle'])->name('wishlist.toggle');
+    Route::get('/wishlist', [App\Http\Controllers\WishlistController::class, 'index'])->name('wishlist');
+    Route::get('/shipping-policy', [App\Http\Controllers\PageController::class, 'shippingPolicy'])->name('shipping-policy');
+    Route::get('/return-policy', [App\Http\Controllers\PageController::class, 'returnPolicy'])->name('return-policy');
+    Route::get('/terms-of-service', [App\Http\Controllers\PageController::class, 'termsOfService'])->name('terms-of-service');
 });
 
 // v3 Backup Theme Routes

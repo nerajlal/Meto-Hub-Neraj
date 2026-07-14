@@ -126,10 +126,60 @@ class PageController extends Controller
             elseif ($gender == 'for-her') { $title = 'Perfumes For Her'; $query->whereIn('gender', ['Women', 'Female', 'Her']); }
             elseif ($gender == 'unisex') { $title = 'Unisex Collection'; $query->whereIn('gender', ['Unisex', 'All']); }
         }
-        $products = $query->latest()->paginate(24)->withQueryString();
+        // Price filters
+        if ($request->filled('min_price')) {
+            $query->where('starting_price', '>=', $request->min_price);
+        }
+        if ($request->filled('max_price')) {
+            $query->where('starting_price', '<=', $request->max_price);
+        }
+
+        // Tags filter
+        if ($request->has('tags') && is_array($request->tags)) {
+            $query->where(function($q) use ($request) {
+                foreach($request->tags as $tag) {
+                    $q->orWhereJsonContains('tags', $tag);
+                }
+            });
+        }
+
+        // Sorting
+        $sort = $request->query('sort', 'latest');
+        if ($sort === 'price_asc') {
+            $query->orderBy('starting_price', 'asc');
+        } elseif ($sort === 'price_desc') {
+            $query->orderBy('starting_price', 'desc');
+        } elseif ($sort === 'name_asc') {
+            $query->orderBy('title', 'asc');
+        } elseif ($sort === 'name_desc') {
+            $query->orderBy('title', 'desc');
+        } else {
+            $query->latest();
+        }
+
+        $products = $query->paginate(24)->withQueryString();
         
+        // Get all unique tags for the filter UI in this collection
+        $allTagsQuery = clone $query;
+        $allTags = $allTagsQuery->pluck('tags')
+                        ->flatten()
+                        ->unique()
+                        ->values()
+                        ->toArray();
+
         $bundles = \App\Models\Bundle::where('tenant_id', $tenantId)->where('status', 'active')->where('type', '!=', 'pool')->with(['products.variants'])->latest()->get();
-        return view($view, ['title' => $title, 'products' => $products, 'bundles' => $bundles]);
+        
+        return view($view, [
+            'title' => $title, 
+            'collection' => $collection ?? null,
+            'products' => $products, 
+            'bundles' => $bundles,
+            'allTags' => $allTags,
+            'currentSort' => $sort,
+            'currentMinPrice' => $request->min_price,
+            'currentMaxPrice' => $request->max_price,
+            'currentTags' => $request->tags ?? [],
+        ]);
     }
 
     public function allProducts(Request $request)

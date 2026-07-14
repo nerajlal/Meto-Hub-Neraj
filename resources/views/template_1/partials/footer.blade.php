@@ -2,7 +2,7 @@
     <div class="footer-content-wrapper">
         <div class="footer-container">
             <div class="footer-brand">
-                <a href="{{ route('v3.home') }}" class="logo" style="color: var(--accent-color); font-weight: 800; font-size: 1.5rem; text-decoration: none; display: flex; align-items: center;">
+                <a href="{{ route('v1.home') }}" class="logo" style="color: var(--accent-color); font-weight: 800; font-size: 1.5rem; text-decoration: none; display: flex; align-items: center;">
                     @if($currentTenant->logo)
                         <img src="{{ Storage::url($currentTenant->logo) }}" alt="{{ $currentTenant->name }}" style="max-height: 40px; width: auto; object-fit: contain;">
                     @else
@@ -28,7 +28,7 @@
                 <ul class="footer-links">
                     @php $footerCols = \App\Models\Collection::where('tenant_id', $currentTenant->id ?? 2)->where('status', 1)->take(5)->get(); @endphp
                     @foreach($footerCols as $col)
-                        <li><a href="{{ route('v3.collection', ['slug' => $col->slug]) }}">{{ $col->name }}</a></li>
+                        <li><a href="{{ route('v1.collection', ['slug' => $col->slug]) }}">{{ $col->name }}</a></li>
                     @endforeach
                 </ul>
             </div>
@@ -36,10 +36,10 @@
             <div class="footer-group">
                 <h3 class="footer-heading">Customer Care</h3>
                 <ul class="footer-links">
-                    <li><a href="{{ route('v3.about') }}">About Us</a></li>
-                    <li><a href="{{ route('v3.contact') }}">Contact Support</a></li>
-                    <li><a href="{{ route('v3.shipping-policy') }}">Shipping Policy</a></li>
-                    <li><a href="{{ route('v3.return-policy') }}">Return Policy</a></li>
+                    <li><a href="{{ route('v1.about') }}">About Us</a></li>
+                    <li><a href="{{ route('v1.contact') }}">Contact Support</a></li>
+                    <li><a href="{{ route('v1.shipping-policy') }}">Shipping Policy</a></li>
+                    <li><a href="{{ route('v1.return-policy') }}">Return Policy</a></li>
                 </ul>
             </div>
 
