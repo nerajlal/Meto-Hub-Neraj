@@ -573,7 +573,7 @@ class CartController extends Controller
             // Check purchase quantity limits
             $productId = null;
             if (!str_starts_with($request->id, 'bundle-')) {
-                $parts = explode('-', $request->id);
+                $parts = explode('-', $request->id, 2);
                 $productId = $parts[0];
             }
 
@@ -596,7 +596,7 @@ class CartController extends Controller
                     // Stock Validation
                     if (!$product->continue_selling_when_out_of_stock) {
                         $availableStock = 0;
-                        $parts = explode('-', $request->id);
+                        $parts = explode('-', $request->id, 2);
                         $size = isset($parts[1]) ? $parts[1] : null;
                         
                         if ($size) {
@@ -626,7 +626,7 @@ class CartController extends Controller
                         ->where('bundle_id', $bundleId)
                         ->first();
                 } else {
-                    $parts = explode('-', $request->id);
+                    $parts = explode('-', $request->id, 2);
                     $productId = $parts[0];
                     $size = isset($parts[1]) ? $parts[1] : null;
 
@@ -709,7 +709,7 @@ class CartController extends Controller
                         ->where('bundle_id', $bundleId)
                         ->delete();
                 } else {
-                    $parts = explode('-', $request->id);
+                    $parts = explode('-', $request->id, 2);
                     $productId = $parts[0];
                     $size = isset($parts[1]) ? $parts[1] : null;
 

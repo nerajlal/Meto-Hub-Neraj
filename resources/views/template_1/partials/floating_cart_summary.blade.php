@@ -147,7 +147,7 @@
                     _token: $('meta[name="csrf-token"]').attr('content'),
                     id: isBundle ? parts[1] : parts[0],
                     quantity: newQty,
-                    size: (!isBundle && parts.length > 1) ? parts[1] : null,
+                    size: (!isBundle && parts.length > 1) ? parts.slice(1).join('-') : null,
                     type: isBundle ? 'bundle' : 'product'
                 };
                 
