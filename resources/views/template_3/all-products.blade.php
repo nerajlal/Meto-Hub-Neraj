@@ -103,9 +103,9 @@
                 <h2 style="font-size: 1.5rem; font-weight: 800; margin-bottom: 1.5rem; color: var(--primary-color);">
                     <i class="fa-solid fa-boxes-stacked" style="color: var(--accent-color); margin-right: 0.5rem;"></i> Combos & Deals
                 </h2>
-                <div class="bundle-grid">
+                <div class="product-grid grid-cols-mobile-{{ $currentTenant->mobile_grid_cols ?? 2 }}">
                     @foreach($bundles as $bundle)
-                        @include('template_1.partials.bundle_card', ['bundle' => $bundle])
+                        @include('template_3.partials.bundle_card', ['bundle' => $bundle])
                     @endforeach
                 </div>
             </div>

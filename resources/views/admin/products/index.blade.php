@@ -18,6 +18,13 @@
                 <i class="fas fa-plug me-1"></i> Connect Zoho
             </a>
         @endif
+
+        <form action="{{ route('admin.dartpos.sync', request()->route('tenant') ?? 1) }}" method="POST" class="d-inline">
+            @csrf
+            <button type="submit" class="btn btn-white border shadow-sm fw-medium text-primary">
+                <i class="fas fa-sync-alt me-1"></i> Sync DartPOS
+            </button>
+        </form>
         
         <button type="button" class="btn btn-white border shadow-sm fw-medium" data-bs-toggle="modal" data-bs-target="#importModal">
             <i class="fas fa-file-import me-1"></i> Import Products
