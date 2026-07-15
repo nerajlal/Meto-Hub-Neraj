@@ -191,11 +191,15 @@
                     <div class="mt-5 pt-4 border-top text-center small text-muted">
                         @if(isset($currentTenant))
                             @php
-                                $displayDomain = $currentTenant->domain ?? (strtolower(str_replace(' ', '', $currentTenant->name)) . '.vespr.com');
+                                $displayDomain = $currentTenant->domain ?? (strtolower(str_replace(' ', '', $currentTenant->name)) . '.slotstore.com');
                             @endphp
-                            vespr store is running on <a href="http://{{ $displayDomain }}" target="_blank" class="text-decoration-none fw-medium text-secondary">{{ $displayDomain }}</a>
+                            @if($currentTenant->domain)
+                                Slot Store is running on <a href="http://{{ $displayDomain }}" target="_blank" class="text-decoration-none fw-medium text-secondary">{{ $displayDomain }}</a>
+                            @else
+                                Slot Store
+                            @endif
                         @else
-                            vespr store
+                            Slot Store
                         @endif
                     </div>
                 </div>
