@@ -170,6 +170,13 @@ Route::prefix('{tenant}/admin')->name('admin.')->middleware(['identify_tenant', 
     Route::get('/integrations/zoho/connect', [App\Http\Controllers\Admin\ZohoController::class, 'connect'])->name('zoho.connect');
     Route::post('/products/zoho-sync', [App\Http\Controllers\Admin\ZohoController::class, 'syncProducts'])->name('zoho.sync');
 
+    // DartPOS Integration Route (Stub for now)
+    Route::post('/products/dartpos-sync', function () {
+        // Trigger the artisan command in the background or synchronous for MVP
+        \Illuminate\Support\Facades\Artisan::call('dartpos:sync-products');
+        return redirect()->back()->with('success', 'DartPOS sync started successfully.');
+    })->name('dartpos.sync');
+
     Route::view('/reviews', 'admin.reviews.index')->name('reviews');
 
     Route::view('/blog', 'admin.blog.index')->name('blog');
