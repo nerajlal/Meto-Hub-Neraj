@@ -680,13 +680,25 @@ button, input {
     }
     
     /* 3 Columns on mobile as requested */
-    .product-grid {
+    .product-grid, .product-grid.grid-cols-mobile-3 {
         grid-template-columns: repeat(3, 1fr);
         gap: 0.5rem;
     }
-    
-    .bundle-grid {
+    .product-grid.grid-cols-mobile-2 {
         grid-template-columns: repeat(2, 1fr);
+        gap: 0.5rem;
+    }
+    .product-grid.grid-cols-mobile-1 {
+        grid-template-columns: repeat(1, 1fr);
+        gap: 0.5rem;
+    }
+    
+    .bundle-grid, .bundle-grid.grid-cols-mobile-2 {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.5rem;
+    }
+    .bundle-grid.grid-cols-mobile-1 {
+        grid-template-columns: repeat(1, 1fr);
         gap: 0.5rem;
     }
     
