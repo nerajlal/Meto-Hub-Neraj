@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Greengrocer — Launch your grocery store</title>
+  <title>Slot Store — Launch your grocery store</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
@@ -844,7 +844,7 @@
 
   <header>
     <nav>
-      <div class="logo"><span class="logo-mark"></span>Greengrocer</div>
+      <div class="logo"><span class="logo-mark"></span>Slot Store</div>
       <div class="nav-links">
         <a href="#how">How it works</a>
         <a href="#templates">Templates</a>
@@ -873,7 +873,7 @@
         <div>
           <span class="eyebrow">Built for independent grocers</span>
           <h1>Stock the shelves.<br>We'll build <em>the store.</em></h1>
-          <p class="lede">Greengrocer turns your inventory into a real online grocery store — orders, delivery zones,
+          <p class="lede">Slot Store turns your inventory into a real online grocery store — orders, delivery zones,
             and payments included. No code, no developer, live by tonight.</p>
           <div class="hero-actions">
             <a href="javascript:void(0)" class="btn btn-primary pricing-btn-trigger" data-plan="sprout">Start your store
@@ -946,7 +946,7 @@
         <div class="step">
           <span class="step-num">01 · stock</span>
           <h3>Add your inventory</h3>
-          <p>Import a spreadsheet or add items one by one — name, price, unit, photo. Greengrocer organizes it into
+          <p>Import a spreadsheet or add items one by one — name, price, unit, photo. Slot Store organizes it into
             aisles automatically.</p>
         </div>
         <div class="step">
@@ -1146,7 +1146,7 @@
         <div class="faq-left">
           <span class="eyebrow">FAQ</span>
           <h2>Common questions</h2>
-          <p>Still not sure? Reach out to the Greengrocer team — we typically respond within a few hours.</p>
+          <p>Still not sure? Reach out to the Slot Store team — we typically respond within a few hours.</p>
           <!-- <a href="#" class="btn btn-outline">Contact us</a> -->
         </div>
         <div class="faq-right">
@@ -1204,7 +1204,7 @@
             </svg></div>
           <h3>Email Support</h3>
           <p style="margin-bottom:24px;">Current customer needing technical help? Drop us a line anytime.</p>
-          <a href="mailto:support@greengrocer.com" class="btn btn-outline">support@task19.com</a>
+          <a href="mailto:support@slotstore.com" class="btn btn-outline">support@task19.com</a>
         </div>
       </div>
     </div>
@@ -1228,7 +1228,7 @@
     <div class="wrap">
       <div class="footer-grid">
         <div class="footer-col">
-          <div class="logo" style="margin-bottom:14px;"><span class="logo-mark"></span>Greengrocer</div>
+          <div class="logo" style="margin-bottom:14px;"><span class="logo-mark"></span>Slot Store</div>
           <p style="font-size:13.5px;color:var(--ink-faint);max-width:240px;">The storefront builder for independent
             grocers, made for real inventory and real delivery routes.</p>
         </div>
@@ -1251,7 +1251,7 @@
         </div>
       </div>
       <div class="footer-bottom">
-        <span>© 2026 Greengrocer. Made for grocers.</span>
+        <span>© 2026 Slot Store. Made for grocers.</span>
         <span>Kayamkulam · Remote</span>
       </div>
     </div>
@@ -1442,7 +1442,7 @@
         <div class="saas-success-container">
           <div class="saas-success-icon-check">✓</div>
           <h2>Account Verified!</h2>
-          <p>Your email has been verified successfully. Welcome to Greengrocer! Let's get started setting up your
+          <p>Your email has been verified successfully. Welcome to Slot Store! Let's get started setting up your
             customized
             grocery store.</p>
           <button onclick="closeSaaSModal()" class="saas-success-finish-btn">Go to your SaaS dashboard →</button>

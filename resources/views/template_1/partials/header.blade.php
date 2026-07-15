@@ -46,7 +46,7 @@
         </button>
 
         <div class="header-actions hide-on-mobile" style="display: flex; align-items: center; gap: 0.5rem;">
-            @auth
+            @if(auth()->check())
                 <div class="user-dropdown" style="position: relative;">
                     <a href="javascript:void(0)" class="action-btn text-decoration-none" onclick="document.getElementById('user-menu').classList.toggle('d-none')" style="display: flex; align-items: center;">
                         <i class="fa-regular fa-user"></i>
@@ -54,10 +54,10 @@
                         <i class="fa-solid fa-chevron-down" style="font-size: 0.7rem; margin-left: 0.3rem;"></i>
                     </a>
                     <div id="user-menu" class="d-none" style="position: absolute; top: calc(100% + 10px); right: 0; background: #fff; box-shadow: 0 4px 20px rgba(0,0,0,0.1); border-radius: 12px; min-width: 180px; z-index: 1000; overflow: hidden; border: 1px solid var(--border-color);">
-                        <a href="{{ route('account.index') }}" style="display: block; padding: 0.85rem 1.25rem; color: var(--primary-color); text-decoration: none; font-size: 0.9rem; font-weight: 600; border-bottom: 1px solid var(--border-color);">
+                        <a href="#" style="display: block; padding: 0.85rem 1.25rem; color: var(--primary-color); text-decoration: none; font-size: 0.9rem; font-weight: 600; border-bottom: 1px solid var(--border-color);">
                             <i class="fa-solid fa-box-open me-2" style="color: var(--accent-color); width: 20px;"></i> My Orders
                         </a>
-                        <form action="{{ route('logout') }}" method="POST" style="margin: 0;">
+                        <form action="{{ route('customer.logout') }}" method="POST" style="margin: 0;">
                             @csrf
                             <button type="submit" style="width: 100%; text-align: left; background: none; border: none; padding: 0.85rem 1.25rem; color: #ef4444; font-size: 0.9rem; font-weight: 600; cursor: pointer;">
                                 <i class="fa-solid fa-arrow-right-from-bracket me-2" style="width: 20px;"></i> Logout
@@ -66,21 +66,21 @@
                     </div>
                 </div>
             @else
-                <a href="{{ route('login') }}" class="action-btn text-decoration-none" style="display: flex; align-items: center;">
-                    <i class="fa-regular fa-user"></i>
-                    <span class="action-text">Log In</span>
+                <a href="javascript:void(0)" onclick="openCustomerAuthModal()" class="action-btn text-decoration-none" style="display: flex; align-items: center;">
+                    <i class="fa-solid fa-right-to-bracket"></i>
+                    <span class="action-text">Sign In</span>
                 </a>
-            @endauth
+            @endif
 
-            <a href="{{ auth()->check() ? route('v3.wishlist') : route('login') }}" class="action-btn text-decoration-none" style="display: flex; align-items: center;">
+            <a href="{{ auth()->check() ? route('v3.wishlist') : 'javascript:void(0)' }}" onclick="{{ auth()->check() ? '' : 'openCustomerAuthModal()' }}" class="action-btn text-decoration-none" style="display: flex; align-items: center;">
                 <span style="position: relative; display: inline-flex;">
                     <i class="fa-regular fa-heart"></i>
-                    @auth
+                    @if(auth()->check())
                         @php
                             $wishlistCount = \App\Models\Wishlist::where('user_id', auth()->id())->where('tenant_id', $currentTenant->id ?? 2)->count();
                         @endphp
                         <span id="wishlist-count" class="badge rounded-circle position-absolute" style="font-size: 0.6rem; top: -8px; right: -8px; width: 15px; height: 15px; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; border: 1.5px solid #fff; background: #ef4444; border-radius: 50%;">{{ $wishlistCount }}</span>
-                    @endauth
+                    @endif
                 </span>
                 <span class="action-text">Wishlist</span>
             </a>

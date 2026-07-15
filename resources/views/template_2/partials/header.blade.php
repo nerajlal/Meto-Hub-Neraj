@@ -43,27 +43,27 @@
         </button>
 
         <div class="header-actions hide-on-mobile" style="display: flex; align-items: center; gap: 1.5rem; flex-shrink: 0;">
-            @auth
+            @if(auth()->check())
                 <a href="{{ route('account.index') }}" class="action-btn text-decoration-none" style="display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 600; color: var(--primary-color); text-align: center; gap: 2px; text-transform: none; text-decoration: none; padding: 0.25rem 0.5rem; background: none; border-radius: 0;">
                     <i class="fa-regular fa-user" style="font-size: 1.25rem; color: var(--primary-color);"></i>
                     <span class="action-text" style="color: var(--primary-color);">Account</span>
                 </a>
             @else
-                <a href="{{ route('login') }}" class="action-btn text-decoration-none" style="display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 600; color: var(--primary-color); text-align: center; gap: 2px; text-transform: none; text-decoration: none; padding: 0.25rem 0.5rem; background: none; border-radius: 0;">
-                    <i class="fa-regular fa-user" style="font-size: 1.25rem; color: var(--primary-color);"></i>
+                <a href="javascript:void(0)" onclick="openCustomerAuthModal()" class="action-btn text-decoration-none" style="display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 600; color: var(--primary-color); text-align: center; gap: 2px; text-transform: none; text-decoration: none; padding: 0.25rem 0.5rem; background: none; border-radius: 0;">
+                    <i class="fa-solid fa-right-to-bracket" style="font-size: 1.25rem; color: var(--primary-color);"></i>
                     <span class="action-text" style="color: var(--primary-color);">Log In</span>
                 </a>
-            @endauth
+            @endif
 
-            <a href="{{ auth()->check() ? route('v3.wishlist') : route('login') }}" class="action-btn text-decoration-none" style="display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 600; color: var(--primary-color); position: relative; text-align: center; gap: 2px; text-transform: none; text-decoration: none; padding: 0.25rem 0.5rem; background: none; border-radius: 0;">
+            <a href="{{ auth()->check() ? route('v3.wishlist') : 'javascript:void(0)' }}" onclick="{{ auth()->check() ? '' : 'openCustomerAuthModal()' }}" class="action-btn text-decoration-none" style="display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 600; color: var(--primary-color); position: relative; text-align: center; gap: 2px; text-transform: none; text-decoration: none; padding: 0.25rem 0.5rem; background: none; border-radius: 0;">
                 <i class="fa-regular fa-heart" style="font-size: 1.25rem; color: var(--primary-color);"></i>
                 <span class="action-text" style="color: var(--primary-color);">Wishlist</span>
-                @auth
+                @if(auth()->check())
                     @php
                         $wishlistCount = \App\Models\Wishlist::where('user_id', auth()->id())->where('tenant_id', $currentTenant->id ?? 2)->count();
                     @endphp
                     <span id="wishlist-count" class="badge rounded-circle" style="font-size: 0.6rem; top: 0px; right: 2px; width: 15px; height: 15px; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; border: 1px solid #fff; background: #ef4444; position: absolute;">{{ $wishlistCount }}</span>
-                @endauth
+                @endif
             </a>
 
             <a href="javascript:void(0)" class="action-btn cart-btn text-decoration-none" onclick="toggleNCart(true)" style="display: flex; flex-direction: row; align-items: center; gap: 0.5rem; background: var(--primary-color); color: #fff; padding: 0.6rem 1rem; border-radius: 0.75rem; text-decoration: none; height: fit-content; margin-top: 2px;">

@@ -50,16 +50,16 @@
             </div>
             
             <div class="header-actions">
-                @auth
+                @if(auth()->check())
                 <button class="action-btn" onclick="window.location.href='{{ route('account.index') }}'" title="My Account">
                     <i class="fa-regular fa-user"></i>
                 </button>
                 @else
-                <button class="action-btn" onclick="window.location.href='{{ route('login') }}'" title="Log In">
-                    <i class="fa-regular fa-user"></i>
+                <button class="action-btn" onclick="openCustomerAuthModal()" title="Log In">
+                    <i class="fa-solid fa-right-to-bracket"></i>
                 </button>
-                @endauth
-                <button class="action-btn" onclick="window.location.href='{{ route('v1.wishlist') }}'">
+                @endif
+                <button class="action-btn" onclick="{{ auth()->check() ? 'window.location.href=\'' . route('v1.wishlist') . '\'' : 'openCustomerAuthModal()' }}">
                     <i class="fa-regular fa-heart"></i>
                 </button>
                 <button class="action-btn" onclick="toggleCartSidebar()">
@@ -378,6 +378,7 @@
             });
         })();
     </script>
+    @include('partials.customer_auth_modal')
     @yield('scripts')
 </body>
 </html>

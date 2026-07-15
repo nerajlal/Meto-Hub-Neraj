@@ -107,6 +107,11 @@ Route::post('/forgot-password/verify', [App\Http\Controllers\Auth\ForgotPassword
 Route::get('/forgot-password/reset', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'showResetForm'])->name('password.reset.form');
 Route::post('/forgot-password/reset', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'resetPassword'])->name('password.update');
 
+// Storefront Customer Auth Routes
+Route::post('/customer/login', [App\Http\Controllers\CustomerAuthController::class, 'login'])->name('customer.login');
+Route::post('/customer/register', [App\Http\Controllers\CustomerAuthController::class, 'register'])->name('customer.register');
+Route::post('/customer/logout', [App\Http\Controllers\CustomerAuthController::class, 'logout'])->name('customer.logout');
+
 // Admin Authentication Routes
 Route::prefix('{tenant}')->name('admin.')->middleware(['identify_tenant'])->group(function () {
     Route::get('/login', [App\Http\Controllers\Admin\AuthController::class, 'showLogin'])->name('login');
@@ -360,6 +365,8 @@ Route::prefix('v5')->name('v5.')->middleware([\App\Http\Middleware\IdentifyStore
     Route::get('/checkout', [PageController::class, 'afnanCheckout'])->name('checkout');
 });
 
+
+// Storefront Routes
 
 // SaaS Onboarding Routes
 Route::prefix('saas')->group(function () {

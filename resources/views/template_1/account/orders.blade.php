@@ -112,7 +112,7 @@
                 <i class="fa-solid fa-box-open" style="font-size: 4rem; color: var(--border-color); margin-bottom: 2rem;"></i>
                 <h3 style="font-size: 1.5rem; font-weight: 700; color: var(--primary-color);">No orders yet</h3>
                 <p style="color: var(--text-muted); margin-top: 1rem; margin-bottom: 2rem;">You haven't placed any orders with us yet. Start exploring our collections!</p>
-                <a href="{{ route('all-products') }}" style="display: inline-block; background: var(--primary-color); color: #fff; text-decoration: none; padding: 1.25rem 2.5rem; border-radius: 9999px; font-weight: 700; transition: 0.3s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
+                <a href="{{ route('v1.all-products') }}" style="display: inline-block; background: var(--primary-color); color: #fff; text-decoration: none; padding: 1.25rem 2.5rem; border-radius: 9999px; font-weight: 700; transition: 0.3s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
                     Explore Fragrances
                 </a>
             </div>

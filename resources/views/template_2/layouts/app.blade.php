@@ -243,5 +243,6 @@
     
     @include('template_2.partials.mobile_bottom_nav')
     @include('template_1.partials.floating_cart_summary')
+    @include('partials.customer_auth_modal')
 </body>
 </html>
