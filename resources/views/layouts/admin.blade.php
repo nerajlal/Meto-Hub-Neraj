@@ -194,12 +194,12 @@
                                 $displayDomain = $currentTenant->domain ?? (strtolower(str_replace(' ', '', $currentTenant->name)) . '.slotstore.com');
                             @endphp
                             @if($currentTenant->domain)
-                                Slot Store is running on <a href="http://{{ $displayDomain }}" target="_blank" class="text-decoration-none fw-medium text-secondary">{{ $displayDomain }}</a>
+                                Developed by Slot Store. Running on <a href="http://{{ $displayDomain }}" target="_blank" class="text-decoration-none fw-medium text-secondary">{{ $displayDomain }}</a>
                             @else
-                                Slot Store
+                                Developed by Slot Store
                             @endif
                         @else
-                            Slot Store
+                            Developed by Slot Store
                         @endif
                     </div>
                 </div>
