@@ -209,7 +209,7 @@
                                         ₹{{ number_format($cp->price, 2) }}
                                     </td>
                                     <td class="px-3 py-3 text-end">
-                                        <form action="{{ route('custom-prices.destroy', $cp->id) }}" method="POST" onsubmit="return confirm('Delete this custom pricing rule?')" class="d-inline">
+                                        <form action="{{ route('admin.custom-prices.destroy', $cp->id) }}" method="POST" onsubmit="return confirm('Delete this custom pricing rule?')" class="d-inline">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-link text-danger p-0 hover-text-danger shadow-none"><i class="fas fa-trash-can"></i></button>
