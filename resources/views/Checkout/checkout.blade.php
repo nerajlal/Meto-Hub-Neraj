@@ -174,10 +174,6 @@
                             <input type="text" name="pincode" value="{{ $address->pincode ?? '' }}" {{ (!isset($cf['pincode']) || (isset($cf['pincode']['required']) && $cf['pincode']['required'])) ? 'required' : '' }} placeholder="6-digit PIN" style="width: 100%; padding: 0.85rem 1.25rem; border: 2px solid var(--border-color); border-radius: 0.75rem; font-size: 1rem; outline: none;">
                         </div>
                         @endif
-                        <div class="form-group-lg">
-                            <label style="display: block; font-size: 0.8rem; font-weight: 800; color: var(--text-muted); margin-bottom: 0.5rem; text-transform: uppercase;">Country <span style="color:red;">*</span></label>
-                            <input type="text" value="India" disabled style="width: 100%; padding: 0.85rem 1.25rem; border: 2px solid var(--border-color); border-radius: 0.75rem; font-size: 1rem; background: var(--section-bg); cursor: not-allowed; outline: none;">
-                        </div>
                         @if(isset($cf['landmark']['enabled']) && $cf['landmark']['enabled'])
                         <div class="form-group-lg full">
                             <label style="display: block; font-size: 0.8rem; font-weight: 800; color: var(--text-muted); margin-bottom: 0.5rem; text-transform: uppercase;">Landmark {!! isset($cf['landmark']['required']) && $cf['landmark']['required'] ? '<span style="color:red;">*</span>' : '' !!}</label>
@@ -238,9 +234,8 @@
 
                 <style>
                     .schedule-option input:checked + .schedule-box {
-                        border-color: var(--accent-color);
-                        background: rgba(var(--accent-rgb), 0.05);
-                        box-shadow: 0 0 0 4px rgba(var(--accent-rgb), 0.1);
+                        border-color: var(--accent-color) !important;
+                        background-color: var(--section-bg) !important;
                     }
                 </style>
                 @endif
@@ -309,8 +304,16 @@
                         <div style="flex-grow: 1; min-width: 0;">
                             <span style="display: block; font-size: 0.95rem; font-weight: 700; color: var(--primary-color); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ $item['name'] }}</span>
                             <span style="font-size: 0.8rem; color: var(--text-muted);">{{ $item['size'] }}</span>
+                            @if(isset($item['coupon']) && $item['coupon'])
+                                <span style="display: inline-block; margin-top: 4px; font-size: 0.7rem; font-weight: 700; color: #10b981; background: #ecfdf5; padding: 2px 6px; border-radius: 4px;"><i class="fa-solid fa-tag"></i> {{ $item['coupon']['code'] ?? 'DISCOUNT' }} Applied</span>
+                            @endif
                         </div>
-                        <span style="font-weight: 700; color: var(--primary-color); font-size: 0.95rem;">₹{{ number_format($item['price'] * $item['quantity'], 2) }}</span>
+                        <div style="display: flex; flex-direction: column; align-items: flex-end;">
+                            @if(isset($item['line_savings']) && $item['line_savings'] > 0)
+                                <span style="text-decoration: line-through; color: #94a3b8; font-size: 0.75rem; margin-bottom: 2px;">₹{{ number_format($item['price'] * $item['quantity'], 2) }}</span>
+                            @endif
+                            <span style="font-weight: 700; color: var(--primary-color); font-size: 0.95rem;">₹{{ number_format(($item['price'] * $item['quantity']) - ($item['line_savings'] ?? 0), 2) }}</span>
+                        </div>
                     </div>
                     @endforeach
                 </div>

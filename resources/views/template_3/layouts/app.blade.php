@@ -64,12 +64,9 @@
                 </button>
                 <button class="action-btn" onclick="toggleCartSidebar()">
                     <i class="fa-solid fa-bag-shopping"></i>
-                    @php
-                        $tenantId = session('tenant_id', 1);
-                        $cartCount = auth()->check()
-                            ? \App\Models\Cart::where('tenant_id', $tenantId)->where('user_id', auth()->id())->sum('quantity')
-                            : collect(session()->get('cart', []))->sum('quantity');
-                    @endphp
+                        @php
+                            $cartCount = \App\Services\CartService::getCount();
+                        @endphp
                     <span class="cart-count" id="cart-count-badge">{{ $cartCount }}</span>
                 </button>
             </div>

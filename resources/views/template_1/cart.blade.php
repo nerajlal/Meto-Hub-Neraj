@@ -55,9 +55,9 @@
                     </div>
                     @endif
 
-                    @if(isset($item['coupon']))
+                    @if(isset($item['coupon']) && $item['coupon'])
                     <div class="item-promo-badge">
-                        <i class="fa-solid fa-gift"></i> {{ $item['coupon']->code }} Applied
+                        <i class="fa-solid fa-gift"></i> {{ $item['coupon']['code'] ?? 'DISCOUNT' }} Applied
                     </div>
                     @endif
 

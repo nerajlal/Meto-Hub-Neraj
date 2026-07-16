@@ -8,13 +8,23 @@
                 <div class="n-item-details">
                     <h4 class="n-item-name">{{ $item['name'] }}</h4>
                     <p class="n-item-meta">{{ $item['size'] ?? '' }}</p>
+                    @if(isset($item['coupon']) && $item['coupon'])
+                        <div style="font-size: 0.7rem; color: #10b981; font-weight: 700; margin-bottom: 0.5rem; background: #ecfdf5; display: inline-block; padding: 2px 6px; border-radius: 4px;">
+                            <i class="fa-solid fa-tag"></i> {{ $item['coupon']['code'] ?? 'DISCOUNT' }} Applied
+                        </div>
+                    @endif
                     <div class="n-item-controls">
                         <div class="n-qty-wrap">
                             <button onclick="updateNCartQty('{{ $key }}', -1)">-</button>
                             <span>{{ $item['quantity'] }}</span>
                             <button onclick="updateNCartQty('{{ $key }}', 1)">+</button>
                         </div>
-                        <span class="n-item-price">₹{{ number_format($item['price'] * $item['quantity'], 0) }}</span>
+                        <span class="n-item-price">
+                            @if(isset($item['line_savings']) && $item['line_savings'] > 0)
+                                <span style="text-decoration: line-through; color: #94a3b8; font-size: 0.75rem; margin-right: 4px;">₹{{ number_format($item['price'] * $item['quantity'], 2) }}</span>
+                            @endif
+                            ₹{{ number_format(($item['price'] * $item['quantity']) - ($item['line_savings'] ?? 0), 2) }}
+                        </span>
                     </div>
                     @if((isset($item['min_order_qty']) && $item['min_order_qty']) || (isset($item['max_order_qty']) && $item['max_order_qty']))
                     <div style="font-size: 0.75rem; color: #64748b; margin-top: 0.4rem;">
@@ -37,23 +47,23 @@
     <div class="n-cart-summary">
         <div class="n-summary-line">
             <span>Subtotal</span>
-            <span>₹{{ number_format($cartTotalBeforeTax, 0) }}</span>
+            <span>₹{{ number_format($cartTotalBeforeTax, 2) }}</span>
         </div>
         @if($taxRate)
             <div class="n-summary-line">
                 <span>{{ $taxName }} ({{ $taxRate }}%)</span>
-                <span>₹{{ number_format($taxAmount, 0) }}</span>
+                <span>₹{{ number_format($taxAmount, 2) }}</span>
             </div>
         @endif
         @if($savings > 0)
             <div class="n-summary-line savings">
                 <span>Total Savings</span>
-                <span>-₹{{ number_format($savings, 0) }}</span>
+                <span>-₹{{ number_format($savings, 2) }}</span>
             </div>
         @endif
         <div class="n-summary-line grand-total">
             <span>Grand Total</span>
-            <span>₹{{ number_format($total, 0) }}</span>
+            <span>₹{{ number_format($total, 2) }}</span>
         </div>
         
         @if(isset($minOrderValue) && $minOrderValue > 0)

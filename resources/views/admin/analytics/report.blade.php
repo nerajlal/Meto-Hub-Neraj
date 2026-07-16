@@ -9,10 +9,17 @@
     </a>
     <div class="d-flex justify-content-between align-items-center">
         <h1 class="h3 mb-0 text-dark">{{ $title }} Report</h1>
-        <div class="d-flex align-items-center gap-2 border rounded bg-white px-3 py-1 shadow-sm small cursor-pointer hover-bg-light">
-            <i class="far fa-calendar text-secondary"></i>
-            <span class="text-dark">Last 30 days</span>
-            <i class="fas fa-chevron-down text-secondary small ms-1"></i>
+        <div class="dropdown">
+            <div class="d-flex align-items-center gap-2 border rounded bg-white px-3 py-1 shadow-sm small cursor-pointer hover-bg-light dropdown-toggle" data-bs-toggle="dropdown">
+                <i class="far fa-calendar text-secondary"></i>
+                <span class="text-dark">Last 30 days</span>
+            </div>
+            <ul class="dropdown-menu shadow-sm border-0 dropdown-menu-end">
+                <li><a class="dropdown-item small" href="{{ route('admin.analytics', ['period' => '7_days']) }}">Last 7 days</a></li>
+                <li><a class="dropdown-item small active bg-light text-dark fw-bold" href="{{ route('admin.analytics', ['period' => '30_days']) }}">Last 30 days</a></li>
+                <li><a class="dropdown-item small" href="{{ route('admin.analytics', ['period' => '90_days']) }}">Last 90 days</a></li>
+                <li><a class="dropdown-item small" href="{{ route('admin.analytics', ['period' => 'year']) }}">Last Year</a></li>
+            </ul>
         </div>
     </div>
 </div>

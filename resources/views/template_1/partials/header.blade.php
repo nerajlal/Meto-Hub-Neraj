@@ -88,10 +88,7 @@
             <a href="javascript:void(0)" class="action-btn cart-btn text-decoration-none" onclick="toggleNCart(true)" style="display: flex; align-items: center;">
                 <i class="fa-solid fa-cart-shopping"></i>
                 @php
-                    $tenantId = $currentTenant->id ?? 2;
-                    $cartCount = auth()->check()
-                        ? \App\Models\Cart::where('tenant_id', $tenantId)->where('user_id', auth()->id())->sum('quantity')
-                        : collect(session()->get('cart', []))->sum('quantity');
+                    $cartCount = \App\Services\CartService::getCount();
                 @endphp
                 <span id="cart-count" class="cart-count" style="background-color: var(--accent-color);">{{ $cartCount }}</span>
             </a>

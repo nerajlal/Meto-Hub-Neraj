@@ -59,17 +59,23 @@
             
             <div class="price-block">
                 <span class="current-price">
-                    ₹{{ number_format($product->starting_price, 2) }}
+                    ₹{{ number_format($product->discounted_price, 2) }}
                 </span>
-                @if($product->compare_at_price > $product->starting_price)
+                @if($product->compare_at_price > $product->discounted_price)
                     <span class="compare-price">
                         ₹{{ number_format($product->compare_at_price, 2) }}
                     </span>
                     <span style="background: #EF4444; color: white; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.85rem; font-weight: 700;">
-                        {{ round((($product->compare_at_price - $product->starting_price) / $product->compare_at_price) * 100) }}% OFF
+                        {{ round((($product->compare_at_price - $product->discounted_price) / $product->compare_at_price) * 100) }}% OFF
                     </span>
                 @endif
             </div>
+
+            @if($product->active_discount)
+                <div style="margin-top: -0.5rem; margin-bottom: 1.5rem; font-size: 0.85rem; color: #10b981; font-weight: 700; background: #ecfdf5; display: inline-block; padding: 4px 10px; border-radius: 6px;">
+                    <i class="fa-solid fa-tag"></i> {{ $product->active_discount->code ?? 'DISCOUNT' }} Applied
+                </div>
+            @endif
 
             @if($product->variants && $product->variants->count() > 0)
             <div class="variant-selector">
@@ -95,7 +101,6 @@
                     <i class="fa-solid fa-bag-shopping"></i> Add to Cart
                 </button>
             </div>
-            
             @if(isset($product->volume_pricing) && (is_array($product->volume_pricing) ? count($product->volume_pricing) > 0 : $product->volume_pricing->count() > 0))
             <div class="volume-deals">
                 <h4 style="margin-bottom: 1rem; font-size: 1.1rem;"><i class="fa-solid fa-boxes-stacked" style="color: var(--accent-color);"></i> Pack Deals</h4>

@@ -86,15 +86,53 @@ class Product extends Model
         return $this->belongsToMany(\App\Models\Bundle::class, 'bundle_product')->withPivot('quantity', 'product_variant_id')->withTimestamps();
     }
 
+    public function getActiveDiscountAttribute()
+    {
+        return $this->discounts()
+            ->where('status', 'active')
+            ->where(function ($q) {
+                $q->whereNull('starts_at')->orWhere('starts_at', '<=', now());
+            })
+            ->where(function ($q) {
+                $q->whereNull('ends_at')->orWhere('ends_at', '>=', now());
+            })
+            ->orderByDesc('value')
+            ->first();
+    }
+
     public function getStartingPriceAttribute()
     {
         return $this->variants->min('price');
     }
 
+    public function getDiscountedPriceAttribute()
+    {
+        $basePrice = $this->starting_price;
+        $discount = $this->active_discount;
+
+        if ($discount) {
+            if ($discount->type == 'percentage') {
+                return $basePrice - ($basePrice * ($discount->value / 100));
+            } else {
+                return max(0, $basePrice - $discount->value);
+            }
+        }
+
+        return $basePrice;
+    }
+
     public function getCompareAtPriceAttribute()
     {
         $variant = $this->variants->sortBy('price')->first();
-        return $variant ? $variant->compare_at_price : null;
+        $compareAt = $variant ? $variant->compare_at_price : null;
+
+        // If there's an active discount, the original starting price effectively becomes the compare_at price
+        // (if it's higher than the DB compare_at price)
+        if ($this->active_discount && $this->starting_price > $this->discounted_price) {
+            return max($compareAt ?? 0, $this->starting_price);
+        }
+
+        return $compareAt;
     }
 
     public function getMainImageUrlAttribute()

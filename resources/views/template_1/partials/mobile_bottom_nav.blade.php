@@ -121,13 +121,10 @@
                 <i class="fa-solid fa-cart-shopping"></i>
                 <span>Cart</span>
                 @php
-                    $tenantId = $currentTenant->id ?? 2;
-                    $bottomCartCount = auth()->check()
-                        ? \App\Models\Cart::where('tenant_id', $tenantId)->where('user_id', auth()->id())->sum('quantity')
-                        : collect(session()->get('cart', []))->sum('quantity');
+                    $cartCount = \App\Services\CartService::getCount();
                 @endphp
-                @if($bottomCartCount > 0)
-                    <span class="nav-badge" id="bottom-cart-count">{{ $bottomCartCount }}</span>
+                @if($cartCount > 0)
+                    <span class="nav-badge" id="bottom-cart-count">{{ $cartCount }}</span>
                 @endif
             </a>
         </li>

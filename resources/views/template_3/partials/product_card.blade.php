@@ -46,11 +46,17 @@
 
     <div class="card-content">
         <div class="p-price-wrap">
-            <span class="p-price">₹{{ number_format($product->starting_price, 2) }}</span>
-            @if($product->compare_at_price > $product->starting_price)
+            <span class="p-price">₹{{ number_format($product->discounted_price, 2) }}</span>
+            @if($product->compare_at_price > $product->discounted_price)
                 <span class="p-compare">₹{{ number_format($product->compare_at_price, 2) }}</span>
             @endif
         </div>
+        
+        @if($product->active_discount)
+            <div style="margin-top: 0.25rem; margin-bottom: 0.5rem; font-size: 0.7rem; color: #10b981; font-weight: 700; background: #ecfdf5; display: inline-block; padding: 2px 6px; border-radius: 4px;">
+                <i class="fa-solid fa-tag"></i> {{ $product->active_discount->code ?? 'DISCOUNT' }} Applied
+            </div>
+        @endif
         
         <a href="{{ route('v1.product', ['id' => $product->id]) }}">
             <h3 class="p-name">{{ $product->title }}</h3>

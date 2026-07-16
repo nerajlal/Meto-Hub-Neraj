@@ -150,8 +150,7 @@
                         @php $addr = $order->shipping_address; @endphp
                         {{ $addr['address'] ?? '' }}<br>
                         {{ $addr['apartment'] ?? '' }}<br>
-                        {{ $addr['city'] ?? '' }}, {{ $addr['state'] ?? '' }} {{ $addr['zip'] ?? '' }}<br>
-                        India
+                        {{ $addr['city'] ?? '' }}, {{ $addr['state'] ?? '' }} {{ $addr['zip'] ?? '' }}
                     </p>
                     
                     <!-- <hr class="text-muted opacity-25 my-3"> -->
@@ -195,12 +194,12 @@
                     <h2 class="h6 fw-semibold text-secondary mb-0"><i class="fa-regular fa-calendar-check text-primary me-2"></i> Delivery Schedule</h2>
                 </div>
                 <div class="card-body p-3 bg-light bg-opacity-50">
-                    <div class="d-flex align-items-center justify-content-between">
+                    <div class="d-flex flex-column gap-3">
                         <div>
                             <span class="small fw-semibold text-muted text-uppercase d-block mb-1">Scheduled Date</span>
                             <span class="fw-bold text-dark fs-5">{{ $order->delivery_date ? \Carbon\Carbon::parse($order->delivery_date)->format('D, M d, Y') : 'N/A' }}</span>
                         </div>
-                        <div class="text-end">
+                        <div>
                             <span class="small fw-semibold text-muted text-uppercase d-block mb-1">Time Slot</span>
                             @if($order->delivery_time_slot)
                             <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 px-3 py-2 fs-6 rounded-pill">{{ $order->delivery_time_slot }}</span>

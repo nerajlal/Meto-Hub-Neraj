@@ -23,7 +23,7 @@
     "@@type": "Offer",
     "url": "{{ url()->current() }}",
     "priceCurrency": "INR",
-    "price": "{{ $product->starting_price }}",
+    "price": "{{ $product->discounted_price }}",
     "availability": "https://schema.org/InStock"
   }
 }
@@ -322,11 +322,11 @@
             <h1 class="p-title" style="font-size: 2.2rem; font-weight: 800; color: var(--primary-color); margin-bottom: 1rem; line-height: 1.2;">{{ $product->title }}</h1>
             
             <div class="p-price-row" style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem;">
-                <span class="p-current-price" id="p-price-display" style="font-size: 2rem; font-weight: 800; color: var(--accent-color);">₹{{ number_format($product->starting_price, 2) }}</span>
-                @if($product->compare_at_price > $product->starting_price)
+                <span class="p-current-price" id="p-price-display" style="font-size: 2rem; font-weight: 800; color: var(--accent-color);">₹{{ number_format($product->discounted_price, 2) }}</span>
+                @if($product->compare_at_price > $product->discounted_price)
                     <div style="display: flex; align-items: center; gap: 0.5rem;">
                         <span class="p-compare-at" style="font-size: 1.1rem; text-decoration: line-through; color: var(--text-muted);">₹{{ number_format($product->compare_at_price, 2) }}</span>
-                        @php $discount = round((($product->compare_at_price - $product->starting_price) / $product->compare_at_price) * 100); @endphp
+                        @php $discount = round((($product->compare_at_price - $product->discounted_price) / $product->compare_at_price) * 100); @endphp
                         <span class="p-discount-badge" style="background: #ecfdf5; color: var(--accent-color); padding: 0.2rem 0.5rem; border-radius: 9999px; font-size: 0.7rem; font-weight: 800; white-space: nowrap;">Save {{ $discount }}%</span>
                     </div>
                 @endif
@@ -401,7 +401,7 @@
                     @if($isOut)
                         OUT OF STOCK
                     @else
-                        ADD TO CART <span class="btn-price-display">₹{{ number_format($product->starting_price, 2) }}</span>
+                        ADD TO CART <span class="btn-price-display">₹{{ number_format($product->discounted_price, 2) }}</span>
                     @endif
                 </button>
             </div>

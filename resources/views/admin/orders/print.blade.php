@@ -150,7 +150,6 @@
                     <p>{{ $shippingAddress['apartment'] }}</p>
                 @endif
                 <p>{{ $shippingAddress['city'] ?? '' }}, {{ $shippingAddress['state'] ?? '' }} {{ $shippingAddress['zip'] ?? '' }}</p>
-                <p>India</p>
                 <p>Phone: {{ $order->customer_phone ?? 'N/A' }}</p>
             </div>
         </div>
@@ -160,8 +159,7 @@
                 <p><strong>{{ $order->tenant->name ?? 'Grocery Store' }}</strong></p>
                 <p>Online Fulfillment Centre</p>
                 <p>Standard Delivery Service Area</p>
-                <p>India</p>
-                <p>support@{{ Str::slug($order->tenant->name ?? 'grocery') }}.com</p>
+                <p>{{ 'support@' . strtolower(str_replace(' ', '', $order->tenant->name ?? 'grocery')) . '.com' }}</p>
             </div>
         </div>
     </div>

@@ -46,8 +46,8 @@
     
     <div class="card-info" style="padding: 1rem; display: flex; flex-direction: column; gap: 0.25rem;">
         <div style="display: flex; align-items: baseline; gap: 0.5rem; flex-wrap: wrap;">
-            <span class="p-price" style="font-weight: 800; font-size: 1.15rem; color: var(--accent-color);">₹{{ number_format($product->starting_price, 2) }}</span>
-            @if($product->compare_at_price > $product->starting_price)
+            <span class="p-price" style="font-weight: 800; font-size: 1.15rem; color: var(--accent-color);">₹{{ number_format($product->discounted_price, 2) }}</span>
+            @if($product->compare_at_price > $product->discounted_price)
                 <span style="text-decoration: line-through; color: var(--text-muted); font-size: 0.85rem; white-space: nowrap;">₹{{ number_format($product->compare_at_price, 2) }}</span>
             @endif
         </div>
