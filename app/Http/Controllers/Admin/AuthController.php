@@ -14,9 +14,10 @@ class AuthController extends Controller
             if (Auth::user()->type === 'super_admin') {
                 return redirect()->route('super_admin.dashboard');
             }
-            if (Auth::user()->tenant_id) {
+            if (Auth::user()->type === 'admin' && Auth::user()->tenant_id) {
                 return redirect()->route('admin.dashboard', ['tenant' => Auth::user()->tenant_id]);
             }
+            Auth::logout();
         }
         return view('admin.auth.common-login');
     }
@@ -37,7 +38,7 @@ class AuthController extends Controller
                 return redirect()->route('super_admin.dashboard');
             }
 
-            if ($user->tenant_id) {
+            if ($user->type === 'admin' && $user->tenant_id) {
                 // Set the session active tenant ID
                 session(['active_tenant_id' => $user->tenant_id]);
                 return redirect()->route('admin.dashboard', ['tenant' => $user->tenant_id]);
@@ -46,7 +47,7 @@ class AuthController extends Controller
             // Fallback if user doesn't have a tenant or super_admin type
             Auth::logout();
             return back()->withErrors([
-                'email' => 'This account is not associated with any store.',
+                'email' => 'This account does not have admin privileges or is not associated with any store.',
             ])->onlyInput('email');
         }
 
@@ -59,7 +60,10 @@ class AuthController extends Controller
     {
         $tenant = $tenant ?? session('active_tenant_id') ?? 1;
         if (Auth::check()) {
-            return redirect()->route('admin.dashboard', ['tenant' => $tenant]);
+            if (Auth::user()->type === 'super_admin' || Auth::user()->type === 'admin') {
+                return redirect()->route('admin.dashboard', ['tenant' => $tenant]);
+            }
+            Auth::logout();
         }
         return view('admin.auth.login');
     }
@@ -77,6 +81,13 @@ class AuthController extends Controller
 
             if (Auth::user()->type === 'super_admin') {
                 return redirect()->route('super_admin.dashboard');
+            }
+            
+            if (Auth::user()->type !== 'admin') {
+                Auth::logout();
+                return back()->withErrors([
+                    'email' => 'This account does not have access to this store.',
+                ])->onlyInput('email');
             }
 
             // Enforce strict tenant boundary checks

@@ -428,6 +428,15 @@
     $(document).ready(function() {
         $('#main-checkout-form').on('submit', function(e) {
             e.preventDefault();
+
+            @if(!auth()->check())
+                if (typeof openCustomerAuthModal === 'function') {
+                    openCustomerAuthModal();
+                } else {
+                    alert('Please login to place an order.');
+                }
+                return false;
+            @endif
             
             const $btn = $('.btn-complete-order');
             const originalHtml = $btn.html();

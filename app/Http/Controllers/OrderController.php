@@ -253,12 +253,12 @@ class OrderController extends Controller
                 if(!$hasAddress) {
                     \App\Models\UserAddress::create([
                         'user_id' => Auth::id(),
-                        'phone' => $request->phone,
-                        'address_line1' => $request->address,
-                        'address_line2' => $request->apartment,
-                        'city' => $request->city,
-                        'state' => $request->state,
-                        'zip' => $request->pincode,
+                        'phone' => $request->phone ?? '',
+                        'address_line1' => $request->address ?? '',
+                        'address_line2' => $request->apartment ?? null,
+                        'city' => $request->city ?? '',
+                        'state' => $request->state ?? '',
+                        'zip' => $request->pincode ?? '',
                         'country' => 'India',
                         'is_default' => true,
                     ]);
