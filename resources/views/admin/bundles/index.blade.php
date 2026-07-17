@@ -6,7 +6,7 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h1 class="h3 mb-0 text-dark">Bundles</h1>
     <div class="d-flex gap-2">
-        <a href="{{ route('admin.bundles.pool.create') }}" class="btn btn-outline-info shadow-sm">
+        <a href="javascript:void(0)" class="btn btn-outline-info shadow-sm disabled" style="pointer-events: none; opacity: 0.5;" title="Pool is disabled">
             <i class="fas fa-swimming-pool me-1"></i> Pool
         </a>
         <button type="button" class="btn btn-outline-primary shadow-sm" data-bs-toggle="modal" data-bs-target="#packOfModal">
@@ -85,7 +85,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {{ request('type') == 'pool' ? 'active fw-bold text-dark border-bottom-0' : 'text-muted' }}" href="{{ route('admin.bundles', array_merge(request()->query(), ['type' => 'pool', 'page' => 1])) }}">
+                <a class="nav-link disabled" href="javascript:void(0)" style="pointer-events: none; opacity: 0.5;" title="Pool is disabled">
                     Pool
                 </a>
             </li>
