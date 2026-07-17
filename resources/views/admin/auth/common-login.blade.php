@@ -6,259 +6,370 @@
     <title>Slot Store Admin - Log In</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <style>
-        :root{
-            --paper:#FDFCFA;
-            --paper-dim:#F7F5F0;
-            --ink:#1C231B;
-            --ink-soft:#4B5245;
-            --ink-faint:#7C8177;
-            --green:#3F6C4E;
-            --green-deep:#2A4A35;
-            --green-pale:#E7EFE7;
-            --yellow:#E8B93F;
-            --yellow-deep:#8A6414;
-            --line:#DDD8CB;
-            --card:#FFFFFF;
-            --radius:14px;
-            --font-display:'Archivo', sans-serif;
-            --font-body:'Inter', sans-serif;
-            --font-mono:'IBM Plex Mono', monospace;
-        }
-        *{box-sizing:border-box;margin:0;padding:0;}
-        html{scroll-behavior:smooth;}
-        body{
-            background:var(--paper);
-            color:var(--ink);
-            font-family:var(--font-body);
-            font-size:16px;
-            line-height:1.6;
-            -webkit-font-smoothing:antialiased;
-            min-height:100vh;
-            display:flex;
-            flex-direction:column;
-        }
-        a{color:inherit;text-decoration:none;}
-        .wrap{max-width:1180px;margin:0 auto;padding:0 32px;}
-
-        /* NAV — exact copy from landing */
-        header{
-            position:sticky;top:0;z-index:50;
-            background:rgba(253,252,250,0.88);
-            backdrop-filter:blur(10px);
-            border-bottom:1px solid var(--line);
-        }
-        nav{
-            max-width:1180px;margin:0 auto;padding:0 32px;
-            height:76px;display:flex;align-items:center;justify-content:space-between;
-        }
-        .logo{
-            font-family:var(--font-display);font-weight:800;font-size:21px;
-            display:flex;align-items:center;gap:8px;
-        }
-        .logo-mark{
-            width:22px;height:22px;background:var(--green);
-            clip-path:polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-        }
-        .nav-links{display:flex;gap:36px;font-size:14.5px;color:var(--ink-soft);}
-        .nav-links a:hover{color:var(--ink);}
-        .nav-cta{display:flex;align-items:center;gap:20px;}
-        .btn{
-            font-family:var(--font-body);font-weight:600;font-size:14.5px;
-            padding:11px 22px;border-radius:9px;
-            display:inline-block;border:1px solid transparent;
-            cursor:pointer;transition:transform .15s ease, background .15s ease;
-        }
-        .btn:hover{transform:translateY(-1px);}
-        .btn-primary{background:var(--ink);color:var(--paper);}
-        .btn-primary:hover{background:var(--green-deep);}
-        .btn-ghost{color:var(--ink);}
-
-        /* MAIN CONTENT */
-        .main-content{
-            flex:1;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            padding:60px 20px;
+        :root {
+            --primary: #2E7D32;
+            --primary-dark: #1B5E20;
+            --secondary: #43A047;
+            --accent: #FFB300;
+            --bg: #F8FAF7;
+            --dark: #1F2937;
+            --white: #FFFFFF;
+            --ink: #16241A;
+            --muted: #5B6B60;
+            --line: rgba(31,41,55,0.08);
+            --radius-sm: 10px;
+            --radius-md: 16px;
+            --radius-lg: 24px;
+            --shadow-sm: 0 2px 8px rgba(31,41,55,0.06);
+            --shadow-md: 0 12px 32px rgba(31,41,55,0.10);
+            --shadow-lg: 0 24px 64px rgba(31,41,55,0.14);
+            --ease: cubic-bezier(.16,.84,.44,1);
         }
 
-        /* LOGIN CARD */
-        .login-card{
-            background:var(--card);
-            border:1px solid var(--line);
-            border-radius:var(--radius);
-            padding:40px;
-            width:100%;
-            max-width:420px;
-        }
-        .login-header{text-align:center;margin-bottom:28px;}
-        .login-header h1{
-            font-family:var(--font-display);
-            font-size:24px;
-            font-weight:700;
-            letter-spacing:-0.02em;
-            margin-bottom:8px;
-        }
-        .login-header p{
-            font-size:14px;
-            color:var(--ink-faint);
-        }
-        .form-group{margin-bottom:18px;display:flex;flex-direction:column;}
-        .form-group label{
-            font-size:13px;
-            font-weight:600;
-            color:var(--ink);
-            margin-bottom:6px;
-        }
-        .form-group input{
-            font-family:var(--font-body);
-            font-size:14px;
-            padding:11px 14px;
-            border:1px solid var(--line);
-            border-radius:9px;
-            background:var(--paper);
-            color:var(--ink);
-            outline:none;
-            transition:border-color .15s ease, box-shadow .15s ease;
-        }
-        .form-group input:focus{
-            border-color:var(--green);
-            box-shadow:0 0 0 3px var(--green-pale);
-        }
-        .form-group input::placeholder{color:var(--ink-faint);}
-        .form-row{
-            display:flex;
-            justify-content:space-between;
-            align-items:center;
-            margin-bottom:20px;
-        }
-        .form-row .remember{
-            display:flex;align-items:center;gap:8px;
-            font-size:13px;color:var(--ink-soft);cursor:pointer;
-        }
-        .form-row .remember input{
-            accent-color:var(--green);cursor:pointer;
-        }
-        .form-row a{
-            font-size:12px;
-            color:var(--ink-faint);
-            transition:color .15s;
-        }
-        .form-row a:hover{color:var(--green);}
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
 
-        .btn-login{
-            width:100%;
-            font-family:var(--font-body);
-            font-weight:600;
-            font-size:14.5px;
-            padding:12px;
-            border-radius:9px;
-            border:none;
-            background:var(--ink);
-            color:var(--paper);
-            cursor:pointer;
-            transition:background .15s ease, transform .15s ease;
-        }
-        .btn-login:hover{background:var(--green-deep);transform:translateY(-1px);}
-
-        .divider{
-            display:flex;align-items:center;gap:12px;
-            margin:20px 0;
-            color:var(--ink-faint);font-size:13px;
-        }
-        .divider::before,.divider::after{
-            content:"";flex:1;height:1px;background:var(--line);
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            color: var(--ink);
+            background: var(--bg);
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
-        .btn-google{
-            width:100%;
-            display:flex;align-items:center;justify-content:center;gap:10px;
-            font-family:var(--font-body);font-size:14px;font-weight:500;
-            padding:11px;
-            border-radius:9px;
-            border:1px solid var(--line);
-            background:var(--card);
-            color:var(--ink);
-            cursor:pointer;
-            transition:border-color .15s, transform .15s;
-        }
-        .btn-google:hover{border-color:var(--ink);transform:translateY(-1px);}
-
-        .alert-error{
-            background:rgba(220,38,38,0.06);
-            border-left:3px solid #dc2626;
-            border-radius:6px;
-            padding:10px 14px;
-            margin-bottom:18px;
-            font-size:13px;
-            color:#dc2626;
-        }
-        .alert-error ul{list-style:none;padding:0;margin:0;}
-
-        /* FOOTER — exact copy from landing */
-        footer{border-top:1px solid var(--line);padding:56px 0 40px;}
-        .footer-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:32px;margin-bottom:48px;}
-        .footer-col h5{font-family:var(--font-mono);font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-faint);margin-bottom:16px;font-weight:500;}
-        .footer-col a{display:block;font-size:14px;color:var(--ink-soft);margin-bottom:10px;}
-        .footer-col a:hover{color:var(--ink);}
-        .footer-bottom{
-            display:flex;justify-content:space-between;align-items:center;
-            padding-top:28px;border-top:1px solid var(--line);
-            font-size:13px;color:var(--ink-faint);
+        h1, h2, h3, h4 {
+            font-family: 'Poppins', sans-serif;
+            color: var(--dark);
+            line-height: 1.15;
+            letter-spacing: -0.02em;
         }
 
-        .nav-icon { 
-          display: none; 
+        p { color: var(--muted); line-height: 1.7; }
+        a { color: inherit; text-decoration: none; }
+
+        /* ---------- Buttons ---------- */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            border-radius: 999px;
+            border: 1px solid transparent;
+            transition: transform .25s var(--ease), box-shadow .25s var(--ease), background .25s var(--ease), color .25s var(--ease);
+            white-space: nowrap;
+            cursor: pointer;
         }
 
-        @media (max-width:920px){
-            .nav-links{display:none;}
-            .footer-grid{grid-template-columns:1fr 1fr;}
-            .nav-text { display: none; }
-            .nav-icon { display: inline-block !important; }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--white);
+            box-shadow: 0 8px 24px rgba(46,125,50,0.28);
         }
-        @media (max-width:480px){
-            .login-card{padding:28px 22px;}
-            .footer-grid{grid-template-columns:1fr;}
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 14px 32px rgba(46,125,50,0.36); }
+
+        .btn-ghost { color: var(--dark); font-weight: 500; }
+        .btn-ghost:hover { color: var(--primary); }
+
+        /* ---------- Header ---------- */
+        .site-header {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 1000;
+            padding: 12px 8vw;
+            background: rgba(248,250,247,0.72);
+            backdrop-filter: blur(16px) saturate(160%);
+            -webkit-backdrop-filter: blur(16px) saturate(160%);
+            box-shadow: 0 4px 24px rgba(31,41,55,0.06);
+            border-bottom: 1px solid var(--line);
+        }
+        .header-inner {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+        }
+        .logo { display: flex; align-items: center; gap: 10px; }
+        .logo-text { font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 1.25rem; color: var(--dark); }
+        .logo-accent { color: var(--primary); }
+
+        .main-nav { display: flex; gap: 32px; }
+        .main-nav a {
+            font-size: 0.92rem;
+            font-weight: 500;
+            color: var(--dark);
+            position: relative;
+            padding: 4px 0;
+        }
+        .main-nav a::after {
+            content: '';
+            position: absolute; left: 0; bottom: -2px;
+            width: 0; height: 2px;
+            background: var(--primary);
+            transition: width .25s var(--ease);
+        }
+        .main-nav a:hover::after { width: 100%; }
+
+        .header-actions { display: flex; align-items: center; gap: 14px; }
+
+        @media (max-width: 980px) {
+            .main-nav { display: none; }
+        }
+
+        /* ---------- Main Section ---------- */
+        .login-section {
+            flex: 1;
+            padding-top: 140px;
+            padding-bottom: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(ellipse at top right, rgba(67,160,71,0.08), transparent 60%), var(--bg);
+            position: relative;
+        }
+
+        .login-card {
+            background: var(--white);
+            border: 1px solid var(--line);
+            border-radius: var(--radius-lg);
+            padding: 46px 40px;
+            width: 100%;
+            max-width: 460px;
+            box-shadow: var(--shadow-lg);
+            z-index: 10;
+            transition: transform 0.3s var(--ease);
+        }
+        .login-card:hover { transform: translateY(-4px); }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        .login-header h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--dark);
+        }
+        .login-header p {
+            font-size: 0.9rem;
+            color: var(--muted);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        .form-group label {
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .form-group input {
+            background: var(--bg);
+            border: 1px solid var(--line);
+            border-radius: var(--radius-sm);
+            padding: 12px 16px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            color: var(--dark);
+            width: 100%;
+            outline: none;
+            transition: border-color 0.25s var(--ease), box-shadow 0.25s var(--ease);
+        }
+        .form-group input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(46,125,50,0.15);
+        }
+
+        .form-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            font-size: 0.88rem;
+        }
+        .remember {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--muted);
+            cursor: pointer;
+            font-weight: 500;
+        }
+        .remember input {
+            accent-color: var(--primary);
+            cursor: pointer;
+            width: 16px;
+            height: 16px;
+        }
+        .forgot-link {
+            color: var(--primary);
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+        .forgot-link:hover {
+            color: var(--primary-dark);
+            text-decoration: underline;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 14px;
+            border-radius: 999px;
+            border: none;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--white);
+            font-family: inherit;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(46,125,50,0.2);
+            transition: transform 0.2s var(--ease), box-shadow 0.2s var(--ease);
+        }
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px rgba(46,125,50,0.3);
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 24px 0;
+            color: var(--muted);
+            font-size: 0.82rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .divider::before, .divider::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: var(--line);
+        }
+
+        .btn-google {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-family: inherit;
+            font-size: 0.92rem;
+            font-weight: 600;
+            padding: 12px;
+            border-radius: 999px;
+            border: 1px solid var(--line);
+            background: var(--white);
+            color: var(--dark);
+            cursor: pointer;
+            transition: border-color 0.2s, background-color 0.2s, transform 0.2s;
+        }
+        .btn-google:hover {
+            border-color: var(--primary);
+            background-color: var(--bg);
+            transform: translateY(-1px);
+        }
+
+        .alert-error {
+            background: rgba(220,38,38,0.06);
+            border-left: 4px solid #dc2626;
+            border-radius: var(--radius-sm);
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            font-size: 0.88rem;
+            color: #dc2626;
+        }
+        .alert-error ul { list-style: none; }
+
+        /* ---------- Footer ---------- */
+        .site-footer {
+            background: var(--dark);
+            color: rgba(255,255,255,0.7);
+            padding: 60px 8vw 30px;
+        }
+        .footer-top {
+            max-width: 1300px; margin: 0 auto 40px;
+            display: grid;
+            grid-template-columns: 2fr repeat(3, 1fr);
+            gap: 32px;
+        }
+        @media (max-width: 768px) {
+            .footer-top { grid-template-columns: 1fr; gap: 24px; text-align: center; }
+            .footer-brand { display: flex; flex-direction: column; align-items: center; }
+        }
+        .footer-brand p { color: rgba(255,255,255,0.55); font-size: 0.88rem; margin-top: 14px; max-width: 320px; }
+        .footer-col h4 { color: var(--white); font-size: 0.9rem; margin-bottom: 16px; font-weight: 600; }
+        .footer-col { display: flex; flex-direction: column; gap: 10px; }
+        .footer-col a { font-size: 0.88rem; color: rgba(255,255,255,0.55); transition: color .25s var(--ease); }
+        .footer-col a:hover { color: var(--accent); }
+        .footer-bottom {
+            max-width: 1300px; margin: 0 auto;
+            display: flex; justify-content: space-between; align-items: center;
+            padding-top: 26px;
+            border-top: 1px solid rgba(255,255,255,0.08);
+            font-size: 0.82rem;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        @media (max-width: 768px) {
+            .footer-bottom { justify-content: center; }
         }
     </style>
 </head>
 <body>
 
-    <!-- HEADER — same as landing page -->
-    <header>
-      <nav>
-        <a href="{{ route('landing') }}" class="logo"><span class="logo-mark"></span>Slot Store</a>
-        <div class="nav-links">
-          <a href="{{ route('landing') }}#how">How it works</a>
-          <a href="{{ route('landing') }}#templates">Templates</a>
-          <a href="{{ route('landing') }}#pricing">Pricing</a>
-          <a href="{{ route('landing') }}#faq">FAQ</a>
-        </div>
-        <div class="nav-cta">
-          <a href="{{ route('admin.common.login') }}" class="btn btn-ghost" style="display: inline-flex; align-items: center; justify-content: center;">
-            <span class="nav-text">Log in</span>
-            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 20px; height: 20px;">
-              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-              <circle cx="12" cy="7" r="4"></circle>
+    <!-- HEADER -->
+    <header class="site-header" id="siteHeader">
+      <div class="header-inner">
+        <a href="{{ route('landing') }}" class="logo" aria-label="GoSlot Store home">
+          <span class="logo-mark" aria-hidden="true">
+            <svg viewBox="0 0 32 32" width="30" height="30">
+              <rect x="3" y="10" width="26" height="18" rx="4" fill="var(--primary)"/>
+              <rect x="3" y="10" width="26" height="6" rx="3" fill="var(--accent)"/>
+              <path d="M9 10 L11 4 H21 L23 10" stroke="var(--primary)" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
-          </a>
-          <a href="{{ route('landing') }}?get_started=1" class="btn btn-primary">
-            <span class="nav-text">Start free</span>
-            <span class="nav-icon">Start</span>
-          </a>
+          </span>
+          <span class="logo-text">GoSlot<span class="logo-accent">Store</span></span>
+        </a>
+
+        <nav class="main-nav" id="mainNav" aria-label="Primary">
+          <a href="{{ route('landing') }}#home">Home</a>
+          <a href="{{ route('landing') }}#features">Features</a>
+          <a href="{{ route('landing') }}#pricing">Pricing</a>
+          <a href="{{ route('landing') }}#themes">Themes</a>
+          <a href="{{ route('landing') }}#contact">Contact</a>
+        </nav>
+
+        <div class="header-actions">
+          <a href="{{ route('landing') }}?get_started=1" class="btn btn-primary">Get Started</a>
         </div>
-      </nav>
+      </div>
     </header>
 
     <!-- MAIN -->
-    <div class="main-content">
+    <section class="login-section">
         <div class="login-card">
             <div class="login-header">
-                <h1>Log in to Slot Store Admin</h1>
-                <p>Enter your email and password to access your store's dashboard.</p>
+                <h1>Log in to GoSlot Store</h1>
+                <p>Access your centralized merchant dashboard</p>
             </div>
 
             <form method="POST" action="{{ route('admin.common.login.submit') }}">
@@ -275,7 +386,7 @@
                 @endif
 
                 <div class="form-group">
-                    <label for="email">Email</label>
+                    <label for="email">Email address</label>
                     <input type="email" id="email" name="email" value="{{ old('email') }}" required autofocus placeholder="admin@example.com">
                 </div>
 
@@ -288,10 +399,10 @@
                     <label class="remember">
                         <input type="checkbox" name="remember"> Keep me logged in
                     </label>
-                    <a href="{{ route('password.request') }}">Forgot password?</a>
+                    <a href="{{ route('password.request') }}" class="forgot-link">Forgot password?</a>
                 </div>
 
-                <button type="submit" class="btn-login">Log in</button>
+                <button type="submit" class="btn-login">Log in to dashboard</button>
 
                 <div class="divider">or</div>
 
@@ -306,38 +417,46 @@
                 </a>
             </form>
         </div>
-    </div>
+    </section>
 
-    <!-- FOOTER — same as landing page -->
-    <footer>
-      <div class="wrap">
-        <div class="footer-grid">
-          <div class="footer-col">
-            <div class="logo" style="margin-bottom:14px;"><span class="logo-mark"></span>Slot Store</div>
-            <p style="font-size:13.5px;color:var(--ink-faint);max-width:240px;">The storefront builder for independent grocers, made for real inventory and real delivery routes.</p>
+    <!-- FOOTER -->
+    <footer class="site-footer">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="logo">
+            <span class="logo-mark">
+              <svg viewBox="0 0 32 32" width="24" height="24">
+                <rect x="3" y="10" width="26" height="18" rx="4" fill="var(--primary)"/>
+                <rect x="3" y="10" width="26" height="6" rx="3" fill="var(--accent)"/>
+                <path d="M9 10 L11 4 H21 L23 10" stroke="var(--primary)" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            <span class="logo-text" style="color: #fff;">GoSlot<span class="logo-accent">Store</span></span>
           </div>
-          <div class="footer-col">
-            <h5>Product</h5>
-            <a href="{{ route('landing') }}#how">How it works</a>
-            <a href="{{ route('landing') }}#templates">Templates</a>
-            <a href="{{ route('landing') }}#pricing">Pricing</a>
-          </div>
-          <div class="footer-col">
-            <h5>Company</h5>
-            <a href="#">About</a>
-            <a href="#">Contact</a>
-            <a href="#">Careers</a>
-          </div>
-          <div class="footer-col">
-            <h5>Legal</h5>
-            <a href="#">Terms</a>
-            <a href="#">Privacy</a>
-          </div>
+          <p>The SaaS platform built for independent grocers, running advanced inventory systems and real-time delivery routes.</p>
         </div>
-        <div class="footer-bottom">
-          <span>© 2026 Slot Store. Made for grocers.</span>
-          <span>Kayamkulam · Remote</span>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="{{ route('landing') }}#features">Features</a>
+          <a href="{{ route('landing') }}#themes">Themes</a>
+          <a href="{{ route('landing') }}#pricing">Pricing</a>
         </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="#">About us</a>
+          <a href="#">Careers</a>
+          <a href="#">Press Kit</a>
+        </div>
+        <div class="footer-col">
+          <h4>Legal</h4>
+          <a href="#">Terms of Use</a>
+          <a href="#">Privacy Policy</a>
+          <a href="#">SLA Agreement</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 GoSlot Store. All rights reserved.</span>
+        <span>Made for grocers worldwide.</span>
       </div>
     </footer>
 

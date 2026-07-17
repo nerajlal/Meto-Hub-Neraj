@@ -4,30 +4,56 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Slot Store — Launch your grocery store</title>
+  <title>GoSlot Store — The Platform Behind Grocery Stores That Sell Online</title>
+  <meta name="description"
+    content="GoSlot Store is the SaaS platform grocery businesses use to build, price, promote, and run their own online stores — pricing engine, promotions, themes, analytics, and payments in one place.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap"
     rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <style>
+    /* =========================================================
+   GoSlot Store — Premium SaaS Homepage
+   ========================================================= */
+
     :root {
-      --paper: #FDFCFA;
-      --paper-dim: #F7F5F0;
-      --ink: #1C231B;
-      --ink-soft: #4B5245;
-      --ink-faint: #7C8177;
-      --green: #3F6C4E;
-      --green-deep: #2A4A35;
-      --green-pale: #E7EFE7;
-      --yellow: #E8B93F;
-      --yellow-deep: #8A6414;
-      --line: #DDD8CB;
-      --card: #FFFFFF;
-      --radius: 14px;
-      --font-display: 'Archivo', sans-serif;
-      --font-body: 'Inter', sans-serif;
-      --font-mono: 'IBM Plex Mono', monospace;
+      --primary: #2E7D32;
+      --primary-dark: #1B5E20;
+      --secondary: #43A047;
+      --accent: #FFB300;
+      --bg: #F8FAF7;
+      --dark: #1F2937;
+      --white: #FFFFFF;
+
+      --ink: #16241A;
+      --muted: #5B6B60;
+      --line: rgba(31, 41, 55, 0.08);
+
+      --radius-sm: 10px;
+      --radius-md: 16px;
+      --radius-lg: 24px;
+      --radius-xl: 32px;
+
+      --shadow-sm: 0 2px 8px rgba(31, 41, 55, 0.06);
+      --shadow-md: 0 12px 32px rgba(31, 41, 55, 0.10);
+      --shadow-lg: 0 24px 64px rgba(31, 41, 55, 0.14);
+
+      --container: 1200px;
+      --ease: cubic-bezier(.16, .84, .44, 1);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
+      }
     }
 
     * {
@@ -40,12 +66,28 @@
 
     body {
       margin: 0;
-      background: var(--paper);
+      font-family: 'Inter', sans-serif;
       color: var(--ink);
-      font-family: var(--font-body);
-      font-size: 16px;
-      line-height: 1.6;
+      background: var(--bg);
       -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4 {
+      font-family: 'Poppins', sans-serif;
+      color: var(--dark);
+      margin: 0;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+    }
+
+    p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.7;
     }
 
     a {
@@ -53,1221 +95,2761 @@
       text-decoration: none;
     }
 
-    img {
-      max-width: 100%;
-      display: block;
-    }
-
-    .wrap {
-      max-width: 1180px;
-      margin: 0 auto;
-      padding: 0 32px;
-    }
-
-    section {
-      padding: 40px 0;
-    }
-
-    h1,
-    h2,
-    h3 {
-      font-family: var(--font-display);
+    ul {
+      list-style: none;
       margin: 0;
-      letter-spacing: -0.02em;
+      padding: 0;
+    }
+
+    img,
+    svg {
+      display: block;
+      max-width: 100%;
+    }
+
+    button {
+      font-family: inherit;
+      cursor: pointer;
+    }
+
+    :focus-visible {
+      outline: 3px solid var(--accent);
+      outline-offset: 2px;
+      border-radius: 4px;
     }
 
     .eyebrow {
-      font-family: var(--font-mono);
-      font-size: 12.5px;
+      display: inline-block;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 600;
       letter-spacing: 0.08em;
       text-transform: uppercase;
-      color: var(--green-deep);
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
+      color: var(--primary);
+      background: rgba(46, 125, 50, 0.08);
+      padding: 6px 14px;
+      border-radius: 999px;
       margin-bottom: 18px;
     }
 
-    .eyebrow::before {
-      content: "";
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: var(--yellow);
-      display: inline-block;
-    }
-
-    /* Shelf-line divider: a hairline with barcode-style ticks */
-    .shelf-line {
-      display: flex;
-      align-items: center;
-      gap: 3px;
-      height: 14px;
-      margin: 0;
-    }
-
-    .shelf-line span {
-      display: block;
-      width: 1.5px;
-      height: 100%;
-      background: var(--line);
-    }
-
-    .shelf-line span:nth-child(3n) {
-      height: 60%;
-    }
-
-    .shelf-line span:nth-child(5n) {
-      height: 40%;
-    }
-
-    /* Price tag signature shape */
-    .price-tag {
+    section {
       position: relative;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: var(--yellow);
-      color: var(--yellow-deep);
-      font-family: var(--font-mono);
-      font-size: 13px;
-      font-weight: 500;
-      padding: 6px 14px 6px 20px;
-      clip-path: polygon(14px 0, 100% 0, 100% 100%, 14px 100%, 0 50%);
+      padding: 110px 8vw;
     }
 
-    .price-tag::before {
-      content: "";
-      position: absolute;
-      left: 6px;
-      top: 50%;
-      width: 4px;
-      height: 4px;
-      border-radius: 50%;
-      background: var(--paper);
-      transform: translateY(-50%);
+    @media (max-width: 768px) {
+      section {
+        padding: 72px 6vw;
+      }
     }
 
-    /* NAV */
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 50;
-      background: rgba(253, 252, 250, 0.88);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid var(--line);
-    }
-
-    nav {
-      max-width: 1180px;
-      margin: 0 auto;
-      padding: 0 32px;
-      height: 76px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .logo {
-      font-family: var(--font-display);
-      font-weight: 800;
-      font-size: 21px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .logo-mark {
-      width: 22px;
-      height: 22px;
-      background: var(--green);
-      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 36px;
-      font-size: 14.5px;
-      color: var(--ink-soft);
-    }
-
-    .nav-links a:hover {
-      color: var(--ink);
-    }
-
-    .nav-cta {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-    }
-
-    .btn {
-      font-family: var(--font-body);
-      font-weight: 600;
-      font-size: 14.5px;
-      padding: 11px 22px;
-      border-radius: 9px;
-      display: inline-block;
-      border: 1px solid transparent;
-      cursor: pointer;
-      transition: transform .15s ease, background .15s ease;
-    }
-
-    .btn:hover {
-      transform: translateY(-1px);
-    }
-
-    .btn-primary {
-      background: var(--ink);
-      color: var(--paper);
-    }
-
-    .btn-primary:hover {
-      background: var(--green-deep);
-    }
-
-    .btn-ghost {
-      color: var(--ink);
-    }
-
-    .btn-outline {
-      border-color: var(--line);
-      color: var(--ink);
-    }
-
-    .btn-outline:hover {
-      border-color: var(--ink);
-    }
-
-    /* HERO */
-    .hero {
-      padding: 88px 0 60px;
-    }
-
-    .hero-grid {
-      display: grid;
-      grid-template-columns: 1.05fr 0.95fr;
-      gap: 64px;
-      align-items: center;
-    }
-
-    .hero h1 {
-      font-size: 56px;
-      line-height: 1.04;
-      font-weight: 700;
-      margin-bottom: 22px;
-    }
-
-    .hero h1 em {
-      font-style: normal;
-      color: var(--green);
-      position: relative;
-    }
-
-    .hero p.lede {
-      font-size: 18px;
-      color: var(--ink-soft);
-      max-width: 460px;
-      margin-bottom: 32px;
-    }
-
-    .hero-actions {
-      display: flex;
-      gap: 14px;
-      align-items: center;
-      margin-bottom: 28px;
-    }
-
-    .hero-note {
-      font-size: 13.5px;
-      color: var(--ink-faint);
-      font-family: var(--font-mono);
-    }
-
-    /* Hero mockup: a little grocery site preview with browser chrome + price tags */
-    .mockup {
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      overflow: hidden;
-      position: relative;
-    }
-
-    .mockup-bar {
-      height: 38px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      padding: 0 14px;
-      border-bottom: 1px solid var(--line);
-      background: var(--paper-dim);
-    }
-
-    .mockup-bar span {
-      width: 9px;
-      height: 9px;
-      border-radius: 50%;
-      background: var(--line);
-    }
-
-    .mockup-body {
-      padding: 22px;
-      position: relative;
-    }
-
-    .mockup-store-name {
-      font-family: var(--font-display);
-      font-weight: 700;
-      font-size: 19px;
-      margin-bottom: 4px;
-    }
-
-    .mockup-store-sub {
-      font-size: 12.5px;
-      color: var(--ink-faint);
-      margin-bottom: 18px;
-    }
-
-    .mockup-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 12px;
-    }
-
-    .produce-card {
-      background: var(--paper-dim);
-      border-radius: 10px;
-      padding: 14px 12px;
-      position: relative;
-      border: 1px solid var(--line);
-    }
-
-    .produce-swatch {
-      width: 100%;
-      height: 56px;
-      border-radius: 7px;
-      margin-bottom: 10px;
-    }
-
-    .produce-name {
-      font-size: 13px;
-      font-weight: 600;
-      margin-bottom: 2px;
-    }
-
-    .produce-tag {
-      font-family: var(--font-mono);
-      font-size: 11.5px;
-      color: var(--green-deep);
-    }
-
-    .floating-tag {
-      position: absolute;
-      top: -14px;
-      right: 18px;
-      transform: rotate(4deg);
-      z-index: 5;
-    }
-
-    /* HOW IT WORKS */
-    .steps {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 0;
-      border-top: 1px solid var(--line);
-      border-bottom: 1px solid var(--line);
-    }
-
-    .step {
-      padding: 40px 36px;
-      border-right: 1px solid var(--line);
-    }
-
-    .step:last-child {
-      border-right: none;
-    }
-
-    .step-num {
-      font-family: var(--font-mono);
-      font-size: 13px;
-      color: var(--green);
-      margin-bottom: 16px;
-      display: block;
-    }
-
-    .step h3 {
-      font-size: 20px;
-      margin-bottom: 10px;
-      font-weight: 600;
-    }
-
-    .step p {
-      color: var(--ink-soft);
-      font-size: 14.5px;
-      margin: 0;
-    }
-
-    /* SECTION HEADS */
     .section-head {
-      max-width: 560px;
-      margin-bottom: 56px;
+      max-width: 640px;
+      margin: 0 auto 60px;
+      text-align: center;
     }
 
     .section-head h2 {
-      font-size: 36px;
-      font-weight: 700;
-      line-height: 1.15;
-      margin-bottom: 14px;
+      font-size: clamp(1.9rem, 3.2vw, 2.6rem);
+      margin-bottom: 16px;
     }
 
     .section-head p {
-      color: var(--ink-soft);
-      font-size: 16.5px;
-      margin: 0;
+      font-size: 1.05rem;
     }
 
-    /* FEATURES */
-    .feature-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1px;
-      background: var(--line);
-      border: 1px solid var(--line);
-      border-radius: 16px;
+    .section-head.light .eyebrow {
+      background: rgba(255, 255, 255, 0.12);
+      color: var(--accent);
+    }
+
+    .section-head.light h2,
+    .section-head.light p {
+      color: var(--white);
+    }
+
+    .section-head.light p {
+      opacity: 0.75;
+    }
+
+    /* ---------- Buttons ---------- */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 24px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      transition: transform .25s var(--ease), box-shadow .25s var(--ease), background .25s var(--ease), color .25s var(--ease);
+      white-space: nowrap;
+      position: relative;
       overflow: hidden;
     }
 
-    .feature {
-      background: var(--card);
-      padding: 32px;
+    .btn-lg {
+      padding: 16px 32px;
+      font-size: 1.02rem;
     }
 
-    .feature-icon {
-      width: 38px;
-      height: 38px;
-      border-radius: 9px;
-      background: var(--green-pale);
+    .btn-sm {
+      padding: 8px 18px;
+      font-size: 0.85rem;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: var(--white);
+      box-shadow: 0 8px 24px rgba(46, 125, 50, 0.28);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 32px rgba(46, 125, 50, 0.36);
+    }
+
+    .btn-outline {
+      border-color: rgba(31, 41, 55, 0.16);
+      color: var(--dark);
+      background: rgba(255, 255, 255, 0.6);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      transform: translateY(-2px);
+    }
+
+    .btn-outline-light {
+      border-color: rgba(255, 255, 255, 0.4);
+      color: var(--white);
+    }
+
+    .btn-outline-light:hover {
+      background: rgba(255, 255, 255, 0.12);
+      transform: translateY(-2px);
+    }
+
+    .btn-ghost {
+      color: var(--dark);
+      font-weight: 500;
+    }
+
+    .btn-ghost:hover {
+      color: var(--primary);
+    }
+
+    .btn .ripple {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.5);
+      transform: scale(0);
+      animation: ripple .6s var(--ease);
+      pointer-events: none;
+    }
+
+    @keyframes ripple {
+      to {
+        transform: scale(3);
+        opacity: 0;
+      }
+    }
+
+    /* ---------- Header ---------- */
+    .site-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      padding: 18px 8vw;
+      transition: background .35s var(--ease), box-shadow .35s var(--ease), padding .35s var(--ease);
+    }
+
+    .site-header.scrolled {
+      background: rgba(248, 250, 247, 0.72);
+      backdrop-filter: blur(16px) saturate(160%);
+      -webkit-backdrop-filter: blur(16px) saturate(160%);
+      box-shadow: 0 4px 24px rgba(31, 41, 55, 0.06);
+      padding: 12px 8vw;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .header-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-text {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 1.25rem;
+      color: var(--dark);
+    }
+
+    .logo-accent {
+      color: var(--primary);
+    }
+
+    .main-nav {
+      display: flex;
+      gap: 32px;
+    }
+
+    .main-nav a {
+      font-size: 0.92rem;
+      font-weight: 500;
+      color: var(--dark);
+      position: relative;
+      padding: 4px 0;
+    }
+
+    .main-nav a::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -2px;
+      width: 0;
+      height: 2px;
+      background: var(--primary);
+      transition: width .25s var(--ease);
+    }
+
+    .main-nav a:hover::after {
+      width: 100%;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .nav-toggle {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      background: none;
+      border: none;
+      padding: 6px;
+    }
+
+    .nav-toggle span {
+      width: 24px;
+      height: 2px;
+      background: var(--dark);
+      border-radius: 2px;
+      transition: transform .3s var(--ease), opacity .3s var(--ease);
+    }
+
+    @media (max-width: 980px) {
+      .main-nav {
+        position: fixed;
+        top: 68px;
+        left: 0;
+        right: 0;
+        background: var(--white);
+        flex-direction: column;
+        padding: 20px 8vw;
+        gap: 18px;
+        box-shadow: var(--shadow-md);
+        transform: translateY(-130%);
+        opacity: 0;
+        transition: transform .35s var(--ease), opacity .3s var(--ease);
+      }
+
+      .main-nav.open {
+        transform: translateY(0);
+        opacity: 1;
+      }
+
+      .header-actions .btn-ghost {
+        display: none;
+      }
+
+      .nav-toggle {
+        display: flex;
+      }
+    }
+
+    /* ---------- Hero ---------- */
+    .hero {
+      padding-top: 160px;
+      padding-bottom: 100px;
+      background: radial-gradient(ellipse at top right, rgba(67, 160, 71, 0.10), transparent 60%), var(--bg);
+      overflow: hidden;
+    }
+
+    .hero-blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.35;
+      z-index: 0;
+      animation: blobFloat 14s ease-in-out infinite;
+    }
+
+    .blob-a {
+      width: 420px;
+      height: 420px;
+      background: var(--secondary);
+      top: -120px;
+      right: -80px;
+    }
+
+    .blob-b {
+      width: 320px;
+      height: 320px;
+      background: var(--accent);
+      bottom: -100px;
+      left: -60px;
+      animation-delay: -6s;
+    }
+
+    @keyframes blobFloat {
+
+      0%,
+      100% {
+        transform: translate(0, 0) scale(1);
+      }
+
+      50% {
+        transform: translate(30px, -30px) scale(1.08);
+      }
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 1300px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.05fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+
+    @media (max-width: 980px) {
+      .hero-inner {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+    }
+
+    .hero-copy h1 {
+      font-size: clamp(2.4rem, 4.6vw, 3.6rem);
+      margin: 0 0 22px;
+    }
+
+    .highlight {
+      color: var(--primary);
+      position: relative;
+      white-space: nowrap;
+    }
+
+    .hero-sub {
+      font-size: 1.12rem;
+      max-width: 520px;
+      margin-bottom: 34px;
+    }
+
+    @media (max-width: 980px) {
+      .hero-sub {
+        margin-left: auto;
+        margin-right: auto;
+      }
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 40px;
+    }
+
+    @media (max-width: 980px) {
+      .hero-cta {
+        justify-content: center;
+      }
+    }
+
+    .hero-proof {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    @media (max-width: 980px) {
+      .hero-proof {
+        justify-content: center;
+      }
+    }
+
+    .hero-proof p {
+      font-size: 0.9rem;
+    }
+
+    .hero-proof strong {
+      color: var(--dark);
+    }
+
+    .avatars {
+      display: flex;
+    }
+
+    .avatars span {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--secondary), var(--primary));
+      border: 2px solid var(--bg);
+      margin-left: -10px;
+    }
+
+    .avatars span:first-child {
+      margin-left: 0;
+    }
+
+    /* Hero dashboard mockup */
+    .hero-visual {
+      position: relative;
+      min-height: 420px;
+    }
+
+    .dash-card {
+      background: rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      padding: 26px;
+    }
+
+    .dash-main {
+      max-width: 460px;
+      margin: 0 auto;
+    }
+
+    .dash-topbar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .dash-dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .dash-dots span {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: rgba(31, 41, 55, 0.16);
+    }
+
+    .dash-title {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .dash-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .dash-tile {
+      background: var(--white);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      box-shadow: var(--shadow-sm);
+      transition: transform .3s var(--ease);
+    }
+
+    .dash-tile:hover {
+      transform: translateY(-3px);
+    }
+
+    .tile-label {
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    .tile-value {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 1.4rem;
+      color: var(--dark);
+    }
+
+    .tile-trend {
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .tile-trend.up {
+      color: var(--secondary);
+    }
+
+    .dash-chart {
+      background: var(--white);
+      border-radius: var(--radius-sm);
+      padding: 10px 4px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .dash-chart svg {
+      width: 100%;
+      height: 90px;
+    }
+
+    .float-card {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      border-radius: var(--radius-md);
+      padding: 12px 16px;
+      box-shadow: var(--shadow-md);
+      font-size: 0.82rem;
+      animation: floaty 5s ease-in-out infinite;
+    }
+
+    .float-card strong {
+      display: block;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.85rem;
+      color: var(--dark);
+    }
+
+    .float-card small {
+      color: var(--muted);
+    }
+
+    .float-icon {
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-bottom: 18px;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: rgba(46, 125, 50, 0.1);
+      color: var(--primary);
+      font-size: 0.95rem;
+      flex-shrink: 0;
     }
 
-    .feature-icon svg {
-      width: 19px;
-      height: 19px;
-      stroke: var(--green-deep);
+    .float-coupon {
+      top: -6%;
+      left: -8%;
+      animation-delay: 0s;
     }
 
-    .feature h3 {
-      font-size: 16.5px;
+    .float-order {
+      bottom: 10%;
+      right: -10%;
+      animation-delay: -1.6s;
+    }
+
+    .float-rule {
+      bottom: -8%;
+      left: 6%;
+      animation-delay: -3.2s;
+    }
+
+    @media (max-width: 980px) {
+      .float-card {
+        display: none;
+      }
+    }
+
+    @keyframes floaty {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+
+    .section-divider {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -1px;
+      height: 80px;
+      background: var(--white);
+      clip-path: ellipse(60% 100% at 50% 100%);
+    }
+
+    /* ---------- Fade-up ---------- */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(24px);
+      animation: fadeUp .8s var(--ease) forwards;
+    }
+
+    @keyframes fadeUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity .7s var(--ease), transform .7s var(--ease);
+    }
+
+    .reveal.in-view {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ---------- Trusted / marquee ---------- */
+    .trusted {
+      background: var(--white);
+      padding: 56px 8vw;
+      text-align: center;
+    }
+
+    .trusted-label {
+      font-size: 0.85rem;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+      margin-bottom: 26px;
+      text-transform: uppercase;
+    }
+
+    .marquee {
+      overflow: hidden;
+      mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+    }
+
+    .marquee-track {
+      display: flex;
+      gap: 64px;
+      width: max-content;
+      animation: marquee 24s linear infinite;
+    }
+
+    .marquee-track span {
+      font-family: 'Poppins', sans-serif;
       font-weight: 600;
-      margin-bottom: 8px;
+      font-size: 1.2rem;
+      color: rgba(31, 41, 55, 0.28);
+      white-space: nowrap;
     }
 
-    .feature p {
-      font-size: 14px;
-      color: var(--ink-soft);
-      margin: 0;
-      line-height: 1.55;
+    @keyframes marquee {
+      from {
+        transform: translateX(0);
+      }
+
+      to {
+        transform: translateX(-50%);
+      }
     }
 
-    /* TEMPLATES */
-    .template-grid {
+    /* ---------- Features ---------- */
+    .features {
+      background: var(--bg);
+    }
+
+    .feature-grid {
+      max-width: var(--container);
+      margin: 0 auto;
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       gap: 22px;
     }
 
-    .template-card {
+    @media (max-width: 1080px) {
+      .feature-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 560px) {
+      .feature-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .feature-card {
+      background: var(--white);
       border: 1px solid var(--line);
-      border-radius: 14px;
-      overflow: hidden;
-      background: var(--card);
-      transition: border-color .15s ease;
+      border-radius: var(--radius-md);
+      padding: 28px 24px;
+      transition: transform .3s var(--ease), box-shadow .3s var(--ease), border-color .3s var(--ease);
     }
 
-    .template-card:hover {
-      border-color: var(--ink-faint);
+    .feature-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-md);
+      border-color: rgba(46, 125, 50, 0.3);
     }
 
-    .template-preview {
-      height: 170px;
+    .f-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      margin-bottom: 16px;
+      border-radius: var(--radius-sm);
+      background: rgba(46, 125, 50, 0.09);
+      color: var(--primary);
+      font-size: 1.15rem;
+    }
+
+    .feature-card h3 {
+      font-size: 1.02rem;
+      margin-bottom: 8px;
+    }
+
+    .feature-card p {
+      font-size: 0.9rem;
+    }
+
+    /* ---------- Pricing engine ---------- */
+    .pricing-engine {
+      background: var(--white);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+      max-width: var(--container);
+      margin: 0 auto;
+    }
+
+    @media (max-width: 900px) {
+      .pricing-engine {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .engine-copy h2 {
+      font-size: clamp(1.8rem, 3vw, 2.4rem);
+      margin: 0 0 14px;
+    }
+
+    .engine-copy p {
+      margin-bottom: 24px;
+      max-width: 460px;
+    }
+
+    .engine-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .engine-list li {
+      font-weight: 600;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.95rem;
+      color: var(--dark);
+      padding-left: 26px;
       position: relative;
-      overflow: hidden;
     }
 
-    .template-info {
+    .engine-list li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      top: 0;
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    .rule-card {
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      padding: 10px;
+      box-shadow: var(--shadow-md);
+    }
+
+    .rule-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       padding: 16px 18px;
+      border-radius: var(--radius-sm);
+      transition: background .3s var(--ease);
+    }
+
+    .rule-row.active {
+      background: var(--white);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .rule-tag {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+      padding: 6px 14px;
+      border-radius: 999px;
+      color: var(--white);
+    }
+
+    .rule-tag.retail {
+      background: #6B7280;
+    }
+
+    .rule-tag.group {
+      background: var(--secondary);
+    }
+
+    .rule-tag.wholesale {
+      background: var(--primary);
+    }
+
+    .rule-tag.bulk {
+      background: var(--accent);
+      color: var(--dark);
+    }
+
+    .rule-tag.regional {
+      background: var(--primary-dark);
+    }
+
+    .rule-price {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      color: var(--dark);
+    }
+
+    /* ---------- Promotions ---------- */
+    .promotions {
+      background: var(--bg);
+    }
+
+    .promo-grid {
+      max-width: var(--container);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+
+    @media (max-width: 1080px) {
+      .promo-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 560px) {
+      .promo-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .promo-card {
+      background: linear-gradient(160deg, var(--white), #F1F7EF);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      padding: 26px;
+      text-align: center;
+      transition: transform .3s var(--ease), box-shadow .3s var(--ease);
+    }
+
+    .promo-card:hover {
+      transform: translateY(-6px) scale(1.02);
+      box-shadow: var(--shadow-md);
+    }
+
+    .p-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      margin: 0 auto 14px;
+      border-radius: 50%;
+      background: rgba(255, 179, 0, 0.14);
+      color: #B45309;
+      font-size: 1.15rem;
+    }
+
+    .promo-card h3 {
+      font-size: 1rem;
+      margin-bottom: 6px;
+    }
+
+    .promo-card p {
+      font-size: 0.86rem;
+    }
+
+    /* ---------- Product management ---------- */
+    .product-mgmt {
+      background: var(--white);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+      max-width: var(--container);
+      margin: 0 auto;
+    }
+
+    @media (max-width: 900px) {
+      .product-mgmt {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .pm-card {
+      background: var(--bg);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--line);
+      padding: 20px;
+      box-shadow: var(--shadow-md);
+    }
+
+    .pm-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      padding: 14px 10px;
+      border-bottom: 1px solid var(--line);
+      font-size: 0.92rem;
     }
 
-    .template-info h4 {
-      font-size: 14.5px;
+    .pm-row i {
+      width: 20px;
+      margin-right: 8px;
+      color: var(--primary);
+      text-align: center;
+    }
+
+    .pm-search i {
+      color: var(--muted);
+    }
+
+    .pm-row:last-of-type {
+      border-bottom: none;
+    }
+
+    .pm-stock {
+      font-size: 0.78rem;
       font-weight: 600;
-      margin: 0;
+      padding: 4px 10px;
+      border-radius: 999px;
     }
 
-    .template-info span {
-      font-family: var(--font-mono);
-      font-size: 12px;
-      color: var(--ink-faint);
+    .pm-stock.ok {
+      color: var(--primary);
+      background: rgba(46, 125, 50, 0.1);
     }
 
-    /* PRICING — receipt style */
-    .pricing-grid {
+    .pm-stock.low {
+      color: #B45309;
+      background: rgba(255, 179, 0, 0.16);
+    }
+
+    .pm-search {
+      margin-top: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--white);
+      border-radius: 999px;
+      padding: 10px 16px;
+      font-size: 0.85rem;
+      color: var(--muted);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .pm-copy h2 {
+      font-size: clamp(1.8rem, 3vw, 2.4rem);
+      margin-bottom: 20px;
+    }
+
+    .pm-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .pm-tags span {
+      background: var(--bg);
+      border: 1px solid var(--line);
+      font-size: 0.85rem;
+      font-weight: 500;
+      padding: 8px 16px;
+      border-radius: 999px;
+    }
+
+    /* ---------- Analytics ---------- */
+    .analytics {
+      background: var(--dark);
+    }
+
+    .analytics-grid {
+      max-width: var(--container);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+    }
+
+    @media (max-width: 980px) {
+      .analytics-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 560px) {
+      .analytics-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .an-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-md);
+      padding: 22px;
+      color: var(--white);
+      transition: transform .3s var(--ease), background .3s var(--ease);
+    }
+
+    .an-card:hover {
+      transform: translateY(-4px);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .an-label {
+      display: block;
+      font-size: 0.8rem;
+      color: rgba(255, 255, 255, 0.55);
+      margin-bottom: 10px;
+    }
+
+    .an-value {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 1.5rem;
+    }
+
+    .an-big {
+      grid-column: span 2;
+    }
+
+    .an-chart {
+      width: 100%;
+      height: 90px;
+    }
+
+    .an-bars .bar-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 10px;
+      font-size: 0.78rem;
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .bar-row span {
+      width: 74px;
+      flex-shrink: 0;
+    }
+
+    .bar-row i {
+      flex: 1;
+      height: 6px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .bar-row i::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      width: var(--w);
+      background: linear-gradient(90deg, var(--secondary), var(--accent));
+      border-radius: 4px;
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 1s var(--ease);
+    }
+
+    .an-bars.in-view i::after,
+    .in-view .bar-row i::after {
+      transform: scaleX(1);
+    }
+
+    @media (max-width: 980px) {
+      .an-big {
+        grid-column: span 2;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .an-big {
+        grid-column: span 1;
+      }
+    }
+
+    /* ---------- Themes ---------- */
+    .themes {
+      background: var(--bg);
+    }
+
+    .theme-grid {
+      max-width: var(--container);
+      margin: 0 auto;
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 24px;
-      align-items: start;
     }
 
-    .plan {
-      background: var(--card);
+    @media (max-width: 900px) {
+      .theme-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 560px) {
+      .theme-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .theme-card {
+      background: var(--white);
       border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 32px;
+      border-radius: var(--radius-md);
+      padding: 16px;
+      text-align: center;
+      transition: transform .3s var(--ease), box-shadow .3s var(--ease);
+    }
+
+    .theme-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .theme-preview {
+      height: 140px;
+      border-radius: var(--radius-sm);
+      margin-bottom: 14px;
+    }
+
+    .theme-fresh {
+      background: linear-gradient(135deg, #C8E6C9, #43A047);
+    }
+
+    .theme-luxury {
+      background: linear-gradient(135deg, #2C2C2C, #FFB300);
+    }
+
+    .theme-organic {
+      background: linear-gradient(135deg, #F1F8E9, #7CB342);
+    }
+
+    .theme-minimal {
+      background: linear-gradient(135deg, #F5F5F5, #BDBDBD);
+    }
+
+    .theme-dark {
+      background: linear-gradient(135deg, #1F2937, #374151);
+    }
+
+    .theme-modern {
+      background: linear-gradient(135deg, #E8F5E9, #2E7D32);
+    }
+
+    .theme-card h3 {
+      font-size: 1rem;
+      margin-bottom: 12px;
+    }
+
+    /* ---------- Timeline ---------- */
+    .timeline-section {
+      background: var(--white);
+    }
+
+    .timeline {
+      max-width: var(--container);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      gap: 16px;
       position: relative;
     }
 
-    .plan.featured {
-      border: 2px solid var(--green);
+    .timeline::before {
+      content: '';
+      position: absolute;
+      top: 22px;
+      left: 4%;
+      right: 4%;
+      height: 2px;
+      background: var(--line);
+    }
+
+    @media (max-width: 980px) {
+      .timeline {
+        grid-template-columns: repeat(4, 1fr);
+      }
+
+      .timeline::before {
+        display: none;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .timeline {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .timeline-step {
+      text-align: center;
+      position: relative;
+    }
+
+    .step-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--white);
+      border: 2px solid var(--primary);
+      color: var(--primary);
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      margin-bottom: 14px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .timeline-step h4 {
+      font-size: 0.92rem;
+      margin-bottom: 6px;
+    }
+
+    .timeline-step p {
+      font-size: 0.8rem;
+    }
+
+    /* ---------- Payments ---------- */
+    .payments {
+      background: var(--bg);
+    }
+
+    .payment-grid {
+      max-width: var(--container);
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 14px;
+    }
+
+    .pay-chip {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 12px 24px;
+      font-weight: 600;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.9rem;
+      color: var(--dark);
+      transition: transform .3s var(--ease), border-color .3s var(--ease), color .3s var(--ease);
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .pay-chip:hover {
+      transform: translateY(-3px);
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .pay-chip svg {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+      display: block;
+      transition: transform .3s var(--ease);
+    }
+
+    .pay-chip:hover svg {
+      transform: scale(1.15);
+    }
+
+    /* ---------- Comparison ---------- */
+    .comparison {
+      background: var(--white);
+    }
+
+    .compare-table-wrap {
+      max-width: 900px;
+      margin: 0 auto;
+      overflow-x: auto;
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.92rem;
+    }
+
+    .compare-table th,
+    .compare-table td {
+      padding: 16px 20px;
+      text-align: left;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .compare-table th {
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg);
+      font-weight: 600;
+    }
+
+    .compare-table td:first-child {
+      font-weight: 600;
+      color: var(--dark);
+    }
+
+    .compare-table td.win {
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .compare-table tbody tr:hover {
+      background: rgba(46, 125, 50, 0.03);
+    }
+
+    /* ---------- Testimonials ---------- */
+    .testimonials {
+      background: var(--bg);
+      text-align: center;
+    }
+
+    .testi-carousel {
+      max-width: 680px;
+      margin: 0 auto;
+      position: relative;
+      min-height: 200px;
+    }
+
+    .testi-slide {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity .5s var(--ease), transform .5s var(--ease);
+      pointer-events: none;
+    }
+
+    .testi-slide.active {
+      opacity: 1;
+      transform: translateY(0);
+      position: relative;
+      pointer-events: auto;
+    }
+
+    .testi-quote {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.2rem;
+      color: var(--dark);
+      font-weight: 500;
+      margin-bottom: 26px;
+    }
+
+    .testi-author {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .testi-avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--secondary), var(--primary));
+      color: var(--white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .testi-author div {
+      text-align: left;
+    }
+
+    .testi-author strong {
+      display: block;
+      font-size: 0.92rem;
+      color: var(--dark);
+    }
+
+    .testi-author small {
+      color: var(--muted);
+    }
+
+    .testi-stars {
+      color: var(--accent);
+      letter-spacing: 2px;
+    }
+
+    .testi-dots {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 30px;
+    }
+
+    .testi-dots button {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(31, 41, 55, 0.18);
+      transition: background .3s var(--ease), transform .3s var(--ease);
+    }
+
+    .testi-dots button.active {
+      background: var(--primary);
+      transform: scale(1.3);
+    }
+
+    /* ---------- Plans ---------- */
+    .plans {
+      background: var(--white);
+    }
+
+    .plan-grid {
+      max-width: var(--container);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+      align-items: stretch;
+    }
+
+    @media (max-width: 900px) {
+      .plan-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .plan-card {
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      padding: 36px 30px;
+      display: flex;
+      flex-direction: column;
+      transition: transform .3s var(--ease), box-shadow .3s var(--ease);
+    }
+
+    .plan-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .plan-card.featured {
+      background: var(--dark);
+      color: var(--white);
+      position: relative;
+      border: none;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .plan-card.featured::before {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      border-radius: var(--radius-lg);
+      padding: 2px;
+      background: linear-gradient(135deg, var(--accent), var(--secondary));
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      z-index: -1;
     }
 
     .plan-badge {
       position: absolute;
-      top: -13px;
-      left: 32px;
-      background: var(--green);
-      color: var(--paper);
-      font-family: var(--font-mono);
-      font-size: 11px;
-      letter-spacing: .05em;
-      padding: 4px 12px;
-      border-radius: 999px;
-      text-transform: uppercase;
-    }
-
-    .plan h3 {
-      font-size: 15px;
-      font-weight: 600;
-      color: var(--ink-soft);
-      margin-bottom: 6px;
-      text-transform: uppercase;
-      letter-spacing: .04em;
-      font-family: var(--font-mono);
-      font-weight: 500;
-    }
-
-    .plan-price {
-      font-family: var(--font-display);
-      font-size: 40px;
+      top: -14px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--accent);
+      color: var(--dark);
+      font-size: 0.75rem;
       font-weight: 700;
-      margin-bottom: 4px;
+      padding: 6px 16px;
+      border-radius: 999px;
+      font-family: 'Poppins', sans-serif;
     }
 
-    .plan-price span {
-      font-family: var(--font-body);
-      font-size: 15px;
-      font-weight: 400;
-      color: var(--ink-faint);
+    .plan-card h3 {
+      font-size: 1.3rem;
+      margin-bottom: 6px;
+    }
+
+    .plan-card.featured h3 {
+      color: var(--white);
     }
 
     .plan-desc {
-      font-size: 13.5px;
-      color: var(--ink-faint);
+      font-size: 0.88rem;
+      margin-bottom: 20px;
+    }
+
+    .plan-card.featured .plan-desc {
+      color: rgba(255, 255, 255, 0.65);
+    }
+
+    .plan-price {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 2.4rem;
       margin-bottom: 24px;
+      color: var(--dark);
     }
 
-    .receipt-divider {
-      border: none;
-      border-top: 1.5px dashed var(--line);
-      margin: 22px 0;
+    .plan-card.featured .plan-price {
+      color: var(--white);
     }
 
-    .plan-list {
-      list-style: none;
-      padding: 0;
-      margin: 0 0 28px;
-      font-family: var(--font-mono);
-      font-size: 13px;
-    }
-
-    .plan-list li {
-      display: flex;
-      justify-content: space-between;
-      padding: 7px 0;
-      color: var(--ink-soft);
-    }
-
-    .plan-list li b {
-      color: var(--ink);
+    .plan-price span {
+      font-size: 1rem;
       font-weight: 500;
+      color: var(--muted);
     }
 
-    /* FAQ */
-    .faq-layout {
-      display: grid;
-      grid-template-columns: 1.1fr 1.6fr;
-      gap: 64px;
+    .plan-card ul {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 28px;
+      flex: 1;
     }
 
-    .faq-left h2 {
-      font-size: 42px;
-      margin: 16px 0 24px;
+    .plan-card li {
+      font-size: 0.9rem;
+      padding-left: 24px;
+      position: relative;
     }
 
-    .faq-left p {
-      color: var(--ink-soft);
-      font-size: 15.5px;
-      margin-bottom: 32px;
-      max-width: 320px;
+    .plan-card li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: var(--secondary);
+      font-weight: 700;
     }
 
-    @media (max-width: 920px) {
-      .faq-layout {
-        grid-template-columns: 1fr;
-        gap: 40px;
-      }
+    .plan-card.featured li {
+      color: rgba(255, 255, 255, 0.85);
+    }
 
-      .faq-left p {
-        max-width: 100%;
-      }
+    /* ---------- FAQ ---------- */
+    .faq {
+      background: var(--bg);
+    }
+
+    .faq-list {
+      max-width: 760px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
     }
 
     .faq-item {
-      border-bottom: 1px solid var(--line);
-      padding: 26px 0;
-      cursor: pointer;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      overflow: hidden;
     }
 
-    .faq-q {
+    .faq-question {
+      width: 100%;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 16.5px;
+      padding: 20px 24px;
+      background: none;
+      border: none;
+      font-family: 'Poppins', sans-serif;
       font-weight: 600;
-      font-family: var(--font-display);
+      font-size: 0.98rem;
+      color: var(--dark);
+      text-align: left;
     }
 
-    .faq-plus {
-      font-family: var(--font-mono);
-      font-size: 20px;
-      color: var(--green);
-      transition: transform .2s ease;
+    .faq-toggle {
+      font-size: 1.2rem;
+      color: var(--primary);
+      transition: transform .3s var(--ease);
     }
 
-    .faq-item.open .faq-plus {
+    .faq-item.open .faq-toggle {
       transform: rotate(45deg);
     }
 
-    .faq-a {
+    .faq-answer {
       max-height: 0;
       overflow: hidden;
-      transition: max-height .25s ease;
-      color: var(--ink-soft);
-      font-size: 14.5px;
-      line-height: 1.65;
+      transition: max-height .4s var(--ease), padding .4s var(--ease);
+      padding: 0 24px;
     }
 
-    .faq-item.open .faq-a {
-      max-height: 200px;
-      padding-top: 14px;
+    .faq-item.open .faq-answer {
+      max-height: 220px;
+      padding: 0 24px 22px;
     }
 
-    /* CTA BAND */
-    .cta-band {
-      background: var(--ink);
-      color: var(--paper);
-      border-radius: 20px;
-      padding: 64px 56px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 40px;
+    .faq-answer p {
+      font-size: 0.92rem;
     }
 
-    .cta-band h2 {
-      font-size: 32px;
-      font-weight: 700;
-      color: var(--paper);
-      margin-bottom: 10px;
+    /* ---------- Final CTA ---------- */
+    .final-cta {
+      background: linear-gradient(135deg, var(--primary-dark), var(--primary) 55%, var(--secondary));
+      text-align: center;
+      padding: 120px 8vw;
     }
 
-    .cta-band p {
-      color: #B9BEB2;
-      font-size: 15px;
-      margin: 0;
+    .final-cta h2 {
+      color: var(--white);
+      font-size: clamp(2rem, 3.6vw, 2.8rem);
+      margin-bottom: 18px;
     }
 
-    .cta-band .btn-primary {
-      background: var(--yellow);
-      color: var(--yellow-deep);
-      flex-shrink: 0;
+    .final-cta p {
+      color: rgba(255, 255, 255, 0.82);
+      max-width: 520px;
+      margin: 0 auto 36px;
+      font-size: 1.05rem;
     }
 
-    .cta-band .btn-primary:hover {
-      background: #f0c95c;
+    .final-cta .hero-cta {
+      justify-content: center;
     }
 
-    /* FOOTER */
-    footer {
-      border-top: 1px solid var(--line);
-      padding: 56px 0 40px;
+    /* ---------- Footer ---------- */
+    .site-footer {
+      background: var(--dark);
+      color: rgba(255, 255, 255, 0.7);
+      padding: 80px 8vw 30px;
     }
 
-    .footer-grid {
+    .footer-top {
+      max-width: 1300px;
+      margin: 0 auto 50px;
       display: grid;
-      grid-template-columns: 1.4fr 1fr 1fr 1fr;
+      grid-template-columns: 1.6fr repeat(5, 1fr);
       gap: 32px;
-      margin-bottom: 48px;
     }
 
-    .footer-col h5 {
-      font-family: var(--font-mono);
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: .06em;
-      color: var(--ink-faint);
+    @media (max-width: 980px) {
+      .footer-top {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (max-width: 620px) {
+      .footer-top {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .footer-brand p {
+      color: rgba(255, 255, 255, 0.55);
+      font-size: 0.88rem;
+      margin: 14px 0 22px;
+      max-width: 280px;
+    }
+
+    .newsletter {
+      display: flex;
+      gap: 8px;
+      max-width: 320px;
+    }
+
+    .newsletter input {
+      flex: 1;
+      padding: 11px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--white);
+      font-size: 0.86rem;
+    }
+
+    .newsletter input::placeholder {
+      color: rgba(255, 255, 255, 0.4);
+    }
+
+    .footer-col h4 {
+      color: var(--white);
+      font-size: 0.9rem;
       margin-bottom: 16px;
-      font-weight: 500;
+    }
+
+    .footer-col {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
     }
 
     .footer-col a {
-      display: block;
-      font-size: 14px;
-      color: var(--ink-soft);
-      margin-bottom: 10px;
+      font-size: 0.88rem;
+      color: rgba(255, 255, 255, 0.55);
+      transition: color .25s var(--ease);
     }
 
     .footer-col a:hover {
-      color: var(--ink);
+      color: var(--accent);
     }
 
     .footer-bottom {
+      max-width: 1300px;
+      margin: 0 auto;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding-top: 28px;
-      border-top: 1px solid var(--line);
-      font-size: 13px;
-      color: var(--ink-faint);
-    }
-    
-    .nav-icon { 
-      display: none; 
-    }
-    
-    .contact-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 32px;
+      padding-top: 26px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 0.82rem;
+      flex-wrap: wrap;
+      gap: 16px;
     }
 
-    .contact-card {
-      text-align: center;
-      padding: 48px 32px;
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      background: #fff;
+    .social-icons {
+      display: flex;
+      gap: 14px;
     }
 
-    @media (max-width:920px) {
-      section {
-        padding: 64px 0;
-      }
+    .social-icons a {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.06);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.75);
+      transition: background .25s var(--ease), transform .25s var(--ease), color .25s var(--ease);
+    }
 
-      .nav-links {
-        display: none;
-      }
+    .social-icons a:hover {
+      color: var(--white);
+    }
 
-      .hero-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .hero h1 {
-        font-size: 38px;
-      }
-
-      .steps {
-        grid-template-columns: 1fr;
-      }
-
-      .step {
-        border-right: none;
-        border-bottom: 1px solid var(--line);
-      }
-
-      .step:last-child {
-        border-bottom: none;
-      }
-
-      .feature-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .contact-card {
-        padding: 24px 16px;
-      }
-
-      .template-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .pricing-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .footer-grid {
-        grid-template-columns: 1fr 1fr;
-      }
-
-      .cta-band {
-        flex-direction: column;
-        text-align: center;
-        padding: 48px 28px;
-      }
-
-      .contact-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .nav-text { display: none; }
-      .nav-icon { display: inline-block !important; }
+    .social-icons a:hover {
+      background: var(--primary);
+      transform: translateY(-3px);
     }
   </style>
 </head>
 
 <body>
 
-  <header>
-    <nav>
-      <div class="logo"><span class="logo-mark"></span>Slot Store</div>
-      <div class="nav-links">
-        <a href="#how">How it works</a>
-        <a href="#templates">Templates</a>
-        <a href="#pricing">Pricing</a>
-        <a href="#faq">FAQ</a>
-      </div>
-      <div class="nav-cta">
-        <a href="{{ route('admin.common.login') }}" class="btn btn-ghost" style="display: inline-flex; align-items: center; justify-content: center;">
-          <span class="nav-text">Log in</span>
-          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 20px; height: 20px;">
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-            <circle cx="12" cy="7" r="4"></circle>
+  <!-- ================= HEADER ================= -->
+  <header class="site-header" id="siteHeader">
+    <div class="header-inner">
+      <a href="#" class="logo" aria-label="GoSlot Store home">
+        <span class="logo-mark" aria-hidden="true">
+          <svg viewBox="0 0 32 32" width="30" height="30">
+            <rect x="3" y="10" width="26" height="18" rx="4" fill="var(--primary)" />
+            <rect x="3" y="10" width="26" height="6" rx="3" fill="var(--accent)" />
+            <path d="M9 10 L11 4 H21 L23 10" stroke="var(--primary)" stroke-width="2.4" fill="none"
+              stroke-linecap="round" stroke-linejoin="round" />
           </svg>
-        </a>
-        <a href="javascript:void(0)" class="btn btn-primary pricing-btn-trigger" data-plan="sprout">
-          <span class="nav-text">Start free</span>
-          <span class="nav-icon">Start</span>
-        </a>
+        </span>
+        <span class="logo-text">GoSlot<span class="logo-accent">Store</span></span>
+      </a>
+
+      <nav class="main-nav" id="mainNav" aria-label="Primary">
+        <a href="#home">Home</a>
+        <a href="#features">Features</a>
+        <a href="#solutions">Solutions</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#themes">Themes</a>
+        <a href="#analytics">Analytics</a>
+        <a href="#contact">Contact</a>
+      </nav>
+
+      <div class="header-actions">
+        <a href="{{ route('admin.common.login') }}" class="btn btn-ghost">Log in</a>
+        <a href="javascript:void(0)" class="btn btn-primary pricing-btn-trigger" data-plan="sprout">Get Started</a>
       </div>
-    </nav>
+
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
   </header>
 
-  <section class="hero">
-    <div class="wrap">
-      <div class="hero-grid">
-        <div>
-          <span class="eyebrow">Built for independent grocers</span>
-          <h1>Stock the shelves.<br>We'll build <em>the store.</em></h1>
-          <p class="lede">Slot Store turns your inventory into a real online grocery store — orders, delivery zones,
-            and payments included. No code, no developer, live by tonight.</p>
-          <div class="hero-actions">
-            <a href="javascript:void(0)" class="btn btn-primary pricing-btn-trigger" data-plan="sprout">Start your store
-              — free</a>
-            <a href="#templates" class="btn btn-outline">See templates</a>
-          </div>
-          <span class="hero-note">No card required · 14-day trial · cancel anytime</span>
+  <!-- ================= HERO ================= -->
+  <section class="hero" id="home">
+    <div class="hero-blob blob-a" aria-hidden="true"></div>
+    <div class="hero-blob blob-b" aria-hidden="true"></div>
+    <div class="hero-inner">
+      <div class="hero-copy fade-up">
+        <span class="eyebrow">Grocery commerce infrastructure</span>
+        <h1>Create &amp; grow your grocery store <span class="highlight">online</span></h1>
+        <p class="hero-sub">Launch a powerful grocery eCommerce store with advanced pricing, promotions, analytics,
+          custom themes, payment integrations, and a seamless shopping experience — all run from one dashboard.</p>
+        <div class="hero-cta">
+          <a href="javascript:void(0)" class="btn btn-primary btn-lg pricing-btn-trigger" data-plan="sprout">Start
+            Free</a>
+          <a href="#contact" class="btn btn-outline btn-lg">Book a Demo</a>
         </div>
-
-        <div class="mockup">
-          <div class="floating-tag">
-            <div class="price-tag">fresh today</div>
+        <div class="hero-proof">
+          <div class="avatars" aria-hidden="true">
+            <span></span><span></span><span></span><span></span>
           </div>
-          <div class="mockup-bar"><span></span><span></span><span></span></div>
-          <div class="mockup-body">
-            <div class="mockup-store-name">Corner Market Co.</div>
-            <div class="mockup-store-sub">Open now · Delivers to 5 zip codes</div>
-            <div class="mockup-grid">
-              <div class="produce-card">
-                <div class="produce-swatch" style="background:#C7DDB0"></div>
-                <div class="produce-name">Avocados</div>
-                <div class="produce-tag">$1.20 / ea</div>
-              </div>
-              <div class="produce-card">
-                <div class="produce-swatch" style="background:#E7C77E"></div>
-                <div class="produce-name">Sourdough</div>
-                <div class="produce-tag">$5.50 / loaf</div>
-              </div>
-              <div class="produce-card">
-                <div class="produce-swatch" style="background:#D69B7E"></div>
-                <div class="produce-name">Heirloom tomatoes</div>
-                <div class="produce-tag">$3.90 / lb</div>
-              </div>
-              <div class="produce-card">
-                <div class="produce-swatch" style="background:#BFD4E0"></div>
-                <div class="produce-name">Whole milk</div>
-                <div class="produce-tag">$4.10 / gal</div>
-              </div>
-              <div class="produce-card">
-                <div class="produce-swatch" style="background:#EAE0A8"></div>
-                <div class="produce-name">Farm eggs</div>
-                <div class="produce-tag">$6.20 / dz</div>
-              </div>
-              <div class="produce-card">
-                <div class="produce-swatch" style="background:#C9A7C4"></div>
-                <div class="produce-name">Red grapes</div>
-                <div class="produce-tag">$2.80 / lb</div>
-              </div>
+          <p><strong>2,400+</strong> grocery merchants run on GoSlot Store</p>
+        </div>
+      </div>
+
+      <div class="hero-visual fade-up" style="animation-delay:.15s">
+        <div class="dash-card dash-main">
+          <div class="dash-topbar">
+            <div class="dash-dots"><span></span><span></span><span></span></div>
+            <span class="dash-title">FreshMart Dashboard</span>
+          </div>
+          <div class="dash-grid">
+            <div class="dash-tile">
+              <span class="tile-label">Revenue</span>
+              <span class="tile-value" data-count="48200" data-prefix="$">$0</span>
+              <span class="tile-trend up">▲ 12.4%</span>
+            </div>
+            <div class="dash-tile">
+              <span class="tile-label">Orders</span>
+              <span class="tile-value" data-count="1284">0</span>
+              <span class="tile-trend up">▲ 8.1%</span>
+            </div>
+            <div class="dash-tile">
+              <span class="tile-label">Customers</span>
+              <span class="tile-value" data-count="912">0</span>
+              <span class="tile-trend up">▲ 5.6%</span>
+            </div>
+            <div class="dash-tile">
+              <span class="tile-label">Inventory</span>
+              <span class="tile-value" data-count="6304">0</span>
+              <span class="tile-trend">SKUs</span>
             </div>
           </div>
+          <div class="dash-chart" aria-hidden="true">
+            <svg viewBox="0 0 320 90" preserveAspectRatio="none">
+              <polyline points="0,70 40,60 80,65 120,40 160,48 200,25 240,32 280,12 320,20" fill="none"
+                stroke="var(--secondary)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+              <polygon points="0,70 40,60 80,65 120,40 160,48 200,25 240,32 280,12 320,20 320,90 0,90"
+                fill="url(#gradFill)" opacity="0.25" />
+              <defs>
+                <linearGradient id="gradFill" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="var(--secondary)" />
+                  <stop offset="100%" stop-color="var(--secondary)" stop-opacity="0" />
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+        </div>
+
+        <div class="float-card float-coupon" aria-hidden="true">
+          <span class="float-icon"><i class="fa-solid fa-tag"></i></span>
+          <div><strong>SAVE20</strong><small>Coupon applied</small></div>
+        </div>
+        <div class="float-card float-order" aria-hidden="true">
+          <span class="float-icon"><i class="fa-solid fa-box"></i></span>
+          <div><strong>Order #10432</strong><small>Ready to ship</small></div>
+        </div>
+        <div class="float-card float-rule" aria-hidden="true">
+          <span class="float-icon"><i class="fa-solid fa-gear"></i></span>
+          <div><strong>Wholesale rule</strong><small>Auto-priced ×10</small></div>
+        </div>
+      </div>
+    </div>
+    <div class="section-divider" aria-hidden="true"></div>
+  </section>
+
+  <!-- ================= TRUSTED BY ================= -->
+  <section class="trusted">
+    <p class="trusted-label">Trusted by grocery businesses building online</p>
+    <div class="marquee">
+      <div class="marquee-track">
+        <span>FreshMart</span><span>Green Basket</span><span>Daily Foods</span><span>Urban Grocery</span><span>Family
+          Market</span><span>Farm Fresh</span>
+        <span>FreshMart</span><span>Green Basket</span><span>Daily Foods</span><span>Urban Grocery</span><span>Family
+          Market</span><span>Farm Fresh</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FEATURES ================= -->
+  <section class="features" id="features">
+    <div class="section-head">
+      <span class="eyebrow">Platform</span>
+      <h2>Every tool a grocery merchant needs, in one platform</h2>
+      <p>Not a storefront. A complete operating system for running a grocery business online.</p>
+    </div>
+    <div class="feature-grid">
+      <!-- <div class="feature-card"><span class="f-icon"><i class="fa-solid fa-shop"></i></span>
+        <h3>Multi-Tenant Store Platform</h3>
+        <p>Run one merchant, ten merchants, or a whole chain — each with an isolated, secure storefront.</p>
+      </div> -->
+      <div class="feature-card"><span class="f-icon"><i class="fa-solid fa-gauge-high"></i></span>
+        <h3>Merchant Dashboard</h3>
+        <p>One screen for orders, revenue, inventory, and customers — no switching tools.</p>
+      </div>
+      <div class="feature-card"><span class="f-icon"><i class="fa-solid fa-cart-shopping"></i></span>
+        <h3>Product Management</h3>
+        <p>Add, edit, and organize products with variants, images, and categories in seconds.</p>
+      </div>
+      <div class="feature-card"><span class="f-icon"><i class="fa-solid fa-boxes-stacked"></i></span>
+        <h3>Inventory Control</h3>
+        <p>Live stock counts with automatic low-stock alerts across every location.</p>
+      </div>
+      <div class="feature-card"><span class="f-icon"><i class="fa-solid fa-layer-group"></i></span>
+        <h3>Product Collections</h3>
+        <p>Group products into collections like Organic, Fresh Produce, or Weekly Deals.</p>
+      </div>
+      <div class="feature-card"><span class="f-icon"><i class="fa-solid fa-tag"></i></span>
+        <h3>Custom Pricing</h3>
+        <p>Set unique prices per customer, product, or purchase quantity.</p>
+      </div>
+      <!-- <div class="feature-card"><span class="f-icon"><i class="fa-solid fa-users"></i></span>
+        <h3>Group Pricing</h3>
+        <p>Assign customers to pricing groups and update rates for all of them at once.</p>
+      </div> -->
+      <div class="feature-card"><span class="f-icon"><i class="fa-solid fa-tags"></i></span>
+        <h3>Coupons</h3>
+        <p>Create percentage, flat-rate, or free-shipping coupons with usage limits.</p>
+      </div>
+      <div class="feature-card"><span class="f-icon"><i class="fa-solid fa-fire"></i></span>
+        <h3>Deals &amp; Offers</h3>
+        <p>Schedule time-limited deals that apply automatically at checkout.</p>
+      </div>
+      <div class="feature-card"><span class="f-icon"><i class="fa-solid fa-chart-line"></i></span>
+        <h3>Volume Discounts</h3>
+        <p>Reward bulk buyers with tiered pricing based on quantity ordered.</p>
+      </div>
+      <div class="feature-card"><span class="f-icon"><i class="fa-solid fa-gift"></i></span>
+        <h3>Product Bundles</h3>
+        <p>Package products together at a special bundle price.</p>
+      </div>
+      <div class="feature-card"><span class="f-icon"><i class="fa-solid fa-palette"></i></span>
+        <h3>Theme Marketplace</h3>
+        <p>Choose from professionally designed, grocery-ready storefront themes.</p>
+      </div>
+      <div class="feature-card"><span class="f-icon"><i class="fa-solid fa-credit-card"></i></span>
+        <h3>Payment Gateways</h3>
+        <p>Connect Stripe, PayPal, Razorpay, and more in a few clicks.</p>
+      </div>
+      <div class="feature-card"><span class="f-icon"><i class="fa-solid fa-globe"></i></span>
+        <h3>Custom Domains</h3>
+        <p>Point your own domain to your store with automatic SSL.</p>
+      </div>
+      <!-- <div class="feature-card"><span class="f-icon"><i class="fa-solid fa-mobile-screen-button"></i></span><h3>Responsive Themes</h3><p>Every theme looks sharp on desktop, tablet, and mobile out of the box.</p></div> -->
+      <!-- <div class="feature-card"><span class="f-icon"><i class="fa-solid fa-user-lock"></i></span>
+        <h3>Customer Accounts</h3>
+        <p>Let shoppers save addresses, track orders, and reorder favorites.</p>
+      </div> -->
+    </div>
+  </section>
+
+  <!-- ================= PRICING ENGINE ================= -->
+  <section class="pricing-engine" id="solutions">
+    <div class="engine-copy">
+      <span class="eyebrow">Pricing engine</span>
+      <h2>Set the right price for every customer, automatically</h2>
+      <p>GoSlot Store's rule-based pricing engine applies the correct rate at checkout — no manual price lists, no
+        spreadsheets.</p>
+      <ul class="engine-list">
+        <li>Customer Pricing</li>
+        <li>Group Pricing</li>
+        <!-- <li>Wholesale Pricing</li> -->
+        <!-- <li>Bulk Pricing</li> -->
+        <li>Regional Pricing</li>
+      </ul>
+    </div>
+    <div class="engine-visual">
+      <div class="rule-card">
+        <div class="rule-row"><span class="rule-tag retail">Retail</span><span class="rule-price">$4.20 / kg</span>
+        </div>
+        <div class="rule-row"><span class="rule-tag group">Group A</span><span class="rule-price">$3.85 / kg</span>
+        </div>
+        <div class="rule-row"><span class="rule-tag wholesale">Wholesale</span><span class="rule-price">$3.10 /
+            kg</span></div>
+        <div class="rule-row"><span class="rule-tag bulk">Bulk 50+</span><span class="rule-price">$2.75 / kg</span>
+        </div>
+        <div class="rule-row active"><span class="rule-tag regional">Regional · Kerala</span><span
+            class="rule-price">$3.40 / kg</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PROMOTIONS ================= -->
+  <section class="promotions">
+    <div class="section-head">
+      <span class="eyebrow">Promotions engine</span>
+      <h2>Run promotions that actually move inventory</h2>
+      <p>Build offers once, schedule them anywhere, and watch them apply automatically at checkout.</p>
+    </div>
+    <div class="promo-grid">
+      <div class="promo-card"><span class="p-icon"><i class="fa-solid fa-tag"></i></span>
+        <h3>Coupon Codes</h3>
+        <p>Percentage, flat, or free-shipping codes with limits per customer.</p>
+      </div>
+      <div class="promo-card"><span class="p-icon"><i class="fa-solid fa-bolt"></i></span>
+        <h3>Flash Sales</h3>
+        <p>Countdown-timed sales that create urgency at checkout.</p>
+      </div>
+      <div class="promo-card"><span class="p-icon"><i class="fa-solid fa-percent"></i></span>
+        <h3>Deals</h3>
+        <p>Everyday discounts on featured or seasonal products.</p>
+      </div>
+      <div class="promo-card"><span class="p-icon"><i class="fa-solid fa-box-open"></i></span>
+        <h3>Bundles</h3>
+        <p>Sell related products together at a combined price.</p>
+      </div>
+      <div class="promo-card"><span class="p-icon"><i class="fa-solid fa-plus"></i></span>
+        <h3>Buy X Get Y</h3>
+        <p>Automatic free or discounted items with qualifying purchases.</p>
+      </div>
+      <div class="promo-card"><span class="p-icon"><i class="fa-solid fa-boxes-stacked"></i></span>
+        <h3>Volume Discounts</h3>
+        <p>Lower per-unit pricing the more a customer buys.</p>
+      </div>
+      <div class="promo-card"><span class="p-icon"><i class="fa-solid fa-calendar-days"></i></span>
+        <h3>Scheduled Promotions</h3>
+        <p>Set start and end dates — promotions run themselves.</p>
+      </div>
+      <div class="promo-card"><span class="p-icon"><i class="fa-solid fa-gift"></i></span>
+        <h3>Gift Offers</h3>
+        <p>Free gifts or gift cards tied to order milestones.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PRODUCT MANAGEMENT ================= -->
+  <section class="product-mgmt">
+    <div class="pm-visual">
+      <div class="pm-card">
+        <div class="pm-row"><span><i class="fa-solid fa-leaf"></i> Organic Spinach</span><span class="pm-stock ok">312
+            in stock</span></div>
+        <div class="pm-row"><span><i class="fa-solid fa-bread-slice"></i> Multigrain Bread</span><span
+            class="pm-stock low">8 left — alert</span></div>
+        <div class="pm-row"><span><i class="fa-solid fa-cheese"></i> Dairy Bundle</span><span class="pm-stock ok">140 in
+            stock</span></div>
+        <div class="pm-row"><span><i class="fa-solid fa-apple-whole"></i> Apple Crate (10kg)</span><span
+            class="pm-stock ok">76 in stock</span></div>
+        <div class="pm-search"><span><i class="fa-solid fa-magnifying-glass"></i></span> Search 6,304 products…</div>
+      </div>
+    </div>
+    <div class="pm-copy">
+      <span class="eyebrow">Product management</span>
+      <h2>Manage your entire catalog from one screen</h2>
+      <div class="pm-tags">
+        <span>Products</span><span>Inventory</span><span>Collections</span><span>Variants</span>
+        <span>Stock Alerts</span><span>Import / Export</span><span>Bulk Upload</span><span>Search</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= ANALYTICS ================= -->
+  <section class="analytics" id="analytics">
+    <div class="section-head light">
+      <span class="eyebrow">Analytics</span>
+      <h2>See your store's health at a glance</h2>
+      <p>Real-time dashboards built for grocery-specific metrics, not generic web traffic.</p>
+    </div>
+    <div class="analytics-grid">
+      <div class="an-card an-big">
+        <span class="an-label">Sales Growth</span>
+        <svg viewBox="0 0 300 120" class="an-chart">
+          <polyline points="0,90 30,80 60,85 90,55 120,60 150,35 180,45 210,20 240,30 270,10 300,18" fill="none"
+            stroke="var(--secondary)" stroke-width="3" />
+        </svg>
+      </div>
+      <div class="an-card"><span class="an-label">Revenue</span><span class="an-value" data-count="94500"
+          data-prefix="$">$0</span></div>
+      <div class="an-card"><span class="an-label">Orders</span><span class="an-value" data-count="3210">0</span></div>
+      <div class="an-card"><span class="an-label">Live Visitors</span><span class="an-value" data-count="184">0</span>
+      </div>
+      <div class="an-card"><span class="an-label">Abandoned Cart</span><span class="an-value" data-count="42">0</span>
+      </div>
+      <div class="an-card an-bars">
+        <span class="an-label">Top Selling Products</span>
+        <div class="bar-row"><span>Vegetables</span><i style="--w:88%"></i></div>
+        <div class="bar-row"><span>Dairy</span><i style="--w:71%"></i></div>
+        <div class="bar-row"><span>Bakery</span><i style="--w:56%"></i></div>
+        <div class="bar-row"><span>Beverages</span><i style="--w:40%"></i></div>
+      </div>
+      <div class="an-card"><span class="an-label">Traffic Sources</span><span class="an-value">Direct 44%</span></div>
+      <!-- <div class="an-card"><span class="an-label">Customer Behaviour</span><span class="an-value">3m 42s avg.</span> -->
+    </div>
+    </div>
+  </section>
+
+  <!-- ================= THEMES ================= -->
+  <section class="themes" id="themes">
+    <div class="section-head">
+      <span class="eyebrow">Theme marketplace</span>
+      <h2>Launch with a theme built for grocery</h2>
+      <p>Every theme is responsive, checkout-ready, and customizable without touching code.</p>
+    </div>
+    <div class="theme-grid">
+      <div class="theme-card template-card" data-demo-url="{{ route('v1.home') }}?preview=1&tenant_id=2">
+        <div class="template-preview"
+          style="background:linear-gradient(180deg, var(--bg) 0%, var(--bg) 60%, var(--white) 60%);padding:16px;height:140px;border-radius:10px;margin-bottom:14px;position:relative;overflow:hidden;text-align:left;border:1px solid var(--line);">
+          <div
+            style="font-family:'Poppins', sans-serif;font-weight:700;font-size:13px;margin-bottom:8px;color:var(--dark);">
+            Market Basic</div>
+          <div style="display:flex;gap:6px;">
+            <div style="width:30%;height:60px;background:rgba(31,41,55,0.12);border-radius:6px;"></div>
+            <div style="width:30%;height:60px;background:rgba(46,125,50,0.12);border-radius:6px;"></div>
+            <div style="width:30%;height:60px;background:rgba(255,179,0,0.15);border-radius:6px;"></div>
+          </div>
+        </div>
+        <h3>Market Basic</h3>
+        <a href="javascript:void(0)" class="btn btn-outline btn-sm" style="margin-top: 10px;">Preview Theme</a>
+      </div>
+
+      <div class="theme-card template-card" data-demo-url="{{ route('velvet.home') }}?preview=1&tenant_id=2">
+        <div class="template-preview"
+          style="background:var(--dark);padding:16px;height:140px;border-radius:10px;margin-bottom:14px;position:relative;overflow:hidden;text-align:left;">
+          <div style="font-family:'Poppins', sans-serif;font-weight:700;font-size:13px;margin-bottom:8px;color:#fff;">
+            Night Grocer</div>
+          <div style="display:flex;gap:6px;">
+            <div style="width:30%;height:60px;background:var(--primary);border-radius:6px;"></div>
+            <div style="width:30%;height:60px;background:rgba(255,255,255,0.15);border-radius:6px;"></div>
+            <div style="width:30%;height:60px;background:var(--accent);border-radius:6px;"></div>
+          </div>
+        </div>
+        <h3>Night Grocer</h3>
+        <a href="javascript:void(0)" class="btn btn-outline btn-sm" style="margin-top: 10px;">Preview Theme</a>
+      </div>
+
+      <div class="theme-card template-card" data-demo-url="{{ route('v3.home') }}?preview=1&tenant_id=2">
+        <div class="template-preview"
+          style="background:linear-gradient(135deg, #E8F5E9, #C8E6C9);padding:16px;height:140px;border-radius:10px;margin-bottom:14px;position:relative;overflow:hidden;border:1px solid var(--line);text-align:left;">
+          <div
+            style="font-family:'Poppins', sans-serif;font-weight:700;font-size:13px;margin-bottom:8px;color:var(--primary-dark);">
+            Fresh App</div>
+          <div style="display:flex;gap:6px;">
+            <div style="width:30%;height:60px;background:var(--primary);border-radius:12px;"></div>
+            <div style="width:30%;height:60px;background:#E53935;border-radius:12px;"></div>
+            <div style="width:30%;height:60px;background:var(--accent);border-radius:12px;"></div>
+          </div>
+        </div>
+        <h3>Fresh App</h3>
+        <a href="javascript:void(0)" class="btn btn-outline btn-sm" style="margin-top: 10px;">Preview Theme</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= STORE CREATION TIMELINE ================= -->
+  <section class="timeline-section">
+    <div class="section-head">
+      <span class="eyebrow">Getting started</span>
+      <h2>From registration to launch day</h2>
+      <p>The exact order our merchants follow — most go live within a week.</p>
+    </div>
+    <div class="timeline">
+      <div class="timeline-step"><span class="step-num">1</span>
+        <h4>Register</h4>
+        <p>Create your merchant account</p>
+      </div>
+      <div class="timeline-step"><span class="step-num">2</span>
+        <h4>Create Store</h4>
+        <p>Set up your storefront basics</p>
+      </div>
+      <div class="timeline-step"><span class="step-num">3</span>
+        <h4>Select Theme</h4>
+        <p>Pick a look from the marketplace</p>
+      </div>
+      <div class="timeline-step"><span class="step-num">4</span>
+        <h4>Add Products</h4>
+        <p>Import or add your catalog</p>
+      </div>
+      <div class="timeline-step"><span class="step-num">5</span>
+        <h4>Configure Pricing</h4>
+        <p>Set rules for every customer type</p>
+      </div>
+      <div class="timeline-step"><span class="step-num">6</span>
+        <h4>Connect Domain</h4>
+        <p>Point your own domain, live in minutes</p>
+      </div>
+      <div class="timeline-step"><span class="step-num">7</span>
+        <h4>Accept Payments</h4>
+        <p>Turn on the gateways you need</p>
+      </div>
+      <div class="timeline-step"><span class="step-num">8</span>
+        <h4>Launch Store</h4>
+        <p>Go live and start selling</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PAYMENTS ================= -->
+  <section class="payments">
+    <div class="section-head">
+      <span class="eyebrow">Integrations</span>
+      <h2>Accept payments any way your customers prefer</h2>
+    </div>
+    <div class="payment-grid">
+      <div class="pay-chip">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path fill="#635BFF"
+            d="M13.962 2c-3.11 0-5.18 1.63-5.18 4.67 0 4.69 6.22 3.9 6.22 5.92 0 1.01-.81 1.57-2.12 1.57-1.85 0-3.86-.71-5.12-1.45l-1.07 3.23c1.39.75 3.73 1.34 6.07 1.34 3.4 0 5.6-1.57 5.6-4.73 0-4.88-6.22-3.95-6.22-5.91 0-.91.73-1.47 1.87-1.47 1.6 0 3.32.55 4.39 1.17l1.07-3.21c-1.25-.67-3.14-1.36-5.63-1.36z" />
+        </svg>
+        Stripe
+      </div>
+      <div class="pay-chip">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path fill="#003087"
+            d="M19.92 6.84c-.11-.53-.33-1.04-.69-1.49-.66-.82-1.68-1.35-2.85-1.35H8.38c-.46 0-.85.33-.94.78L4.41 20.13c-.06.31.18.61.5.61h4.29c.46 0 .85-.33.94-.78l1.19-6.03c.09-.45.48-.78.94-.78h1.61c2.4 0 4.45-.96 5.34-3.15.55-1.32.55-2.89.14-3.99-.12-.26-.26-.51-.41-.76z" />
+          <path fill="#0079C1"
+            d="M17.03 5.48c-.66-.82-1.68-1.35-2.85-1.35H6.18c-.46 0-.85.33-.94.78L2.21 20.26c-.06.31.18.61.5.61h4.29l1.19-6.03c.09-.45.48-.78.94-.78h1.61c2.4 0 4.45-.96 5.34-3.15.55-1.32.55-2.89.14-3.99c-.11-.26-.25-.51-.4-.76z" />
+        </svg>
+        PayPal
+      </div>
+      <div class="pay-chip">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path fill="#0052FF"
+            d="M22.436 0l-11.91 7.773-1.174 4.276 6.625-4.297L11.65 24h4.391l6.395-24zM14.26 10.098L3.389 17.166 1.564 24h9.008l3.688-13.902Z" />
+        </svg>
+        Razorpay
+      </div>
+      <div class="pay-chip">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path fill="#4285F4"
+            d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+          <path fill="#34A853"
+            d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+          <path fill="#FBBC05"
+            d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l3.66-2.85z" />
+          <path fill="#EA4335"
+            d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.85c.87-2.6 3.3-4.53 6.16-4.53z" />
+        </svg>
+        Google Pay
+      </div>
+      <!-- <div class="pay-chip">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path fill="#000000"
+            d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 4.17c.66-.81 1.11-1.93.99-3.06-1 .04-2.21.67-2.93 1.49-.62.69-1.16 1.84-1.01 2.96 1.12.09 2.27-.58 2.95-1.39z" />
+        </svg>
+        Apple Pay
+      </div> -->
+      <div class="pay-chip">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path fill="#1A1F71"
+            d="M9.112 8.262L5.97 15.758H3.92L2.374 9.775c-.094-.368-.175-.503-.461-.658C1.447 8.864.677 8.627 0 8.479l.046-.217h3.3a.904.904 0 01.894.764l.817 4.338 2.018-5.102zm8.033 5.049c.008-1.979-2.736-2.088-2.717-2.972.006-.269.262-.555.822-.628a3.66 3.66 0 011.913.336l.34-1.59a5.207 5.207 0 00-1.814-.333c-1.917 0-3.266 1.02-3.278 2.479-.012 1.079.963 1.68 1.698 2.04.756.367 1.01.603 1.006.931-.005.504-.602.725-1.16.734-.975.015-1.54-.263-1.992-.473l-.351 1.642c.453.208 1.289.39 2.156.398 2.037 0 3.37-1.006 3.377-2.564m5.061 2.447H24l-1.565-7.496h-1.656a.883.883 0 00-.826.55l-2.909 6.946h2.036l.405-1.12h2.488zm-2.163-2.656l1.02-2.815.588 2.815zm-8.16-4.84l-1.603 7.496H8.34l1.605-7.496z" />
+        </svg>
+        Visa
+      </div>
+      <div class="pay-chip">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="9" cy="12" r="6.5" fill="#EB001B" />
+          <circle cx="15" cy="12" r="6.5" fill="#F79E1B" />
+          <path d="M12 6.5a6.49 6.49 0 0 1 3 5.5 6.49 6.49 0 0 1-3 5.5 6.49 6.49 0 0 1-3-5.5 6.49 6.49 0 0 1 3-5.5z"
+            fill="#FF5F00" />
+        </svg>
+        Mastercard
+      </div>
+      <div class="pay-chip">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path fill="#25D366"
+            d="M19.001 4.908A9.817 9.817 0 0 0 11.992 2C6.534 2 2.085 6.448 2.08 11.908c0 1.748.458 3.45 1.321 4.956L2 22l5.251-1.378a9.831 9.831 0 0 0 4.74 1.208h.004c5.454 0 9.91-4.45 9.915-9.91a9.814 9.814 0 0 0-2.909-6.912zM11.993 20.147a8.17 8.17 0 0 1-4.17-1.144l-.299-.177-3.105.814.829-3.027-.195-.311A8.156 8.156 0 0 1 3.75 11.91c.004-4.502 3.669-8.163 8.178-8.163 2.185.001 4.236.852 5.776 2.395a8.097 8.097 0 0 1 2.393 5.783c-.004 4.503-3.67 8.162-8.104 8.162zm4.537-6.203c-.249-.125-1.472-.725-1.699-.809-.228-.084-.393-.125-.558.125-.165.25-.637.809-.78.968-.143.16-.286.177-.535.052-.25-.125-1.05-.387-2.001-1.236-.74-.66-1.238-1.475-1.383-1.725-.145-.25-.015-.385.11-.51.112-.112.249-.292.374-.438.124-.146.166-.25.249-.417.083-.167.042-.313-.021-.438-.063-.125-.558-1.348-.764-1.848-.2-.48-.403-.415-.558-.423-.143-.007-.31-.008-.475-.008a.911.911 0 0 0-.66.309c-.228.25-.87.85-.87 2.07 0 1.22.887 2.4 1.011 2.56.124.16 1.744 2.66 4.223 3.73.59.254 1.05.407 1.41.521.593.189 1.134.162 1.562.098.476-.07 1.472-.601 1.68-1.182.207-.581.207-1.08.145-1.182-.062-.101-.227-.158-.477-.283z" />
+        </svg>
+        WhatsApp
+      </div>
+      <!-- <div class="pay-chip">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path fill="#1A73E8"
+            d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM9 11H7V9h2v2zm4 0h-2V9h2v2zm4 0h-2V9h2v2z" />
+        </svg>
+        SMS
+      </div> -->
+      <!-- <div class="pay-chip">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path fill="#FF6B00"
+            d="M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4zM6 18.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm12 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM19 13h-3V9h3v4z" />
+        </svg>
+        Shipping APIs
+      </div> -->
+    </div>
+  </section>
+
+  <!-- ================= COMPARISON ================= -->
+  <section class="comparison" id="pricing-solutions">
+    <div class="section-head">
+      <span class="eyebrow">Why GoSlot Store</span>
+      <h2>A traditional website vs. a real grocery platform</h2>
+    </div>
+    <div class="compare-table-wrap">
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>Compare</th>
+            <th>Traditional Website</th>
+            <th>GoSlot Store</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Setup Time</td>
+            <td>Weeks of custom dev</td>
+            <td class="win">Live in days</td>
+          </tr>
+          <tr>
+            <td>Maintenance</td>
+            <td>Ongoing developer cost</td>
+            <td class="win">Fully managed</td>
+          </tr>
+          <tr>
+            <td>Promotions</td>
+            <td>Manual, hard-coded</td>
+            <td class="win">Built-in promotions engine</td>
+          </tr>
+          <tr>
+            <td>Pricing Rules</td>
+            <td>Not supported</td>
+            <td class="win">Customer, group, bulk, regional</td>
+          </tr>
+          <tr>
+            <td>Analytics</td>
+            <td>Bolt-on / limited</td>
+            <td class="win">Native grocery analytics</td>
+          </tr>
+          <tr>
+            <td>Checkout</td>
+            <td>Generic cart</td>
+            <td class="win">Grocery-optimized checkout</td>
+          </tr>
+          <tr>
+            <td>Themes</td>
+            <td>One fixed template</td>
+            <td class="win">Full theme marketplace</td>
+          </tr>
+          <tr>
+            <td>Scalability</td>
+            <td>Rebuild to scale</td>
+            <td class="win">Scales with your business</td>
+          </tr>
+          <tr>
+            <td>Support</td>
+            <td>Freelancer-dependent</td>
+            <td class="win">Dedicated merchant support</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ================= TESTIMONIALS ================= -->
+  <section class="testimonials">
+    <div class="section-head">
+      <span class="eyebrow">Testimonials</span>
+      <h2>Grocery owners, in their own words</h2>
+    </div>
+    <div class="testi-carousel" id="testiCarousel">
+      <div class="testi-slide active">
+        <p class="testi-quote">Switching to GoSlot Store cut our order processing time in half. The pricing engine alone
+          paid for the subscription in a month.</p>
+        <div class="testi-author"><span class="testi-avatar">R</span>
+          <div><strong>Rahul Menon</strong><small>Owner, Urban Grocery</small></div>
+        </div>
+        <div class="testi-stars">★★★★★</div>
+      </div>
+      <div class="testi-slide">
+        <p class="testi-quote">We launched our online store in four days. The theme marketplace made it look
+          professional without hiring a designer.</p>
+        <div class="testi-author"><span class="testi-avatar">S</span>
+          <div><strong>Sara Thomas</strong><small>Founder, Green Basket</small></div>
+        </div>
+        <div class="testi-stars">★★★★★</div>
+      </div>
+      <div class="testi-slide">
+        <p class="testi-quote">Wholesale pricing used to be a manual nightmare. Now it's automatic, and our regional
+          stores each have the right rates.</p>
+        <div class="testi-author"><span class="testi-avatar">D</span>
+          <div><strong>David Paul</strong><small>Operations Lead, Family Market</small></div>
+        </div>
+        <div class="testi-stars">★★★★★</div>
+      </div>
+    </div>
+    <div class="testi-dots" id="testiDots"></div>
+  </section>
+
+  <!-- ================= PRICING PLANS ================= -->
+  <section class="plans" id="pricing">
+    <div class="section-head">
+      <span class="eyebrow">Pricing plans</span>
+      <h2>Simple plans that grow with your store</h2>
+    </div>
+    <div class="plan-grid">
+      <div class="plan-card">
+        <h3>Starter</h3>
+        <p class="plan-desc">For new grocery stores getting online.</p>
+        <div class="plan-price">$29<span>/mo</span></div>
+        <ul>
+          <li>1 storefront</li>
+          <li>Standard themes</li>
+          <li>Basic pricing rules</li>
+          <li>Email support</li>
+        </ul>
+        <a href="javascript:void(0)" class="btn btn-outline pricing-btn-trigger" data-plan="sprout">Start Free</a>
+      </div>
+      <div class="plan-card featured">
+        <span class="plan-badge">Most Popular</span>
+        <h3>Professional</h3>
+        <p class="plan-desc">For growing stores that need control.</p>
+        <div class="plan-price">$79<span>/mo</span></div>
+        <ul>
+          <li>Unlimited products</li>
+          <li>Full pricing engine</li>
+          <li>Promotions &amp; bundles</li>
+          <li>Advanced analytics</li>
+          <li>Priority support</li>
+        </ul>
+        <a href="javascript:void(0)" class="btn btn-primary pricing-btn-trigger" data-plan="maison">Start Free</a>
+      </div>
+      <div class="plan-card">
+        <h3>Enterprise</h3>
+        <p class="plan-desc">For multi-location grocery chains.</p>
+        <div class="plan-price">Custom</div>
+        <ul>
+          <li>Multi-store management</li>
+          <li>Regional pricing</li>
+          <li>Dedicated account manager</li>
+          <li>Custom integrations</li>
+        </ul>
+        <a href="#contact" class="btn btn-outline">Book a Demo</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FAQ ================= -->
+  <section class="faq" id="faq">
+    <div class="section-head">
+      <span class="eyebrow">FAQ</span>
+      <h2>Questions merchants ask us</h2>
+    </div>
+    <div class="faq-list" id="faqList">
+      <div class="faq-item">
+        <button class="faq-question" aria-expanded="false">Is GoSlot Store a grocery shopping site or a platform? <span
+            class="faq-toggle">+</span></button>
+        <div class="faq-answer">
+          <p>GoSlot Store is a SaaS platform for grocery business owners. It's not a place to buy groceries — it's the
+            software merchants use to build and run their own online grocery stores.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" aria-expanded="false">Do I need a developer to launch my store? <span
+            class="faq-toggle">+</span></button>
+        <div class="faq-answer">
+          <p>No. Themes, product setup, and pricing rules are all configured from the merchant dashboard — no code
+            required.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" aria-expanded="false">Can I set different prices for different customers? <span
+            class="faq-toggle">+</span></button>
+        <div class="faq-answer">
+          <p>Yes. The pricing engine supports customer, group, wholesale, bulk, and regional pricing rules that apply
+            automatically at checkout.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" aria-expanded="false">What payment gateways are supported? <span
+            class="faq-toggle">+</span></button>
+        <div class="faq-answer">
+          <p>Stripe, PayPal, Razorpay, Google Pay, Apple Pay, and major card networks are supported out of the box.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" aria-expanded="false">Can I connect my own domain? <span
+            class="faq-toggle">+</span></button>
+        <div class="faq-answer">
+          <p>Yes, you can point any custom domain to your store and SSL is provisioned automatically.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" aria-expanded="false">Can I manage more than one store location? <span
+            class="faq-toggle">+</span></button>
+        <div class="faq-answer">
+          <p>Enterprise plans support multi-store and multi-location management with regional pricing built in.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <div class="wrap">
-    <div class="shelf-line">
-      <script>document.write(Array(90).fill('<span></span>').join(''))</script>
-    </div>
-  </div>
-
-  <section id="how" style="padding-top:64px;">
-    <div class="wrap">
-      <div class="section-head">
-        <span class="eyebrow">The process</span>
-        <h2>From spreadsheet to storefront</h2>
-        <p>Three steps, in the order they actually happen when you open a store.</p>
-      </div>
-      <div class="steps">
-        <div class="step">
-          <span class="step-num">01 · stock</span>
-          <h3>Add your inventory</h3>
-          <p>Import a spreadsheet or add items one by one — name, price, unit, photo. Slot Store organizes it into
-            aisles automatically.</p>
-        </div>
-        <div class="step">
-          <span class="step-num">02 · set terms</span>
-          <h3>Set prices and delivery zones</h3>
-          <p>Draw your delivery radius on a map, set fees and minimums, and choose which payment methods you accept.</p>
-        </div>
-        <div class="step">
-          <span class="step-num">03 · open</span>
-          <h3>Open the doors</h3>
-          <p>Publish to your own domain. Orders land in one dashboard — pack, mark ready, and hand off to your driver.
-          </p>
-        </div>
-      </div>
+  <!-- ================= FINAL CTA ================= -->
+  <section class="final-cta">
+    <h2>Start your grocery business today</h2>
+    <p>Everything you need to launch, manage, and grow a successful grocery store online.</p>
+    <div class="hero-cta">
+      <a href="javascript:void(0)" class="btn btn-primary btn-lg pricing-btn-trigger" data-plan="sprout">Start Free</a>
+      <a href="#contact" class="btn btn-outline-light btn-lg">Book Demo</a>
     </div>
   </section>
 
-  <section>
-    <div class="wrap">
-      <div class="section-head">
-        <span class="eyebrow">What's included</span>
-        <h2>Everything a grocery order actually needs</h2>
-        <p>Not a generic store builder with grocery icons bolted on — every feature here exists because a real order
-          needs it.</p>
+  <!-- ================= FOOTER ================= -->
+  <footer class="site-footer" id="contact">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <span class="logo-text">GoSlot<span class="logo-accent">Store</span></span>
+        <p>The platform grocery businesses use to build and run their own online stores.</p>
+        <form class="newsletter" id="newsletterForm">
+          <input type="email" placeholder="Your work email" required aria-label="Email address for newsletter">
+          <button type="submit" class="btn btn-primary">Subscribe</button>
+        </form>
       </div>
-      <div class="feature-grid">
-        <div class="feature">
-          <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8">
-              <path d="M3 9h18M3 15h18M9 3v18M15 3v18" stroke-linecap="round" />
-            </svg></div>
-          <h3>Aisle-based catalog</h3>
-          <p>Organize items by aisle and category the way shoppers already think — produce, dairy, pantry, frozen.</p>
-        </div>
-        <div class="feature">
-          <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8">
-              <path
-                d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z">
-              </path>
-              <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
-              <line x1="12" y1="22.08" x2="12" y2="12"></line>
-            </svg></div>
-          <h3>Zoho Integration</h3>
-          <p>Seamlessly connect your storefront to Zoho. Automatically sync your inventory, customer records, and daily
-            sales.</p>
-        </div>
-
-        <div class="feature">
-          <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8">
-              <path d="M20 12H4M14 6l6 6-6 6" />
-            </svg></div>
-          <h3>Delivery zone maps</h3>
-          <p>Draw exactly where you deliver, set per-zone fees, and block orders from outside your reach.</p>
-        </div>
-
-        <div class="feature">
-          <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8">
-              <path d="M4 4h16v4H4zM4 10h16v10H4z" />
-              <path d="M9 14h6" />
-            </svg></div>
-          <h3>One order dashboard</h3>
-          <p>See every order from cart to doorstep — pack, print labels, and hand off without switching tabs.</p>
-        </div>
-        <div class="feature">
-          <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8">
-              <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
-              <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
-            </svg></div>
-          <h3>Bundle & Pack Deals</h3>
-          <p>Group items into weekly combos or offer volume pack discounts to instantly boost average order sizes.</p>
-        </div>
-        <div class="feature">
-          <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8">
-              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-              <circle cx="12" cy="10" r="3"></circle>
-            </svg></div>
-          <h3>Geo-Location Autofill</h3>
-          <p>Reduce cart abandonment with Google Maps address autocomplete and live GPS location capture at checkout.
-          </p>
-        </div>
-
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a href="#">About</a><a href="#">Careers</a><a href="#">Press</a><a href="#">Blog</a>
+      </div>
+      <div class="footer-col">
+        <h4>Platform</h4>
+        <a href="#features">Features</a><a href="#analytics">Analytics</a><a href="#themes">Themes</a><a
+          href="#pricing">Pricing</a>
+      </div>
+      <div class="footer-col">
+        <h4>Solutions</h4>
+        <a href="#">Independent Grocers</a><a href="#">Grocery Chains</a><a href="#">Farmers Markets</a>
+      </div>
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <a href="#">Help Center</a><a href="#">API Docs</a><a href="#">Guides</a>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <a href="#">Privacy</a><a href="#">Terms</a><a href="#">Security</a>
       </div>
     </div>
-  </section>
-
-  <section id="templates">
-    <div class="wrap">
-      <div class="section-head">
-        <span class="eyebrow">Storefront templates</span>
-        <h2>Pick a layout, then make it yours</h2>
-        <p>Every template ships with real grocery structure already in place — swap colors, fonts, and your logo.</p>
-      </div>
-      <div class="template-grid">
-        <div class="template-card" data-demo-url="{{ route('v1.home') }}?preview=1&tenant_id=2">
-          <div class="template-preview"
-            style="background:linear-gradient(180deg,#F7F5F0 0%,#F7F5F0 60%,#fff 60%);padding:16px;">
-            <div style="font-family:'Archivo';font-weight:700;font-size:13px;margin-bottom:8px;">Market Basic</div>
-            <div style="display:flex;gap:6px;">
-              <div style="width:30%;height:60px;background:#DDD8CB;border-radius:6px;"></div>
-              <div style="width:30%;height:60px;background:#E7EFE7;border-radius:6px;"></div>
-              <div style="width:30%;height:60px;background:#F2E4C4;border-radius:6px;"></div>
-            </div>
-          </div>
-          <div class="template-info">
-            <h4>Market basic</h4><span>Minimal</span>
-          </div>
-        </div>
-        <div class="template-card" data-demo-url="{{ route('velvet.home') }}?preview=1&tenant_id=2">
-          <div class="template-preview" style="background:#1C231B;padding:16px;">
-            <div style="font-family:'Archivo';font-weight:700;font-size:13px;margin-bottom:8px;color:#fff;">Night Grocer
-            </div>
-            <div style="display:flex;gap:6px;">
-              <div style="width:30%;height:60px;background:#3F6C4E;border-radius:6px;"></div>
-              <div style="width:30%;height:60px;background:#4B5245;border-radius:6px;"></div>
-              <div style="width:30%;height:60px;background:#E8B93F;border-radius:6px;"></div>
-            </div>
-          </div>
-          <div class="template-info">
-            <h4>Night grocer</h4><span>Bold</span>
-          </div>
-        </div>
-        <div class="template-card" data-demo-url="{{ route('v3.home') }}?preview=1&tenant_id=2">
-          <div class="template-preview" style="background:#F4F6F8;padding:16px; border-bottom: 1px solid var(--line);">
-            <div style="font-family:'Archivo';font-weight:700;font-size:13px;margin-bottom:8px;color:#111827;">Fresh App
-            </div>
-            <div style="display:flex;gap:6px;">
-              <div style="width:30%;height:60px;background:#10B981;border-radius:12px;"></div>
-              <div style="width:30%;height:60px;background:#EF4444;border-radius:12px;"></div>
-              <div style="width:30%;height:60px;background:#F59E0B;border-radius:12px;"></div>
-            </div>
-          </div>
-          <div class="template-info">
-            <h4>Fresh App</h4><span>Modern Mobile</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="pricing">
-    <div class="wrap">
-      <div class="section-head">
-        <span class="eyebrow">Pricing</span>
-        <h2>One plan for one store. Simple as a receipt.</h2>
-        <p>Every plan includes the storefront, orders, and payments. Higher tiers add more zones, staff, and volume.</p>
-      </div>
-      <div class="pricing-grid">
-        <div class="plan">
-          <h3>Corner store</h3>
-          <div class="plan-price">$0<span>/mo</span></div>
-          <div class="plan-desc">For testing the waters — one delivery zone, up to 100 items.</div>
-          <hr class="receipt-divider">
-          <ul class="plan-list">
-            <li><span>Storefront</span><b>1</b></li>
-            <li><span>Delivery zones</span><b>1</b></li>
-            <li><span>Catalog items</span><b>100</b></li>
-            <li><span>Staff accounts</span><b>1</b></li>
-            <li><span>Transaction fee</span><b>2.9%</b></li>
-          </ul>
-          <a href="#" class="btn btn-outline" style="width:100%;text-align:center;">Start free</a>
-        </div>
-        <div class="plan featured">
-          <span class="plan-badge">most chosen</span>
-          <h3>Full aisle</h3>
-          <div class="plan-price">$49<span>/mo</span></div>
-          <div class="plan-desc">For a store that's actually taking orders every day.</div>
-          <hr class="receipt-divider">
-          <ul class="plan-list">
-            <li><span>Storefront</span><b>1</b></li>
-            <li><span>Delivery zones</span><b>10</b></li>
-            <li><span>Catalog items</span><b>Unlimited</b></li>
-            <li><span>Staff accounts</span><b>5</b></li>
-            <li><span>Transaction fee</span><b>1.5%</b></li>
-          </ul>
-          <a href="#" class="btn btn-primary" style="width:100%;text-align:center;">Start your store</a>
-        </div>
-        <div class="plan">
-          <h3>Warehouse</h3>
-          <div class="plan-price">$149<span>/mo</span></div>
-          <div class="plan-desc">For multi-location grocers and growing chains.</div>
-          <hr class="receipt-divider">
-          <ul class="plan-list">
-            <li><span>Storefronts</span><b>5</b></li>
-            <li><span>Delivery zones</span><b>Unlimited</b></li>
-            <li><span>Catalog items</span><b>Unlimited</b></li>
-            <li><span>Staff accounts</span><b>Unlimited</b></li>
-            <li><span>Transaction fee</span><b>0.9%</b></li>
-          </ul>
-          <a href="#" class="btn btn-outline" style="width:100%;text-align:center;">Talk to us</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="faq">
-    <div class="wrap">
-      <div class="faq-layout">
-        <div class="faq-left">
-          <span class="eyebrow">FAQ</span>
-          <h2>Common questions</h2>
-          <p>Still not sure? Reach out to the Slot Store team — we typically respond within a few hours.</p>
-          <!-- <a href="#" class="btn btn-outline">Contact us</a> -->
-        </div>
-        <div class="faq-right">
-          <div class="faq-item open">
-            <div class="faq-q"><span>Do I need any code to set this up?</span><span class="faq-plus">+</span></div>
-            <div class="faq-a">No. Add your catalog, pick a template, set your delivery zones, and publish. Most stores
-              go
-              live in under an hour.</div>
-          </div>
-          <div class="faq-item">
-            <div class="faq-q"><span>Can I use my own domain?</span><span class="faq-plus">+</span></div>
-            <div class="faq-a">Yes — connect a domain you already own, or buy one during setup. Every plan supports a
-              custom
-              domain.</div>
-          </div>
-          <div class="faq-item">
-            <div class="faq-q"><span>How does delivery actually work?</span><span class="faq-plus">+</span></div>
-            <div class="faq-a">You draw your delivery zones on a map and set fees per zone. Orders route to your
-              dashboard,
-              where you mark them packed and ready for your own drivers or a courier partner.</div>
-          </div>
-          <div class="faq-item">
-            <div class="faq-q"><span>What happens after the trial?</span><span class="faq-plus">+</span></div>
-            <div class="faq-a">Your store stays live. Pick a plan that fits, or downgrade to Corner store — nothing is
-              deleted.</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-  <section id="contact">
-    <div class="wrap">
-      <div class="section-head">
-        <span class="eyebrow">Contact us</span>
-        <h2>We're here to help</h2>
-        <p>Have questions before you start or need technical support? Reach out to our team.</p>
-      </div>
-      <div class="contact-grid">
-        <div class="contact-card">
-          <div class="feature-icon" style="margin: 0 auto 20px;"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"
-              stroke="currentColor">
-              <path
-                d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z">
-              </path>
-            </svg></div>
-          <h3>Talk to Sales</h3>
-          <p style="margin-bottom:24px;">Need a custom plan or a live demo? We're available Mon-Fri, 9am-6pm.</p>
-          <a href="tel:+18001234567" class="btn btn-outline">Call +91 70126 39646</a>
-        </div>
-        <div class="contact-card">
-          <div class="feature-icon" style="margin: 0 auto 20px;"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"
-              stroke="currentColor">
-              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-              <polyline points="22,6 12,13 2,6"></polyline>
-            </svg></div>
-          <h3>Email Support</h3>
-          <p style="margin-bottom:24px;">Current customer needing technical help? Drop us a line anytime.</p>
-          <a href="mailto:support@slotstore.com" class="btn btn-outline">support@task19.com</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-
-  <section style="padding-top:0;">
-    <div class="wrap">
-      <div class="cta-band">
-        <div>
-          <h2>Your shelves are ready. Is your store?</h2>
-          <p>Set up your first storefront in the time it takes to restock a display.</p>
-        </div>
-        <a href="javascript:void(0)" class="btn btn-primary pricing-btn-trigger" data-plan="sprout">Start your store —
-          free</a>
-      </div>
-    </div>
-  </section>
-
-  <footer>
-    <div class="wrap">
-      <div class="footer-grid">
-        <div class="footer-col">
-          <div class="logo" style="margin-bottom:14px;"><span class="logo-mark"></span>Slot Store</div>
-          <p style="font-size:13.5px;color:var(--ink-faint);max-width:240px;">The storefront builder for independent
-            grocers, made for real inventory and real delivery routes.</p>
-        </div>
-        <div class="footer-col">
-          <h5>Product</h5>
-          <a href="#how">How it works</a>
-          <a href="#templates">Templates</a>
-          <a href="#pricing">Pricing</a>
-        </div>
-        <div class="footer-col">
-          <h5>Company</h5>
-          <a href="#">About</a>
-          <a href="#">Contact</a>
-          <a href="#">Careers</a>
-        </div>
-        <div class="footer-col">
-          <h5>Legal</h5>
-          <a href="#">Terms</a>
-          <a href="#">Privacy</a>
-        </div>
-      </div>
-      <div class="footer-bottom">
-        <span>© 2026 Slot Store. Made for grocers.</span>
-        <span>Kayamkulam · Remote</span>
+    <div class="footer-bottom">
+      <span>© 2026 GoSlot Store. All rights reserved.</span>
+      <div class="social-icons" aria-label="Social media">
+        <a href="#" aria-label="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+        <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+        <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+        <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
       </div>
     </div>
   </footer>
 
   <script>
-    document.querySelectorAll('.faq-item').forEach(item => {
-      item.addEventListener('click', () => {
-        const wasOpen = item.classList.contains('open');
-        document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
-        if (!wasOpen) item.classList.add('open');
+    (function () {
+      'use strict';
+
+      /* ---------- Sticky glass header ---------- */
+      const header = document.getElementById('siteHeader');
+      const onScroll = () => {
+        if (window.scrollY > 24) header.classList.add('scrolled');
+        else header.classList.remove('scrolled');
+      };
+      document.addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
+
+      /* ---------- Mobile nav toggle ---------- */
+      const navToggle = document.getElementById('navToggle');
+      const mainNav = document.getElementById('mainNav');
+      navToggle.addEventListener('click', () => {
+        const open = mainNav.classList.toggle('open');
+        navToggle.setAttribute('aria-expanded', open);
+        navToggle.classList.toggle('active', open);
       });
-    });
+      mainNav.querySelectorAll('a').forEach((link) => {
+        link.addEventListener('click', () => {
+          mainNav.classList.remove('open');
+          navToggle.setAttribute('aria-expanded', 'false');
+        });
+      });
+
+      /* ---------- Reveal-on-scroll ---------- */
+      const revealTargets = document.querySelectorAll(
+        '.feature-card, .promo-card, .theme-card, .an-card, .timeline-step, .plan-card, .faq-item, .pay-chip, .section-head, .rule-card, .pm-card, .compare-table-wrap'
+      );
+      revealTargets.forEach((el) => el.classList.add('reveal'));
+
+      const io = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('in-view');
+              io.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.15 }
+      );
+      revealTargets.forEach((el) => io.observe(el));
+
+      /* ---------- Animated counters ---------- */
+      const counters = document.querySelectorAll('[data-count]');
+      const animateCounter = (el) => {
+        const target = parseInt(el.getAttribute('data-count'), 10);
+        const prefix = el.getAttribute('data-prefix') || '';
+        const duration = 1400;
+        const start = performance.now();
+        const step = (now) => {
+          const progress = Math.min((now - start) / duration, 1);
+          const eased = 1 - Math.pow(1 - progress, 3);
+          const value = Math.floor(eased * target);
+          el.textContent = prefix + value.toLocaleString();
+          if (progress < 1) requestAnimationFrame(step);
+          else el.textContent = prefix + target.toLocaleString();
+        };
+        requestAnimationFrame(step);
+      };
+      const counterIO = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              animateCounter(entry.target);
+              counterIO.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.4 }
+      );
+      counters.forEach((el) => counterIO.observe(el));
+
+      /* ---------- Testimonial carousel ---------- */
+      const slides = document.querySelectorAll('.testi-slide');
+      const dotsWrap = document.getElementById('testiDots');
+      let activeSlide = 0;
+      let testiTimer;
+
+      slides.forEach((_, i) => {
+        const dot = document.createElement('button');
+        dot.setAttribute('aria-label', 'Show testimonial ' + (i + 1));
+        if (i === 0) dot.classList.add('active');
+        dot.addEventListener('click', () => showSlide(i, true));
+        dotsWrap.appendChild(dot);
+      });
+      const dots = dotsWrap.querySelectorAll('button');
+
+      function showSlide(index, manual) {
+        slides[activeSlide].classList.remove('active');
+        dots[activeSlide].classList.remove('active');
+        activeSlide = index;
+        slides[activeSlide].classList.add('active');
+        dots[activeSlide].classList.add('active');
+        if (manual) restartTestiTimer();
+      }
+      function nextSlide() { showSlide((activeSlide + 1) % slides.length, false); }
+      function restartTestiTimer() {
+        clearInterval(testiTimer);
+        testiTimer = setInterval(nextSlide, 5500);
+      }
+      if (slides.length) restartTestiTimer();
+
+      /* ---------- FAQ accordion ---------- */
+      document.querySelectorAll('.faq-item').forEach((item) => {
+        const btn = item.querySelector('.faq-question');
+        btn.addEventListener('click', () => {
+          const isOpen = item.classList.contains('open');
+          document.querySelectorAll('.faq-item.open').forEach((other) => {
+            if (other !== item) {
+              other.classList.remove('open');
+              other.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
+            }
+          });
+          item.classList.toggle('open', !isOpen);
+          btn.setAttribute('aria-expanded', String(!isOpen));
+        });
+      });
+
+      /* ---------- Button ripple effect ---------- */
+      document.querySelectorAll('.btn').forEach((btn) => {
+        btn.addEventListener('click', function (e) {
+          const rect = btn.getBoundingClientRect();
+          const ripple = document.createElement('span');
+          const size = Math.max(rect.width, rect.height);
+          ripple.className = 'ripple';
+          ripple.style.width = ripple.style.height = size + 'px';
+          ripple.style.left = (e.clientX - rect.left - size / 2) + 'px';
+          ripple.style.top = (e.clientY - rect.top - size / 2) + 'px';
+          btn.appendChild(ripple);
+          setTimeout(() => ripple.remove(), 650);
+        });
+      });
+
+      /* ---------- Newsletter form ---------- */
+      const newsletterForm = document.getElementById('newsletterForm');
+      if (newsletterForm) {
+        newsletterForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const input = newsletterForm.querySelector('input');
+          const btn = newsletterForm.querySelector('button');
+          const original = btn.textContent;
+          btn.innerHTML = 'Subscribed <i class="fa-solid fa-check"></i>';
+          input.value = '';
+          setTimeout(() => { btn.textContent = original; }, 2200);
+        });
+      }
+
+      /* ---------- Smooth anchor scroll offset ---------- */
+      document.querySelectorAll('a[href^="#"]').forEach((link) => {
+        link.addEventListener('click', (e) => {
+          const id = link.getAttribute('href');
+          if (id.length > 1) {
+            const target = document.querySelector(id);
+            if (target) {
+              e.preventDefault();
+              const y = target.getBoundingClientRect().top + window.pageYOffset - 90;
+              window.scrollTo({ top: y, behavior: 'smooth' });
+            }
+          }
+        });
+      });
+    })();
   </script>
-
-
 
   <!-- SAAS SIGN-UP MODAL -->
   <div class="saas-modal-overlay" id="saasModal">
@@ -1455,20 +3037,20 @@
   <style>
     .saas-modal-overlay,
     .demo-modal-overlay {
-      --black: #1C231B;
+      --black: #1F2937;
       --white: #FFFFFF;
-      --cream: #FDFCFA;
-      --gold: #3F6C4E;
-      --gold-light: #E7EFE7;
-      --gold-dark: #2A4A35;
-      --gray-100: #F7F5F0;
-      --gray-200: #DDD8CB;
-      --gray-400: #7C8177;
-      --gray-600: #4B5245;
-      --gray-800: #2A4A35;
-      --text: #1C231B;
-      --text-muted: #4B5245;
-      --border: #DDD8CB;
+      --cream: #F8FAF7;
+      --gold: #2E7D32;
+      --gold-light: rgba(46, 125, 50, 0.08);
+      --gold-dark: #1B5E20;
+      --gray-100: #F3F4F6;
+      --gray-200: #E5E7EB;
+      --gray-400: #9CA3AF;
+      --gray-600: #4B5563;
+      --gray-800: #1B5E20;
+      --text: #16241A;
+      --text-muted: #5B6B60;
+      --border: rgba(31, 41, 55, 0.08);
     }
 
     /* ── MOBILE PREVIEW MODAL ── */
@@ -2807,136 +4389,7 @@
     demoIframe.onload = () => {
       phoneLoader.classList.add('hidden');
     };
-
-    // Sticky Header Scroll Transition
-    const headerNav = document.getElementById('main-nav');
-    const heroSection = document.getElementById('hero');
-    function handleScroll() {
-      const heroHeight = heroSection ? heroSection.offsetHeight : 600;
-      const transitionPoint = heroHeight - 64;
-
-      if (window.scrollY >= transitionPoint) {
-        headerNav.classList.remove('nav-transparent', 'nav-transparent-blur');
-        headerNav.classList.add('nav-scrolled');
-      } else {
-        headerNav.classList.remove('nav-scrolled');
-        headerNav.classList.add('nav-transparent');
-
-        if (window.scrollY > 20) {
-          headerNav.classList.add('nav-transparent-blur');
-        } else {
-          headerNav.classList.remove('nav-transparent-blur');
-        }
-      }
-    }
-    window.addEventListener('scroll', handleScroll);
-    handleScroll(); // Run once initially
-
-    // Product Page Showcase Tab Switcher & Auto-rotation
-    const showcaseTabs = document.querySelectorAll('.showcase-tab');
-    const showcaseImages = document.querySelectorAll('.showcase-image-wrapper');
-    let activeIndex = 0;
-    let rotationInterval;
-
-    function switchTab(index) {
-      activeIndex = index;
-      const tab = showcaseTabs[activeIndex];
-
-      showcaseTabs.forEach(t => t.classList.remove('active'));
-      tab.classList.add('active');
-
-      showcaseImages.forEach(img => img.classList.remove('active'));
-      const targetId = tab.getAttribute('data-target');
-      const targetImg = document.getElementById(targetId);
-      if (targetImg) {
-        targetImg.classList.add('active');
-      }
-    }
-
-    function startAutoRotation() {
-      stopAutoRotation();
-      rotationInterval = setInterval(() => {
-        let nextIndex = (activeIndex + 1) % showcaseTabs.length;
-        switchTab(nextIndex);
-      }, 5000);
-    }
-
-    function stopAutoRotation() {
-      if (rotationInterval) {
-        clearInterval(rotationInterval);
-      }
-    }
-
-    showcaseTabs.forEach((tab, index) => {
-      tab.addEventListener('click', () => {
-        switchTab(index);
-        // Reset the timer when a user interacts manually so it doesn't skip immediately
-        startAutoRotation();
-      });
-    });
-
-    // Pause auto-rotation when mouse is hovering the showcase container
-    const showcaseContainer = document.querySelector('.showcase-container');
-    if (showcaseContainer) {
-      showcaseContainer.addEventListener('mouseenter', () => {
-        stopAutoRotation();
-      });
-      showcaseContainer.addEventListener('mouseleave', () => {
-        // Only resume if lightbox is not active
-        const lightbox = document.getElementById('showcase-lightbox');
-        if (lightbox && !lightbox.classList.contains('active')) {
-          startAutoRotation();
-        }
-      });
-    }
-
-    // Lightbox modal functionality
-    const showcasePreviewPanel = document.querySelector('.showcase-preview-panel');
-    const lightbox = document.getElementById('showcase-lightbox');
-    const lightboxImg = document.getElementById('lightbox-img');
-    const lightboxCaption = document.getElementById('lightbox-caption');
-    const lightboxClose = document.querySelector('.lightbox-close');
-
-    if (showcasePreviewPanel && lightbox && lightboxImg) {
-      showcasePreviewPanel.addEventListener('click', (e) => {
-        const clickedMobile = e.target.closest('.showcase-mobile-mockup');
-        const activeImgWrapper = showcasePreviewPanel.querySelector('.showcase-image-wrapper.active');
-        if (activeImgWrapper) {
-          if (clickedMobile) {
-            const mobileImg = clickedMobile.querySelector('img');
-            lightboxImg.src = mobileImg.src;
-            lightboxCaption.textContent = mobileImg.alt + " (Mobile View)";
-          } else {
-            const desktopImg = activeImgWrapper.querySelector('.showcase-desktop-img');
-            lightboxImg.src = desktopImg.src;
-            lightboxCaption.textContent = desktopImg.alt + " (Desktop View)";
-          }
-          lightbox.classList.add('active');
-          document.body.style.overflow = 'hidden'; // Stop background scrolling
-          stopAutoRotation();
-        }
-      });
-
-      const closeLightbox = () => {
-        lightbox.classList.remove('active');
-        document.body.style.overflow = ''; // Restore scrolling
-        startAutoRotation();
-      };
-
-      lightboxClose.addEventListener('click', closeLightbox);
-      lightbox.addEventListener('click', (e) => {
-        if (e.target === lightbox) {
-          closeLightbox();
-        }
-      });
-    }
-
-    // Start auto-rotation initially
-    startAutoRotation();
   </script>
-
-
-
 </body>
 
 </html>
