@@ -82,6 +82,8 @@ class BundleController extends Controller
             'products' => 'required|array|min:1',
             'products.*' => 'exists:products,id',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
+            'min_order_qty' => 'nullable|integer|min:1',
+            'max_order_qty' => 'nullable|integer|min:1' . ($request->filled('min_order_qty') ? '|gte:min_order_qty' : ''),
         ]);
 
         $slug = Str::slug($request->title);
@@ -105,6 +107,8 @@ class BundleController extends Controller
             'status' => $request->status ?? 'draft',
             'discount_type' => $request->discount_type,
             'discount_value' => $request->discount_value,
+            'min_order_qty' => $request->min_order_qty,
+            'max_order_qty' => $request->max_order_qty,
         ]);
 
         $bundle->products()->attach($request->products);
@@ -156,6 +160,8 @@ class BundleController extends Controller
             'products' => 'required|array|min:1',
             'products.*' => 'exists:products,id',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
+            'min_order_qty' => 'nullable|integer|min:1',
+            'max_order_qty' => 'nullable|integer|min:1' . ($request->filled('min_order_qty') ? '|gte:min_order_qty' : ''),
         ]);
 
         $bundle = Bundle::findOrFail($id);
@@ -177,6 +183,8 @@ class BundleController extends Controller
             'status' => $request->status ?? 'draft',
             'discount_type' => $request->discount_type,
             'discount_value' => $request->discount_value,
+            'min_order_qty' => $request->min_order_qty,
+            'max_order_qty' => $request->max_order_qty,
         ];
 
         if ($request->hasFile('image')) {

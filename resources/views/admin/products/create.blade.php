@@ -448,6 +448,10 @@
                             <input type="text" name="type" class="form-control shadow-sm" placeholder="e.g. Fruits, Beverages" value="Grocery">
                         </div>
                         <div>
+                            <label class="form-label fw-medium text-secondary small mb-1">Vendor</label>
+                            <input type="text" name="vendor" class="form-control shadow-sm" placeholder="e.g. Local Farms">
+                        </div>
+                        <div>
                             <label class="form-label fw-medium text-secondary small mb-1">Collections</label>
                             <select name="collection_id" class="form-select shadow-sm">
                                 <option value="">Select a collection</option>

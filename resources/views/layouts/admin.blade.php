@@ -67,7 +67,12 @@
         .content-scroll .container-fluid {
             max-width: 1060px !important;
             margin: 0 auto !important;
-            padding: 0 2rem !important;
+            padding: 0 1rem !important;
+        }
+        @media (min-width: 768px) {
+            .content-scroll .container-fluid {
+                padding: 0 2rem !important;
+            }
         }
         
         /* Custom scrollbar for sidebar */

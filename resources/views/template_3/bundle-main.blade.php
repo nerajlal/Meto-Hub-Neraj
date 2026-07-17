@@ -151,7 +151,7 @@
     }
     
     function addToCartMain() {
-        const key = `bundle_{{ $bundle->id }}`;
+        const key = `bundle-{{ $bundle->id }}`;
         
         updateInlineCart(key, qty);
         

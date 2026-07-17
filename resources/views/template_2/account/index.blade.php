@@ -92,11 +92,11 @@
                         </div>
                         <div>
                             <label style="display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.5rem;">PIN Code</label>
-                            <input type="text" name="zip" value="{{ $address->zip ?? '' }}" placeholder="6-digit PIN" style="width: 100%; padding: 1rem; border-radius: 1rem; border: 1.5px solid var(--border-color); outline: none;" required>
+                            <input type="text" name="zip" value="{{ $address->zip ?? '' }}" placeholder="6-digit PIN" style="width: 100%; padding: 1rem; border-radius: 1rem; border: 1.5px solid var(--border-color); outline: none;">
                         </div>
                         <div>
                             <label style="display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.5rem;">Country</label>
-                            <input type="text" name="country" value="{{ $address->country ?? 'India' }}" style="width: 100%; padding: 1rem; border-radius: 1rem; border: 1.5px solid var(--border-color); outline: none; background: var(--section-bg);" readonly>
+                            <input type="text" name="country" value="{{ $address->country ?? 'India' }}" style="width: 100%; padding: 1rem; border-radius: 1rem; border: 1.5px solid var(--border-color); outline: none;">
                         </div>
                     </div>
                     <button type="submit" style="background: var(--primary-color); color: #fff; border: none; padding: 1.25rem 2.5rem; border-radius: 9999px; font-weight: 700; cursor: pointer; transition: 0.3s; margin-top: 1rem;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='var(--shadow-md)'" onmouseout="this.style.transform='none'; this.style.boxShadow='none'">

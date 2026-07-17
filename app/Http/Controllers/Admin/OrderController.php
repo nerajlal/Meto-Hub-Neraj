@@ -123,7 +123,7 @@ class OrderController extends Controller
             'shipping_address_line2' => 'nullable|string|max:255',
             'shipping_city' => 'required|string|max:100',
             'shipping_state' => 'required|string|max:100',
-            'shipping_postal_code' => 'required|string|max:20',
+            'shipping_postal_code' => 'nullable|string|max:20',
             'shipping_country' => 'required|string|max:100',
 
             // Billing Address
@@ -164,7 +164,7 @@ class OrderController extends Controller
                 'address' => $validated['shipping_address_line1'] . ($validated['shipping_address_line2'] ? ', ' . $validated['shipping_address_line2'] : ''),
                 'city' => $validated['shipping_city'],
                 'state' => $validated['shipping_state'],
-                'postal_code' => $validated['shipping_postal_code'],
+                'postal_code' => $validated['shipping_postal_code'] ?? '',
                 'country' => $validated['shipping_country'],
             ];
 
@@ -172,7 +172,7 @@ class OrderController extends Controller
                 'address' => ($validated['billing_address_line1'] ?? $validated['shipping_address_line1']) . (($validated['billing_address_line2'] ?? $validated['shipping_address_line2']) ? ', ' . ($validated['billing_address_line2'] ?? $validated['shipping_address_line2']) : ''),
                 'city' => $validated['billing_city'] ?? $validated['shipping_city'],
                 'state' => $validated['billing_state'] ?? $validated['shipping_state'],
-                'postal_code' => $validated['billing_postal_code'] ?? $validated['shipping_postal_code'],
+                'postal_code' => $validated['billing_postal_code'] ?? $validated['shipping_postal_code'] ?? '',
                 'country' => $validated['billing_country'] ?? $validated['shipping_country'],
             ];
 

@@ -6,7 +6,7 @@
 <div class="container-fluid py-4" style="background: #FAF9F6; min-height: 100vh;">
 
     <!-- Premium Header -->
-    <div class="mb-5 position-relative overflow-hidden p-4 rounded-4" style="background: linear-gradient(135deg, #111 0%, #222 100%); border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
+    <div class="mb-4 mb-md-5 position-relative overflow-hidden p-3 p-md-4 rounded-4" style="background: linear-gradient(135deg, #111 0%, #222 100%); border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
         <!-- Abstract background glow -->
         <div class="position-absolute rounded-circle" style="width: 250px; height: 250px; background: rgba(0, 128, 96, 0.15); filter: blur(80px); top: -100px; right: -50px; pointer-events: none;"></div>
         <div class="position-absolute rounded-circle" style="width: 200px; height: 200px; background: rgba(201, 168, 76, 0.1); filter: blur(60px); bottom: -100px; left: -50px; pointer-events: none;"></div>

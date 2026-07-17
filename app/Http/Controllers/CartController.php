@@ -361,6 +361,44 @@ class CartController extends Controller
             
             $cartKey = 'bundle-' . $id;
             
+            // Check purchase quantity limits for Bundle
+            $currentQty = 0;
+            if (Auth::check()) {
+                $cartItem = Cart::where('user_id', Auth::id())
+                    ->where('bundle_id', $id)
+                    ->first();
+                if ($cartItem) {
+                    $currentQty = $cartItem->quantity;
+                }
+            } else {
+                $cart = session()->get('cart', []);
+                if (isset($cart[$cartKey])) {
+                    $currentQty = $cart[$cartKey]['quantity'];
+                }
+            }
+
+            $targetQty = $currentQty + $quantity;
+
+            // Auto-boost initial addition to minimum required quantity
+            if ($currentQty == 0 && $bundle->min_order_qty && $targetQty < $bundle->min_order_qty) {
+                $quantity = $bundle->min_order_qty;
+                $targetQty = $bundle->min_order_qty;
+            }
+
+            if ($bundle->min_order_qty && $targetQty < $bundle->min_order_qty) {
+                return response()->json([
+                    'success' => false,
+                    'message' => "Minimum order quantity for {$bundle->title} is {$bundle->min_order_qty}."
+                ], 400);
+            }
+
+            if ($bundle->max_order_qty && $targetQty > $bundle->max_order_qty) {
+                return response()->json([
+                    'success' => false,
+                    'message' => "Maximum order quantity for {$bundle->title} is {$bundle->max_order_qty}."
+                ], 400);
+            }
+
              if (Auth::check()) {
                 $cartItem = Cart::where('user_id', Auth::id())
                     ->where('bundle_id', $id)
@@ -396,7 +434,9 @@ class CartController extends Controller
                         "price" => $bundle->total_price,
                         "image" => $bundleImage,
                         "size" => null,
-                        "type" => "bundle"
+                        "type" => "bundle",
+                        "min_order_qty" => $bundle->min_order_qty,
+                        "max_order_qty" => $bundle->max_order_qty
                     ];
                 }
                 session()->put('cart', $cart);
@@ -572,9 +612,30 @@ class CartController extends Controller
         if($request->id && $request->quantity) {
             // Check purchase quantity limits
             $productId = null;
+            $bundleId = null;
             if (!str_starts_with($request->id, 'bundle-')) {
                 $parts = explode('-', $request->id, 2);
                 $productId = $parts[0];
+            } else {
+                $bundleId = str_replace('bundle-', '', $request->id);
+            }
+
+            if ($bundleId) {
+                $bundle = Bundle::find($bundleId);
+                if ($bundle) {
+                    if ($bundle->min_order_qty && $request->quantity < $bundle->min_order_qty) {
+                        return response()->json([
+                            'success' => false,
+                            'message' => "Minimum order quantity for {$bundle->title} is {$bundle->min_order_qty}."
+                        ], 400);
+                    }
+                    if ($bundle->max_order_qty && $request->quantity > $bundle->max_order_qty) {
+                        return response()->json([
+                            'success' => false,
+                            'message' => "Maximum order quantity for {$bundle->title} is {$bundle->max_order_qty}."
+                        ], 400);
+                    }
+                }
             }
 
             if ($productId) {
@@ -844,7 +905,9 @@ class CartController extends Controller
                     "image" => $bundleImage,
                     "size" => null,
                     "type" => "bundle",
-                    "stock" => $item->bundle->is_out_of_stock ? 0 : 100 
+                    "stock" => $item->bundle->is_out_of_stock ? 0 : 100,
+                    "min_order_qty" => $item->bundle->min_order_qty,
+                    "max_order_qty" => $item->bundle->max_order_qty
                 ];
             }
             elseif ($item->product_id && $item->product) {

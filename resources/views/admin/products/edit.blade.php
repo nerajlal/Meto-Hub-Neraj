@@ -520,6 +520,10 @@
                             <input type="text" name="type" value="{{ old('type', $product->type) }}" class="form-control shadow-sm">
                         </div>
                         <div>
+                            <label class="form-label fw-medium text-secondary small mb-1">Vendor</label>
+                            <input type="text" name="vendor" value="{{ old('vendor', $product->vendor) }}" class="form-control shadow-sm" placeholder="e.g. Local Farms">
+                        </div>
+                        <div>
                             <label class="form-label fw-medium text-secondary small mb-1">Collections</label>
                             <select name="collection_id" class="form-select shadow-sm">
                                 <option value="">Select a collection</option>

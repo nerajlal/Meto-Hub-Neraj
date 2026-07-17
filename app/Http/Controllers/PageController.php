@@ -450,7 +450,7 @@ class PageController extends Controller
         if(\Illuminate\Support\Facades\Auth::check()) {
              $address = \App\Models\UserAddress::where('user_id', \Illuminate\Support\Facades\Auth::id())->where('is_default', true)->first();
              if(!$address) { $address = \App\Models\UserAddress::where('user_id', \Illuminate\Support\Facades\Auth::id())->first(); }
-             $items = \App\Models\Cart::where('tenant_id', $tenantId)->where('user_id', \Illuminate\Support\Facades\Auth::id())->with(['product.discounts', 'product.images', 'product.variants', 'bundle'])->get();
+             $items = \App\Models\Cart::where('tenant_id', $tenantId)->where('user_id', \Illuminate\Support\Facades\Auth::id())->with(['product.discounts', 'product.images', 'product.variants', 'bundle.products.images'])->get();
              foreach($items as $item) {
                  $stock = 0;
                  if($item->product_id && $item->product) {
@@ -486,7 +486,22 @@ class PageController extends Controller
                     }
                 } elseif ($item->bundle_id && $item->bundle) {
                     if (!$item->bundle->is_out_of_stock) {
-                        $cart['bundle-' . $item->bundle_id] = ["name" => $item->bundle->title, "quantity" => $item->quantity, "price" => $item->bundle->total_price, "image" => \Illuminate\Support\Facades\Storage::url($item->bundle->image), "product_id" => null, "bundle_id" => $item->bundle_id, "size" => null, "type" => "bundle"];
+                        $bundleImage = $item->bundle->image ? \Illuminate\Support\Facades\Storage::url($item->bundle->image) : null;
+                        if (!$bundleImage && $item->bundle->type == 'pack') {
+                            $firstProd = $item->bundle->products->first();
+                            $bundleImage = $firstProd ? $firstProd->main_image_url : null;
+                        }
+
+                        $cart['bundle-' . $item->bundle_id] = [
+                            "name" => $item->bundle->title, 
+                            "quantity" => $item->quantity, 
+                            "price" => $item->bundle->total_price, 
+                            "image" => $bundleImage, 
+                            "product_id" => null, 
+                            "bundle_id" => $item->bundle_id, 
+                            "size" => null, 
+                            "type" => "bundle"
+                        ];
                     }
                 }
              }
@@ -507,7 +522,22 @@ class PageController extends Controller
                         if($stock > 0) { $item['coupon'] = $this->getActiveCoupon($product); $cart[$key] = $item; }
                     }
                 } elseif(isset($item['type']) && $item['type'] == 'bundle') {
-                     if(isset($item['bundle_id'])) { $bundle = \App\Models\Bundle::where('tenant_id', $tenantId)->find($item['bundle_id']); if ($bundle && !$bundle->is_out_of_stock) { $cart[$key] = $item; } }
+                     if(isset($item['bundle_id'])) {
+                         $bundle = \App\Models\Bundle::where('tenant_id', $tenantId)->with('products.images')->find($item['bundle_id']);
+                         if ($bundle && !$bundle->is_out_of_stock) {
+                             // Resolve image: use bundle's own image, fall back to first product's image for packs
+                             $bundleImage = $item['image'] ?? null;
+                             if (!$bundleImage || $bundleImage == '' || str_contains($bundleImage, 'g-load')) {
+                                 $bundleImage = $bundle->image ? \Illuminate\Support\Facades\Storage::url($bundle->image) : null;
+                                 if (!$bundleImage && $bundle->type == 'pack') {
+                                     $firstProd = $bundle->products->first();
+                                     $bundleImage = $firstProd ? $firstProd->main_image_url : null;
+                                 }
+                             }
+                             $item['image'] = $bundleImage;
+                             $cart[$key] = $item;
+                         }
+                     }
                 }
             }
         }
@@ -532,10 +562,10 @@ class PageController extends Controller
             $formattedMin = '₹' . number_format($minOrderValue, 2);
             $theme = $tenant ? $tenant->theme : 'template_1';
             $cartRoute = match(true) {
-                $theme === 'template_2' || $theme === 'v3' => 'v3.cart',
+                $theme === 'template_2' || $theme === 'v3' => 'v3.home',
                 $theme === 'v4' => 'v4.cart',
                 $theme === 'v5' => 'v5.cart',
-                default => 'v1.cart'
+                default => 'v1.home'
             };
             return redirect()->route($cartRoute)->with('error', "Your order total must be at least {$formattedMin} to proceed to checkout.");
         }

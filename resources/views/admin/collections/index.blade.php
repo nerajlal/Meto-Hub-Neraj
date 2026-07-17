@@ -10,7 +10,7 @@
 
 <div class="card border shadow-sm container-fluid p-0 overflow-hidden">
     <div class="card-header bg-light border-bottom p-3">
-        <div class="d-flex gap-3">
+        <div class="d-flex flex-column flex-md-row gap-3">
             <div class="flex-grow-1">
                  <form action="{{ route('admin.collections') }}" method="GET">
                      @foreach(request()->except(['search', 'page']) as $key => $value)
@@ -24,7 +24,8 @@
             </div>
             
             <!-- Status Filter -->
-            <div class="dropdown">
+            <div class="d-flex gap-2">
+                <div class="dropdown">
                 <button class="btn btn-white border shadow-sm text-secondary bg-white dropdown-toggle" type="button" data-bs-toggle="dropdown">
                     <i class="fas fa-filter me-2"></i> {{ request('status') ? ucfirst(request('status')) : 'All Status' }}
                 </button>
@@ -47,6 +48,7 @@
                     <li><a class="dropdown-item small {{ request('sort') == 'name_asc' ? 'active bg-light text-dark fw-bold' : '' }}" href="{{ route('admin.collections', array_merge(request()->query(), ['sort' => 'name_asc', 'page' => 1])) }}">Name (A-Z)</a></li>
                     <li><a class="dropdown-item small {{ request('sort') == 'name_desc' ? 'active bg-light text-dark fw-bold' : '' }}" href="{{ route('admin.collections', array_merge(request()->query(), ['sort' => 'name_desc', 'page' => 1])) }}">Name (Z-A)</a></li>
                 </ul>
+            </div>
             </div>
         </div>
     </div>

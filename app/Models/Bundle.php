@@ -20,6 +20,8 @@ class Bundle extends Model
         'discount_value',
         'min_quantity',
         'tenant_id',
+        'min_order_qty',
+        'max_order_qty',
     ];
 
     public function getBasePriceAttribute()

@@ -26,12 +26,14 @@ Route::get('/templates', [App\Http\Controllers\LandingController::class, 'templa
 Route::post('/demo-request', [App\Http\Controllers\LandingController::class, 'handleDemoRequest'])->name('demo.request');
 
 // Shared Actions (Global)
-Route::post('/cart/add', [App\Http\Controllers\CartController::class, 'add'])->name('cart.add');
-Route::post('/cart/update', [App\Http\Controllers\CartController::class, 'update'])->name('cart.update');
-Route::post('/cart/remove', [App\Http\Controllers\CartController::class, 'remove'])->name('cart.remove');
-Route::get('/cart/fetch', [App\Http\Controllers\CartController::class, 'fetch'])->name('cart.fetch');
-Route::get('/cart/state', [App\Http\Controllers\CartController::class, 'state'])->name('cart.state');
-Route::post('/order/place', [App\Http\Controllers\OrderController::class, 'store'])->name('order.place');
+Route::middleware([\App\Http\Middleware\IdentifyStorefrontTenant::class])->group(function () {
+    Route::post('/cart/add', [App\Http\Controllers\CartController::class, 'add'])->name('cart.add');
+    Route::post('/cart/update', [App\Http\Controllers\CartController::class, 'update'])->name('cart.update');
+    Route::post('/cart/remove', [App\Http\Controllers\CartController::class, 'remove'])->name('cart.remove');
+    Route::get('/cart/fetch', [App\Http\Controllers\CartController::class, 'fetch'])->name('cart.fetch');
+    Route::get('/cart/state', [App\Http\Controllers\CartController::class, 'state'])->name('cart.state');
+    Route::post('/order/place', [App\Http\Controllers\OrderController::class, 'store'])->name('order.place');
+});
 
 // v1 Nurah Theme Routes
 Route::prefix('v1')->name('v1.')->middleware([\App\Http\Middleware\IdentifyStorefrontTenant::class])->group(function () {
@@ -45,7 +47,8 @@ Route::prefix('v1')->name('v1.')->middleware([\App\Http\Middleware\IdentifyStore
     Route::get('/product', [PageController::class, 'product'])->name('product');
     Route::get('/about', [PageController::class, 'about'])->name('about');
     Route::get('/contact', [PageController::class, 'contact'])->name('contact');
-    Route::get('/cart', [App\Http\Controllers\CartController::class, 'index'])->name('cart');
+    // Cart drawer is used instead of a separate cart page for v1
+    // Route::get('/cart', [App\Http\Controllers\CartController::class, 'index'])->name('cart');
     Route::get('/checkout', [PageController::class, 'checkout'])->name('checkout');
     Route::post('/wishlist/toggle', [App\Http\Controllers\WishlistController::class, 'toggle'])->name('wishlist.toggle');
     Route::get('/wishlist', [App\Http\Controllers\WishlistController::class, 'index'])->name('wishlist');
@@ -330,7 +333,8 @@ Route::prefix('v3')->name('v3.')->middleware([\App\Http\Middleware\IdentifyStore
     Route::get('/combos', [PageController::class, 'v3Combos'])->name('combos');
     Route::get('/combo', [PageController::class, 'v3Combo'])->name('combo');
     Route::get('/product', [PageController::class, 'v3Product'])->name('product');
-    Route::get('/cart', [App\Http\Controllers\CartController::class, 'v3Index'])->name('cart');
+    // Cart drawer is used instead of a separate cart page for v3
+    // Route::get('/cart', [App\Http\Controllers\CartController::class, 'v3Index'])->name('cart');
     Route::get('/checkout', [PageController::class, 'v3Checkout'])->name('checkout');
     Route::post('/wishlist/toggle', [App\Http\Controllers\WishlistController::class, 'toggle'])->name('wishlist.toggle');
     Route::get('/wishlist', [App\Http\Controllers\WishlistController::class, 'index'])->name('wishlist');

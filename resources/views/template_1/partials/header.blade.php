@@ -54,7 +54,7 @@
                         <i class="fa-solid fa-chevron-down" style="font-size: 0.7rem; margin-left: 0.3rem;"></i>
                     </a>
                     <div id="user-menu" class="d-none" style="position: absolute; top: calc(100% + 10px); right: 0; background: #fff; box-shadow: 0 4px 20px rgba(0,0,0,0.1); border-radius: 12px; min-width: 180px; z-index: 1000; overflow: hidden; border: 1px solid var(--border-color);">
-                        <a href="#" style="display: block; padding: 0.85rem 1.25rem; color: var(--primary-color); text-decoration: none; font-size: 0.9rem; font-weight: 600; border-bottom: 1px solid var(--border-color);">
+                        <a href="{{ route('account.orders') }}" style="display: block; padding: 0.85rem 1.25rem; color: var(--primary-color); text-decoration: none; font-size: 0.9rem; font-weight: 600; border-bottom: 1px solid var(--border-color);">
                             <i class="fa-solid fa-box-open me-2" style="color: var(--accent-color); width: 20px;"></i> My Orders
                         </a>
                         <form action="{{ route('customer.logout') }}" method="POST" style="margin: 0;">

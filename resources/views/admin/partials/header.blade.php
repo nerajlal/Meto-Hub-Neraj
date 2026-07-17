@@ -22,12 +22,72 @@
             <i class="fas fa-external-link-alt" style="font-size: 9px;"></i>
             View Store
         </a>
-        <button class="btn btn-link p-1 position-relative text-decoration-none" style="color: #cccccc !important;">
-            <i class="fas fa-bell"></i>
-            <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-dark rounded-circle" style="margin-top: 5px; margin-left: -5px;">
-                <span class="visually-hidden">New alerts</span>
-            </span>
-        </button>
+        @php
+            $tenantId = session('active_tenant_id') ?? auth()->user()->tenant_id ?? 1;
+            
+            $pendingOrdersCount = \App\Models\Order::where('tenant_id', $tenantId)
+                ->where('status', 'pending')
+                ->count();
+
+            $outOfStockCount = \App\Models\ProductVariant::whereHas('product', function($q) use ($tenantId) {
+                    $q->where('tenant_id', $tenantId)->where('status', 'active')->where('continue_selling_when_out_of_stock', false);
+                })
+                ->where('stock', '<=', 0)
+                ->count();
+                
+            $hasNotifications = $pendingOrdersCount > 0 || $outOfStockCount > 0;
+        @endphp
+        
+        <div class="dropdown">
+            <button class="btn btn-link p-1 position-relative text-decoration-none" data-bs-toggle="dropdown" aria-expanded="false" style="color: #cccccc !important;">
+                <i class="fas fa-bell"></i>
+                @if($hasNotifications)
+                <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-dark rounded-circle" style="margin-top: 5px; margin-left: -5px;">
+                    <span class="visually-hidden">New alerts</span>
+                </span>
+                @endif
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2" style="width: 280px; font-size: 13px;">
+                <li class="px-3 py-2 border-bottom">
+                    <span class="fw-bold text-dark">Notifications</span>
+                </li>
+                
+                @if(!$hasNotifications)
+                <li class="px-3 py-4 text-center text-muted">
+                    <i class="fas fa-bell-slash fs-4 mb-2 opacity-25"></i>
+                    <p class="mb-0 small">No new notifications</p>
+                </li>
+                @else
+                    @if($pendingOrdersCount > 0)
+                    <li>
+                        <a class="dropdown-item py-2 d-flex align-items-center border-bottom" href="{{ route('admin.orders', ['status' => 'pending']) }}">
+                            <div class="bg-primary bg-opacity-10 text-primary rounded-circle p-2 me-3 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+                                <i class="fas fa-box"></i>
+                            </div>
+                            <div>
+                                <div class="fw-medium text-dark">{{ $pendingOrdersCount }} Pending Order(s)</div>
+                                <div class="text-muted" style="font-size: 11px;">You have orders to process.</div>
+                            </div>
+                        </a>
+                    </li>
+                    @endif
+
+                    @if($outOfStockCount > 0)
+                    <li>
+                        <a class="dropdown-item py-2 d-flex align-items-center" href="{{ route('admin.products', ['status' => 'active']) }}">
+                            <div class="bg-danger bg-opacity-10 text-danger rounded-circle p-2 me-3 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                            <div>
+                                <div class="fw-medium text-dark">{{ $outOfStockCount }} Out of Stock</div>
+                                <div class="text-muted" style="font-size: 11px;">Active variants need restocking.</div>
+                            </div>
+                        </a>
+                    </li>
+                    @endif
+                @endif
+            </ul>
+        </div>
         
         <div class="dropdown">
             <div class="d-flex align-items-center gap-2 cursor-pointer" data-bs-toggle="dropdown" aria-expanded="false">

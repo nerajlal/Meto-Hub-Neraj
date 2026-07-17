@@ -5,7 +5,7 @@
 @section('content')
 <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
     <h1 class="h3 fw-bold text-dark mb-0">Products</h1>
-    <div class="d-flex gap-2">
+    <div class="d-flex flex-wrap gap-2">
         @if(isset($zohoConnected) && $zohoConnected)
             <form action="{{ route('admin.zoho.sync', request()->route('tenant') ?? 1) }}" method="POST" class="d-inline">
                 @csrf
@@ -71,7 +71,7 @@
 
 <div class="card border shadow-sm">
     <div class="card-header bg-light border-bottom p-3">
-        <div class="d-flex gap-3">
+        <div class="d-flex flex-column flex-md-row gap-3">
             <div class="flex-grow-1">
                  <form action="{{ route('admin.products') }}" method="GET">
                      @foreach(request()->except(['search', 'page']) as $key => $value)
@@ -85,7 +85,8 @@
             </div>
             
              <!-- Type Filter -->
-            <div class="dropdown">
+            <div class="d-flex gap-2">
+                <div class="dropdown">
                 <button class="btn btn-white border shadow-sm text-secondary bg-white dropdown-toggle" type="button" data-bs-toggle="dropdown">
                     <i class="fas fa-filter me-2"></i> {{ request('type') ?? 'Type' }}
                 </button>
@@ -109,6 +110,7 @@
                     <li><a class="dropdown-item small {{ request('sort') == 'title_asc' ? 'active bg-light text-success fw-bold' : '' }}" href="{{ route('admin.products', array_merge(request()->query(), ['sort' => 'title_asc', 'page' => 1])) }}">Title (A-Z)</a></li>
                     <li><a class="dropdown-item small {{ request('sort') == 'title_desc' ? 'active bg-light text-success fw-bold' : '' }}" href="{{ route('admin.products', array_merge(request()->query(), ['sort' => 'title_desc', 'page' => 1])) }}">Title (Z-A)</a></li>
                 </ul>
+            </div>
             </div>
         </div>
     </div>

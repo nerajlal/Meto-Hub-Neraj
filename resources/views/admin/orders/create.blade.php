@@ -115,8 +115,8 @@
                 </div>
                 <div class="row g-3">
                     <div class="col-md-6">
-                        <label for="shipping_postal_code" class="form-label">Postal / ZIP Code *</label>
-                        <input type="text" class="form-control" id="shipping_postal_code" name="shipping_postal_code" required placeholder="ZIP Code">
+                        <label for="shipping_postal_code" class="form-label">Postal / ZIP Code</label>
+                        <input type="text" class="form-control" id="shipping_postal_code" name="shipping_postal_code" placeholder="ZIP Code">
                     </div>
                     <div class="col-md-6">
                         <label for="shipping_country" class="form-label">Country *</label>

@@ -42,7 +42,7 @@ class AccountController extends Controller
             'address_line1' => 'required|string|max:255',
             'city' => 'required|string|max:100',
             'state' => 'required|string|max:100',
-            'zip' => 'required|string|max:20',
+            'zip' => 'nullable|string|max:20',
             'country' => 'required|string|max:100',
         ]);
 
@@ -51,10 +51,14 @@ class AccountController extends Controller
         // Updating or Creating logic. Simple approach: assume we are editing the default address or creating a new one as default
         $address = $user->defaultAddress ?? $user->addresses()->first();
 
+        $data = $request->all();
+        $data['phone'] = $data['phone'] ?? '';
+        $data['zip'] = $data['zip'] ?? '';
+
         if ($address) {
-            $address->update($request->all());
+            $address->update($data);
         } else {
-            $user->addresses()->create(array_merge($request->all(), ['is_default' => true]));
+            $user->addresses()->create(array_merge($data, ['is_default' => true]));
         }
 
         return back()->with('success', 'Address updated successfully.');

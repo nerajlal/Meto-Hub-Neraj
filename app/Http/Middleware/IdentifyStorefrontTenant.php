@@ -35,6 +35,8 @@ class IdentifyStorefrontTenant
             ?? (auth()->check() ? auth()->user()->tenant_id : null) 
             ?? session('demo_tenant_id') 
             ?? 2;
+        session(['active_tenant_id' => $tenantId]);
+        
         $tenant = Tenant::find($tenantId);
         if ($tenant) {
             view()->share('currentTenant', $tenant);

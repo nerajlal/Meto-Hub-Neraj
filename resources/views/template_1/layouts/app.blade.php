@@ -168,9 +168,15 @@
 
         window.updateNCartQty = function (key, delta) {
             const $item = $(`.n-cart-item:has(button[onclick*="${key}"])`);
-            const currentQty = parseInt($item.find('.n-qty-wrap span').text() || '1');
+            const $qtySpan = $item.find('.n-qty-wrap span');
+            const $buttons = $item.find('.n-qty-wrap button');
+            const currentQty = parseInt($qtySpan.text() || '1');
             const newQty = currentQty + delta;
             if (newQty < 1) return;
+
+            // Optimistic UI: update quantity immediately
+            $qtySpan.text(newQty);
+            $buttons.prop('disabled', true).css('opacity', '0.4');
 
             $.post("{{ route('cart.update') }}", {
                 _token: "{{ csrf_token() }}",
@@ -179,7 +185,19 @@
             }, function (response) {
                 if (response.success) {
                     $('#cart-count').text(response.cartCount);
-                    refreshNCart();
+                    // Silently refresh cart content without spinner
+                    $.get("{{ route('cart.fetch') }}", { theme: 'template_1' }, function (html) {
+                        $('#cart-drawer-body-n').html(html);
+                    });
+                }
+            }).fail(function(xhr) {
+                // Revert on failure
+                $qtySpan.text(currentQty);
+                $buttons.prop('disabled', false).css('opacity', '1');
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    alert(xhr.responseJSON.message);
+                } else {
+                    alert('Could not update quantity. Please try again.');
                 }
             });
         }

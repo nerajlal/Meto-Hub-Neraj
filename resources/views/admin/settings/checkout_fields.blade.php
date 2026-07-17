@@ -32,8 +32,8 @@
                             <i class="fa-solid fa-cash-register me-2 shopify-green"></i>
                             <h5 class="m-0 fw-bold">Available Checkout Fields</h5>
                         </div>
-                        <div class="card-body p-0">
-                            <table class="table table-hover mb-0 align-middle">
+                        <div class="card-body p-0 table-responsive">
+                            <table class="table table-hover mb-0 align-middle" style="min-width: 600px;">
                                 <thead class="table-light">
                                     <tr>
                                         <th class="ps-4">Field Name</th>

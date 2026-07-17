@@ -184,6 +184,22 @@
                         </div>
                     </div>
 
+                    <!-- Purchase Quantity Limits -->
+                    <div class="card border shadow-sm p-3 mb-4">
+                        <h2 class="h6 fw-bold text-secondary mb-3">Purchase Limits (Wholesale/Promo)</h2>
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <label class="form-label fw-medium text-secondary small mb-1">Min Order Qty</label>
+                                <input type="number" name="min_order_qty" value="{{ old('min_order_qty', $bundle->min_order_qty) }}" class="form-control" placeholder="e.g. 1" min="1">
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label fw-medium text-secondary small mb-1">Max Order Qty</label>
+                                <input type="number" name="max_order_qty" value="{{ old('max_order_qty', $bundle->max_order_qty) }}" class="form-control" placeholder="e.g. 10" min="1">
+                            </div>
+                        </div>
+                        <div class="form-text text-muted small mt-2">Leave blank to disable order constraints on this bundle.</div>
+                    </div>
+
                     <!-- Summary -->
                     @if($bundle->type != 'pack')
                         <div class="card border shadow-sm p-3 mb-4">
