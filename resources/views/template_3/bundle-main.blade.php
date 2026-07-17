@@ -74,14 +74,18 @@
                         <img src="{{ $product->main_image_url ?? asset('Images/placeholder-grocery.webp') }}" style="width: 50px; height: 50px; border-radius: 8px; object-fit: cover; border: 1px solid #e2e8f0;">
                         <div>
                             <div style="font-weight: 600; font-size: 0.95rem;">
-                                @if($product->pivot->quantity > 1)
+                                @if(isset($product->pivot->quantity))
                                     <span style="color: var(--accent-color);">{{ $product->pivot->quantity }}x</span> 
                                 @endif
                                 {{ $product->title }}
                             </div>
-                            @if($product->pivot->product_variant_id)
-                                @php $variant = $product->variants->firstWhere('id', $product->pivot->product_variant_id); @endphp
-                                <div style="font-size: 0.85rem; color: var(--text-muted);">{{ $variant ? $variant->size : '' }}</div>
+                            @php
+                                $variant = $product->pivot->product_variant_id 
+                                    ? $product->variants->firstWhere('id', $product->pivot->product_variant_id) 
+                                    : $product->variants->first();
+                            @endphp
+                            @if($variant && $variant->size)
+                                <div style="font-size: 0.85rem; color: var(--text-muted);">Size: {{ $variant->size }}</div>
                             @endif
                         </div>
                     </div>

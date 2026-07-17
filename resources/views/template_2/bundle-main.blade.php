@@ -82,13 +82,17 @@
                             <img src="{{ $product->main_image_url }}" alt="{{ $product->title }}" onerror="this.src='{{ asset('Images/placeholder-grocery.webp') }}'" style="width: 50px; height: 50px; border-radius: 0.5rem; object-fit: cover;">
                             <div style="flex-grow: 1;">
                                 <h4 style="font-size: 0.95rem; font-weight: 700; color: var(--primary-color); margin: 0;">
-                                    @if($product->pivot->quantity > 1) {{ $product->pivot->quantity }}x @endif
+                                    {{ $product->pivot->quantity }}x
                                     {{ $product->title }}
                                 </h4>
                                 <p style="font-size: 0.8rem; color: var(--text-muted); margin: 0.25rem 0 0 0;">
-                                    @if($product->pivot->product_variant_id)
-                                        @php $v = $product->variants->firstWhere('id', $product->pivot->product_variant_id); @endphp
-                                        Size: {{ $v->size ?? $product->type }}
+                                    @php
+                                        $v = $product->pivot->product_variant_id 
+                                            ? $product->variants->firstWhere('id', $product->pivot->product_variant_id) 
+                                            : $product->variants->first();
+                                    @endphp
+                                    @if($v && $v->size)
+                                        Size: {{ $v->size }}
                                     @else
                                         Category: {{ $product->type ?? 'Grocery' }}
                                     @endif
