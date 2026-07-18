@@ -414,6 +414,64 @@ class ProductController extends Controller
         return response()->json($product->variants);
     }
 
+    public function downloadSample()
+    {
+        $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        
+        $headersList = [
+            'Title', 'Description', 'Status', 'Product Type', 'Vendor', 'Tags', 
+            'Min Order Qty', 'Max Order Qty', 'Continue Selling (Yes/No)', 
+            'Variant Size', 'SKU', 'Price', 'Compare Price', 'Stock'
+        ];
+
+        // Set Headers
+        foreach ($headersList as $index => $header) {
+            $col = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index + 1);
+            $sheet->setCellValue($col . '1', $header);
+            $sheet->getStyle($col . '1')->getFont()->setBold(true);
+        }
+        
+        // Sample 1
+        $sample1 = [
+            'Fresh Organic Apples', 'Delicious crisp apples directly from the farm.', 'active', 'Grocery', 'Local Farms', 'Fruits, Organic, Fresh',
+            '1', '10', 'No', 
+            '1kg', 'APP-1KG', '199.00', '250.00', '50'
+        ];
+        foreach ($sample1 as $index => $val) {
+            $col = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index + 1);
+            $sheet->setCellValue($col . '2', $val);
+        }
+        
+        // Sample 2
+        $sample2 = [
+            'Premium Almonds', 'High quality roasted almonds.', 'active', 'Dry Fruits', 'Nutty Delights', 'Nuts, Premium',
+            '', '', 'Yes', 
+            '500g', 'ALM-500G', '450.00', '500.00', '0'
+        ];
+        foreach ($sample2 as $index => $val) {
+            $col = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index + 1);
+            $sheet->setCellValue($col . '3', $val);
+        }
+        
+        $fileName = 'products_import_sample.xlsx';
+        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+        
+        $headers = [
+            "Content-type" => "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "Content-Disposition" => "attachment; filename=$fileName",
+            "Pragma" => "no-cache",
+            "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
+            "Expires" => "0"
+        ];
+        
+        $callback = function() use($writer) {
+            $writer->save('php://output');
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
+
     public function import(Request $request)
     {
         $request->validate([
@@ -449,12 +507,35 @@ class ProductController extends Controller
         $skuIdx = -1;
         $priceIdx = -1;
         $stockIdx = -1;
+        
+        $descIdx = -1;
+        $statusIdx = -1;
+        $typeIdx = -1;
+        $vendorIdx = -1;
+        $tagsIdx = -1;
+        $minQtyIdx = -1;
+        $maxQtyIdx = -1;
+        $continueIdx = -1;
+        $sizeIdx = -1;
+        $compareIdx = -1;
+        
         $isTallyStockSummary = false;
 
         $titleKeys = ['title', 'name', 'item name', 'product name', 'particulars'];
         $skuKeys = ['sku', 'part no', 'alias', 'item code'];
         $priceKeys = ['price', 'rate', 'standard price', 'mrp'];
         $stockKeys = ['stock', 'qty', 'closing balance', 'quantity'];
+        
+        $descKeys = ['description', 'desc'];
+        $statusKeys = ['status'];
+        $typeKeys = ['product type', 'type'];
+        $vendorKeys = ['vendor', 'brand'];
+        $tagsKeys = ['tags', 'categories'];
+        $minQtyKeys = ['min order qty', 'min qty', 'minimum order'];
+        $maxQtyKeys = ['max order qty', 'max qty', 'maximum order'];
+        $continueKeys = ['continue selling', 'continue selling (yes/no)', 'open when out of stock'];
+        $sizeKeys = ['variant size', 'size', 'weight', 'volume'];
+        $compareKeys = ['compare price', 'compare at price', 'mrp'];
 
         for ($i = 0; $i < min(20, count($data)); $i++) {
             $row = array_map('trim', array_map('strtolower', array_map('strval', $data[$i])));
@@ -492,6 +573,17 @@ class ProductController extends Controller
                 if ($skuIdx === -1 && in_array($colName, $skuKeys)) $skuIdx = $index;
                 if ($priceIdx === -1 && in_array($colName, $priceKeys)) $priceIdx = $index;
                 if ($stockIdx === -1 && in_array($colName, $stockKeys)) $stockIdx = $index;
+                
+                if ($descIdx === -1 && in_array($colName, $descKeys)) $descIdx = $index;
+                if ($statusIdx === -1 && in_array($colName, $statusKeys)) $statusIdx = $index;
+                if ($typeIdx === -1 && in_array($colName, $typeKeys)) $typeIdx = $index;
+                if ($vendorIdx === -1 && in_array($colName, $vendorKeys)) $vendorIdx = $index;
+                if ($tagsIdx === -1 && in_array($colName, $tagsKeys)) $tagsIdx = $index;
+                if ($minQtyIdx === -1 && in_array($colName, $minQtyKeys)) $minQtyIdx = $index;
+                if ($maxQtyIdx === -1 && in_array($colName, $maxQtyKeys)) $maxQtyIdx = $index;
+                if ($continueIdx === -1 && in_array($colName, $continueKeys)) $continueIdx = $index;
+                if ($sizeIdx === -1 && in_array($colName, $sizeKeys)) $sizeIdx = $index;
+                if ($compareIdx === -1 && in_array($colName, $compareKeys)) $compareIdx = $index;
             }
 
             if ($titleIdx !== -1 && ($priceIdx !== -1 || $stockIdx !== -1)) {
@@ -535,25 +627,77 @@ class ProductController extends Controller
                 $sku = ($skuIdx !== -1 && isset($row[$skuIdx])) ? trim((string) $row[$skuIdx]) : '';
                 $stock = (int) preg_replace('/[^0-9.-]/', '', $rawStock);
 
+                // --- NEW FIELDS EXTRACTION ---
+                $description = ($descIdx !== -1 && isset($row[$descIdx])) ? trim((string)$row[$descIdx]) : null;
+                $status = ($statusIdx !== -1 && isset($row[$statusIdx])) ? trim((string)$row[$statusIdx]) : 'active';
+                if (!in_array(strtolower($status), ['active', 'draft'])) $status = 'active';
+                
+                $type = ($typeIdx !== -1 && isset($row[$typeIdx])) ? trim((string)$row[$typeIdx]) : 'product';
+                $vendor = ($vendorIdx !== -1 && isset($row[$vendorIdx])) ? trim((string)$row[$vendorIdx]) : null;
+                
+                $tags = [];
+                if ($tagsIdx !== -1 && isset($row[$tagsIdx])) {
+                    $tagsStr = trim((string)$row[$tagsIdx]);
+                    if (!empty($tagsStr)) {
+                        $tags = array_map('trim', explode(',', $tagsStr));
+                    }
+                }
+
+                $minQty = null;
+                if ($minQtyIdx !== -1 && isset($row[$minQtyIdx])) {
+                    $m = trim((string)$row[$minQtyIdx]);
+                    if (is_numeric($m) && $m > 0) $minQty = (int)$m;
+                }
+                
+                $maxQty = null;
+                if ($maxQtyIdx !== -1 && isset($row[$maxQtyIdx])) {
+                    $m = trim((string)$row[$maxQtyIdx]);
+                    if (is_numeric($m) && $m > 0) $maxQty = (int)$m;
+                }
+
+                $continueSelling = false;
+                if ($continueIdx !== -1 && isset($row[$continueIdx])) {
+                    $c = strtolower(trim((string)$row[$continueIdx]));
+                    if ($c === 'yes' || $c === 'true' || $c === '1') $continueSelling = true;
+                }
+                
+                $variantSize = ($sizeIdx !== -1 && isset($row[$sizeIdx])) ? trim((string)$row[$sizeIdx]) : 'Standard';
+                if (empty($variantSize)) $variantSize = 'Standard';
+                
+                $comparePrice = null;
+                if ($compareIdx !== -1 && isset($row[$compareIdx])) {
+                    $c = trim((string)$row[$compareIdx]);
+                    $parsed = (float) preg_replace('/[^0-9.]/', '', $c);
+                    if ($parsed > 0) $comparePrice = $parsed;
+                }
+                // --- END NEW FIELDS ---
+
                 // Create or update Product
                 $product = Product::firstOrCreate([
                     'title' => $title,
                     'tenant_id' => $tenantId,
                 ], [
-                    'status' => 'active',
-                    'type' => 'product'
+                    'status' => strtolower($status),
+                    'type' => $type,
+                    'description' => $description,
+                    'vendor' => $vendor,
+                    'tags' => $tags,
+                    'min_order_qty' => $minQty,
+                    'max_order_qty' => $maxQty,
+                    'continue_selling_when_out_of_stock' => $continueSelling
                 ]);
 
                 // Create Variant
                 if (empty($sku)) {
-                    $sku = \Illuminate\Support\Str::slug($title) . '-' . rand(100, 999);
+                    $sku = \Illuminate\Support\Str::slug($title) . '-' . \Illuminate\Support\Str::slug($variantSize) . '-' . rand(100, 999);
                 }
 
                 $product->variants()->updateOrCreate([
                     'sku' => $sku
                 ], [
-                    'size' => 'Standard',
+                    'size' => $variantSize,
                     'price' => $price,
+                    'compare_at_price' => $comparePrice,
                     'stock' => $stock
                 ]);
 

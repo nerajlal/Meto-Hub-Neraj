@@ -31,7 +31,7 @@ class AppServiceProvider extends ServiceProvider
                     'USD' => '$',
                     'EUR' => '€',
                     'GBP' => '£',
-                    'AED' => 'د.إ',
+                    'AED' => 'AED ',
                     'CAD' => '$',
                     'AUD' => '$',
                 ];

@@ -26,9 +26,16 @@
             </button>
         </form>
         
-        <button type="button" class="btn btn-white border shadow-sm fw-medium" data-bs-toggle="modal" data-bs-target="#importModal">
-            <i class="fas fa-file-import me-1"></i> Import Products
-        </button>
+        <div class="dropdown d-inline-block">
+            <button class="btn btn-white border shadow-sm fw-medium dropdown-toggle" type="button" id="importTallyDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fas fa-file-import me-1"></i> Import Tally
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0" aria-labelledby="importTallyDropdown">
+                <li><a class="dropdown-item py-2" href="#" data-bs-toggle="modal" data-bs-target="#importModal"><i class="fas fa-upload me-2 text-muted"></i> Upload File</a></li>
+                <li><hr class="dropdown-divider my-1"></li>
+                <li><a class="dropdown-item py-2" href="{{ route('admin.products.sample') }}"><i class="fas fa-download me-2 text-muted"></i> Download Sample Format</a></li>
+            </ul>
+        </div>
         <a href="{{ route('admin.products.create') }}" class="btn btn-success shadow-sm">Add product</a>
     </div>
 </div>
@@ -204,14 +211,15 @@
         <form action="{{ route('admin.products.import') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="modal-content border-0 shadow-lg rounded-4">
-                <div class="modal-header border-bottom-0 pb-0">
-                    <h5 class="modal-title fw-bold" id="importModalLabel">Import Products</h5>
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold" id="importModalLabel">Import Tally</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <p class="text-muted small mb-4">
                         Upload an Excel (.xlsx, .xls) or CSV (.csv) file containing your product data. 
-                        We automatically map standard exports (like Tally) if they use column headers such as <strong>Item Name</strong>, <strong>Rate</strong>, <strong>Closing Balance</strong>, or <strong>Part No</strong>.
+                        We automatically map standard exports (like Tally) as well as full product catalogs. <br>
+                        <strong>Supported Columns:</strong> Title, Description, Status, Product Type, Vendor, Tags, Min Order Qty, Max Order Qty, Continue Selling, Variant Size, SKU, Price, Compare Price, Stock.
                     </p>
                     <div class="mb-3">
                         <label for="import_file" class="form-label fw-medium">Select File</label>

@@ -167,6 +167,7 @@ Route::prefix('{tenant}/admin')->name('admin.')->middleware(['identify_tenant', 
     Route::delete('/attributes/{id}', [App\Http\Controllers\Admin\AttributeController::class, 'destroy'])->name('attributes.destroy');
 
     Route::get('/products', [App\Http\Controllers\Admin\ProductController::class, 'index'])->name('products');
+    Route::get('/products/sample', [App\Http\Controllers\Admin\ProductController::class, 'downloadSample'])->name('products.sample');
     Route::post('/products/import', [App\Http\Controllers\Admin\ProductController::class, 'import'])->name('products.import');
     Route::get('/products/create', [App\Http\Controllers\Admin\ProductController::class, 'create'])->name('products.create');
     Route::post('/products', [App\Http\Controllers\Admin\ProductController::class, 'store'])->name('products.store');

@@ -30,7 +30,7 @@ class FormatCurrencyResponse
                     'USD' => '$',
                     'EUR' => '€',
                     'GBP' => '£',
-                    'AED' => 'د.إ',
+                    'AED' => 'AED ',
                     'CAD' => '$',
                     'AUD' => '$',
                 ];
