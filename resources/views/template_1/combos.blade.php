@@ -1,15 +1,15 @@
 @extends('template_1.layouts.app')
 
-@section('title', 'Weekly Combos & Value Deals | ' . ($currentTenant->name ?? 'Fresh Grocery'))
+@section('title', 'Deals | ' . ($currentTenant->name ?? 'Fresh Grocery'))
 
 @section('content')
 <div class="collection-header" style="margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: flex-end; gap: 1rem; flex-wrap: wrap;">
     <div style="max-width: 800px;">
-        <h1 class="collection-title" style="font-size: 2.5rem; font-weight: 800; color: var(--primary-color); line-height: 1.2;">Weekly Grocery Combos</h1>
-        <p style="color: var(--text-muted); margin-top: 0.5rem; font-size: 1.1rem;">Save big with our farm-fresh vegetables & fruit baskets, breakfast sets, and meal combos.</p>
+        <h1 class="collection-title" style="font-size: 2.5rem; font-weight: 800; color: var(--primary-color); line-height: 1.2;">Deals</h1>
+        <p style="color: var(--text-muted); margin-top: 0.5rem; font-size: 1.1rem;">Save big with our curated combo bundles and savings pack deals.</p>
     </div>
     <div class="collection-stats" style="font-weight: 600; color: var(--text-muted); background: #fff; border: 1px solid var(--border-color); padding: 0.5rem 1rem; border-radius: 0.75rem; font-size: 0.9rem;">
-        {{ $bundles->count() }} combos available
+        {{ $bundles->count() }} deals available
     </div>
 </div>
 

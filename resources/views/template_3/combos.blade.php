@@ -1,6 +1,6 @@
 @extends('template_3.layouts.app')
 
-@section('title', 'Weekly Deals | ' . ($currentTenant->name ?? 'Fresh Grocery'))
+@section('title', 'Deals | ' . ($currentTenant->name ?? 'Fresh Grocery'))
 
 @section('content')
 <div class="container" style="padding-top: 2rem; padding-bottom: 4rem;">
@@ -8,12 +8,12 @@
     <div class="breadcrumb">
         <a href="{{ route('v1.home') }}"><i class="fa-solid fa-house"></i> Home</a> 
         <span>/</span> 
-        <span style="color: var(--text-main); font-weight: 600;">Weekly Deals</span>
+        <span style="color: var(--text-main); font-weight: 600;">Deals</span>
     </div>
 
     <div class="collection-header" style="margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: flex-end; gap: 1rem; flex-wrap: wrap;">
         <div>
-            <h1 class="collection-title" style="font-size: 2rem; font-weight: 800; color: var(--primary-color);">Weekly Deals</h1>
+            <h1 class="collection-title" style="font-size: 2rem; font-weight: 800; color: var(--primary-color);">Deals</h1>
             <p style="color: var(--text-muted); margin-top: 0.5rem;">Discover our farm-fresh combo packs and volume savings.</p>
         </div>
     </div>

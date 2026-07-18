@@ -11,7 +11,7 @@
         @endphp
         <img src="{{ $imagePath }}" alt="{{ $bundle->title }}" onerror="this.src='{{ asset('Images/default.png') }}'">
         <div class="pack-deal-badge">
-            <i class="fa-solid fa-tags"></i> DEAL
+            <i class="{{ $bundle->type == 'pack' ? 'fa-solid fa-boxes-stacked' : 'fa-solid fa-layer-group' }}"></i> {{ $bundle->type == 'pack' ? 'COMBO' : 'BUNDLE' }}
         </div>
     </a>
     

@@ -103,7 +103,7 @@
                 </li>
                 <li class="menu-item">
                     <a href="{{ route('v1.combos') }}" class="menu-link">
-                        <i class="fa-solid fa-layer-group"></i> Weekly Combos
+                        <i class="fa-solid fa-layer-group"></i> Combos
                     </a>
                 </li>
                 @foreach($sidebarCollections as $col)
@@ -190,7 +190,7 @@
                         $('#cart-drawer-body-n').html(html);
                     });
                 }
-            }).fail(function(xhr) {
+            }).fail(function (xhr) {
                 // Revert on failure
                 $qtySpan.text(currentQty);
                 $buttons.prop('disabled', false).css('opacity', '1');
@@ -218,7 +218,7 @@
             toggleNCart(false);
         });
 
-        window.showCartToast = function(msg = 'Added to Cart successfully') {
+        window.showCartToast = function (msg = 'Added to Cart successfully') {
             const toast = document.createElement('div');
             toast.textContent = msg;
             toast.style.cssText = 'position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background: #10B981; color: white; padding: 10px 20px; border-radius: 20px; font-weight: 600; font-size: 0.9rem; z-index: 9999; box-shadow: 0 4px 12px rgba(0,0,0,0.15); transition: opacity 0.3s;';
@@ -256,7 +256,7 @@
 
                         // toggleNCart(true);
                         showCartToast();
-                        
+
                         setTimeout(() => {
                             btn.html('<i class="fa-solid fa-plus"></i>');
                             btn.css('background-color', '');

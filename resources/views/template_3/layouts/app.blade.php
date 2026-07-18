@@ -13,6 +13,13 @@
     
     <meta name="csrf-token" content="{{ csrf_token() }}">
     
+    <style>
+        @media (max-width: 768px) {
+            .mobile-search-toggle-btn {
+                display: flex !important;
+            }
+        }
+    </style>
     @yield('styles')
 </head>
 <body>
@@ -50,6 +57,9 @@
             </div>
             
             <div class="header-actions">
+                <button class="action-btn mobile-search-toggle-btn" onclick="toggleMobileSearchT3()" title="Search" style="display: none;">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
                 @if(auth()->check())
                 <button class="action-btn" onclick="window.location.href='{{ route('account.index') }}'" title="My Account">
                     <i class="fa-regular fa-user"></i>
@@ -71,6 +81,38 @@
                 </button>
             </div>
         </div>
+        <!-- Mobile Expandable Search Bar -->
+        <div id="t3-mobile-search-container" style="display: none; padding: 10px 15px; background: #fff; border-bottom: 1px solid var(--border-color); width: 100%; position: absolute; z-index: 999; top: 100%; left: 0;">
+            <form action="{{ route('v1.all-products') }}" method="GET" id="t3-mobile-search-form" autocomplete="off" style="display: flex; align-items: center; width: 100%; position: relative;">
+                <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 1rem; color: #9ca3af; top: 50%; transform: translateY(-50%);"></i>
+                <input
+                    type="text"
+                    name="q"
+                    id="t3-mobile-search-input"
+                    placeholder="Search for groceries, vegetables, meat..."
+                    value="{{ request('q') }}"
+                    autocomplete="off"
+                    style="width: 100%; padding: 0.75rem 1rem 0.75rem 2.5rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.95rem; outline: none; color: var(--text-main); background: #f8fafc;"
+                >
+                <button type="button" onclick="toggleMobileSearchT3()" style="position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%); border: none; background: none; color: #9ca3af; font-size: 1.25rem; padding: 0.25rem; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </form>
+            <div id="t3-mobile-search-dropdown" class="search-dropdown" style="display:none; position: absolute; top: calc(100% + 5px); left: 10px; right: 10px; background: #fff; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); border: 1px solid var(--border-color); z-index: 1000; padding: 0.5rem 0;">
+                <div id="t3-mobile-search-history-section">
+                    <div style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: #9ca3af; padding: 0.5rem 1rem;">
+                        <i class="fa-solid fa-clock-rotate-left"></i> Recent Searches
+                    </div>
+                    <ul id="t3-mobile-history-list" style="list-style: none; margin: 0; padding: 0;"></ul>
+                </div>
+                <div id="t3-mobile-suggestions-section" style="display:none;">
+                    <div style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: #9ca3af; padding: 0.5rem 1rem;">
+                        <i class="fa-solid fa-magnifying-glass"></i> Suggestions
+                    </div>
+                    <ul id="t3-mobile-suggestions-list" style="list-style: none; margin: 0; padding: 0;"></ul>
+                </div>
+            </div>
+        </div>
     </header>
     
     <!-- Top Navigation -->
@@ -78,7 +120,7 @@
         <div class="container" style="display: flex; gap: 2rem; align-items: center;">
             <a href="{{ route('v1.home') }}" style="color: var(--text-main); font-weight: 600; text-decoration: none; font-size: 0.95rem;">Home</a>
             <a href="{{ route('v1.all-products') }}" style="color: var(--text-main); font-weight: 600; text-decoration: none; font-size: 0.95rem;">All Products</a>
-            <a href="{{ route('v1.combos') }}" style="color: var(--text-main); font-weight: 600; text-decoration: none; font-size: 0.95rem;">Weekly Deals</a>
+            <a href="{{ route('v1.combos') }}" style="color: var(--text-main); font-weight: 600; text-decoration: none; font-size: 0.95rem;">Deals</a>
             @php
                 $collections = \App\Models\Collection::where('tenant_id', $currentTenant->id ?? 1)->where('status', 1)->get();
             @endphp
@@ -271,17 +313,7 @@
         (function () {
             const HISTORY_KEY = 't3_search_history';
             const MAX_HISTORY = 8;
-            const input = document.getElementById('t3-search-input');
-            const dropdown = document.getElementById('t3-search-dropdown');
-            const historySection = document.getElementById('t3-search-history-section');
-            const historyList = document.getElementById('t3-history-list');
-            const sugSection = document.getElementById('t3-suggestions-section');
-            const sugList = document.getElementById('t3-suggestions-list');
-            const form = document.getElementById('t3-search-form');
-            
-            if (!input || !dropdown) return;
 
-            // Optional: get products if available, or just use history for now
             @php
                 $tenantId = session('active_tenant_id') ?? 1;
                 $productTitles = \App\Models\Product::where('tenant_id', $tenantId)->where('status', 'active')->pluck('title');
@@ -302,48 +334,6 @@
                 saveHistory(h);
             }
 
-            function renderHistory() {
-                const h = getHistory();
-                historyList.innerHTML = '';
-                if (h.length === 0) { historySection.style.display = 'none'; return; }
-                historySection.style.display = '';
-                h.forEach(term => {
-                    const li = document.createElement('li');
-                    li.style.cssText = "display: flex; align-items: center; justify-content: space-between; padding: 0.5rem 1rem; cursor: pointer; transition: background 0.15s; font-size: 0.95rem; color: #374151;";
-                    li.innerHTML = `<div style="flex-grow: 1; display: flex; align-items: center; gap: 0.75rem;"><i class="fa-solid fa-clock-rotate-left" style="color:#9ca3af; font-size:0.85rem;"></i><span class="suggestion-text">${escHtml(term)}</span></div><span class="remove-history" style="color:#d1d5db; padding:2px; font-size: 0.8rem;"><i class="fa-solid fa-xmark"></i></span>`;
-                    
-                    li.addEventListener('mouseover', () => li.style.background = '#f3f4f6');
-                    li.addEventListener('mouseout', () => li.style.background = 'transparent');
-
-                    li.querySelector('.suggestion-text').addEventListener('click', (e) => { e.stopPropagation(); doSearch(term); });
-                    li.querySelector('.remove-history').addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        const filtered = getHistory().filter(i => i !== term);
-                        saveHistory(filtered);
-                        renderHistory();
-                        if (filtered.length === 0 && sugList.children.length === 0) hideDropdown();
-                    });
-                    historyList.appendChild(li);
-                });
-            }
-
-            function renderSuggestions(query) {
-                sugList.innerHTML = '';
-                if (!query.trim()) { sugSection.style.display = 'none'; return; }
-                const matches = allProductNames.filter(n => n.toLowerCase().includes(query.toLowerCase())).slice(0, 6);
-                if (matches.length === 0) { sugSection.style.display = 'none'; return; }
-                sugSection.style.display = '';
-                matches.forEach(name => {
-                    const li = document.createElement('li');
-                    li.style.cssText = "display: flex; align-items: center; gap: 0.75rem; padding: 0.5rem 1rem; cursor: pointer; transition: background 0.15s; font-size: 0.95rem; color: #374151;";
-                    li.innerHTML = `<i class="fa-solid fa-magnifying-glass" style="color:#9ca3af; font-size:0.85rem;"></i><span>${highlight(name, query)}</span>`;
-                    li.addEventListener('mouseover', () => li.style.background = '#f3f4f6');
-                    li.addEventListener('mouseout', () => li.style.background = 'transparent');
-                    li.addEventListener('click', () => doSearch(name));
-                    sugList.appendChild(li);
-                });
-            }
-
             function highlight(text, query) {
                 const idx = text.toLowerCase().indexOf(query.toLowerCase());
                 if (idx < 0) return escHtml(text);
@@ -354,44 +344,113 @@
                 return str.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[m]);
             }
 
-            function showDropdown() { dropdown.style.display = ''; }
-            function hideDropdown() { dropdown.style.display = 'none'; }
+            function initSearchAutocomplete(inputId, dropdownId, historySectionId, historyListId, sugSectionId, sugListId, formId) {
+                const input = document.getElementById(inputId);
+                const dropdown = document.getElementById(dropdownId);
+                const historySection = document.getElementById(historySectionId);
+                const historyList = document.getElementById(historyListId);
+                const sugSection = document.getElementById(sugSectionId);
+                const sugList = document.getElementById(sugListId);
+                const form = document.getElementById(formId);
 
-            function doSearch(term) {
-                addToHistory(term);
-                input.value = term;
-                form.submit();
+                if (!input || !dropdown) return;
+
+                function renderHistory() {
+                    const h = getHistory();
+                    historyList.innerHTML = '';
+                    if (h.length === 0) { historySection.style.display = 'none'; return; }
+                    historySection.style.display = '';
+                    h.forEach(term => {
+                        const li = document.createElement('li');
+                        li.style.cssText = "display: flex; align-items: center; justify-content: space-between; padding: 0.5rem 1rem; cursor: pointer; transition: background 0.15s; font-size: 0.95rem; color: #374151;";
+                        li.innerHTML = `<div style="flex-grow: 1; display: flex; align-items: center; gap: 0.75rem;"><i class="fa-solid fa-clock-rotate-left" style="color:#9ca3af; font-size:0.85rem;"></i><span class="suggestion-text">${escHtml(term)}</span></div><span class="remove-history" style="color:#d1d5db; padding:2px; font-size: 0.8rem;"><i class="fa-solid fa-xmark"></i></span>`;
+                        
+                        li.addEventListener('mouseover', () => li.style.background = '#f3f4f6');
+                        li.addEventListener('mouseout', () => li.style.background = 'transparent');
+
+                        li.querySelector('.suggestion-text').addEventListener('click', (e) => { e.stopPropagation(); doSearch(term); });
+                        li.querySelector('.remove-history').addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            const filtered = getHistory().filter(i => i !== term);
+                            saveHistory(filtered);
+                            renderHistory();
+                            if (filtered.length === 0 && sugList.children.length === 0) hideDropdown();
+                        });
+                        historyList.appendChild(li);
+                    });
+                }
+
+                function renderSuggestions(query) {
+                    sugList.innerHTML = '';
+                    if (!query.trim()) { sugSection.style.display = 'none'; return; }
+                    const matches = allProductNames.filter(n => n.toLowerCase().includes(query.toLowerCase())).slice(0, 6);
+                    if (matches.length === 0) { sugSection.style.display = 'none'; return; }
+                    sugSection.style.display = '';
+                    matches.forEach(name => {
+                        const li = document.createElement('li');
+                        li.style.cssText = "display: flex; align-items: center; gap: 0.75rem; padding: 0.5rem 1rem; cursor: pointer; transition: background 0.15s; font-size: 0.95rem; color: #374151;";
+                        li.innerHTML = `<i class="fa-solid fa-magnifying-glass" style="color:#9ca3af;font-size:0.85rem;"></i><span>${highlight(name, query)}</span>`;
+                        li.addEventListener('mouseover', () => li.style.background = '#f3f4f6');
+                        li.addEventListener('mouseout', () => li.style.background = 'transparent');
+                        li.addEventListener('click', () => doSearch(name));
+                        sugList.appendChild(li);
+                    });
+                }
+
+                function showDropdown() { dropdown.style.display = ''; }
+                function hideDropdown() { dropdown.style.display = 'none'; }
+
+                function doSearch(term) {
+                    addToHistory(term);
+                    input.value = term;
+                    form.submit();
+                }
+
+                input.addEventListener('focus', () => {
+                    renderHistory();
+                    renderSuggestions(input.value);
+                    const hasContent = getHistory().length > 0 || (input.value.trim() && allProductNames.some(n => n.toLowerCase().includes(input.value.toLowerCase())));
+                    if (hasContent) showDropdown();
+                });
+
+                input.addEventListener('input', () => {
+                    const q = input.value.trim();
+                    renderSuggestions(q);
+                    renderHistory();
+                    const hasHistory = getHistory().length > 0;
+                    const hasSug = sugList.children.length > 0;
+                    if (hasHistory || hasSug) showDropdown(); else hideDropdown();
+                });
+
+                form.addEventListener('submit', (e) => {
+                    const q = input.value.trim();
+                    if (q) addToHistory(q);
+                });
+
+                document.addEventListener('click', (e) => {
+                    if (!dropdown.contains(e.target) && e.target !== input) hideDropdown();
+                });
             }
 
-            input.addEventListener('focus', () => {
-                renderHistory();
-                renderSuggestions(input.value);
-                const hasContent = getHistory().length > 0 || (input.value.trim() && allProductNames.some(n => n.toLowerCase().includes(input.value.toLowerCase())));
-                if (hasContent) showDropdown();
-            });
+            // Init desktop autocomplete
+            initSearchAutocomplete('t3-search-input', 't3-search-dropdown', 't3-search-history-section', 't3-history-list', 't3-suggestions-section', 't3-suggestions-list', 't3-search-form');
 
-            input.addEventListener('input', () => {
-                const q = input.value.trim();
-                renderSuggestions(q);
-                renderHistory();
-                const hasHistory = getHistory().length > 0;
-                const hasSug = sugList.children.length > 0;
-                if (hasHistory || hasSug) showDropdown(); else hideDropdown();
-            });
-
-            form.addEventListener('submit', (e) => {
-                const q = input.value.trim();
-                if (q) addToHistory(q);
-            });
-
-            document.addEventListener('click', (e) => {
-                if (!dropdown.contains(e.target) && e.target !== input) hideDropdown();
-            });
-
-            input.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape') hideDropdown();
-            });
+            // Init mobile autocomplete
+            initSearchAutocomplete('t3-mobile-search-input', 't3-mobile-search-dropdown', 't3-mobile-search-history-section', 't3-mobile-history-list', 't3-mobile-suggestions-section', 't3-mobile-suggestions-list', 't3-mobile-search-form');
         })();
+
+        function toggleMobileSearchT3() {
+            const container = document.getElementById('t3-mobile-search-container');
+            const input = document.getElementById('t3-mobile-search-input');
+            if (container && input) {
+                if (container.style.display === 'none') {
+                    container.style.display = 'block';
+                    input.focus();
+                } else {
+                    container.style.display = 'none';
+                }
+            }
+        }
     </script>
     @include('partials.customer_auth_modal')
     @yield('scripts')

@@ -4,6 +4,9 @@
 
 @section('content')
 <style>
+    .checkout-page-container * {
+        box-sizing: border-box !important;
+    }
     .checkout-main-grid {
         display: grid;
         grid-template-columns: 1.8fr 1fr;
@@ -18,9 +21,21 @@
     .form-group-lg.full {
         grid-column: span 2;
     }
+    .schedule-grid {
+        display: grid;
+        gap: 1rem;
+    }
+    .date-grid {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        margin-bottom: 2rem;
+    }
+    .time-grid {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
     @media (max-width: 900px) {
         .checkout-main-grid {
-            grid-template-columns: 1fr;
+            display: flex;
+            flex-direction: column-reverse;
             gap: 1.5rem;
         }
         .checkout-sticky-summary {
@@ -29,15 +44,24 @@
         .checkout-title-lg {
             font-size: 1.8rem !important;
         }
-    }
-    @media (max-width: 600px) {
         .checkout-page-container {
-            padding: 0 !important;
+            padding: 0.5rem 1rem !important;
             max-width: 100% !important;
-            margin: 0 !important;
+            margin: 0 auto !important;
+            overflow-x: hidden !important;
+        }
+        .checkout-main-grid,
+        .checkout-forms-panel,
+        .checkout-sticky-summary,
+        .checkout-card,
+        .order-summary-card {
+            width: 100% !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
         }
         .checkout-header-lg {
             margin-bottom: 1.5rem !important;
+            padding: 0;
         }
         .form-grid-lg {
             grid-template-columns: 1fr;
@@ -47,7 +71,7 @@
             grid-column: span 1;
         }
         .checkout-card {
-            padding: 1.25rem !important;
+            padding: 1.25rem 1rem !important;
             margin-bottom: 1.25rem !important;
             border-radius: 1rem !important;
         }
@@ -58,12 +82,29 @@
             padding-bottom: 0.75rem !important;
         }
         .order-summary-card {
-            padding: 1.25rem !important;
+            padding: 1.25rem 1rem !important;
             border-radius: 1rem !important;
         }
         .pay-option {
             padding: 1rem !important;
             gap: 1rem !important;
+        }
+        .pay-title {
+            font-size: 0.95rem !important;
+        }
+        .pay-desc {
+            font-size: 0.75rem !important;
+        }
+        .date-grid {
+            grid-template-columns: repeat(3, 1fr) !important;
+            gap: 0.5rem !important;
+        }
+        .time-grid {
+            grid-template-columns: 1fr !important;
+            gap: 0.5rem !important;
+        }
+        .schedule-box {
+            padding: 0.75rem 0.5rem !important;
         }
         .summary-footer-badges {
             gap: 0.25rem !important;
@@ -79,7 +120,7 @@
         }
     }
 </style>
-<div class="checkout-page-container" style="max-width: 1200px; margin: 0 auto; padding: 2rem 1rem;">
+<div class="checkout-page-container" style="width: 100%; max-width: 1200px; margin: 0 auto; padding: 2rem 1rem;">
     @php
         $cf = $currentTenant->checkout_fields ?? [];
     @endphp
@@ -202,7 +243,7 @@
                     
                     @if($showDate)
                     <label style="display: block; font-size: 0.95rem; font-weight: 800; color: var(--primary-color); margin-bottom: 1rem;">Select Date <span style="color:red;">*</span></label>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+                    <div class="schedule-grid date-grid">
                         @foreach($deliveryDates as $idx => $dateOpt)
                         <label class="schedule-option" style="cursor: pointer; position: relative;">
                             <input type="radio" name="delivery_date" value="{{ $dateOpt['value'] }}" {{ $idx === 0 ? 'checked' : '' }} required style="position: absolute; opacity: 0; width: 0; height: 0;">
@@ -219,7 +260,7 @@
 
                     @if($showTime)
                     <label style="display: block; font-size: 0.95rem; font-weight: 800; color: var(--primary-color); margin-bottom: 1rem;">Select Time Slot <span style="color:red;">*</span></label>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem;">
+                    <div class="schedule-grid time-grid">
                         @foreach($deliveryTimeSlots as $idx => $slot)
                         <label class="schedule-option" style="cursor: pointer; position: relative;">
                             <input type="radio" name="delivery_time_slot" value="{{ $slot }}" {{ $idx === 0 ? 'checked' : '' }} required style="position: absolute; opacity: 0; width: 0; height: 0;">

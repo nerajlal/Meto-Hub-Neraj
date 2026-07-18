@@ -487,9 +487,9 @@ button, input {
     left: 8px;
     background: var(--accent-color);
     color: white;
-    padding: 0.25rem 0.75rem;
+    padding: 0.2rem 0.5rem;
     border-radius: 99px;
-    font-size: 0.75rem;
+    font-size: 0.6rem;
     font-weight: 700;
     z-index: 10;
     box-shadow: var(--shadow-sm);
@@ -677,6 +677,14 @@ button, input {
     
     .search-bar {
         display: none; /* Hide on mobile header, show in an expanded view or below header */
+    }
+    
+    .pack-deal-badge {
+        font-size: 0.55rem !important;
+        padding: 0.15rem 0.35rem !important;
+        top: 6px !important;
+        left: 6px !important;
+        border-radius: 4px !important;
     }
     
     /* 3 Columns on mobile as requested */
@@ -1110,5 +1118,12 @@ button, input {
         grid-template-columns: 1fr;
         gap: 2rem;
         padding: 1rem;
+    }
+    
+    .product-tag-badge {
+        font-size: 0.5rem !important;
+        padding: 0.15rem 0.35rem !important;
+        bottom: 5px !important;
+        left: 5px !important;
     }
 }
