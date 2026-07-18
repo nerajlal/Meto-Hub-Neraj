@@ -239,6 +239,7 @@ class OrderController extends Controller
             'delivery_time_slot' => $request->delivery_time_slot,
             'notes' => $request->order_notes ?? $request->notes,
             'placed_at' => now(),
+            'tenant_id' => $tenantId,
         ]);
 
         // 4.1 Save User Address if not exists or Update Phone on existing default
@@ -361,12 +362,22 @@ class OrderController extends Controller
         }
 
         // 7. Return Success
+        $theme = $tenant ? $tenant->theme : 'template_1';
+        $homeRoute = match($theme) {
+            'template_2' => route('velvet.home'),
+            'v3' => route('v3.home'),
+            'v4' => route('v4.home'),
+            'v5' => route('v5.home'),
+            default => route('v1.home'),
+        };
+
+        $redirectUrl = Auth::check() ? route('account.orders') : $homeRoute . '?order_success=1';
+
         return response()->json([
             'success' => true,
             'order_id' => $order->order_number,
-            'redirect_url' => route('account.orders')
+            'redirect_url' => $redirectUrl
         ]);
     }
-
 
 }

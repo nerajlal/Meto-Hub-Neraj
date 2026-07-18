@@ -466,17 +466,77 @@
         );
     }
 
+    let bypassAuthModal = false;
+
+    window.checkoutAsGuest = function() {
+        bypassAuthModal = true;
+        if (typeof closeCustomerAuthModal === 'function') {
+            closeCustomerAuthModal();
+        }
+        $('#main-checkout-form').submit();
+    };
+
+    function saveCheckoutFormData() {
+        const data = {};
+        $('#main-checkout-form input, #main-checkout-form textarea, #main-checkout-form select').each(function() {
+            const name = $(this).attr('name');
+            const val = $(this).val();
+            if (name && val && $(this).attr('type') !== 'password' && $(this).attr('type') !== 'hidden' && name !== '_token') {
+                if ($(this).attr('type') === 'radio' || $(this).attr('type') === 'checkbox') {
+                    if ($(this).is(':checked')) {
+                        data[name] = val;
+                    }
+                } else {
+                    data[name] = val;
+                }
+            }
+        });
+        localStorage.setItem('checkout_form_data', JSON.stringify(data));
+    }
+
+    function loadCheckoutFormData() {
+        const saved = localStorage.getItem('checkout_form_data');
+        if (saved) {
+            const data = JSON.parse(saved);
+            Object.keys(data).forEach(name => {
+                const val = data[name];
+                const input = $(`#main-checkout-form [name="${name}"]`);
+                if (input.length) {
+                    if (input.attr('type') === 'radio' || input.attr('type') === 'checkbox') {
+                        input.filter(`[value="${val}"]`).prop('checked', true).trigger('change');
+                        if (name === 'payment_method') {
+                            $(`.pay-option input[value="${val}"]`).closest('.pay-option').trigger('click');
+                        }
+                    } else {
+                        input.val(val).trigger('change');
+                    }
+                }
+            });
+        }
+    }
+
     $(document).ready(function() {
+        // Load cached details if any
+        loadCheckoutFormData();
+
+        // Listen for user edits to auto-save form state
+        $('#main-checkout-form input, #main-checkout-form textarea, #main-checkout-form select').on('input change', function() {
+            saveCheckoutFormData();
+        });
+
         $('#main-checkout-form').on('submit', function(e) {
             e.preventDefault();
 
             @if(!auth()->check())
-                if (typeof openCustomerAuthModal === 'function') {
-                    openCustomerAuthModal();
-                } else {
-                    alert('Please login to place an order.');
+                if (!bypassAuthModal) {
+                    saveCheckoutFormData();
+                    if (typeof openCustomerAuthModal === 'function') {
+                        openCustomerAuthModal();
+                    } else {
+                        alert('Please login to place an order.');
+                    }
+                    return false;
                 }
-                return false;
             @endif
             
             const $btn = $('.btn-complete-order');
@@ -490,6 +550,7 @@
                 data: $(this).serialize(),
                 success: function(response) {
                     if(response.success) {
+                        localStorage.removeItem('checkout_form_data');
                         window.location.href = response.redirect_url;
                     } else {
                         alert(response.message || 'Something went wrong.');
@@ -512,6 +573,7 @@
             $('.pay-option').removeClass('active').css('border-color', 'var(--border-color)').css('background', 'none');
             $(this).addClass('active').css('border-color', 'var(--accent-color)').css('background', 'var(--section-bg)');
             $(this).find('input[type="radio"]').prop('checked', true);
+            saveCheckoutFormData();
         });
     });
 </script>

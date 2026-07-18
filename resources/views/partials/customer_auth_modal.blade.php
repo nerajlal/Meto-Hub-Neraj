@@ -69,6 +69,15 @@
                     Create Account
                 </button>
             </form>
+            
+            @if(request()->is('*checkout*'))
+            <div style="margin-top: 15px; border-top: 1px dashed #e5e7eb; padding-top: 15px; text-align: center;">
+                <span style="font-size: 0.8rem; color: var(--text-muted); display: block; margin-bottom: 10px;">Or proceed without an account</span>
+                <button type="button" onclick="checkoutAsGuest()" style="width: 100%; padding: 10px 12px; background: #f1f5f9; color: var(--primary-color); border: 1px solid #d1d5db; border-radius: 8px; font-weight: 700; font-size: 0.95rem; cursor: pointer; transition: background 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                    <i class="fa-solid fa-circle-arrow-right"></i> Checkout as Guest
+                </button>
+            </div>
+            @endif
         </div>
     </div>
 </div>

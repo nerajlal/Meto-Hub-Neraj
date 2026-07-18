@@ -245,6 +245,16 @@
                 }
             });
         }
+
+        // Handle order success for guests
+        $(document).ready(function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('order_success')) {
+                alert('Thank you! Your order has been placed successfully.');
+                // Clean up the URL
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+        });
     </script>
     @stack('scripts')
 </body>

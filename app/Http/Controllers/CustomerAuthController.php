@@ -37,8 +37,10 @@ class CustomerAuthController extends Controller
                 'message' => 'Invalid email or password.'
             ], 401);
         }
-
         Auth::guard('web')->login($customer, $request->boolean('remember'));
+
+        // Sync session cart to DB for the newly logged in user
+        \App\Http\Controllers\CartController::syncSession($customer->id);
 
         // Handle Admin Redirects
         if ($customer->type === 'super_admin') {
@@ -60,7 +62,7 @@ class CustomerAuthController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Logged in successfully.',
-            'redirect' => url()->previous()
+            // Avoid using url()->previous() for AJAX as it might point to the page before
         ]);
     }
 
@@ -95,10 +97,13 @@ class CustomerAuthController extends Controller
 
         Auth::guard('web')->login($customer);
 
+        // Sync session cart to DB for the newly registered user
+        \App\Http\Controllers\CartController::syncSession($customer->id);
+
         return response()->json([
             'success' => true,
             'message' => 'Account created successfully.',
-            'redirect' => url()->previous()
+            // Avoid using url()->previous() for AJAX as it might point to the page before
         ]);
     }
 
