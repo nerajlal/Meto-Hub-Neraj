@@ -24,7 +24,7 @@
                 @if(isset($currentTenant) && $currentTenant->logo)
                     <img src="{{ asset('storage/' . $currentTenant->logo) }}" alt="Logo" style="height: 40px;">
                 @else
-                    <i class="fa-solid fa-leaf"></i> {{ $currentTenant->store_name ?? 'FreshMarket' }}
+                    <i class="fa-solid fa-leaf"></i> {{ $currentTenant->name ?? 'FreshMarket' }}
                 @endif
             </a>
             
@@ -80,19 +80,19 @@
             <a href="{{ route('v1.all-products') }}" style="color: var(--text-main); font-weight: 600; text-decoration: none; font-size: 0.95rem;">All Products</a>
             <a href="{{ route('v1.combos') }}" style="color: var(--text-main); font-weight: 600; text-decoration: none; font-size: 0.95rem;">Weekly Deals</a>
             @php
-                $collections = \App\Models\Collection::where('tenant_id', session('tenant_id', 1))->where('status', 1)->get();
+                $collections = \App\Models\Collection::where('tenant_id', $currentTenant->id ?? 1)->where('status', 1)->get();
             @endphp
             @foreach($collections as $cat)
                 <a href="{{ route('v1.collection', ['slug' => $cat->slug]) }}" style="color: var(--text-muted); font-weight: 500; text-decoration: none; font-size: 0.95rem;">{{ $cat->name }}</a>
             @endforeach
         </div>
     </nav>
-
+ 
     <!-- Main Content -->
     <main>
         @yield('content')
     </main>
-
+ 
     <!-- Footer -->
     <footer class="store-footer">
         <div class="container footer-grid">
@@ -101,7 +101,7 @@
                     @if(isset($currentTenant) && $currentTenant->logo)
                         <img src="{{ asset('storage/' . $currentTenant->logo) }}" alt="Logo" style="height: 40px;">
                     @else
-                        <i class="fa-solid fa-leaf"></i> {{ $currentTenant->store_name ?? 'FreshMarket' }}
+                        <i class="fa-solid fa-leaf"></i> {{ $currentTenant->name ?? 'FreshMarket' }}
                     @endif
                 </a>
                 <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.6;">

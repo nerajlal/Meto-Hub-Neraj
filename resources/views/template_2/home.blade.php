@@ -36,8 +36,8 @@
             @empty
                 <div class="hero-slide" style="flex: 0 0 100%; width: 100%; scroll-snap-align: start; position: relative; line-height: 0;">
                     <picture style="width: 100%; display: block;">
-                        <source media="(max-width: 768px)" srcset="{{ asset('Images/placeholder-grocery.webp') }}">
-                        <img src="{{ asset('Images/placeholder-grocery.webp') }}" alt="Default Banner" style="width: 100%; height: auto; border-radius: 2rem; object-fit: cover;">
+                        <source media="(max-width: 768px)" srcset="{{ asset('Images/demo.png') }}">
+                        <img src="{{ asset('Images/demo.png') }}" alt="Default Banner" style="width: 100%; height: auto; border-radius: 2rem; object-fit: cover;">
                     </picture>
                 </div>
             @endforelse
