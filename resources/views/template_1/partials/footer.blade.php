@@ -55,7 +55,7 @@
 
         <div class="footer-bottom">
             <div class="copyright">
-                &copy; {{ date('Y') }} {{ $currentTenant->name ?? 'Fresh Grocery' }}. All rights reserved. <span style="opacity: 0.7; margin-left: 10px;">| Powered by <a href="#" style="color: inherit; text-decoration: none; font-weight: 600;">Grocery SaaS</a></span>
+                &copy; {{ date('Y') }} {{ $currentTenant->name ?? 'Fresh Grocery' }}. All rights reserved. <span style="opacity: 0.7; margin-left: 10px;">| Powered by <a href="https://www.goslot.store/" style="color: inherit; text-decoration: none; font-weight: 600;">GoSlot Store</a></span>
             </div>
             <div class="social-links">
                 <a href="#"><i class="fa-brands fa-instagram"></i></a>
