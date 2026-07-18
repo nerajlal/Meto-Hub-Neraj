@@ -17,12 +17,12 @@
             <div class="cart-item-card" id="item-{{ $id }}" style="display: flex; gap: 1.5rem; padding: 1.5rem; background: #fff; border: 1px solid var(--border-color); border-radius: 1.25rem; margin-bottom: 1rem; transition: 0.2s;">
                 <div class="item-visual" style="width: 100px; height: 100px; border-radius: 0.75rem; overflow: hidden; background: #f8fafc; flex-shrink: 0;">
                     @php 
-                        $itemImg = $item['image'] ?? 'Images/placeholder-grocery.webp';
+                        $itemImg = $item['image'] ?? 'Images/default.png';
                         if (!$itemImg || $itemImg == '') {
-                            $itemImg = 'Images/placeholder-grocery.webp';
+                            $itemImg = 'Images/default.png';
                         }
                     @endphp
-                    <img src="{{ asset($itemImg) }}" alt="{{ $item['name'] }}" onerror="this.src='{{ asset('Images/placeholder-grocery.webp') }}'" style="width: 100%; height: 100%; object-fit: cover;">
+                    <img src="{{ asset($itemImg) }}" alt="{{ $item['name'] }}" onerror="this.src='{{ asset('Images/default.png') }}'" style="width: 100%; height: 100%; object-fit: cover;">
                 </div>
                 <div class="item-info-lg" style="flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between;">
                     <div class="item-top-row" style="display: flex; justify-content: space-between; align-items: flex-start;">

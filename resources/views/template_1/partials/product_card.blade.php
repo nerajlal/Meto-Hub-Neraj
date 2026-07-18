@@ -3,7 +3,7 @@
         @php 
             $imagePath = $product->main_image_url;
             if (!$imagePath) {
-                $imagePath = asset('Images/placeholder-grocery.webp');
+                $imagePath = asset('Images/default.png');
             }
             $isWishlisted = false;
             if (auth()->check()) {
@@ -15,7 +15,7 @@
             $initialStock = $product->variants->count() > 0 ? $product->variants->first()->stock : $product->variants->sum('stock');
             $isOut = $initialStock <= 0 && !$product->continue_selling_when_out_of_stock;
         @endphp
-        <img src="{{ $imagePath }}" alt="{{ $product->title }}" onerror="this.src='{{ asset('Images/placeholder-grocery.webp') }}'" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; {{ $isOut ? 'opacity: 0.6; filter: grayscale(100%);' : '' }}">
+        <img src="{{ $imagePath }}" alt="{{ $product->title }}" onerror="this.src='{{ asset('Images/default.png') }}'" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; {{ $isOut ? 'opacity: 0.6; filter: grayscale(100%);' : '' }}">
         
         @if($isOut)
         <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.7); color: #fff; padding: 6px 12px; border-radius: 4px; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; z-index: 10; white-space: nowrap;">

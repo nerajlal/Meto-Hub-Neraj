@@ -2,7 +2,7 @@
     @php 
         $imagePath = $product->main_image_url;
         if (!$imagePath) {
-            $imagePath = asset('Images/placeholder-grocery.webp');
+            $imagePath = asset('Images/default.png');
         }
         $isWishlisted = false;
         if (auth()->check()) {
@@ -26,7 +26,7 @@
         </div>
         @endif
         
-        <img src="{{ $imagePath }}" alt="{{ $product->title }}" onerror="this.src='{{ asset('Images/placeholder-grocery.webp') }}'" style="{{ $isOut ? 'opacity: 0.6; filter: grayscale(100%);' : '' }}">
+        <img src="{{ $imagePath }}" alt="{{ $product->title }}" onerror="this.src='{{ asset('Images/default.png') }}'" style="{{ $isOut ? 'opacity: 0.6; filter: grayscale(100%);' : '' }}">
         
         @if($isOut)
         <div class="sold-out-badge">

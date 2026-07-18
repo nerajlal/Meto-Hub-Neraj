@@ -57,7 +57,7 @@
             
             container.append(`
                 <div style="width: 34px; height: 34px; border-radius: 50%; background: #f8fafc; border: 2px solid #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-left: ${margin}; z-index: ${zIndex}; overflow: hidden;">
-                    <img src="${fullUrl}" onerror="this.src='{{ asset('Images/placeholder-grocery.webp') }}'" style="width: 100%; height: 100%; object-fit: cover;">
+                    <img src="${fullUrl}" onerror="this.src='{{ asset('Images/default.png') }}'" style="width: 100%; height: 100%; object-fit: cover;">
                 </div>
             `);
             zIndex--;

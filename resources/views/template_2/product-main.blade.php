@@ -3,7 +3,7 @@
 @section('title', $product->title . ' | ' . ($currentTenant->name ?? 'Fresh Grocery'))
 @section('meta_description', Str::limit(strip_tags($product->description), 160))
 @section('meta_keywords', $product->title . ', fresh, organic, grocery, order online')
-@section('og_image', $product->main_image_url ?? asset('Images/placeholder-grocery.webp'))
+@section('og_image', $product->main_image_url ?? asset('Images/default.png'))
 
 @section('styles')
 <script type="application/ld+json">
@@ -12,7 +12,7 @@
   "@@type": "Product",
   "name": "{{ $product->title }}",
   "image": [
-    "{{ $product->main_image_url ?? asset('Images/placeholder-grocery.webp') }}"
+    "{{ $product->main_image_url ?? asset('Images/default.png') }}"
   ],
   "description": "{{ strip_tags($product->description) }}",
   "brand": {
@@ -293,9 +293,9 @@
                     </div>
                 @endif
                 @php 
-                    $mainImg = $product->main_image_url ?? asset('Images/placeholder-grocery.webp');
+                    $mainImg = $product->main_image_url ?? asset('Images/default.png');
                 @endphp
-                <img src="{{ $mainImg }}" id="p-main-img" alt="{{ $product->title }}" onerror="this.src='{{ asset('Images/placeholder-grocery.webp') }}'" style="width: 100%; height: 100%; object-fit: cover;">
+                <img src="{{ $mainImg }}" id="p-main-img" alt="{{ $product->title }}" onerror="this.src='{{ asset('Images/default.png') }}'" style="width: 100%; height: 100%; object-fit: cover;">
             </div>
             <div class="thumb-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;">
                 @foreach($product->images->take(4) as $img)

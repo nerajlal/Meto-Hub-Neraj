@@ -296,9 +296,9 @@
                     <div class="s-item-row" style="display: flex; gap: 1rem; align-items: center; margin-bottom: 1.25rem;">
                         <div class="s-item-img" style="width: 60px; height: 60px; border-radius: 0.75rem; overflow: hidden; background: #fff; border: 1px solid var(--border-color); position: relative; flex-shrink: 0;">
                             @php 
-                                $checkoutImg = $item['image'] ?? asset('Images/placeholder-grocery.webp');
+                                $checkoutImg = $item['image'] ?? asset('Images/default.png');
                             @endphp
-                            <img src="{{ $checkoutImg }}" alt="{{ $item['name'] }}" onerror="this.src='{{ asset('Images/placeholder-grocery.webp') }}'" style="width: 100%; height: 100%; object-fit: cover;">
+                            <img src="{{ $checkoutImg }}" alt="{{ $item['name'] }}" onerror="this.src='{{ asset('Images/default.png') }}'" style="width: 100%; height: 100%; object-fit: cover;">
                             <span class="s-item-qty" style="position: absolute; top: -5px; right: -5px; background: var(--primary-color); color: #fff; width: 20px; height: 20px; border-radius: 50%; font-size: 0.75rem; display: flex; align-items: center; justify-content: center; font-weight: 700; border: 2px solid #fff;">{{ $item['quantity'] }}</span>
                         </div>
                         <div style="flex-grow: 1; min-width: 0;">

@@ -26,7 +26,7 @@
                 <button class="wishlist-btn {{ $isWishlisted ? 'active' : '' }}" onclick="toggleWishlist(event, {{ $product->id }})" style="top: 1rem; right: 1rem; width: 44px; height: 44px; font-size: 1.25rem;">
                     <i class="{{ $isWishlisted ? 'fa-solid' : 'fa-regular' }} fa-heart"></i>
                 </button>
-                <img id="mainImage" class="main-image" src="{{ $product->main_image_url ?? asset('Images/placeholder-grocery.webp') }}" alt="{{ $product->title }}">
+                <img id="mainImage" class="main-image" src="{{ $product->main_image_url ?? asset('Images/default.png') }}" alt="{{ $product->title }}">
             </div>
             
             @if($product->images && $product->images->count() > 1)

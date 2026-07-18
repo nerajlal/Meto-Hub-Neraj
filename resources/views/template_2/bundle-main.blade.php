@@ -17,7 +17,7 @@
         <div class="product-gallery">
             <div class="main-image-display" style="background: #fff; border-radius: 1.5rem; overflow: hidden; aspect-ratio: 1; border: 1px solid var(--border-color); margin-bottom: 1rem; position: relative; display: flex; align-items: center; justify-content: center;">
                 @php 
-                    $mainImg = $bundle->image ? Storage::url($bundle->image) : asset('Images/placeholder-grocery.webp');
+                    $mainImg = $bundle->image ? Storage::url($bundle->image) : asset('Images/default.png');
                     if (!$bundle->image && $bundle->type == 'pack') {
                         $firstProd = $bundle->products->first();
                         if ($firstProd) {
@@ -25,7 +25,7 @@
                         }
                     }
                 @endphp
-                <img src="{{ $mainImg }}" id="p-main-img" alt="{{ $bundle->title }}" onerror="this.src='{{ asset('Images/placeholder-grocery.webp') }}'" style="width: 100%; height: 100%; object-fit: cover;">
+                <img src="{{ $mainImg }}" id="p-main-img" alt="{{ $bundle->title }}" onerror="this.src='{{ asset('Images/default.png') }}'" style="width: 100%; height: 100%; object-fit: cover;">
                 <div style="position: absolute; top: 1.25rem; left: 1.25rem; background: var(--accent-color); color: #fff; padding: 0.5rem 1rem; border-radius: 0.5rem; font-weight: 800; font-size: 0.8rem; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2); z-index: 10;">
                     {{ $bundle->type == 'pack' ? 'VOLUME VALUE DEAL' : 'COMBO SAVINGS' }}
                 </div>
@@ -33,11 +33,11 @@
             @if($bundle->products->count() > 0)
             <div class="thumb-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;">
                 <div class="thumb-item active" onclick="document.getElementById('p-main-img').src='{{ $mainImg }}'; document.querySelectorAll('.thumb-item').forEach(el => el.style.borderColor='var(--border-color)'); this.style.borderColor='var(--accent-color)';" style="border: 2px solid var(--accent-color); border-radius: 0.75rem; overflow: hidden; aspect-ratio: 1; cursor: pointer; transition: 0.2s;">
-                    <img src="{{ $mainImg }}" onerror="this.src='{{ asset('Images/placeholder-grocery.webp') }}'" style="width: 100%; height: 100%; object-fit: cover;">
+                    <img src="{{ $mainImg }}" onerror="this.src='{{ asset('Images/default.png') }}'" style="width: 100%; height: 100%; object-fit: cover;">
                 </div>
                 @foreach($bundle->products->take(3) as $prod)
                     <div class="thumb-item" onclick="document.getElementById('p-main-img').src='{{ $prod->main_image_url }}'; document.querySelectorAll('.thumb-item').forEach(el => el.style.borderColor='var(--border-color)'); this.style.borderColor='var(--accent-color)';" style="border: 2px solid var(--border-color); border-radius: 0.75rem; overflow: hidden; aspect-ratio: 1; cursor: pointer; transition: 0.2s;">
-                        <img src="{{ $prod->main_image_url }}" onerror="this.src='{{ asset('Images/placeholder-grocery.webp') }}'" alt="{{ $prod->title }}" style="width: 100%; height: 100%; object-fit: cover;">
+                        <img src="{{ $prod->main_image_url }}" onerror="this.src='{{ asset('Images/default.png') }}'" alt="{{ $prod->title }}" style="width: 100%; height: 100%; object-fit: cover;">
                     </div>
                 @endforeach
             </div>
@@ -79,7 +79,7 @@
                 <div style="display: flex; flex-direction: column; gap: 1rem;">
                     @foreach($bundle->products as $product)
                         <div class="bundle-product-item" style="background: #f8fafc; border-radius: 0.75rem; border: 1px solid var(--border-color); overflow: hidden; padding: 1rem; display: flex; align-items: center; gap: 1rem;">
-                            <img src="{{ $product->main_image_url }}" alt="{{ $product->title }}" onerror="this.src='{{ asset('Images/placeholder-grocery.webp') }}'" style="width: 50px; height: 50px; border-radius: 0.5rem; object-fit: cover;">
+                            <img src="{{ $product->main_image_url }}" alt="{{ $product->title }}" onerror="this.src='{{ asset('Images/default.png') }}'" style="width: 50px; height: 50px; border-radius: 0.5rem; object-fit: cover;">
                             <div style="flex-grow: 1;">
                                 <h4 style="font-size: 0.95rem; font-weight: 700; color: var(--primary-color); margin: 0;">
                                     {{ $product->pivot->quantity }}x

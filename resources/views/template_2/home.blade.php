@@ -138,7 +138,7 @@
             <a href="{{ route('velvet.collection', ['slug' => $c->slug]) }}" style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem; text-decoration: none; min-width: 75px;">
                 <div style="width: 70px; height: 70px; border-radius: 50%; background: #f8fafc; border: 1.5px solid var(--border-color); overflow: hidden; display: flex; align-items: center; justify-content: center; padding: 0.2rem; transition: border-color 0.2s;" onmouseover="this.style.borderColor='var(--accent-color)'" onmouseout="this.style.borderColor='var(--border-color)'">
                     @php 
-                        $catImage = $c->image ? Storage::url($c->image) : asset('Images/placeholder-grocery.webp');
+                        $catImage = $c->image ? Storage::url($c->image) : asset('Images/default.png');
                     @endphp
                     <img src="{{ $catImage }}" alt="{{ $c->name }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
                 </div>
@@ -217,10 +217,10 @@
                             $bundleImg = $bundle->image ? \Illuminate\Support\Facades\Storage::url($bundle->image) : null;
                             if (!$bundleImg) {
                                 $firstProd = $bundle->products->first();
-                                $bundleImg = $firstProd ? $firstProd->main_image_url : asset('Images/placeholder-grocery.webp');
+                                $bundleImg = $firstProd ? $firstProd->main_image_url : asset('Images/default.png');
                             }
                         @endphp
-                        <img src="{{ $bundleImg }}" alt="{{ $bundle->title }}" onerror="this.src='{{ asset('Images/placeholder-grocery.webp') }}'" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;">
+                        <img src="{{ $bundleImg }}" alt="{{ $bundle->title }}" onerror="this.src='{{ asset('Images/default.png') }}'" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;">
                         <div style="position: absolute; top: 10px; right: 10px; background: #10b981; color: #fff; padding: 4px 8px; border-radius: 4px; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap;">
                             <i class="fa-solid fa-layer-group me-1"></i><span class="hide-text-mobile">Save Bundle</span>
                         </div>

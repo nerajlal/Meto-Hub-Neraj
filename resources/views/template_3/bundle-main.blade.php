@@ -26,7 +26,7 @@
                 @endif
                 
                 @php
-                    $mainImage = $bundle->image ? asset('storage/' . $bundle->image) : asset('Images/placeholder-grocery.webp');
+                    $mainImage = $bundle->image ? asset('storage/' . $bundle->image) : asset('Images/default.png');
                     if (!$bundle->image && $bundle->type == 'pack' && $bundle->products->first()) {
                         $mainImage = $bundle->products->first()->main_image_url;
                     }
@@ -71,7 +71,7 @@
                 <div style="display: flex; flex-direction: column; gap: 1rem;">
                     @foreach($bundle->products as $product)
                     <div style="display: flex; align-items: center; gap: 1rem;">
-                        <img src="{{ $product->main_image_url ?? asset('Images/placeholder-grocery.webp') }}" style="width: 50px; height: 50px; border-radius: 8px; object-fit: cover; border: 1px solid #e2e8f0;">
+                        <img src="{{ $product->main_image_url ?? asset('Images/default.png') }}" style="width: 50px; height: 50px; border-radius: 8px; object-fit: cover; border: 1px solid #e2e8f0;">
                         <div>
                             <div style="font-weight: 600; font-size: 0.95rem;">
                                 @if(isset($product->pivot->quantity))

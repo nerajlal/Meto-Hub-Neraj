@@ -4,12 +4,12 @@
             $imagePath = $bundle->image ? Storage::url($bundle->image) : null;
             if (!$imagePath && $bundle->type == 'pack') {
                 $firstProd = $bundle->products->first();
-                $imagePath = $firstProd ? $firstProd->main_image_url : asset('Images/placeholder-grocery.webp');
+                $imagePath = $firstProd ? $firstProd->main_image_url : asset('Images/default.png');
             } elseif (!$imagePath) {
-                $imagePath = asset('Images/placeholder-grocery.webp');
+                $imagePath = asset('Images/default.png');
             }
         @endphp
-        <img src="{{ $imagePath }}" alt="{{ $bundle->title }}" onerror="this.src='{{ asset('Images/placeholder-grocery.webp') }}'" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;">
+        <img src="{{ $imagePath }}" alt="{{ $bundle->title }}" onerror="this.src='{{ asset('Images/default.png') }}'" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;">
         <div class="social-proof-tag" style="position: absolute; bottom: 10px; left: 10px; background: rgba(255, 255, 255, 0.9); padding: 4px 8px; border-radius: 20px; font-size: 0.65rem; font-weight: 700; color: #059669; display: flex; align-items: center; gap: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); white-space: nowrap; max-width: 90%; overflow: hidden; text-overflow: ellipsis;">
             <i class="fa-solid fa-basket-shopping"></i>
             <span>{{ rand(20, 60) }} bought</span>

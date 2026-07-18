@@ -4,12 +4,12 @@
             $imagePath = $bundle->image ? Storage::url($bundle->image) : null;
             if (!$imagePath && $bundle->type == 'pack') {
                 $firstProd = $bundle->products->first();
-                $imagePath = $firstProd ? $firstProd->main_image_url : asset('Images/placeholder-grocery.webp');
+                $imagePath = $firstProd ? $firstProd->main_image_url : asset('Images/default.png');
             } elseif (!$imagePath) {
-                $imagePath = asset('Images/placeholder-grocery.webp');
+                $imagePath = asset('Images/default.png');
             }
         @endphp
-        <img src="{{ $imagePath }}" alt="{{ $bundle->title }}" onerror="this.src='{{ asset('Images/placeholder-grocery.webp') }}'">
+        <img src="{{ $imagePath }}" alt="{{ $bundle->title }}" onerror="this.src='{{ asset('Images/default.png') }}'">
         <div class="pack-deal-badge">
             <i class="fa-solid fa-tags"></i> DEAL
         </div>
