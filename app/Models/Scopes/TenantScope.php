@@ -15,6 +15,23 @@ class TenantScope implements Scope
     {
         // Prevent infinite recursion when loading the authenticated user
         if ($model instanceof \App\Models\User) {
+            // Prevent infinite recursion by resolving tenant ID without calling auth()
+            $tenantId = null;
+            if (request()->query('preview') == 1) {
+                $tenantId = request()->query('tenant_id') ?? 2;
+            } elseif (request()->has('tenant_id')) {
+                $tenantId = request()->query('tenant_id');
+            } elseif (request()->route('tenant')) {
+                $tenantId = request()->route('tenant');
+            } elseif (session()->has('active_tenant_id')) {
+                $tenantId = session('active_tenant_id');
+            } elseif (session()->has('demo_tenant_id')) {
+                $tenantId = session('demo_tenant_id');
+            }
+
+            if ($tenantId) {
+                $builder->where($model->getTable() . '.tenant_id', $tenantId);
+            }
             return;
         }
 
