@@ -199,11 +199,11 @@
                                 @forelse($customPrices as $cp)
                                 <tr>
                                     <td class="px-3 py-3">
-                                        <div class="fw-semibold text-dark">{{ $cp->user->name }}</div>
-                                        <div class="small text-muted">{{ $cp->user->email ?? $cp->user->phone }}</div>
+                                        <div class="fw-semibold text-dark">{{ $cp->user?->name ?? 'Deleted User' }}</div>
+                                        <div class="small text-muted">{{ $cp->user?->email ?? $cp->user?->phone ?? 'N/A' }}</div>
                                     </td>
                                     <td class="px-3 py-3 text-dark fw-medium">
-                                        {{ $cp->product->title }}
+                                        {{ $cp->product?->title ?? 'Deleted Product' }}
                                     </td>
                                     <td class="px-3 py-3 text-success fw-bold">
                                         ₹{{ number_format($cp->price, 2) }}
@@ -383,10 +383,10 @@
                                 @forelse($groupCustomPrices as $gcp)
                                 <tr>
                                     <td class="px-3 py-3">
-                                        <div class="fw-bold text-dark">{{ $gcp->group->name }}</div>
+                                        <div class="fw-bold text-dark">{{ $gcp->group?->name ?? 'Deleted Group' }}</div>
                                     </td>
                                     <td class="px-3 py-3 text-dark fw-medium">
-                                        {{ $gcp->product->title }}
+                                        {{ $gcp->product?->title ?? 'Deleted Product' }}
                                     </td>
                                     <td class="px-3 py-3 text-success fw-bold">
                                         ₹{{ number_format($gcp->price, 2) }}
