@@ -15,7 +15,7 @@ class IdentifyStorefrontTenant
     public function handle(Request $request, Closure $next): Response
     {
         $host = $request->getHost();
-        if (!in_array($host, ['localhost', '127.0.0.1', 'localhost:8000', 'vespr.store', 'www.vespr.store'])) {
+        if (!in_array($host, ['localhost', '127.0.0.1', 'localhost:8000', 'goslot.store', 'www.goslot.store'])) {
             $matchingTenant = Tenant::where('domain', $host)->first();
             if ($matchingTenant) {
                 session(['active_tenant_id' => $matchingTenant->id]);

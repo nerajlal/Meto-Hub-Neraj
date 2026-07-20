@@ -3,13 +3,27 @@
 use App\Http\Controllers\PageController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function() {
-    // Set demo tenant from query parameter if provided
-    if (request()->has('demo_tenant')) {
-        session(['demo_tenant_id' => request()->demo_tenant]);
+Route::get('/', function(Illuminate\Http\Request $request) {
+    $host = $request->getHost();
+    // If it's a known main domain, show the SaaS landing page
+    if (in_array($host, ['localhost', '127.0.0.1', 'goslot.store', 'www.goslot.store'])) {
+        if ($request->has('demo_tenant')) {
+            session(['demo_tenant_id' => $request->demo_tenant]);
+        }
+        return view('landing.new-landing');
     }
+
+    // Otherwise, assume it's a custom domain and dispatch to the tenant storefront
+    // Apply the tenant identification middleware logic manually or just forward to PageController
+    $tenant = \App\Models\Tenant::where('domain', $host)->first();
+    if ($tenant) {
+        session(['active_tenant_id' => $tenant->id]);
+        return app()->make(\App\Http\Controllers\PageController::class)->home($request);
+    }
+    
+    // Fallback if domain not found
     return view('landing.new-landing');
-})->name('landing');
+})->name('landing')->middleware([\Illuminate\Session\Middleware\StartSession::class]);
 
 // Demo routes to set tenant
 Route::get('/demo/{tenantId}', function($tenantId) {
