@@ -31,6 +31,7 @@ class Tenant extends Model
         'delivery_info',
         'checkout_fields',
         'min_order_value',
+        'domain',
     ];
 
     protected $casts = [
