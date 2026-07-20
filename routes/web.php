@@ -18,6 +18,7 @@ Route::get('/', function(Illuminate\Http\Request $request) {
     $tenant = \App\Models\Tenant::where('domain', $host)->first();
     if ($tenant) {
         session(['active_tenant_id' => $tenant->id]);
+        view()->share('currentTenant', $tenant);
         return app()->make(\App\Http\Controllers\PageController::class)->home($request);
     }
     
