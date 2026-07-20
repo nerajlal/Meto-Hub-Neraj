@@ -16,7 +16,7 @@
         <div class="product-gallery">
             <div class="main-image-container" style="position: relative;">
                 <span style="position: absolute; top: 1rem; left: 1rem; background: var(--accent-color); color: white; padding: 0.25rem 0.75rem; border-radius: 99px; font-weight: 700; font-size: 0.8rem; z-index: 10;">
-                    {{ $bundle->type == 'pack' ? 'COMBO' : 'BUNDLE' }}
+                    {{ $bundle->type == 'pack' ? 'BUNDLE' : 'COMBO' }}
                 </span>
                 
                 @php

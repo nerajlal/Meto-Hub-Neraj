@@ -15,7 +15,7 @@
             <span>{{ rand(20, 60) }} bought</span>
         </div>
         <div class="bundle-badge-container" style="position: absolute; top: 10px; right: 10px; background: var(--accent-color); color: #fff; padding: 4px 8px; border-radius: 4px; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; z-index: 10;">
-            <i class="{{ $bundle->type == 'pack' ? 'fa-solid fa-boxes-stacked' : 'fa-solid fa-layer-group' }} me-1"></i><span>{{ $bundle->type == 'pack' ? 'COMBO' : 'BUNDLE' }}</span>
+            <i class="{{ $bundle->type == 'pack' ? 'fa-solid fa-layer-group' : 'fa-solid fa-boxes-stacked' }} me-1"></i><span>{{ $bundle->type == 'pack' ? 'BUNDLE' : 'COMBO' }}</span>
         </div>
     </a>
     <div class="card-info" style="padding: 1rem; display: flex; flex-direction: column; gap: 0.25rem;">

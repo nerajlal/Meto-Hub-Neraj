@@ -27,7 +27,7 @@
                 @endphp
                 <img src="{{ $mainImg }}" id="p-main-img" alt="{{ $bundle->title }}" onerror="this.src='{{ asset('Images/default.png') }}'" style="width: 100%; height: 100%; object-fit: cover;">
                 <div style="position: absolute; top: 1.25rem; left: 1.25rem; background: var(--accent-color); color: #fff; padding: 0.5rem 1rem; border-radius: 0.5rem; font-weight: 800; font-size: 0.8rem; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2); z-index: 10;">
-                    {{ $bundle->type == 'pack' ? 'COMBO' : 'BUNDLE' }}
+                    {{ $bundle->type == 'pack' ? 'BUNDLE' : 'COMBO' }}
                 </div>
             </div>
             @if($bundle->products->count() > 0)
