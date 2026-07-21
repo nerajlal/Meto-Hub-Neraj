@@ -21,6 +21,7 @@ class Tenant extends Model
         'terms_of_service',
         'mobile_grid_cols',
         'logo',
+        'favicon',
         'primary_color',
         'dark_color',
         'accent_color',

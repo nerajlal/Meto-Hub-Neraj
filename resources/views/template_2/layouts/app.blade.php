@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', ($currentTenant->name ?? 'Fresh Grocery') . ' | Online Supermarket')</title>
+    <link rel="icon" href="{{ isset($currentTenant) && $currentTenant->favicon ? Storage::url($currentTenant->favicon) : 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>S</text></svg>' }}">
     <meta name="description" content="@yield('meta_description', 'Shop fresh vegetables, fruits, dairy, bakery, and daily essentials online at ' . ($currentTenant->name ?? 'our store') . '. Fast home delivery guaranteed.')">
     <meta name="keywords" content="@yield('meta_keywords', 'online grocery, fresh vegetables, organic fruits, daily essentials, order food online')">
     <link rel="canonical" href="{{ url()->current() }}">
