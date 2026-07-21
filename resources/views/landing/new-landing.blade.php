@@ -7,6 +7,24 @@
   <title>GoSlot Store — The Platform Behind Grocery Stores That Sell Online</title>
   <meta name="description"
     content="GoSlot Store is the SaaS platform grocery businesses use to build, price, promote, and run their own online stores — pricing engine, promotions, themes, analytics, and payments in one place.">
+  <meta name="keywords" content="grocery ecommerce, saas for grocery stores, create grocery website, online supermarket platform, delivery software, grocery POS integration">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>S</text></svg>">
+  
+  <link rel="canonical" href="{{ url()->current() }}">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="{{ url()->current() }}">
+  <meta property="og:title" content="GoSlot Store — Start Your Online Grocery Business">
+  <meta property="og:description" content="GoSlot Store is the SaaS platform grocery businesses use to build, price, promote, and run their own online stores.">
+  <meta property="og:image" content="{{ asset('images/og-image.jpg') }}">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="{{ url()->current() }}">
+  <meta property="twitter:title" content="GoSlot Store — Start Your Online Grocery Business">
+  <meta property="twitter:description" content="GoSlot Store is the SaaS platform grocery businesses use to build, price, promote, and run their own online stores.">
+  <meta property="twitter:image" content="{{ asset('images/og-image.jpg') }}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
@@ -1987,6 +2005,22 @@
       transform: translateY(-3px);
     }
   </style>
+  <!-- JSON-LD Structured Data for SEO -->
+  <script type="application/ld+json">
+    {
+      "@@context": "https://schema.org",
+      "@@type": "SoftwareApplication",
+      "name": "GoSlot Store",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Web",
+      "description": "GoSlot Store is the SaaS platform grocery businesses use to build, price, promote, and run their own online stores.",
+      "url": "{{ url()->current() }}",
+      "publisher": {
+        "@@type": "Organization",
+        "name": "GoSlot Store"
+      }
+    }
+  </script>
 </head>
 
 <body>
