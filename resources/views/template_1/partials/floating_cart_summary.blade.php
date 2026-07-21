@@ -117,8 +117,8 @@
 
     // Custom inline cart updater
     window.updateInlineCart = function(key, delta) {
-        let currentQty = window.cartItemsMap[key] || 0;
-        let newQty = currentQty + delta;
+        let currentQty = parseInt(window.cartItemsMap[key] || 0);
+        let newQty = currentQty + parseInt(delta);
         
         if (newQty <= 0) {
             // Remove item
