@@ -110,20 +110,20 @@
                                 @endif
                             </td>
                             <td>{{ $item->quantity }}</td>
-                            <td>{{ \App\Services\CurrencyService::format($item->price, $order->tenant_id ?? 1) }}</td>
-                            <td>{{ \App\Services\CurrencyService::format($item->total, $order->tenant_id ?? 1) }}</td>
+                            <td>{{ $order->tenant->currency ?? '₹' }}{{ number_format($item->price, 2) }}</td>
+                            <td>{{ $order->tenant->currency ?? '₹' }}{{ number_format($item->total, 2) }}</td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
 
             <div class="totals">
-                <p>Subtotal: {{ \App\Services\CurrencyService::format($order->subtotal, $order->tenant_id ?? 1) }}</p>
-                <p>Shipping: {{ \App\Services\CurrencyService::format($order->shipping_cost, $order->tenant_id ?? 1) }}</p>
+                <p>Subtotal: {{ $order->tenant->currency ?? '₹' }}{{ number_format($order->subtotal, 2) }}</p>
+                <p>Shipping: {{ $order->tenant->currency ?? '₹' }}{{ number_format($order->shipping_cost, 2) }}</p>
                 @if($order->tax_amount > 0)
-                    <p>{{ $order->tax_name ?? 'Tax' }} ({{ $order->tax_rate }}%): {{ \App\Services\CurrencyService::format($order->tax_amount, $order->tenant_id ?? 1) }}</p>
+                    <p>{{ $order->tax_name ?? 'Tax' }} ({{ $order->tax_rate }}%): {{ $order->tenant->currency ?? '₹' }}{{ number_format($order->tax_amount, 2) }}</p>
                 @endif
-                <p class="total-amount">Total: {{ \App\Services\CurrencyService::format($order->total_amount, $order->tenant_id ?? 1) }}</p>
+                <p class="total-amount">Total: {{ $order->tenant->currency ?? '₹' }}{{ number_format($order->total_amount, 2) }}</p>
             </div>
 
             <div class="shipping-address">
