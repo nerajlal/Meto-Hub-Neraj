@@ -84,20 +84,23 @@
 
     function updateProductCardUI(key, qty, forceHide = false) {
         $('.product-action-wrapper[data-cart-key="' + key + '"]').each(function() {
+            let card = $(this).closest('.product-card, .pack-deal-card');
+            
+            if (qty > 0) {
+                card.addClass('in-cart-active');
+            } else {
+                card.removeClass('in-cart-active');
+            }
+            
+            // If we have items in cart, always show the quantity controller
             if (qty > 0 && !forceHide) {
                 $(this).find('.inline-add-btn').hide();
                 $(this).find('.qty-controller').css('display', 'flex');
                 $(this).find('.qty-value').text(qty);
-                
-                // Auto hide after 5 seconds
-                clearTimeout(window.productCardTimers[key]);
-                window.productCardTimers[key] = setTimeout(() => {
-                    updateProductCardUI(key, qty, true);
-                }, 5000);
             } else {
+                // If 0 items, show the Add button again
                 $(this).find('.qty-controller').hide();
                 $(this).find('.inline-add-btn').css('display', 'flex');
-                clearTimeout(window.productCardTimers[key]);
             }
         });
     }
@@ -115,9 +118,7 @@
                 // Sync product cards for items already in cart
                 for (let key in window.cartItemsMap) {
                     if (window.cartItemsMap[key] > 0) {
-                        updateProductCardUI(key, window.cartItemsMap[key], true); // Force hide after 5s or just don't show qty selector initially? 
-                        // Wait, usually we don't want all items to show qty controller on load unless hovered, but in mobile we can just keep them hidden until clicked.
-                        // Actually, let's keep them hidden initially, they only show when you click Add.
+                        updateProductCardUI(key, window.cartItemsMap[key], false); // Always show qty controller for items in cart
                     }
                 }
             }
