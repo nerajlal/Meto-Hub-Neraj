@@ -50,13 +50,13 @@
             @if(auth()->check())
                 <a href="{{ route('account.index') }}" class="action-btn text-decoration-none"
                     style="display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 600; color: var(--primary-color); text-align: center; gap: 2px; text-transform: none; text-decoration: none; padding: 0.25rem 0.5rem; background: none; border-radius: 0;">
-                    <i class="fa-regular fa-user" style="font-size: 1.25rem; color: var(--primary-color);"></i>
+                    <i class="fa-solid fa-user" style="font-size: 1.25rem; color: var(--primary-color);"></i>
                     <span class="action-text" style="color: var(--primary-color);">Account</span>
                 </a>
             @else
                 <a href="javascript:void(0)" onclick="openCustomerAuthModal()" class="action-btn text-decoration-none"
                     style="display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 600; color: var(--primary-color); text-align: center; gap: 2px; text-transform: none; text-decoration: none; padding: 0.25rem 0.5rem; background: none; border-radius: 0;">
-                    <i class="fa-solid fa-right-to-bracket" style="font-size: 1.25rem; color: var(--primary-color);"></i>
+                    <i class="fa-regular fa-user" style="font-size: 1.25rem; color: var(--primary-color);"></i>
                     <span class="action-text" style="color: var(--primary-color);">Log In</span>
                 </a>
             @endif

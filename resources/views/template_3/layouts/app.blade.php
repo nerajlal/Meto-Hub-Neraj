@@ -63,11 +63,11 @@
                 </button>
                 @if(auth()->check())
                 <button class="action-btn" onclick="window.location.href='{{ route('account.index') }}'" title="My Account">
-                    <i class="fa-regular fa-user"></i>
+                    <i class="fa-solid fa-user"></i>
                 </button>
                 @else
                 <button class="action-btn" onclick="openCustomerAuthModal()" title="Log In">
-                    <i class="fa-solid fa-right-to-bracket"></i>
+                    <i class="fa-regular fa-user"></i>
                 </button>
                 @endif
                 <button class="action-btn" onclick="{{ auth()->check() ? 'window.location.href=\'' . route('v1.wishlist') . '\'' : 'openCustomerAuthModal()' }}">

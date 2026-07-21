@@ -345,6 +345,16 @@ class OrderController extends Controller
         }
         session()->forget('cart');
 
+        // 7.1 Send Order Summary Email
+        if (!empty($request->email)) {
+            try {
+                \Illuminate\Support\Facades\Mail::to($request->email)->send(new \App\Mail\OrderSummaryMail($order));
+            } catch (\Exception $e) {
+                // Log error but don't stop the checkout flow
+                \Illuminate\Support\Facades\Log::error("Failed to send order summary email to {$request->email}: " . $e->getMessage());
+            }
+        }
+
         // 8. Send WhatsApp Notification to Owner
         try {
             $waService = new WhatsAppService();
