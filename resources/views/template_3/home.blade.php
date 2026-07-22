@@ -80,7 +80,7 @@
     
     <div class="bundle-grid">
         @foreach($bundles as $bundle)
-            @include('template_1.partials.bundle_card', ['bundle' => $bundle])
+            @include('template_3.partials.bundle_card', ['bundle' => $bundle])
         @endforeach
     </div>
 </div>
