@@ -111,9 +111,13 @@ Route::prefix('superadmin')->name('super_admin.')->group(function () {
         Route::get('/plans', [App\Http\Controllers\SuperAdmin\DashboardController::class, 'plans'])->name('plans');
         Route::get('/status', [App\Http\Controllers\SuperAdmin\DashboardController::class, 'status'])->name('status');
 
-        // Global Product Images
+        // Global Product Images — specific routes MUST come before {id} wildcard
         Route::get('/global-images', [App\Http\Controllers\SuperAdmin\GlobalImageController::class, 'index'])->name('global_images');
         Route::post('/global-images', [App\Http\Controllers\SuperAdmin\GlobalImageController::class, 'store'])->name('global_images.store');
+        Route::post('/global-images/csv-import', [App\Http\Controllers\SuperAdmin\GlobalImageController::class, 'csvImport'])->name('global_images.csv_import');
+        Route::get('/global-images/sample-csv', [App\Http\Controllers\SuperAdmin\GlobalImageController::class, 'downloadSampleCsv'])->name('global_images.sample_csv');
+        Route::post('/global-images/fetch-from-api', [App\Http\Controllers\SuperAdmin\GlobalImageController::class, 'fetchFromOpenFoodFacts'])->name('global_images.fetch_api');
+        Route::delete('/global-images/clear-all', [App\Http\Controllers\SuperAdmin\GlobalImageController::class, 'clearAll'])->name('global_images.clear_all');
         Route::delete('/global-images/{id}', [App\Http\Controllers\SuperAdmin\GlobalImageController::class, 'destroy'])->name('global_images.destroy');
     });
 });

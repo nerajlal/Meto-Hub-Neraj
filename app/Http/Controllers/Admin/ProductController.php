@@ -9,6 +9,7 @@ use App\Models\Attribute;
 use App\Models\ProductVariant;
 use App\Models\ProductImage;
 use App\Models\Bundle;
+use App\Services\AutoProductImageService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -705,23 +706,8 @@ class ProductController extends Controller
                     'stock' => $stock
                 ]);
 
-                // Assign Global Image if product has no images (Fuzzy Match)
-                if ($product->images()->count() === 0) {
-                    $searchTerm = strtolower(trim($title));
-                    $globalImage = \App\Models\GlobalProductImage::where('status', true)
-                        ->whereRaw('(? LIKE CONCAT("%", title, "%") OR title LIKE CONCAT("%", ?, "%"))', [$searchTerm, $searchTerm])
-                        ->orderByRaw('LENGTH(title) DESC')
-                        ->first();
-                        
-                    if ($globalImage) {
-                        \App\Models\ProductImage::create([
-                            'product_id' => $product->id,
-                            'path' => $globalImage->image_path,
-                            'type' => 'image',
-                            'order' => 0
-                        ]);
-                    }
-                }
+                // Auto-assign image: dictionary match → Open Food Facts API fallback
+                (new AutoProductImageService())->assignImage($product, $title);
 
                 $importedCount++;
             }
@@ -826,23 +812,8 @@ class ProductController extends Controller
             $variant->stock = is_numeric($stock) ? $stock : 0;
             $variant->save();
 
-            // Assign Global Image if product has no images (Fuzzy Match)
-            if ($product->images()->count() === 0) {
-                $searchTerm = strtolower(trim($title));
-                $globalImage = \App\Models\GlobalProductImage::where('status', true)
-                    ->whereRaw('(? LIKE CONCAT("%", title, "%") OR title LIKE CONCAT("%", ?, "%"))', [$searchTerm, $searchTerm])
-                    ->orderByRaw('LENGTH(title) DESC')
-                    ->first();
-                    
-                if ($globalImage) {
-                    \App\Models\ProductImage::create([
-                        'product_id' => $product->id,
-                        'path' => $globalImage->image_path,
-                        'type' => 'image',
-                        'order' => 0
-                    ]);
-                }
-            }
+            // Auto-assign image: dictionary match → Open Food Facts API fallback
+            (new AutoProductImageService())->assignImage($product, $title);
 
             $successCount++;
         }
