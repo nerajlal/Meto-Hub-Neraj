@@ -239,6 +239,8 @@ Route::prefix('{tenant}/admin')->name('admin.')->middleware(['identify_tenant', 
 
     Route::post('/custom-prices', [App\Http\Controllers\Admin\CustomPriceController::class, 'store'])->name('custom-prices.store');
     Route::delete('/custom-prices/{id}', [App\Http\Controllers\Admin\CustomPriceController::class, 'destroy'])->name('custom-prices.destroy');
+    Route::get('/custom-prices-excel/sample', [App\Http\Controllers\Admin\CustomPriceController::class, 'sampleExcel'])->name('custom-prices.sample-excel');
+    Route::post('/custom-prices-excel/import', [App\Http\Controllers\Admin\CustomPriceController::class, 'importExcel'])->name('custom-prices.import-excel');
 
     // Group Custom Pricing routes
     Route::post('/customer-groups', [App\Http\Controllers\Admin\GroupPricingController::class, 'storeGroup'])->name('customer-groups.store');

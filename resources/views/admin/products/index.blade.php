@@ -127,6 +127,7 @@
             <thead class="bg-light text-muted small text-uppercase">
                  <tr>
                     <th class="px-3 py-3 w-auto"><input type="checkbox" class="form-check-input"></th>
+                    <th class="px-3 py-3 border-0 fw-medium" style="width: 60px;">ID</th>
                     <th class="px-3 py-3 border-0 fw-medium">Product</th>
                     <th class="px-3 py-3 border-0 fw-medium">Status</th>
                     <th class="px-3 py-3 border-0 fw-medium">Inventory</th>

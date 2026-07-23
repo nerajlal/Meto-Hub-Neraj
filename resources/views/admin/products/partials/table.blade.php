@@ -1,6 +1,7 @@
 @forelse($products as $product)
 <tr class="cursor-pointer" onclick="window.location='{{ route('admin.products.edit', $product->id) }}'">
     <td class="px-3 py-3" onclick="event.stopPropagation()"><input type="checkbox" class="form-check-input" value="{{ $product->id }}"></td>
+    <td class="px-3 py-3 fw-medium text-secondary">#{{ $product->id }}</td>
     <td class="px-3 py-3">
         <div class="d-flex align-items-center gap-3">
             <div class="bg-light rounded border d-flex align-items-center justify-content-center flex-shrink-0 overflow-hidden" style="width: 48px; height: 48px;">
