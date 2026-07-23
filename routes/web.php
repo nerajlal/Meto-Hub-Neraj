@@ -110,6 +110,11 @@ Route::prefix('superadmin')->name('super_admin.')->group(function () {
         Route::get('/customers', [App\Http\Controllers\SuperAdmin\DashboardController::class, 'customers'])->name('customers');
         Route::get('/plans', [App\Http\Controllers\SuperAdmin\DashboardController::class, 'plans'])->name('plans');
         Route::get('/status', [App\Http\Controllers\SuperAdmin\DashboardController::class, 'status'])->name('status');
+
+        // Global Product Images
+        Route::get('/global-images', [App\Http\Controllers\SuperAdmin\GlobalImageController::class, 'index'])->name('global_images');
+        Route::post('/global-images', [App\Http\Controllers\SuperAdmin\GlobalImageController::class, 'store'])->name('global_images.store');
+        Route::delete('/global-images/{id}', [App\Http\Controllers\SuperAdmin\GlobalImageController::class, 'destroy'])->name('global_images.destroy');
     });
 });
 
@@ -184,6 +189,8 @@ Route::prefix('{tenant}/admin')->name('admin.')->middleware(['identify_tenant', 
     Route::get('/products', [App\Http\Controllers\Admin\ProductController::class, 'index'])->name('products');
     Route::get('/products/sample', [App\Http\Controllers\Admin\ProductController::class, 'downloadSample'])->name('products.sample');
     Route::post('/products/import', [App\Http\Controllers\Admin\ProductController::class, 'import'])->name('products.import');
+    Route::get('/products/live-export', [App\Http\Controllers\Admin\ProductController::class, 'liveExport'])->name('products.live-export');
+    Route::post('/products/live-import', [App\Http\Controllers\Admin\ProductController::class, 'liveImport'])->name('products.live-import');
     Route::get('/products/create', [App\Http\Controllers\Admin\ProductController::class, 'create'])->name('products.create');
     Route::post('/products', [App\Http\Controllers\Admin\ProductController::class, 'store'])->name('products.store');
     Route::get('/products/{id}/edit', [App\Http\Controllers\Admin\ProductController::class, 'edit'])->name('products.edit');

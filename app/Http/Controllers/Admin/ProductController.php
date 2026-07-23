@@ -367,7 +367,9 @@ class ProductController extends Controller
                 $image = $product->images()->find($imageId);
                 if ($image) {
                     if (Storage::disk('public')->exists($image->path)) {
-                        Storage::disk('public')->delete($image->path);
+                        if (!\Illuminate\Support\Str::startsWith($image->path, 'global_product_images/')) {
+                            Storage::disk('public')->delete($image->path);
+                        }
                     }
                     $image->delete();
                 }
@@ -402,7 +404,9 @@ class ProductController extends Controller
         $product = Product::findOrFail($id);
         // Delete images from storage
         foreach($product->images as $image) {
-            Storage::disk('public')->delete($image->path);
+            if ($image->path && !\Illuminate\Support\Str::startsWith($image->path, 'global_product_images/')) {
+                Storage::disk('public')->delete($image->path);
+            }
         }
         $product->delete();
         return redirect()->route('admin.products')->with('success', 'Product deleted successfully.');
@@ -701,6 +705,24 @@ class ProductController extends Controller
                     'stock' => $stock
                 ]);
 
+                // Assign Global Image if product has no images (Fuzzy Match)
+                if ($product->images()->count() === 0) {
+                    $searchTerm = strtolower(trim($title));
+                    $globalImage = \App\Models\GlobalProductImage::where('status', true)
+                        ->whereRaw('(? LIKE CONCAT("%", title, "%") OR title LIKE CONCAT("%", ?, "%"))', [$searchTerm, $searchTerm])
+                        ->orderByRaw('LENGTH(title) DESC')
+                        ->first();
+                        
+                    if ($globalImage) {
+                        \App\Models\ProductImage::create([
+                            'product_id' => $product->id,
+                            'path' => $globalImage->image_path,
+                            'type' => 'image',
+                            'order' => 0
+                        ]);
+                    }
+                }
+
                 $importedCount++;
             }
             \Illuminate\Support\Facades\DB::commit();
@@ -710,5 +732,121 @@ class ProductController extends Controller
         }
 
         return redirect()->back()->with('success', "Successfully imported {$importedCount} products.");
+    }
+
+    public function liveExport(Request $request)
+    {
+        $tenantId = session('active_tenant_id') ?? $request->route('tenant') ?? 1;
+        $products = Product::where('tenant_id', $tenantId)->with('variants')->get();
+
+        $data = [];
+        foreach ($products as $p) {
+            $price = 0;
+            $comparePrice = 0;
+            $stock = 0;
+            $sku = $p->sku ?? '';
+
+            if ($p->variants && $p->variants->count() > 0) {
+                $v = $p->variants->first();
+                $price = $v->price;
+                $comparePrice = $v->compare_at_price;
+                $stock = $p->variants->sum('stock');
+                $sku = $v->sku ?? $sku;
+            }
+
+            $data[] = [
+                $p->id,
+                $p->title,
+                $sku,
+                $price,
+                $comparePrice,
+                $stock,
+                $p->status ?? 'active',
+                $p->type ?? '',
+                $p->vendor ?? ''
+            ];
+        }
+
+        return response()->json($data);
+    }
+
+    public function liveImport(Request $request)
+    {
+        $tenantId = session('active_tenant_id') ?? $request->route('tenant') ?? 1;
+        $data = $request->input('data');
+
+        if (!is_array($data)) {
+            return response()->json(['success' => false, 'message' => 'Invalid data format.']);
+        }
+
+        $successCount = 0;
+
+        foreach ($data as $row) {
+            if (empty($row[1])) continue; // Title is required
+
+            $id = $row[0];
+            $title = $row[1];
+            $sku = $row[2];
+            $price = str_replace(['₹', ',', ' '], '', $row[3]);
+            $comparePrice = str_replace(['₹', ',', ' '], '', $row[4]);
+            $stock = $row[5];
+            $status = $row[6] ?? 'active';
+            $type = $row[7];
+            $vendor = $row[8];
+
+            if ($id) {
+                $product = Product::where('id', $id)->where('tenant_id', $tenantId)->first();
+            } else {
+                $product = Product::where('title', $title)->where('tenant_id', $tenantId)->first();
+            }
+
+            if (!$product) {
+                $product = new Product();
+                $product->tenant_id = $tenantId;
+                $product->title = $title;
+                $product->slug = \Illuminate\Support\Str::slug($title);
+            }
+
+            $product->status = strtolower($status);
+            $product->type = $type;
+            $product->vendor = $vendor;
+            $product->save();
+
+            // Default variant
+            $variant = $product->variants()->first();
+            if (!$variant) {
+                $variant = new \App\Models\Variant();
+                $variant->product_id = $product->id;
+                $variant->title = 'Default Title';
+            }
+
+            $variant->sku = $sku;
+            $variant->price = is_numeric($price) ? $price : 0;
+            $variant->compare_at_price = is_numeric($comparePrice) ? $comparePrice : null;
+            $variant->stock = is_numeric($stock) ? $stock : 0;
+            $variant->save();
+
+            // Assign Global Image if product has no images (Fuzzy Match)
+            if ($product->images()->count() === 0) {
+                $searchTerm = strtolower(trim($title));
+                $globalImage = \App\Models\GlobalProductImage::where('status', true)
+                    ->whereRaw('(? LIKE CONCAT("%", title, "%") OR title LIKE CONCAT("%", ?, "%"))', [$searchTerm, $searchTerm])
+                    ->orderByRaw('LENGTH(title) DESC')
+                    ->first();
+                    
+                if ($globalImage) {
+                    \App\Models\ProductImage::create([
+                        'product_id' => $product->id,
+                        'path' => $globalImage->image_path,
+                        'type' => 'image',
+                        'order' => 0
+                    ]);
+                }
+            }
+
+            $successCount++;
+        }
+
+        return response()->json(['success' => true, 'message' => "Successfully imported/updated $successCount products!"]);
     }
 }
