@@ -358,6 +358,7 @@ class CartController extends Controller
         if($request->type == 'bundle') {
             $bundle = Bundle::find($id);
             if(!$bundle) return response()->json(['success' => false, 'message' => 'Bundle not found!'], 404);
+            if($bundle->is_out_of_stock) return response()->json(['success' => false, 'message' => 'This bundle is currently out of stock.'], 400);
             
             $cartKey = 'bundle-' . $id;
             
@@ -1138,21 +1139,32 @@ class CartController extends Controller
                     if($product) {
                         $item['coupon'] = $this->getActiveCoupon($product);
                         
+                        $stock = 0;
                         if(isset($item['size']) && $item['size']) {
                             $variant = $product->variants->where('size', $item['size'])->first();
-                            $item['stock'] = $variant ? $variant->stock : 0;
+                            $stock = $variant ? $variant->stock : 0;
                         } else {
-                            $item['stock'] = $product->variants->sum('stock');
+                            $stock = $product->variants->sum('stock');
                         }
                         
                         if ($product->continue_selling_when_out_of_stock) {
-                            $item['stock'] = 999;
+                            $stock = 999;
                         }
+
+                        $item['stock'] = $stock;
+
+                        if ($stock <= 0) {
+                            unset($cart[$key]);
+                        }
+                    } else {
+                        unset($cart[$key]);
                     }
                 } elseif (isset($item['type']) && $item['type'] == 'bundle' && isset($item['bundle_id'])) {
                     $bundle = Bundle::find($item['bundle_id']);
-                    if ($bundle) {
-                        $item['stock'] = $bundle->is_out_of_stock ? 0 : 100;
+                    if ($bundle && !$bundle->is_out_of_stock) {
+                        $item['stock'] = 100;
+                    } else {
+                        unset($cart[$key]);
                     }
                 }
             }
