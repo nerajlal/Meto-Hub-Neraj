@@ -898,6 +898,10 @@ class CartController extends Controller
                     $bundleImage = $firstProd ? $firstProd->main_image_url : null;
                 }
 
+                if ($item->bundle->is_out_of_stock) {
+                    continue;
+                }
+
                 $cart[$key] = [
                     "bundle_id" => $item->bundle_id,
                     "name" => $item->bundle->title,
@@ -906,7 +910,7 @@ class CartController extends Controller
                     "image" => $bundleImage,
                     "size" => null,
                     "type" => "bundle",
-                    "stock" => $item->bundle->is_out_of_stock ? 0 : 100,
+                    "stock" => 100,
                     "min_order_qty" => $item->bundle->min_order_qty,
                     "max_order_qty" => $item->bundle->max_order_qty
                 ];
@@ -927,6 +931,10 @@ class CartController extends Controller
                 
                 if ($item->product->continue_selling_when_out_of_stock) {
                     $stock = 999;
+                }
+                
+                if ($stock <= 0) {
+                    continue;
                 }
                 
                 $cart[$key] = [
