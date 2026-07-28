@@ -131,33 +131,27 @@
     @if(session('error'))
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            Toastify({
-                text: "{{ session('error') }}",
-                duration: 5000,
-                close: true,
-                gravity: "top", 
-                position: "center", 
-                backgroundColor: "#EF4444",
-                stopOnFocus: true
-            }).showToast();
+            const t = document.createElement('div');
+            t.textContent = "{{ session('error') }}";
+            t.style.cssText = 'position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#EF4444;color:#fff;padding:12px 24px;border-radius:8px;font-weight:600;z-index:99999;box-shadow:0 4px 12px rgba(0,0,0,0.15);transition:opacity 0.3s;';
+            document.body.appendChild(t);
+            setTimeout(() => { t.style.opacity='0'; setTimeout(()=>t.remove(), 300); }, 5000);
         });
     </script>
     @endif
     @if(session('success'))
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            Toastify({
-                text: "{{ session('success') }}",
-                duration: 5000,
-                close: true,
-                gravity: "top", 
-                position: "center", 
-                backgroundColor: "#10B981",
-                stopOnFocus: true
-            }).showToast();
+            const t = document.createElement('div');
+            t.textContent = "{{ session('success') }}";
+            t.style.cssText = 'position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#10B981;color:#fff;padding:12px 24px;border-radius:8px;font-weight:600;z-index:99999;box-shadow:0 4px 12px rgba(0,0,0,0.15);transition:opacity 0.3s;';
+            document.body.appendChild(t);
+            setTimeout(() => { t.style.opacity='0'; setTimeout(()=>t.remove(), 300); }, 5000);
         });
     </script>
     @endif
+    
+    
     
     <script>
         $(document).ready(function () {
