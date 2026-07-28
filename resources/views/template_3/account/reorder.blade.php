@@ -42,12 +42,12 @@
         <div class="account-content">
             <div style="background: #fff; border: 1px solid var(--border-color); border-radius: 2rem; padding: 2rem; box-shadow: var(--shadow-sm); margin-bottom: 2rem;">
                 <h3 style="font-size: 1.5rem; font-weight: 800; color: var(--primary-color); margin-bottom: 1.5rem;">Previously Ordered Items</h3>
-                <div class="product-grid">
+                <div class="product-grid grid-cols-mobile-{{ $currentTenant->mobile_grid_cols ?? 2 }}">
                     @forelse($reorderItems as $item)
                         @if($item->product_id && $item->product)
                             @include('template_3.partials.product_card', ['product' => $item->product])
                         @elseif($item->bundle_id && $item->bundle)
-                            @include('template_1.partials.bundle_card', ['bundle' => $item->bundle])
+                            @include('template_3.partials.bundle_card', ['bundle' => $item->bundle])
                         @endif
                     @empty
                         <div style="grid-column: 1 / -1; text-align: center; padding: 3rem 1rem;">
