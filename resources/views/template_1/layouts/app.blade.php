@@ -128,6 +128,37 @@
     @include('template_1.partials.cart_drawer')
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    @if(session('error'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Toastify({
+                text: "{{ session('error') }}",
+                duration: 5000,
+                close: true,
+                gravity: "top", 
+                position: "center", 
+                backgroundColor: "#EF4444",
+                stopOnFocus: true
+            }).showToast();
+        });
+    </script>
+    @endif
+    @if(session('success'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Toastify({
+                text: "{{ session('success') }}",
+                duration: 5000,
+                close: true,
+                gravity: "top", 
+                position: "center", 
+                backgroundColor: "#10B981",
+                stopOnFocus: true
+            }).showToast();
+        });
+    </script>
+    @endif
+    
     <script>
         $(document).ready(function () {
             const $sidebar = $('.sidebar');
