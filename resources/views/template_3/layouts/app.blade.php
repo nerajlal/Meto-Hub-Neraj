@@ -189,9 +189,34 @@
 
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    @if(session('error'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const t = document.createElement('div');
+            t.textContent = "{{ session('error') }}";
+            t.style.cssText = 'position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#EF4444;color:#fff;padding:12px 24px;border-radius:8px;font-weight:600;z-index:99999;box-shadow:0 4px 12px rgba(0,0,0,0.15);transition:opacity 0.3s;';
+            document.body.appendChild(t);
+            setTimeout(() => { t.style.opacity='0'; setTimeout(()=>t.remove(), 300); }, 5000);
+        });
+    </script>
+    @endif
+    @if(session('success'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const t = document.createElement('div');
+            t.textContent = "{{ session('success') }}";
+            t.style.cssText = 'position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#10B981;color:#fff;padding:12px 24px;border-radius:8px;font-weight:600;z-index:99999;box-shadow:0 4px 12px rgba(0,0,0,0.15);transition:opacity 0.3s;';
+            document.body.appendChild(t);
+            setTimeout(() => { t.style.opacity='0'; setTimeout(()=>t.remove(), 300); }, 5000);
+        });
+    </script>
+    @endif
     
     <!-- Floating Cart Pill Component -->
     @include('template_3.partials.floating_cart')
+
+    
+    
 
     <script>
         function toggleCartSidebar() {
