@@ -450,7 +450,7 @@ class PageController extends Controller
         if(\Illuminate\Support\Facades\Auth::check()) {
              $address = \App\Models\UserAddress::where('user_id', \Illuminate\Support\Facades\Auth::id())->where('is_default', true)->first();
              if(!$address) { $address = \App\Models\UserAddress::where('user_id', \Illuminate\Support\Facades\Auth::id())->first(); }
-             $items = \App\Models\Cart::where('tenant_id', $tenantId)->where('user_id', \Illuminate\Support\Facades\Auth::id())->with(['product.discounts', 'product.images', 'product.variants', 'bundle.products.images'])->get();
+             $items = \App\Models\Cart::where('user_id', \Illuminate\Support\Facades\Auth::id())->with(['product.discounts', 'product.images', 'product.variants', 'bundle.products.images'])->get();
              foreach($items as $item) {
                  $stock = 0;
                  if($item->product_id && $item->product) {
@@ -509,7 +509,7 @@ class PageController extends Controller
             $sessionCart = session()->get('cart', []);
             foreach($sessionCart as $key => $item) {
                 if(isset($item['type']) && $item['type'] == 'product' && isset($item['product_id'])) {
-                    $product = \App\Models\Product::where('tenant_id', $tenantId)->find($item['product_id']);
+                    $product = \App\Models\Product::find($item['product_id']);
                     if($product) {
                         $stock = 0;
                         if(isset($item['size']) && $item['size']) { $variant = $product->variants->where('size', $item['size'])->first(); $stock = $variant ? $variant->stock : 0; }
@@ -523,7 +523,7 @@ class PageController extends Controller
                     }
                 } elseif(isset($item['type']) && $item['type'] == 'bundle') {
                      if(isset($item['bundle_id'])) {
-                         $bundle = \App\Models\Bundle::where('tenant_id', $tenantId)->with('products.images')->find($item['bundle_id']);
+                         $bundle = \App\Models\Bundle::with('products.images')->find($item['bundle_id']);
                          if ($bundle && !$bundle->is_out_of_stock) {
                              // Resolve image: use bundle's own image, fall back to first product's image for packs
                              $bundleImage = $item['image'] ?? null;
@@ -558,6 +558,15 @@ class PageController extends Controller
 
         // Minimum Order Value Check
         $minOrderValue = $tenant ? ($tenant->min_order_value ?? 0) : 0;
+        
+        // DEBUG LOGGING
+        \Illuminate\Support\Facades\Log::info('Checkout Check:', [
+            'total' => $total,
+            'minOrderValue' => $minOrderValue,
+            'tenantId' => $tenantId,
+            'cart_items' => array_keys($cart)
+        ]);
+        
         if ($minOrderValue > 0 && $total < $minOrderValue) {
             $formattedMin = '₹' . number_format($minOrderValue, 2);
             $theme = $tenant ? $tenant->theme : 'template_1';
