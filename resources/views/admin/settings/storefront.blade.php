@@ -51,6 +51,25 @@
                             </div>
                         </div>
 
+                        <!-- Store Favicon -->
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold mb-2">Store Favicon (Browser Tab Icon)</label>
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="rounded border p-2 bg-light d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; overflow: hidden;">
+                                    @if($tenant->favicon)
+                                        <img id="favicon_preview" src="{{ Storage::url($tenant->favicon) }}" class="w-100 h-100 object-fit-contain">
+                                    @else
+                                        <div id="favicon_placeholder" class="text-secondary fw-bold">S</div>
+                                        <img id="favicon_preview" class="d-none w-100 h-100 object-fit-contain">
+                                    @endif
+                                </div>
+                                <div>
+                                    <input type="file" name="favicon" id="store_favicon" class="form-control form-control-sm" accept=".ico, image/png, image/jpeg, image/jpg, image/svg+xml, image/webp" onchange="previewStoreFavicon(this)">
+                                    <div class="form-text mt-1 small text-muted">Max size: 1MB. Recommend 32x32 ICO or PNG.</div>
+                                </div>
+                            </div>
+                        </div>
+
                         <hr>
 
                         <!-- Theme Colors -->
@@ -344,6 +363,21 @@
                 if (placeholder) placeholder.classList.add('d-none');
                 
                 const img = document.getElementById('logo_preview');
+                img.src = e.target.result;
+                img.classList.remove('d-none');
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function previewStoreFavicon(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                const placeholder = document.getElementById('favicon_placeholder');
+                if (placeholder) placeholder.classList.add('d-none');
+                
+                const img = document.getElementById('favicon_preview');
                 img.src = e.target.result;
                 img.classList.remove('d-none');
             }

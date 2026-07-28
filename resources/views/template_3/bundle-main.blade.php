@@ -87,15 +87,15 @@
                 </div>
             </div>
 
-            <div class="product-actions">
+            <div class="product-actions" id="main-product-actions" data-bundle-id="{{ $bundle->id }}">
                 <div style="display: flex; align-items: center; justify-content: space-between; border: 1px solid var(--border-color); border-radius: var(--border-radius-md); padding: 0.5rem; width: 140px; background: #FFFFFF;">
-                    <button onclick="decrementQty()" style="width: 36px; height: 36px; border-radius: 50%; background: #F1F5F9; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-main);"><i class="fa-solid fa-minus"></i></button>
-                    <span id="product-qty" style="font-weight: 700; font-size: 1.25rem;">1</span>
-                    <button onclick="incrementQty()" style="width: 36px; height: 36px; border-radius: 50%; background: #F1F5F9; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-main);"><i class="fa-solid fa-plus"></i></button>
+                    <button onclick="updateMainCart(-1)" style="width: 36px; height: 36px; border-radius: 50%; background: #F1F5F9; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-main);"><i class="fa-solid fa-minus"></i></button>
+                    <span id="main-qty-value" style="font-weight: 700; font-size: 1.25rem;">0</span>
+                    <button onclick="updateMainCart(1)" style="width: 36px; height: 36px; border-radius: 50%; background: #F1F5F9; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-main);"><i class="fa-solid fa-plus"></i></button>
                 </div>
                 
-                <button class="add-to-cart-btn" onclick="addToCartMain()">
-                    <i class="fa-solid fa-bag-shopping"></i> Add Combo to Cart
+                <button class="add-to-cart-btn" id="add-to-cart-bundle-btn" onclick="addOrOpenCart()">
+                    <i class="fa-solid fa-bag-shopping"></i> <span>Add Combo to Cart</span>
                 </button>
             </div>
             
@@ -136,32 +136,55 @@
         element.classList.add('active');
     }
 
-    function incrementQty() {
-        qty++;
-        document.getElementById('product-qty').innerText = qty;
+    function getMainCartKey() {
+        return "bundle-{{ $bundle->id }}";
     }
-    
-    function decrementQty() {
-        if (qty > 1) {
-            qty--;
-            document.getElementById('product-qty').innerText = qty;
+
+    function syncMainProductUI() {
+        if (!window.cartItemsMap) return;
+        let key = getMainCartKey();
+        let currentQty = parseInt(window.cartItemsMap[key] || 0);
+        
+        let qtyValue = document.getElementById('main-qty-value');
+        let btn = document.getElementById('add-to-cart-bundle-btn');
+        
+        if (qtyValue) {
+            qtyValue.innerText = currentQty;
+        }
+        
+        if (btn && currentQty > 0) {
+            btn.innerHTML = '<i class="fa-solid fa-check"></i> <span>View Cart</span>';
+            btn.style.background = '#10B981';
+        } else if (btn) {
+            btn.innerHTML = '<i class="fa-solid fa-bag-shopping"></i> <span>Add Combo to Cart</span>';
+            btn.style.background = 'var(--accent-color)';
         }
     }
-    
-    function addToCartMain() {
-        const key = `bundle-{{ $bundle->id }}`;
-        
-        updateInlineCart(key, qty);
-        
-        const btn = document.querySelector('.add-to-cart-btn');
-        const originalHtml = btn.innerHTML;
-        
-        btn.innerHTML = '<i class="fa-solid fa-check"></i> Combo Added';
-        
-        setTimeout(() => {
-            btn.innerHTML = originalHtml;
-            toggleCartSidebar();
-        }, 1000);
+
+    const originalSyncCartUI = window.syncCartUI;
+    window.syncCartUI = function(showToast) {
+        if (typeof originalSyncCartUI === 'function') originalSyncCartUI(showToast);
+        syncMainProductUI();
+    };
+
+    function updateMainCart(delta) {
+        if (typeof window.updateInlineCart === 'function') {
+            let key = getMainCartKey();
+            window.updateInlineCart(key, delta);
+        }
     }
+
+    function addOrOpenCart() {
+        let key = getMainCartKey();
+        let currentQty = parseInt(window.cartItemsMap ? (window.cartItemsMap[key] || 0) : 0);
+        
+        if (currentQty > 0) {
+            if (typeof toggleCartSidebar === 'function') toggleCartSidebar();
+        } else {
+            updateMainCart(1);
+        }
+    }
+
+    setTimeout(syncMainProductUI, 500);
 </script>
 @endsection

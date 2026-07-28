@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', $currentTenant->store_name ?? 'Store')</title>
+    <link rel="icon" href="{{ isset($currentTenant) && $currentTenant->favicon ? Storage::url($currentTenant->favicon) : 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>S</text></svg>' }}">
     
     <!-- Fonts and Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -62,11 +63,11 @@
                 </button>
                 @if(auth()->check())
                 <button class="action-btn" onclick="window.location.href='{{ route('account.index') }}'" title="My Account">
-                    <i class="fa-regular fa-user"></i>
+                    <i class="fa-solid fa-user"></i>
                 </button>
                 @else
                 <button class="action-btn" onclick="openCustomerAuthModal()" title="Log In">
-                    <i class="fa-solid fa-right-to-bracket"></i>
+                    <i class="fa-regular fa-user"></i>
                 </button>
                 @endif
                 <button class="action-btn" onclick="{{ auth()->check() ? 'window.location.href=\'' . route('v1.wishlist') . '\'' : 'openCustomerAuthModal()' }}">

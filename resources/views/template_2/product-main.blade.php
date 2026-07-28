@@ -389,15 +389,15 @@
                 $isOut = $initialStock <= 0 && !$product->continue_selling_when_out_of_stock;
             @endphp
             <!-- Add to Cart actions row -->
-            <div class="p-actions-row" style="display: flex; gap: 1rem; margin-bottom: 1.5rem; height: 3.5rem;">
+            <div class="p-actions-row" id="main-product-actions" style="display: flex; gap: 1rem; margin-bottom: 1.5rem; height: 3.5rem;">
                 <div class="qty-control" style="background: #fff; border: 2px solid var(--border-color); border-radius: 0.75rem; display: flex; flex-direction: row; align-items: center; justify-content: center; padding: 0.25rem 0.75rem; min-width: 70px; height: 100%;">
-                    <span class="page-qty" style="font-size: 1.2rem; font-weight: 800; text-align: center; line-height: 1; margin-right: 0.75rem;">1</span>
+                    <span class="page-qty" id="main-qty-value" style="font-size: 1.2rem; font-weight: 800; text-align: center; line-height: 1; margin-right: 0.75rem;">0</span>
                     <div style="display: flex; flex-direction: column; gap: 0.4rem; align-items: center; justify-content: center;">
-                        <button onclick="changePageQty(1)" style="border: none; background: none; padding: 0; font-size: 0.75rem; cursor: pointer; color: var(--text-muted); line-height: 1;"><i class="fa-solid fa-chevron-up"></i></button>
-                        <button onclick="changePageQty(-1)" style="border: none; background: none; padding: 0; font-size: 0.75rem; cursor: pointer; color: var(--text-muted); line-height: 1;"><i class="fa-solid fa-chevron-down"></i></button>
+                        <button onclick="updateMainCart(1)" style="border: none; background: none; padding: 0; font-size: 0.75rem; cursor: pointer; color: var(--text-muted); line-height: 1;"><i class="fa-solid fa-chevron-up"></i></button>
+                        <button onclick="updateMainCart(-1)" style="border: none; background: none; padding: 0; font-size: 0.75rem; cursor: pointer; color: var(--text-muted); line-height: 1;"><i class="fa-solid fa-chevron-down"></i></button>
                     </div>
                 </div>
-                <button class="btn-add-to-cart add-to-cart-btn" id="add-to-cart-page-btn" {{ $isOut ? 'disabled' : '' }} style="flex-grow: 1; height: 100%; background: {{ $isOut ? '#cbd5e1' : 'var(--accent-color)' }}; color: #fff; border: none; border-radius: 0.75rem; font-weight: 800; font-size: 1rem; cursor: {{ $isOut ? 'not-allowed' : 'pointer' }}; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.5rem; white-space: nowrap;">
+                <button class="btn-add-to-cart add-to-cart-btn" id="add-to-cart-page-btn" onclick="addOrOpenCart()" {{ $isOut ? 'disabled' : '' }} style="flex-grow: 1; height: 100%; background: {{ $isOut ? '#cbd5e1' : 'var(--accent-color)' }}; color: #fff; border: none; border-radius: 0.75rem; font-weight: 800; font-size: 1rem; cursor: {{ $isOut ? 'not-allowed' : 'pointer' }}; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.5rem; white-space: nowrap;">
                     @if($isOut)
                         OUT OF STOCK
                     @else
@@ -535,74 +535,64 @@
         }
         
         document.getElementById('selected-variant-id').value = id;
+        
+        // Update UI for newly selected variant
+        syncMainProductUI();
     }
 
-    function changePageQty(delta) {
-        qty = Math.max(1, qty + delta);
-        document.querySelector('.page-qty').innerText = qty;
-    }
-
-    function switchTab(tab, el) {
-        el.parentElement.querySelectorAll('.tab-link').forEach(b => {
-            b.style.color = 'var(--text-muted)';
-            b.classList.remove('active');
-        });
-        el.style.color = 'var(--primary-color)';
-        el.classList.add('active');
-
-        document.getElementById('tab-desc').classList.add('d-none');
-        document.getElementById('tab-shipping').classList.add('d-none');
-        document.getElementById('tab-' + tab).classList.remove('d-none');
-    }
-
-    function addToCart(event) {
-        const btn = document.getElementById('add-to-cart-page-btn');
-        const variantId = document.getElementById('selected-variant-id').value;
+    function getMainCartKey() {
         const activeCard = document.querySelector('.size-rect[style*="var(--accent-color)"]') || document.querySelector('.size-rect.active');
         const size = activeCard ? activeCard.querySelector('.s-size').innerText : '';
-        const originalHtml = btn.innerHTML;
-
-        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Adding...';
-        btn.disabled = true;
-
-        $.ajax({
-            url: "{{ route('cart.add') }}",
-            method: "POST",
-            data: {
-                _token: "{{ csrf_token() }}",
-                id: "{{ $product->id }}",
-                quantity: qty,
-                size: size,
-                variant_id: variantId
-            },
-            success: function(response) {
-                if(response.success) {
-                    $('#cart-count').text(response.cartCount);
-                    btn.innerHTML = 'ADDED TO BAG!';
-                    btn.style.background = '#10B981';
-                    
-                    showCartToast();
-
-                    setTimeout(() => {
-                        btn.innerHTML = originalHtml;
-                        btn.style.background = '';
-                        btn.disabled = false;
-                    }, 2000);
-                } else {
-                    alert('Error: ' + response.message);
-                    btn.innerHTML = originalHtml;
-                    btn.disabled = false;
-                }
-            },
-            error: function() {
-                alert('Something went wrong. Please try again.');
-                btn.innerHTML = originalHtml;
-                btn.disabled = false;
-            }
-        });
+        return "{{ $product->id }}" + (size ? '-' + size : '');
     }
 
-    document.getElementById('add-to-cart-page-btn').addEventListener('click', addToCart);
+    function syncMainProductUI() {
+        if (!window.cartItemsMap) return;
+        let key = getMainCartKey();
+        let currentQty = parseInt(window.cartItemsMap[key] || 0);
+        
+        let qtyValue = document.getElementById('main-qty-value');
+        let btn = document.getElementById('add-to-cart-page-btn');
+        if (qtyValue) {
+            qtyValue.innerText = currentQty;
+        }
+        
+        if (btn && currentQty > 0) {
+            btn.innerHTML = '<i class="fa-solid fa-check"></i> VIEW CART';
+            btn.style.background = '#10B981';
+        } else if (btn) {
+            const formattedPrice = document.getElementById('p-price-display').innerText;
+            btn.innerHTML = 'ADD TO CART <span class="btn-price-display">' + formattedPrice + '</span>';
+            btn.style.background = 'var(--accent-color)';
+        }
+    }
+
+    // Override the global syncCartUI to also sync the main product page
+    const originalSyncCartUI = window.syncCartUI;
+    window.syncCartUI = function(showToast) {
+        if (typeof originalSyncCartUI === 'function') originalSyncCartUI(showToast);
+        syncMainProductUI();
+    };
+
+    function updateMainCart(delta) {
+        if (typeof window.updateInlineCart === 'function') {
+            let key = getMainCartKey();
+            window.updateInlineCart(key, delta);
+        }
+    }
+
+    function addOrOpenCart() {
+        let key = getMainCartKey();
+        let currentQty = parseInt(window.cartItemsMap ? (window.cartItemsMap[key] || 0) : 0);
+        
+        if (currentQty > 0) {
+            if (typeof syncCartUI === 'function') syncCartUI(true);
+        } else {
+            updateMainCart(1);
+        }
+    }
+
+    setTimeout(syncMainProductUI, 500);
 
     function buyNow() {
         const btn = document.getElementById('buy-now-btn');

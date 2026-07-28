@@ -103,15 +103,15 @@
                 </div>
             </div>
 
-            <div class="p-actions-row" style="display: flex; gap: 1rem; margin-bottom: 2rem; height: 3.5rem;">
+            <div class="p-actions-row" id="main-product-actions" style="display: flex; gap: 1rem; margin-bottom: 2rem; height: 3.5rem;" data-bundle-id="{{ $bundle->id }}">
                 <div class="qty-control" style="background: #fff; border: 2px solid var(--border-color); border-radius: 0.75rem; display: flex; flex-direction: row; align-items: center; justify-content: center; padding: 0.25rem 0.75rem; min-width: 70px; height: 100%;">
-                    <span id="page-qty" style="font-size: 1.2rem; font-weight: 800; text-align: center; line-height: 1; margin-right: 0.75rem;">1</span>
+                    <span id="main-qty-value" style="font-size: 1.2rem; font-weight: 800; text-align: center; line-height: 1; margin-right: 0.75rem;">0</span>
                     <div style="display: flex; flex-direction: column; gap: 0.4rem; align-items: center; justify-content: center;">
-                        <button onclick="changePageQty(1)" style="border: none; background: none; padding: 0; font-size: 0.75rem; cursor: pointer; color: var(--text-muted); line-height: 1;"><i class="fa-solid fa-chevron-up"></i></button>
-                        <button onclick="changePageQty(-1)" style="border: none; background: none; padding: 0; font-size: 0.75rem; cursor: pointer; color: var(--text-muted); line-height: 1;"><i class="fa-solid fa-chevron-down"></i></button>
+                        <button onclick="updateMainCart(1)" style="border: none; background: none; padding: 0; font-size: 0.75rem; cursor: pointer; color: var(--text-muted); line-height: 1;"><i class="fa-solid fa-chevron-up"></i></button>
+                        <button onclick="updateMainCart(-1)" style="border: none; background: none; padding: 0; font-size: 0.75rem; cursor: pointer; color: var(--text-muted); line-height: 1;"><i class="fa-solid fa-chevron-down"></i></button>
                     </div>
                 </div>
-                <button class="btn-add-to-cart add-to-cart-btn" id="add-to-cart-bundle-btn" style="flex-grow: 1; height: 100%; background: var(--accent-color); color: #fff; border: none; border-radius: 0.75rem; font-weight: 800; font-size: 1rem; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.5rem; white-space: nowrap;">
+                <button class="btn-add-to-cart add-to-cart-btn" id="add-to-cart-bundle-btn" onclick="addOrOpenCart()" style="flex-grow: 1; height: 100%; background: var(--accent-color); color: #fff; border: none; border-radius: 0.75rem; font-weight: 800; font-size: 1rem; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.5rem; white-space: nowrap;">
                     <span>ADD TO BAG</span>
                     <span style="width: 1px; height: 16px; background: rgba(255,255,255,0.3); margin: 0 0.5rem;"></span>
                     <span id="btn-price-display">₹{{ number_format($bundle->total_price, 2) }}</span>
@@ -143,63 +143,54 @@
 
 @section('scripts')
 <script>
-    let qty = 1;
+    function getMainCartKey() {
+        return "bundle-{{ $bundle->id }}";
+    }
 
-    function changePageQty(delta) {
-        qty = Math.max(1, qty + delta);
-        document.getElementById('page-qty').innerText = qty;
+    function syncMainProductUI() {
+        if (!window.cartItemsMap) return;
+        let key = getMainCartKey();
+        let currentQty = parseInt(window.cartItemsMap[key] || 0);
         
-        const basePrice = {{ $bundle->total_price }};
-        const formattedPrice = new Intl.NumberFormat('en-IN', {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-        }).format(basePrice * qty);
-        document.getElementById('btn-price-display').innerText = '₹' + formattedPrice;
+        let qtyValue = document.getElementById('main-qty-value');
+        let btn = document.getElementById('add-to-cart-bundle-btn');
+        if (qtyValue) {
+            qtyValue.innerText = currentQty;
+        }
+        
+        if (btn && currentQty > 0) {
+            btn.innerHTML = '<i class="fa-solid fa-check"></i> VIEW CART';
+            btn.style.background = '#10B981';
+        } else if (btn) {
+            btn.innerHTML = '<span>ADD TO BAG</span><span style="width: 1px; height: 16px; background: rgba(255,255,255,0.3); margin: 0 0.5rem;"></span><span id="btn-price-display">₹{{ number_format($bundle->total_price, 2) }}</span>';
+            btn.style.background = 'var(--accent-color)';
+        }
     }
 
-    function addToCart() {
-        const btn = document.getElementById('add-to-cart-bundle-btn');
-        const originalHtml = btn.innerHTML;
+    const originalSyncCartUI = window.syncCartUI;
+    window.syncCartUI = function(showToast) {
+        if (typeof originalSyncCartUI === 'function') originalSyncCartUI(showToast);
+        syncMainProductUI();
+    };
 
-        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Adding...';
-        btn.disabled = true;
-
-        $.ajax({
-            url: "{{ route('cart.add') }}",
-            method: "POST",
-            data: {
-                _token: "{{ csrf_token() }}",
-                id: "{{ $bundle->id }}",
-                quantity: qty,
-                type: 'bundle'
-            },
-            success: function(response) {
-                if(response.success) {
-                    $('#cart-count').text(response.cartCount);
-                    btn.innerHTML = 'ADDED COMBO!';
-                    btn.style.background = '#10B981';
-                    
-                    showCartToast();
-
-                    setTimeout(() => {
-                        btn.innerHTML = originalHtml;
-                        btn.style.background = '';
-                        btn.disabled = false;
-                    }, 2000);
-                } else {
-                    alert('Error: ' + response.message);
-                    btn.innerHTML = originalHtml;
-                    btn.disabled = false;
-                }
-            },
-            error: function() {
-                alert('Something went wrong. Please try again.');
-                btn.innerHTML = originalHtml;
-                btn.disabled = false;
-            }
-        });
+    function updateMainCart(delta) {
+        if (typeof window.updateInlineCart === 'function') {
+            let key = getMainCartKey();
+            window.updateInlineCart(key, delta);
+        }
     }
 
-    document.getElementById('add-to-cart-bundle-btn').addEventListener('click', addToCart);
+    function addOrOpenCart() {
+        let key = getMainCartKey();
+        let currentQty = parseInt(window.cartItemsMap ? (window.cartItemsMap[key] || 0) : 0);
+        
+        if (currentQty > 0) {
+            if (typeof syncCartUI === 'function') syncCartUI(true);
+        } else {
+            updateMainCart(1);
+        }
+    }
+
+    setTimeout(syncMainProductUI, 500);
 </script>
 @endsection

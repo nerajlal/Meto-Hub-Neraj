@@ -59,6 +59,12 @@
                 </a>
             </li> -->
             <li>
+                <a href="{{ route('super_admin.global_images') }}" class="sidebar-item {{ request()->routeIs('super_admin.global_images') ? 'active' : '' }} d-flex align-items-center gap-3 px-3 py-2 rounded text-decoration-none text-secondary small">
+                    <i class="fas fa-images text-center" style="width: 20px;"></i>
+                    <span>Global Images</span>
+                </a>
+            </li>
+            <li>
                 <a href="{{ route('super_admin.status') }}" class="sidebar-item {{ request()->routeIs('super_admin.status') ? 'active' : '' }} d-flex align-items-center gap-3 px-3 py-2 rounded text-decoration-none text-secondary small">
                     <i class="fas fa-server text-center" style="width: 20px;"></i>
                     <span>System Status</span>

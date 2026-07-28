@@ -7,6 +7,24 @@
   <title>GoSlot Store — The Platform Behind Grocery Stores That Sell Online</title>
   <meta name="description"
     content="GoSlot Store is the SaaS platform grocery businesses use to build, price, promote, and run their own online stores — pricing engine, promotions, themes, analytics, and payments in one place.">
+  <meta name="keywords" content="grocery ecommerce, saas for grocery stores, create grocery website, online supermarket platform, delivery software, grocery POS integration">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>S</text></svg>">
+  
+  <link rel="canonical" href="{{ url()->current() }}">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="{{ url()->current() }}">
+  <meta property="og:title" content="GoSlot Store — Start Your Online Grocery Business">
+  <meta property="og:description" content="GoSlot Store is the SaaS platform grocery businesses use to build, price, promote, and run their own online stores.">
+  <meta property="og:image" content="{{ asset('images/og-image.jpg') }}">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="{{ url()->current() }}">
+  <meta property="twitter:title" content="GoSlot Store — Start Your Online Grocery Business">
+  <meta property="twitter:description" content="GoSlot Store is the SaaS platform grocery businesses use to build, price, promote, and run their own online stores.">
+  <meta property="twitter:image" content="{{ asset('images/og-image.jpg') }}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
@@ -378,9 +396,19 @@
       .header-actions .btn-ghost {
         display: none;
       }
+      
+      .header-actions .btn-primary {
+        padding: 8px 16px;
+        font-size: 0.85rem;
+      }
 
       .nav-toggle {
         display: flex;
+        margin-left: 8px;
+      }
+      
+      .header-inner {
+        gap: 12px;
       }
     }
 
@@ -1010,6 +1038,31 @@
       font-size: 0.86rem;
     }
 
+    @media (max-width: 560px) {
+      .promo-card {
+        text-align: left;
+        display: grid;
+        grid-template-columns: 48px 1fr;
+        gap: 16px;
+        align-items: center;
+        padding: 20px;
+        background: linear-gradient(135deg, var(--white), #f8faf7);
+      }
+      .p-icon {
+        margin: 0;
+        grid-row: 1 / span 2;
+        align-self: start;
+        box-shadow: 0 4px 12px rgba(255, 179, 0, 0.15);
+      }
+      .promo-card h3 {
+        margin-bottom: 2px;
+        align-self: end;
+      }
+      .promo-card p {
+        align-self: start;
+      }
+    }
+
     /* ---------- Product management ---------- */
     .product-mgmt {
       background: var(--white);
@@ -1333,6 +1386,18 @@
     @media (max-width: 560px) {
       .timeline {
         grid-template-columns: 1fr;
+        gap: 32px;
+        position: relative;
+      }
+      .timeline::before {
+        content: '';
+        position: absolute;
+        left: 22px;
+        top: 20px;
+        bottom: 20px;
+        width: 2px;
+        background: rgba(46, 125, 50, 0.2);
+        z-index: 0;
       }
     }
 
@@ -1365,6 +1430,28 @@
 
     .timeline-step p {
       font-size: 0.8rem;
+    }
+
+    @media (max-width: 560px) {
+      .timeline-step {
+        display: grid;
+        grid-template-columns: 44px 1fr;
+        gap: 20px;
+        text-align: left;
+        align-items: center;
+      }
+      .step-num {
+        margin-bottom: 0;
+        grid-row: 1 / span 2;
+        box-shadow: 0 4px 12px rgba(46, 125, 50, 0.15);
+      }
+      .timeline-step h4 {
+        margin-bottom: 2px;
+        align-self: end;
+      }
+      .timeline-step p {
+        align-self: start;
+      }
     }
 
     /* ---------- Payments ---------- */
@@ -1786,7 +1873,7 @@
       max-width: 1300px;
       margin: 0 auto 50px;
       display: grid;
-      grid-template-columns: 1.6fr repeat(5, 1fr);
+      grid-template-columns: 1.6fr repeat(4, 1fr);
       gap: 32px;
     }
 
@@ -1794,11 +1881,17 @@
       .footer-top {
         grid-template-columns: repeat(3, 1fr);
       }
+      .footer-brand {
+        grid-column: 1 / -1;
+      }
     }
 
     @media (max-width: 620px) {
       .footer-top {
         grid-template-columns: repeat(2, 1fr);
+      }
+      .footer-col {
+        margin-bottom: 24px;
       }
     }
 
@@ -1864,6 +1957,27 @@
       gap: 16px;
     }
 
+    .footer-bottom-left {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .footer-legal-links {
+      display: flex;
+      gap: 16px;
+    }
+
+    .footer-legal-links a {
+      color: rgba(255, 255, 255, 0.55);
+      transition: color .25s var(--ease);
+    }
+
+    .footer-legal-links a:hover {
+      color: var(--white);
+    }
+
     .social-icons {
       display: flex;
       gap: 14px;
@@ -1891,6 +2005,22 @@
       transform: translateY(-3px);
     }
   </style>
+  <!-- JSON-LD Structured Data for SEO -->
+  <script type="application/ld+json">
+    {
+      "@@context": "https://schema.org",
+      "@@type": "SoftwareApplication",
+      "name": "GoSlot Store",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Web",
+      "description": "GoSlot Store is the SaaS platform grocery businesses use to build, price, promote, and run their own online stores.",
+      "url": "{{ url()->current() }}",
+      "publisher": {
+        "@@type": "Organization",
+        "name": "GoSlot Store"
+      }
+    }
+  </script>
 </head>
 
 <body>
@@ -2666,13 +2796,16 @@
         <h4>Resources</h4>
         <a href="#">Help Center</a><a href="#">API Docs</a><a href="#">Guides</a>
       </div>
-      <div class="footer-col">
-        <h4>Legal</h4>
-        <a href="#">Privacy</a><a href="#">Terms</a><a href="#">Security</a>
-      </div>
     </div>
     <div class="footer-bottom">
-      <span>© 2026 GoSlot Store. All rights reserved.</span>
+      <div class="footer-bottom-left">
+        <span>© 2026 GoSlot Store. All rights reserved.</span>
+        <div class="footer-legal-links">
+          <a href="#">Privacy</a>
+          <a href="#">Terms</a>
+          <a href="#">Security</a>
+        </div>
+      </div>
       <div class="social-icons" aria-label="Social media">
         <a href="#" aria-label="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
         <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
@@ -3528,7 +3661,10 @@
     @media (max-width: 500px) {
       .saas-form-grid {
         grid-template-columns: 1fr;
-        gap: 0;
+        gap: 16px;
+      }
+      .saas-modal-card {
+        padding: 24px 20px;
       }
     }
 

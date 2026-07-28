@@ -32,6 +32,7 @@
             </button>
             <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0" aria-labelledby="importTallyDropdown">
                 <li><a class="dropdown-item py-2" href="#" data-bs-toggle="modal" data-bs-target="#importModal"><i class="fas fa-upload me-2 text-muted"></i> Upload File</a></li>
+                <li><a class="dropdown-item py-2" href="#" onclick="openLiveExcel()"><i class="fas fa-table me-2 text-success"></i> Live Excel Editor</a></li>
                 <li><hr class="dropdown-divider my-1"></li>
                 <li><a class="dropdown-item py-2" href="{{ route('admin.products.sample') }}"><i class="fas fa-download me-2 text-muted"></i> Download Sample Format</a></li>
             </ul>
@@ -127,6 +128,7 @@
             <thead class="bg-light text-muted small text-uppercase">
                  <tr>
                     <th class="px-3 py-3 w-auto"><input type="checkbox" class="form-check-input"></th>
+                    <th class="px-3 py-3 border-0 fw-medium" style="width: 60px;">ID</th>
                     <th class="px-3 py-3 border-0 fw-medium">Product</th>
                     <th class="px-3 py-3 border-0 fw-medium">Status</th>
                     <th class="px-3 py-3 border-0 fw-medium">Inventory</th>
@@ -234,5 +236,145 @@
         </form>
     </div>
 </div>
+
+<!-- Live Excel Modal -->
+<div class="modal fade" id="liveExcelModal" tabindex="-1" aria-labelledby="liveExcelModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content">
+            <div class="modal-header bg-light">
+                <h5 class="modal-title fw-bold" id="liveExcelModalLabel"><i class="fas fa-table text-success me-2"></i>Live Excel Editor</h5>
+                <div>
+                    <button type="button" class="btn btn-secondary shadow-sm me-2" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-success shadow-sm" onclick="saveLiveExcel()"><i class="fas fa-save me-1"></i> Save & Sync</button>
+                </div>
+            </div>
+            <div class="modal-body p-0" style="overflow: auto; height: calc(100vh - 130px);">
+                <div id="spreadsheet" style="width: 100%;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://bossanova.uk/jspreadsheet/v4/jexcel.js"></script>
+<link rel="stylesheet" href="https://bossanova.uk/jspreadsheet/v4/jexcel.css" type="text/css" />
+<script src="https://jsuites.net/v4/jsuites.js"></script>
+<link rel="stylesheet" href="https://jsuites.net/v4/jsuites.css" type="text/css" />
+
+<script>
+    let mySpreadsheet = null;
+
+    function openLiveExcel() {
+        // Show modal
+        var myModal = new bootstrap.Modal(document.getElementById('liveExcelModal'));
+        myModal.show();
+        
+        // Destroy previous instance if exists
+        document.getElementById('spreadsheet').innerHTML = '<div class="p-5 text-center text-muted"><i class="fas fa-spinner fa-spin fa-2x mb-3"></i><p>Loading catalog...</p></div>';
+        
+        // Show loading state or fetch data
+        fetch("{{ route('admin.products.live-export') }}", {
+            credentials: 'same-origin'
+        })
+            .then(res => {
+                if (!res.ok) throw new Error('Network response was not ok');
+                return res.json();
+            })
+            .then(data => {
+                document.getElementById('spreadsheet').innerHTML = '';
+                // Prevent crash if data is completely empty
+                let spreadsheetData = data;
+                if (!Array.isArray(data) || data.length === 0) {
+                    spreadsheetData = [['', '', '', '', '', '', 'active', '', '']];
+                }
+
+                mySpreadsheet = jexcel(document.getElementById('spreadsheet'), {
+                    data: spreadsheetData,
+                    minDimensions: [9, 10],
+                    columns: [
+                        { type: 'numeric', title: 'ID', width: 60, readOnly: true },
+                        { type: 'text', title: 'Title', width: 300 },
+                        { type: 'text', title: 'SKU', width: 120 },
+                        { type: 'numeric', title: 'Price', width: 100, mask: '₹ #.##,00' },
+                        { type: 'numeric', title: 'Compare Price', width: 120, mask: '₹ #.##,00' },
+                        { type: 'numeric', title: 'Stock', width: 100 },
+                        { type: 'dropdown', title: 'Status', width: 120, source: ['active', 'draft', 'archived'] },
+                        { type: 'text', title: 'Type', width: 150 },
+                        { type: 'text', title: 'Vendor', width: 150 }
+                    ],
+                    tableOverflow: true,
+                    tableHeight: 'calc(100vh - 135px)',
+                    tableWidth: '100%',
+                    search: true,
+                    pagination: 100,
+                    contextMenu: function(obj, x, y, e) {
+                        var items = [];
+                        if (y !== null) {
+                            items.push({
+                                title: 'Insert new row above',
+                                onclick: function() {
+                                    obj.insertRow(1, parseInt(y), 1);
+                                }
+                            });
+                            items.push({
+                                title: 'Insert new row below',
+                                onclick: function() {
+                                    obj.insertRow(1, parseInt(y));
+                                }
+                            });
+                            items.push({
+                                title: 'Delete row',
+                                onclick: function() {
+                                    obj.deleteRow(parseInt(y), 1);
+                                }
+                            });
+                        }
+                        return items;
+                    }
+                });
+            })
+            .catch(err => {
+                document.getElementById('spreadsheet').innerHTML = '<div class="p-5 text-center text-danger"><i class="fas fa-exclamation-triangle fa-2x mb-3"></i><p>Failed to load data. Please try again.</p></div>';
+            });
+    }
+
+    function saveLiveExcel() {
+        if (!mySpreadsheet) return;
+        
+        // Get all data from the spreadsheet
+        const data = mySpreadsheet.getData();
+        const btn = document.querySelector('#liveExcelModal .btn-success');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Saving...';
+        btn.disabled = true;
+        
+        fetch("{{ route('admin.products.live-import') }}", {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({ data: data })
+        })
+        .then(res => res.json())
+        .then(response => {
+            if (response.success) {
+                alert(response.message);
+                window.location.reload();
+            } else {
+                alert('Error: ' + (response.message || 'Unknown error'));
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            alert('An error occurred while saving.');
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        });
+    }
+</script>
 
 @endsection

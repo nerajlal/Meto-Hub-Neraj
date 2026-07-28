@@ -27,6 +27,7 @@ class DatabaseSeeder extends Seeder
             OrderSeeder::class,
             SuperAdminSeeder::class,
             RajStoreSeeder::class,
+            GlobalProductImageSeeder::class,
         ]);
 
         $tenant = \App\Models\Tenant::first();

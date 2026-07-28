@@ -182,8 +182,18 @@
             <!-- Custom Prices List -->
             <div class="col-12 col-md-8">
                 <div class="card border shadow-sm p-0 bg-white">
-                    <div class="card-header bg-light border-bottom p-3">
+                    <div class="card-header bg-light border-bottom p-3 d-flex justify-content-between align-items-center">
                         <h2 class="h6 fw-bold text-secondary mb-0">Active Custom Customer Pricing Rules</h2>
+                        <div class="dropdown">
+                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle shadow-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa-solid fa-file-excel text-success me-1"></i> Excel
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end shadow">
+                                <li><a class="dropdown-item" href="{{ route('admin.custom-prices.sample-excel') }}"><i class="fa-solid fa-download me-2"></i> Download Sample Excel</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#uploadCustomPriceExcelModal"><i class="fa-solid fa-upload me-2"></i> Upload Excel</a></li>
+                            </ul>
+                        </div>
                     </div>
                     <div class="table-responsive">
                         <table class="table table-hover align-middle mb-0 text-secondary">
@@ -490,5 +500,31 @@
     });
 </script>
 
+
+<!-- Upload Excel Modal -->
+<div class="modal fade" id="uploadCustomPriceExcelModal" tabindex="-1" aria-labelledby="uploadCustomPriceExcelModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="{{ route('admin.custom-prices.import-excel') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold" id="uploadCustomPriceExcelModalLabel">Upload Custom Pricing</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="excelFile" class="form-label small fw-semibold text-secondary">Excel/CSV File</label>
+                        <input class="form-control shadow-sm" type="file" id="excelFile" name="file" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" required>
+                        <div class="form-text">Please use the downloaded sample template. Required columns: customer_email, product_id, price.</div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary shadow-sm" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-success shadow-sm">Upload & Import</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 @endsection

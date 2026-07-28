@@ -49,7 +49,7 @@
             @if(auth()->check())
                 <div class="user-dropdown" style="position: relative;">
                     <a href="javascript:void(0)" class="action-btn text-decoration-none" onclick="document.getElementById('user-menu').classList.toggle('d-none')" style="display: flex; align-items: center;">
-                        <i class="fa-regular fa-user"></i>
+                        <i class="fa-solid fa-user"></i>
                         <span class="action-text">{{ explode(' ', auth()->user()->name)[0] }}</span>
                         <i class="fa-solid fa-chevron-down" style="font-size: 0.7rem; margin-left: 0.3rem;"></i>
                     </a>
@@ -67,7 +67,7 @@
                 </div>
             @else
                 <a href="javascript:void(0)" onclick="openCustomerAuthModal()" class="action-btn text-decoration-none" style="display: flex; align-items: center;">
-                    <i class="fa-solid fa-right-to-bracket"></i>
+                    <i class="fa-regular fa-user"></i>
                     <span class="action-text">Sign In</span>
                 </a>
             @endif

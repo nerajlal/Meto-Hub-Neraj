@@ -120,6 +120,7 @@ class SettingController extends Controller
             'terms_of_service' => 'nullable|string',
             'mobile_grid_cols' => 'required|integer|in:1,2,3',
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,svg,webp|max:2048',
+            'favicon' => 'nullable|image|mimes:ico,jpeg,png,jpg,svg,webp|max:1024',
             'primary_color' => 'required|string|regex:/^#[0-9A-Fa-f]{6}$/',
             'dark_color' => 'required|string|regex:/^#[0-9A-Fa-f]{6}$/',
             'accent_color' => 'required|string|regex:/^#[0-9A-Fa-f]{6}$/',
@@ -159,6 +160,14 @@ class SettingController extends Controller
                 \Illuminate\Support\Facades\Storage::disk('public')->delete($tenant->logo);
             }
             $updateData['logo'] = $request->file('logo')->store('logos', 'public');
+        }
+
+        if ($request->hasFile('favicon')) {
+            // Delete old favicon if exists
+            if ($tenant->favicon) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($tenant->favicon);
+            }
+            $updateData['favicon'] = $request->file('favicon')->store('favicons', 'public');
         }
 
         $tenant->update($updateData);
