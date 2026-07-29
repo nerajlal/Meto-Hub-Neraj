@@ -124,6 +124,8 @@
         </div>
     </header>
     
+    @endmobileapp
+    
     <!-- Top Navigation -->
     <nav style="background: #FFFFFF; border-bottom: 1px solid var(--border-color); padding: 0.75rem 0; overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch;">
         <div class="container" style="display: flex; gap: 2rem; align-items: center;">
@@ -138,7 +140,6 @@
             @endforeach
         </div>
     </nav>
-    @endmobileapp
  
     <!-- Main Content -->
     <main>
