@@ -90,7 +90,7 @@
     @mobileapp
         <!-- No header for native app, keeping it clean -->
         <style>
-            .main-wrapper, .main-content, main {
+            body, .main-wrapper, .main-content, main {
                 padding-top: env(safe-area-inset-top, 15px) !important;
             }
         </style>

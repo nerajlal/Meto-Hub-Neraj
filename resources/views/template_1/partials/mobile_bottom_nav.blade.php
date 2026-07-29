@@ -72,7 +72,7 @@
         }
         /* Add padding to body so content isn't hidden behind the sticky footer */
         body {
-            padding-bottom: 70px !important;
+            padding-bottom: 110px !important;
         }
         /* Also push up the whatsapp float button if it exists */
         .whatsapp-float-btn {
@@ -122,7 +122,7 @@
         
         <!-- Cart -->
         <li class="nav-item">
-            <a href="javascript:void(0)" class="nav-link" onclick="toggleNCart(true)">
+            <a href="javascript:void(0)" class="nav-link" onclick="typeof toggleNCart === 'function' ? toggleNCart(true) : (typeof toggleCartSidebar === 'function' ? toggleCartSidebar() : null)">
                 <i class="fa-solid fa-cart-shopping"></i>
                 <span>Cart</span>
                 @php
