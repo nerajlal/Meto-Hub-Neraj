@@ -1,3 +1,4 @@
+@mobileapp
 <style>
     .mobile-bottom-nav {
         display: none;
@@ -100,7 +101,11 @@
         
         <!-- Wishlist -->
         <li class="nav-item">
-            <a href="{{ auth()->check() ? route('v3.wishlist') : route('login') }}" class="nav-link {{ request()->routeIs('v3.wishlist') ? 'active' : '' }}">
+            @if(auth()->check())
+                <a href="{{ route('v3.wishlist') }}" class="nav-link {{ request()->routeIs('v3.wishlist') ? 'active' : '' }}">
+            @else
+                <a href="javascript:void(0)" onclick="typeof openCustomerAuthModal === 'function' ? openCustomerAuthModal() : (typeof openModal === 'function' ? openModal('login-modal') : window.location.href='{{ route('login') }}')" class="nav-link">
+            @endif
                 <i class="fa-regular fa-heart"></i>
                 <span>Wishlist</span>
                 @auth
@@ -131,7 +136,11 @@
         
         <!-- You / Profile -->
         <li class="nav-item">
-            <a href="{{ auth()->check() ? route('account.index') : route('login') }}" class="nav-link {{ request()->routeIs('account.index') ? 'active' : '' }}">
+            @if(auth()->check())
+                <a href="{{ route('account.index') }}" class="nav-link {{ request()->routeIs('account.index') ? 'active' : '' }}">
+            @else
+                <a href="javascript:void(0)" onclick="typeof openCustomerAuthModal === 'function' ? openCustomerAuthModal() : (typeof openModal === 'function' ? openModal('login-modal') : window.location.href='{{ route('login') }}')" class="nav-link">
+            @endif
                 <i class="fa-regular fa-user"></i>
                 <span>You</span>
             </a>
@@ -203,3 +212,4 @@
         }
     });
 </script>
+@endmobileapp
