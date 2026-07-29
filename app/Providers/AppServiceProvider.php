@@ -24,6 +24,10 @@ class AppServiceProvider extends ServiceProvider
         Schema::defaultStringLength(191);
         \Illuminate\Pagination\Paginator::useBootstrapFive();
 
+        \Illuminate\Support\Facades\Blade::if('mobileapp', function () {
+            return \Illuminate\Support\Str::contains(request()->header('User-Agent'), 'GrocerySaaSApp');
+        });
+
         \Illuminate\Support\Facades\Blade::directive('currency', function () {
             return "<?php 
                 \$symbolMap = [

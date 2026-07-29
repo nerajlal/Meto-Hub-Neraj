@@ -64,13 +64,21 @@
     </style>
 </head>
 <body>
-    @include('template_2.partials.header')
+    @mobileapp
+        <!-- No header for native app -->
+    @else
+        @include('template_2.partials.header')
+    @endmobileapp
 
     <main class="main-content" style="width: 100%; max-width: 1400px; margin: 0 auto; padding: 2rem 2rem; background: #fff; min-height: 70vh; box-sizing: border-box;">
         @yield('content')
     </main>
 
-    @include('template_2.partials.footer')
+    @mobileapp
+        <!-- No massive footer for native app -->
+    @else
+        @include('template_2.partials.footer')
+    @endmobileapp
     @include('template_1.partials.cart_drawer')
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -276,11 +284,15 @@
         };
     </script>
     @yield('scripts')
-    @if(!empty($currentTenant->whatsapp_number))
-        <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $currentTenant->whatsapp_number) }}" target="_blank" class="whatsapp-float-btn" style="position: fixed; bottom: 20px; right: 20px; width: 60px; height: 60px; background-color: #25d366; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.15); z-index: 1000; text-decoration: none; transition: transform 0.3s ease;">
-            <i class="fa-brands fa-whatsapp"></i>
-        </a>
-    @endif
+    @mobileapp
+        <!-- No whatsapp float button in native app -->
+    @else
+        @if(!empty($currentTenant->whatsapp_number))
+            <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $currentTenant->whatsapp_number) }}" target="_blank" class="whatsapp-float-btn" style="position: fixed; bottom: 20px; right: 20px; width: 60px; height: 60px; background-color: #25d366; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.15); z-index: 1000; text-decoration: none; transition: transform 0.3s ease;">
+                <i class="fa-brands fa-whatsapp"></i>
+            </a>
+        @endif
+    @endmobileapp
     
     @include('template_2.partials.mobile_bottom_nav')
     @include('template_1.partials.floating_cart_summary')

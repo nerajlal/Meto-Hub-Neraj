@@ -56,7 +56,10 @@
 </head>
 <body>
     <div class="sidebar-overlay"></div>
-    @include('template_1.partials.header')
+    @mobileapp
+    @else
+        @include('template_1.partials.header')
+    @endmobileapp
 
     <div class="main-wrapper">
         <aside class="sidebar">
@@ -136,7 +139,10 @@
         </main>
     </div>
 
-    @include('template_1.partials.footer')
+    @mobileapp
+    @else
+        @include('template_1.partials.footer')
+    @endmobileapp
     @include('template_1.partials.cart_drawer')
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

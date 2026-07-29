@@ -95,11 +95,31 @@ class CartService
                 $savings += $poolSavings;
             }
         }
+        // 3. App-Exclusive Offer (Strategy 3) - First Time Only
+        $appDiscount = 0;
+        $isMobileApp = \Illuminate\Support\Str::contains(request()->header('User-Agent'), 'GrocerySaaSApp');
+        
+        if ($isMobileApp) {
+            $isFirstTime = true;
+            if (\Illuminate\Support\Facades\Auth::check()) {
+                $hasOrders = \App\Models\Order::where('user_id', \Illuminate\Support\Facades\Auth::id())->exists();
+                if ($hasOrders) {
+                    $isFirstTime = false;
+                }
+            }
+
+            if ($isFirstTime) {
+                // Apply a 10% discount for first-time app users
+                $appDiscount = ($subtotal - $savings) * 0.10;
+                $savings += $appDiscount;
+            }
+        }
 
         return [
             'total' => max(0, $subtotal - $savings),
             'subtotal' => $subtotal,
-            'savings' => $savings
+            'savings' => $savings,
+            'app_discount' => $appDiscount
         ];
     }
 

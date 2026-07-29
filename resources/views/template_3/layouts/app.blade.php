@@ -25,6 +25,9 @@
 </head>
 <body>
     
+    @mobileapp
+        <!-- No header for native app -->
+    @else
     <!-- Glassmorphism Header -->
     <header class="store-header">
         <div class="header-container">
@@ -130,12 +133,16 @@
             @endforeach
         </div>
     </nav>
+    @endmobileapp
  
     <!-- Main Content -->
     <main>
         @yield('content')
     </main>
  
+    @mobileapp
+        <!-- No footer for native app -->
+    @else
     <!-- Footer -->
     <footer class="store-footer">
         <div class="container footer-grid">
@@ -183,6 +190,7 @@
             </div>
         </div>
     </footer>
+    @endmobileapp
 
     <!-- Cart Sidebar Component (Assuming it exists or we build it) -->
     @include('template_1.partials.cart_drawer') <!-- Reusing template_1 cart for now to save time -->
@@ -478,6 +486,7 @@
             }
         }
     </script>
+    @include('template_1.partials.mobile_bottom_nav')
     @include('partials.customer_auth_modal')
     @yield('scripts')
 </body>

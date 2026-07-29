@@ -30,6 +30,7 @@ export default function App() {
         javaScriptEnabled={true}
         domStorageEnabled={true}
         androidLayerType="hardware" 
+        applicationNameForUserAgent="GrocerySaaSApp"
         onNavigationStateChange={(navState) => { canGoBackRef.current = navState.canGoBack; }}
         allowsBackForwardNavigationGestures={true}
       />
