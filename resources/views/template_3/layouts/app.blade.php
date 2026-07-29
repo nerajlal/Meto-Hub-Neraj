@@ -27,6 +27,11 @@
     
     @mobileapp
         <!-- No header for native app -->
+        <style>
+            .main-wrapper, .main-content, main {
+                padding-top: env(safe-area-inset-top, 15px) !important;
+            }
+        </style>
     @else
     <!-- Glassmorphism Header -->
     <header class="store-header">

@@ -91,11 +91,11 @@
             </a>
         </li>
         
-        <!-- Categories -->
+        <!-- Search (formerly Categories) -->
         <li class="nav-item">
             <a href="javascript:void(0)" class="nav-link" id="mobile-bottom-menu-btn">
                 <i class="fa-solid fa-magnifying-glass"></i>
-                <span>Categories</span>
+                <span>Search</span>
             </a>
         </li>
         
@@ -153,13 +153,37 @@
         const bottomMenuBtn = document.getElementById('mobile-bottom-menu-btn');
         if(bottomMenuBtn) {
             bottomMenuBtn.addEventListener('click', function() {
-                document.querySelector('.sidebar').classList.add('active');
-                document.querySelector('.sidebar-overlay').classList.add('active');
+                // Toggle mobile search containers
+                let t1Container = document.getElementById('mobile-search-container');
+                let t1Input = document.getElementById('t1-mobile-search-input');
+                let t3Container = document.getElementById('t3-mobile-search-container');
+                let t3Input = document.getElementById('t3-mobile-search-input');
+                let t2Container = document.querySelector('.mobile-search-bar'); // if template_2 uses this
+                
+                let container = t1Container || t3Container || t2Container;
+                let input = t1Input || t3Input || (t2Container ? t2Container.querySelector('input') : null);
+                
+                if (container) {
+                    if (container.style.display === 'none' || container.style.display === '') {
+                        container.style.display = 'block';
+                        if (input) input.focus();
+                    } else {
+                        container.style.display = 'none';
+                    }
+                } else {
+                    // Fallback to opening sidebar if no search container is found
+                    let sidebar = document.querySelector('.sidebar');
+                    let overlay = document.querySelector('.sidebar-overlay');
+                    if (sidebar && overlay) {
+                        sidebar.classList.add('active');
+                        overlay.classList.add('active');
+                    }
+                }
             });
         }
         
         // Sync cart count with the bottom bar
-        const topCartCount = document.getElementById('cart-count');
+        const topCartCount = document.getElementById('cart-count') || document.getElementById('cart-count-badge');
         if (topCartCount) {
             const observer = new MutationObserver(function(mutations) {
                 mutations.forEach(function(mutation) {
