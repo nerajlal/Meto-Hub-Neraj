@@ -25,16 +25,8 @@
 </head>
 <body>
     
-    @mobileapp
-        <!-- No header for native app -->
-        <style>
-            body, .main-wrapper, .main-content, main {
-                padding-top: env(safe-area-inset-top, 15px) !important;
-            }
-        </style>
-    @else
     <!-- Glassmorphism Header -->
-    <header class="store-header">
+    <header class="store-header" style="padding-top: env(safe-area-inset-top, 0px);">
         <div class="header-container">
             <a href="{{ route('v1.home') }}" class="logo">
                 @if(isset($currentTenant) && $currentTenant->logo)
@@ -44,6 +36,9 @@
                 @endif
             </a>
             
+            @mobileapp
+                <!-- Hide search and actions for mobile app -->
+            @else
             <div class="search-bar" style="position: relative;">
                 <i class="fa-solid fa-magnifying-glass"></i>
                 <form action="{{ route('v1.all-products') }}" method="GET" id="t3-search-form" autocomplete="off" style="width: 100%;">
@@ -89,6 +84,7 @@
                     <span class="cart-count" id="cart-count-badge">{{ $cartCount }}</span>
                 </button>
             </div>
+            @endmobileapp
         </div>
         <!-- Mobile Expandable Search Bar -->
         <div id="t3-mobile-search-container" style="display: none; padding: 10px 15px; background: #fff; border-bottom: 1px solid var(--border-color); width: 100%; position: absolute; z-index: 999; top: 100%; left: 0;">
@@ -123,8 +119,6 @@
             </div>
         </div>
     </header>
-    
-    @endmobileapp
     
     <!-- Top Navigation -->
     <nav style="background: #FFFFFF; border-bottom: 1px solid var(--border-color); padding: 0.75rem 0; overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch;">

@@ -11,6 +11,9 @@
             @endif
         </a>
 
+        @mobileapp
+            <!-- Mobile app hides desktop search and header actions -->
+        @else
         {{-- Search Bar with autocomplete (Desktop) --}}
         <div class="search-bar hide-on-mobile" style="position: relative; flex: 1; max-width: 520px;">
             <form id="t1-search-form" action="{{ route('v3.all-products') }}" method="GET" autocomplete="off" style="display: flex; align-items: center; width: 100%; position: relative;">
@@ -94,6 +97,7 @@
             </a>
         </div>
     </div>
+    @endmobileapp
     <!-- Mobile Expandable Search Bar -->
     <div id="mobile-search-container" style="display: none; padding: 10px 15px; background: #fff; border-bottom: 1px solid var(--border-color); width: 100%; position: absolute; z-index: 999; top: 100%; left: 0;">
         <form id="t1-mobile-search-form" action="{{ route('v3.all-products') }}" method="GET" autocomplete="off" style="display: flex; align-items: center; width: 100%; position: relative;">

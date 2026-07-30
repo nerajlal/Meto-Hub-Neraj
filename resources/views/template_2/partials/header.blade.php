@@ -12,6 +12,9 @@
             @endif
         </a>
 
+        @mobileapp
+            <!-- Mobile app hides desktop search and header actions -->
+        @else
         {{-- Search Bar with autocomplete (Desktop) --}}
         <div class="search-bar hide-on-mobile" style="flex-grow: 1; max-width: 600px; position: relative;">
             <form id="t2-search-form" action="{{ route('velvet.all-products') }}" method="GET" autocomplete="off"
@@ -117,6 +120,7 @@
             @endforeach
         </div>
     </nav>
+    @endmobileapp
     <!-- Mobile Expandable Search Bar -->
     <div id="mobile-search-container"
         style="display: none; padding: 10px 15px; background: #fff; border-bottom: 1px solid var(--border-color); width: 100%; position: absolute; z-index: 999; top: 100%; left: 0;">

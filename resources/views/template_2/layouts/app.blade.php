@@ -64,16 +64,7 @@
     </style>
 </head>
 <body>
-    @mobileapp
-        <!-- No header for native app -->
-        <style>
-            body, .main-wrapper, .main-content, main {
-                padding-top: env(safe-area-inset-top, 15px) !important;
-            }
-        </style>
-    @else
-        @include('template_2.partials.header')
-    @endmobileapp
+    @include('template_2.partials.header')
 
     <main class="main-content" style="width: 100%; max-width: 1400px; margin: 0 auto; padding: 2rem 2rem; background: #fff; min-height: 70vh; box-sizing: border-box;">
         @yield('content')

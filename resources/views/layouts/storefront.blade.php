@@ -56,15 +56,7 @@
 </head>
 <body>
     <div class="sidebar-overlay"></div>
-    @mobileapp
-        <style>
-            body, .main-wrapper, .main-content, main {
-                padding-top: env(safe-area-inset-top, 15px) !important;
-            }
-        </style>
-    @else
-        @include('template_1.partials.header')
-    @endmobileapp
+    @include('template_1.partials.header')
 
     <div class="main-wrapper">
         <aside class="sidebar">
