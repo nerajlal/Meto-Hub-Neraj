@@ -31,6 +31,8 @@
     </style>
     <!-- Dynamic Mobile App Header -->
     <header id="app-dynamic-header" style="background: #f8fafc; border-bottom: 1px solid rgba(0,0,0,0.03); position: sticky; top: 0; z-index: 1000; transition: box-shadow 0.3s ease;">
+        <!-- Hidden cart count badge for MutationObserver to sync with bottom nav -->
+        <span id="cart-count-badge" style="display: none;">{{ \App\Services\CartService::getCount() }}</span>
         <style>
             @keyframes slideTicker {
                 0%, 25% { transform: translateY(0); }
