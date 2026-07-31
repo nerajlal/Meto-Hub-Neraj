@@ -47,6 +47,14 @@
                                 <div>
                                     <input type="file" name="logo" id="store_logo" class="form-control form-control-sm" accept="image/png, image/jpeg, image/jpg, image/svg+xml, image/webp" onchange="previewStoreLogo(this)">
                                     <div class="form-text mt-1 small text-muted">Max size: 2MB. SVG, PNG, JPG, or WebP.</div>
+                                    @if($tenant->logo)
+                                        <div class="form-check mt-2">
+                                            <input class="form-check-input" type="checkbox" name="remove_logo" value="1" id="remove_logo">
+                                            <label class="form-check-label text-danger small" for="remove_logo">
+                                                Remove Current Logo
+                                            </label>
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -66,6 +74,14 @@
                                 <div>
                                     <input type="file" name="favicon" id="store_favicon" class="form-control form-control-sm" accept=".ico, image/png, image/jpeg, image/jpg, image/svg+xml, image/webp" onchange="previewStoreFavicon(this)">
                                     <div class="form-text mt-1 small text-muted">Max size: 1MB. Recommend 32x32 ICO or PNG.</div>
+                                    @if($tenant->favicon)
+                                        <div class="form-check mt-2">
+                                            <input class="form-check-input" type="checkbox" name="remove_favicon" value="1" id="remove_favicon">
+                                            <label class="form-check-label text-danger small" for="remove_favicon">
+                                                Remove Current Favicon
+                                            </label>
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
                         </div>

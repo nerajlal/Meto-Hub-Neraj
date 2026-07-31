@@ -8,7 +8,7 @@
                 <img src="{{ Storage::url($currentTenant->logo) }}" alt="{{ $currentTenant->name }}"
                     style="max-height: 45px; width: auto; object-fit: contain;">
             @else
-                <i class="fa-solid fa-leaf"></i>{{ $currentTenant->name ?? 'Fresh Grocery' }}
+                {{ $currentTenant->name ?? 'Fresh Grocery' }}
             @endif
         </a>
 

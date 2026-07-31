@@ -154,7 +154,12 @@ class SettingController extends Controller
             'min_order_value' => $request->min_order_value ?? 0,
         ];
 
-        if ($request->hasFile('logo')) {
+        if ($request->has('remove_logo') && $request->remove_logo == '1') {
+            if ($tenant->logo) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($tenant->logo);
+            }
+            $updateData['logo'] = null;
+        } elseif ($request->hasFile('logo')) {
             // Delete old logo if exists
             if ($tenant->logo) {
                 \Illuminate\Support\Facades\Storage::disk('public')->delete($tenant->logo);
@@ -162,7 +167,12 @@ class SettingController extends Controller
             $updateData['logo'] = $request->file('logo')->store('logos', 'public');
         }
 
-        if ($request->hasFile('favicon')) {
+        if ($request->has('remove_favicon') && $request->remove_favicon == '1') {
+            if ($tenant->favicon) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($tenant->favicon);
+            }
+            $updateData['favicon'] = null;
+        } elseif ($request->hasFile('favicon')) {
             // Delete old favicon if exists
             if ($tenant->favicon) {
                 \Illuminate\Support\Facades\Storage::disk('public')->delete($tenant->favicon);

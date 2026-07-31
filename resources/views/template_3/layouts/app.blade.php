@@ -37,7 +37,7 @@
                 @if(isset($currentTenant) && $currentTenant->logo)
                     <img src="{{ asset('storage/' . $currentTenant->logo) }}" alt="Logo" style="height: 48px; max-width: 180px; object-fit: contain;">
                 @else
-                    <i class="fa-solid fa-leaf" style="color: var(--accent-color); margin-right: 5px;"></i> <span style="font-size: 1.2rem;">{{ $currentTenant->name ?? 'FreshMarket' }}</span>
+                    <span style="font-size: 1.2rem;">{{ $currentTenant->name ?? 'FreshMarket' }}</span>
                 @endif
             </a>
             <div class="greeting" style="font-size: 0.85rem; font-weight: 700; color: var(--text-main); position: absolute; right: 15px; z-index: 1;">
@@ -118,7 +118,7 @@
                 @if(isset($currentTenant) && $currentTenant->logo)
                     <img src="{{ asset('storage/' . $currentTenant->logo) }}" alt="Logo" style="height: 40px;">
                 @else
-                    <i class="fa-solid fa-leaf"></i> {{ $currentTenant->name ?? 'FreshMarket' }}
+                    {{ $currentTenant->name ?? 'FreshMarket' }}
                 @endif
             </a>
             
@@ -234,7 +234,7 @@
                     @if(isset($currentTenant) && $currentTenant->logo)
                         <img src="{{ asset('storage/' . $currentTenant->logo) }}" alt="Logo" style="height: 40px;">
                     @else
-                        <i class="fa-solid fa-leaf"></i> {{ $currentTenant->name ?? 'FreshMarket' }}
+                        {{ $currentTenant->name ?? 'FreshMarket' }}
                     @endif
                 </a>
                 <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.6;">
