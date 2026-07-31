@@ -153,6 +153,13 @@
         const bottomMenuBtn = document.getElementById('mobile-bottom-menu-btn');
         if(bottomMenuBtn) {
             bottomMenuBtn.addEventListener('click', function() {
+                let appSearchInput = document.getElementById('app-search-input');
+                if (appSearchInput) {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    setTimeout(() => appSearchInput.focus(), 300);
+                    return;
+                }
+                
                 // Toggle mobile search containers
                 let t1Container = document.getElementById('mobile-search-container');
                 let t1Input = document.getElementById('t1-mobile-search-input');

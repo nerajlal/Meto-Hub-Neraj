@@ -25,7 +25,93 @@
 </head>
 <body>
     
-    <!-- Glassmorphism Header -->
+    @mobileapp
+    <style>
+        body, main { padding-top: 0 !important; }
+    </style>
+    <!-- Dynamic Mobile App Header -->
+    <header id="app-dynamic-header" style="background: #fff; position: sticky; top: 0; z-index: 1000; padding-top: env(safe-area-inset-top, 0px); transition: box-shadow 0.3s ease;">
+        <!-- Top Row: Logo & Greeting -->
+        <div id="app-header-top-row" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; transition: all 0.3s ease; overflow: hidden; transform-origin: top;">
+            <a href="{{ route('v1.home') }}" class="logo" style="text-decoration: none; color: var(--text-main); font-weight: 800; display: flex; align-items: center;">
+                @if(isset($currentTenant) && $currentTenant->logo)
+                    <img src="{{ asset('storage/' . $currentTenant->logo) }}" alt="Logo" style="height: 35px; max-width: 150px; object-fit: contain;">
+                @else
+                    <i class="fa-solid fa-leaf" style="color: var(--accent-color); margin-right: 5px;"></i> <span style="font-size: 1.2rem;">{{ $currentTenant->name ?? 'FreshMarket' }}</span>
+                @endif
+            </a>
+            <div class="greeting" style="font-size: 0.9rem; font-weight: 700; color: var(--text-main);">
+                @if(auth()->check())
+                    Hi, {{ explode(' ', auth()->user()->name)[0] }} 👋
+                @else
+                    Welcome! 👋
+                @endif
+            </div>
+        </div>
+
+        <!-- Permanent Search Bar -->
+        <div id="app-header-search-row" style="padding: 0 15px 12px 15px;">
+            <form action="{{ route('v1.all-products') }}" method="GET" id="app-search-form" autocomplete="off" style="position: relative;">
+                <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 1.25rem; color: #9ca3af; top: 50%; transform: translateY(-50%); font-size: 1rem;"></i>
+                <input
+                    type="text"
+                    name="q"
+                    id="app-search-input"
+                    placeholder="Search for groceries, vegetables, meat..."
+                    value="{{ request('q') }}"
+                    autocomplete="off"
+                    style="width: 100%; padding: 0.85rem 1rem 0.85rem 3rem; border: 1.5px solid var(--border-color); border-radius: 99px; font-size: 0.95rem; outline: none; color: var(--text-main); background: #f8fafc; transition: border-color 0.3s ease;"
+                    onfocus="this.style.borderColor='var(--accent-color)';"
+                    onblur="this.style.borderColor='var(--border-color)';"
+                >
+            </form>
+            <div id="app-mobile-search-dropdown" class="search-dropdown" style="display:none; position: absolute; top: calc(100% - 5px); left: 15px; right: 15px; background: #fff; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border: 1px solid var(--border-color); z-index: 1000; padding: 0.5rem 0;">
+                <div id="app-mobile-search-history-section">
+                    <div style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: #9ca3af; padding: 0.5rem 1rem;">
+                        <i class="fa-solid fa-clock-rotate-left"></i> Recent Searches
+                    </div>
+                    <ul id="app-mobile-history-list" style="list-style: none; margin: 0; padding: 0;"></ul>
+                </div>
+                <div id="app-mobile-suggestions-section" style="display:none;">
+                    <div style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: #9ca3af; padding: 0.5rem 1rem;">
+                        <i class="fa-solid fa-magnifying-glass"></i> Suggestions
+                    </div>
+                    <ul id="app-mobile-suggestions-list" style="list-style: none; margin: 0; padding: 0;"></ul>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <script>
+        // Shrink header on scroll
+        document.addEventListener("DOMContentLoaded", function() {
+            const topRow = document.getElementById("app-header-top-row");
+            const header = document.getElementById("app-dynamic-header");
+            
+            if (topRow && header) {
+                window.addEventListener("scroll", function() {
+                    let st = window.pageYOffset || document.documentElement.scrollTop;
+                    if (st > 40) {
+                        // Scroll down: hide top row
+                        topRow.style.height = "0px";
+                        topRow.style.paddingTop = "0px";
+                        topRow.style.paddingBottom = "0px";
+                        topRow.style.opacity = "0";
+                        header.style.boxShadow = "0 4px 15px rgba(0,0,0,0.05)";
+                    } else {
+                        // Scroll up to top: show top row
+                        topRow.style.height = "55px";
+                        topRow.style.paddingTop = "10px";
+                        topRow.style.paddingBottom = "10px";
+                        topRow.style.opacity = "1";
+                        header.style.boxShadow = "none";
+                    }
+                }, { passive: true });
+            }
+        });
+    </script>
+    @else
+    <!-- Glassmorphism Header (Web) -->
     <header class="store-header" style="padding-top: env(safe-area-inset-top, 0px);">
         <div class="header-container">
             <a href="{{ route('v1.home') }}" class="logo">
@@ -36,9 +122,6 @@
                 @endif
             </a>
             
-            @mobileapp
-                <!-- Hide search and actions for mobile app -->
-            @else
             <div class="search-bar" style="position: relative;">
                 <i class="fa-solid fa-magnifying-glass"></i>
                 <form action="{{ route('v1.all-products') }}" method="GET" id="t3-search-form" autocomplete="off" style="width: 100%;">
@@ -84,7 +167,6 @@
                     <span class="cart-count" id="cart-count-badge">{{ $cartCount }}</span>
                 </button>
             </div>
-            @endmobileapp
         </div>
         <!-- Mobile Expandable Search Bar -->
         <div id="t3-mobile-search-container" style="display: none; padding: 10px 15px; background: #fff; border-bottom: 1px solid var(--border-color); width: 100%; position: absolute; z-index: 999; top: 100%; left: 0;">
@@ -119,6 +201,7 @@
             </div>
         </div>
     </header>
+    @endmobileapp
     
     <!-- Top Navigation -->
     <nav style="background: #FFFFFF; border-bottom: 1px solid var(--border-color); padding: 0.75rem 0; overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch;">
