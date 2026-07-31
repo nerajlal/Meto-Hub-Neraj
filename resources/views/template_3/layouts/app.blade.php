@@ -51,12 +51,17 @@
                 @endif
             </a>
             
+            @php
+                $deliveryDaysDelay = isset($currentTenant) ? (int) $currentTenant->delivery_days : 0;
+                $startDate = now()->addDays($deliveryDaysDelay);
+                $firstDateStr = $startDate->isToday() ? 'Today' : ($startDate->isTomorrow() ? 'Tomorrow' : $startDate->format('D, M d'));
+            @endphp
             <!-- Animated Promotional Ticker -->
             <div style="background: rgba(16, 185, 129, 0.1); color: var(--accent-color); padding: 0 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; height: 28px; overflow: hidden; z-index: 1;">
                 <div style="animation: slideTicker 12s infinite cubic-bezier(0.4, 0, 0.2, 1);">
                     <div style="height: 28px; display: flex; align-items: center; justify-content: center; white-space: nowrap;">🚚 Free Delivery</div>
-                    <div style="height: 28px; display: flex; align-items: center; justify-content: center; white-space: nowrap;">⏱️ Book your slot</div>
-                    <div style="height: 28px; display: flex; align-items: center; justify-content: center; white-space: nowrap;">✨ Fresh Everyday</div>
+                    <div style="height: 28px; display: flex; align-items: center; justify-content: center; white-space: nowrap;">⏱️ Delivery {{ $firstDateStr }}</div>
+                    <div style="height: 28px; display: flex; align-items: center; justify-content: center; white-space: nowrap;">✨ Slots: 9AM - 9PM</div>
                     <div style="height: 28px; display: flex; align-items: center; justify-content: center; white-space: nowrap;">🚚 Free Delivery</div>
                 </div>
             </div>
