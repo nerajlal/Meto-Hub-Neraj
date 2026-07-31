@@ -30,22 +30,33 @@
         body, main { padding-top: 0 !important; }
     </style>
     <!-- Dynamic Mobile App Header -->
-    <header id="app-dynamic-header" style="background: #fff; position: sticky; top: 0; z-index: 1000; padding-top: env(safe-area-inset-top, 0px); transition: box-shadow 0.3s ease;">
-        <!-- Top Row: Logo & Greeting -->
-        <div id="app-header-top-row" style="display: flex; justify-content: center; align-items: center; padding: 10px 15px; transition: all 0.3s ease; overflow: hidden; transform-origin: top; position: relative;">
+    <header id="app-dynamic-header" style="background: #fff; position: sticky; top: 0; z-index: 1000; transition: box-shadow 0.3s ease;">
+        <style>
+            @keyframes slideTicker {
+                0%, 25% { transform: translateY(0); }
+                33%, 58% { transform: translateY(-26px); }
+                66%, 91% { transform: translateY(-52px); }
+                100% { transform: translateY(-78px); }
+            }
+        </style>
+        <!-- Top Row: Logo & Promo Ticker -->
+        <div id="app-header-top-row" style="display: flex; justify-content: space-between; align-items: center; padding: 5px 15px 10px 15px; transition: all 0.3s ease; overflow: hidden; transform-origin: top; position: relative;">
             <a href="{{ route('v1.home') }}" class="logo" style="text-decoration: none; color: var(--text-main); font-weight: 800; display: flex; align-items: center; z-index: 2;">
                 @if(isset($currentTenant) && $currentTenant->logo)
-                    <img src="{{ asset('storage/' . $currentTenant->logo) }}" alt="Logo" style="height: 48px; max-width: 180px; object-fit: contain;">
+                    <img src="{{ asset('storage/' . $currentTenant->logo) }}" alt="Logo" style="height: 40px; max-width: 140px; object-fit: contain;">
                 @else
                     <span style="font-size: 1.2rem;">{{ $currentTenant->name ?? 'FreshMarket' }}</span>
                 @endif
             </a>
-            <div class="greeting" style="font-size: 0.85rem; font-weight: 700; color: var(--text-main); position: absolute; right: 15px; z-index: 1;">
-                @if(auth()->check())
-                    Hi, {{ explode(' ', auth()->user()->name)[0] }} 👋
-                @else
-                    Welcome! 👋
-                @endif
+            
+            <!-- Animated Promotional Ticker -->
+            <div style="background: rgba(16, 185, 129, 0.1); color: var(--accent-color); padding: 0 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; height: 26px; overflow: hidden; z-index: 1;">
+                <div style="animation: slideTicker 12s infinite cubic-bezier(0.4, 0, 0.2, 1); text-align: center;">
+                    <div style="height: 26px; line-height: 26px; white-space: nowrap;">🚚 Free Delivery</div>
+                    <div style="height: 26px; line-height: 26px; white-space: nowrap;">⏱️ Book your slot</div>
+                    <div style="height: 26px; line-height: 26px; white-space: nowrap;">✨ Fresh Everyday</div>
+                    <div style="height: 26px; line-height: 26px; white-space: nowrap;">🚚 Free Delivery</div>
+                </div>
             </div>
         </div>
 
