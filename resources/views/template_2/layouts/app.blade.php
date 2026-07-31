@@ -107,13 +107,27 @@
                 $('#cart-drawer-n').addClass('open');
                 $('#cart-drawer-overlay-n').fadeIn(300);
                 $('body').css('overflow', 'hidden');
+                if (!window.history.state || window.history.state.drawer !== 'cart') {
+                    window.history.pushState({drawer: 'cart'}, "Cart", window.location.href);
+                }
                 refreshNCart();
             } else {
                 $('#cart-drawer-n').removeClass('open');
                 $('#cart-drawer-overlay-n').fadeOut(300);
                 $('body').css('overflow', '');
+                if (window.history.state && window.history.state.drawer === 'cart') {
+                    window.history.back();
+                }
             }
         }
+
+        window.addEventListener('popstate', function(event) {
+            if ($('#cart-drawer-n').hasClass('open')) {
+                $('#cart-drawer-n').removeClass('open');
+                $('#cart-drawer-overlay-n').fadeOut(300);
+                $('body').css('overflow', '');
+            }
+        });
 
         function refreshNCart() {
             $('#cart-drawer-body-n').html('<div class="cart-loader-n text-center py-5"><i class="fa-solid fa-spinner fa-spin fa-2x text-success"></i></div>');
