@@ -30,13 +30,13 @@
         body, main { padding-top: 0 !important; }
     </style>
     <!-- Dynamic Mobile App Header -->
-    <header id="app-dynamic-header" style="background: #fff; position: sticky; top: 0; z-index: 1000; transition: box-shadow 0.3s ease;">
+    <header id="app-dynamic-header" style="background: #f8fafc; border-bottom: 1px solid rgba(0,0,0,0.03); position: sticky; top: 0; z-index: 1000; transition: box-shadow 0.3s ease;">
         <style>
             @keyframes slideTicker {
                 0%, 25% { transform: translateY(0); }
-                33%, 58% { transform: translateY(-26px); }
-                66%, 91% { transform: translateY(-52px); }
-                100% { transform: translateY(-78px); }
+                33%, 58% { transform: translateY(-28px); }
+                66%, 91% { transform: translateY(-56px); }
+                100% { transform: translateY(-84px); }
             }
         </style>
         <!-- Top Row: Logo & Promo Ticker -->
@@ -50,12 +50,12 @@
             </a>
             
             <!-- Animated Promotional Ticker -->
-            <div style="background: rgba(16, 185, 129, 0.1); color: var(--accent-color); padding: 0 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; height: 26px; overflow: hidden; z-index: 1;">
-                <div style="animation: slideTicker 12s infinite cubic-bezier(0.4, 0, 0.2, 1); text-align: center;">
-                    <div style="height: 26px; line-height: 26px; white-space: nowrap;">🚚 Free Delivery</div>
-                    <div style="height: 26px; line-height: 26px; white-space: nowrap;">⏱️ Book your slot</div>
-                    <div style="height: 26px; line-height: 26px; white-space: nowrap;">✨ Fresh Everyday</div>
-                    <div style="height: 26px; line-height: 26px; white-space: nowrap;">🚚 Free Delivery</div>
+            <div style="background: rgba(16, 185, 129, 0.1); color: var(--accent-color); padding: 0 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; height: 28px; overflow: hidden; z-index: 1;">
+                <div style="animation: slideTicker 12s infinite cubic-bezier(0.4, 0, 0.2, 1);">
+                    <div style="height: 28px; display: flex; align-items: center; justify-content: center; white-space: nowrap;">🚚 Free Delivery</div>
+                    <div style="height: 28px; display: flex; align-items: center; justify-content: center; white-space: nowrap;">⏱️ Book your slot</div>
+                    <div style="height: 28px; display: flex; align-items: center; justify-content: center; white-space: nowrap;">✨ Fresh Everyday</div>
+                    <div style="height: 28px; display: flex; align-items: center; justify-content: center; white-space: nowrap;">🚚 Free Delivery</div>
                 </div>
             </div>
         </div>
