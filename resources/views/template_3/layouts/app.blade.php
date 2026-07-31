@@ -32,15 +32,15 @@
     <!-- Dynamic Mobile App Header -->
     <header id="app-dynamic-header" style="background: #fff; position: sticky; top: 0; z-index: 1000; padding-top: env(safe-area-inset-top, 0px); transition: box-shadow 0.3s ease;">
         <!-- Top Row: Logo & Greeting -->
-        <div id="app-header-top-row" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; transition: all 0.3s ease; overflow: hidden; transform-origin: top;">
-            <a href="{{ route('v1.home') }}" class="logo" style="text-decoration: none; color: var(--text-main); font-weight: 800; display: flex; align-items: center;">
+        <div id="app-header-top-row" style="display: flex; justify-content: center; align-items: center; padding: 10px 15px; transition: all 0.3s ease; overflow: hidden; transform-origin: top; position: relative;">
+            <a href="{{ route('v1.home') }}" class="logo" style="text-decoration: none; color: var(--text-main); font-weight: 800; display: flex; align-items: center; z-index: 2;">
                 @if(isset($currentTenant) && $currentTenant->logo)
-                    <img src="{{ asset('storage/' . $currentTenant->logo) }}" alt="Logo" style="height: 35px; max-width: 150px; object-fit: contain;">
+                    <img src="{{ asset('storage/' . $currentTenant->logo) }}" alt="Logo" style="height: 48px; max-width: 180px; object-fit: contain;">
                 @else
                     <i class="fa-solid fa-leaf" style="color: var(--accent-color); margin-right: 5px;"></i> <span style="font-size: 1.2rem;">{{ $currentTenant->name ?? 'FreshMarket' }}</span>
                 @endif
             </a>
-            <div class="greeting" style="font-size: 0.9rem; font-weight: 700; color: var(--text-main);">
+            <div class="greeting" style="font-size: 0.85rem; font-weight: 700; color: var(--text-main); position: absolute; right: 15px; z-index: 1;">
                 @if(auth()->check())
                     Hi, {{ explode(' ', auth()->user()->name)[0] }} 👋
                 @else
@@ -60,9 +60,9 @@
                     placeholder="Search for groceries, vegetables, meat..."
                     value="{{ request('q') }}"
                     autocomplete="off"
-                    style="width: 100%; padding: 0.85rem 1rem 0.85rem 3rem; border: 1.5px solid var(--border-color); border-radius: 99px; font-size: 0.95rem; outline: none; color: var(--text-main); background: #f8fafc; transition: border-color 0.3s ease;"
-                    onfocus="this.style.borderColor='var(--accent-color)';"
-                    onblur="this.style.borderColor='var(--border-color)';"
+                    style="width: 100%; padding: 0.85rem 1rem 0.85rem 3rem; border: 1px solid transparent; border-radius: 99px; font-size: 0.95rem; outline: none; color: var(--text-main); background: #f1f5f9; transition: all 0.3s ease; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);"
+                    onfocus="this.style.borderColor='var(--accent-color)'; this.style.background='#ffffff'; this.style.boxShadow='0 0 0 4px rgba(16, 185, 129, 0.1)';"
+                    onblur="this.style.borderColor='transparent'; this.style.background='#f1f5f9'; this.style.boxShadow='inset 0 2px 4px rgba(0,0,0,0.02)';"
                 >
             </form>
             <div id="app-mobile-search-dropdown" class="search-dropdown" style="display:none; position: absolute; top: calc(100% - 5px); left: 15px; right: 15px; background: #fff; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border: 1px solid var(--border-color); z-index: 1000; padding: 0.5rem 0;">
