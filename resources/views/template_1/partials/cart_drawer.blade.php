@@ -2,7 +2,10 @@
 <div class="cart-drawer-n" id="cart-drawer-n">
     <div class="cart-drawer-header-n">
         <h2 class="drawer-title-n">Shopping Bag</h2>
-        <button class="close-drawer-n" id="close-cart-n"><i class="fa-solid fa-xmark"></i></button>
+        <button class="close-drawer-n" id="close-cart-n">
+            <span>Close</span>
+            <i class="fa-solid fa-xmark"></i>
+        </button>
     </div>
 
     <div class="cart-drawer-body-n" id="cart-drawer-body-n">
@@ -60,12 +63,23 @@
         margin: 0;
     }
 
-    .close-cart-n {
-        background: none;
-        border: none;
+    .close-drawer-n {
+        background: rgba(255, 255, 255, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.2);
         color: #fff;
-        font-size: 1.5rem;
+        font-size: 0.85rem;
+        font-weight: 600;
         cursor: pointer;
+        padding: 6px 14px;
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        transition: all 0.2s ease;
+    }
+
+    .close-drawer-n:hover {
+        background: rgba(255, 255, 255, 0.25);
     }
 
     .cart-drawer-body-n {

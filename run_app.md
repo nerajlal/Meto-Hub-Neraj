@@ -28,3 +28,13 @@ Provide an app icon (e.g., icon.png) and splash screen image (splash.png) and pl
 Configure your app name, bundle identifier (like com.goslot.store), and versioning inside mobile/app.json.
 Use Expo Application Services (EAS) to build the .aab for Android and .ipa for iOS.
 Let me know if you'd like to do any of those next steps now!
+
+
+
+
+
+
+
+cd /Applications/XAMPP/xamppfiles/htdocs/Github/Grocery/mobile-apps/Chocolayt
+export PATH="$HOME/.nvm/versions/node/v24.18.0/bin:$PATH"
+npx eas-cli build --profile preview --platform android
