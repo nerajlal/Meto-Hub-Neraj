@@ -103,12 +103,20 @@ class ProductController extends Controller
             'media.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
         ]);
 
-        $product = Product::create($request->only([
+        $data = $request->only([
             'title', 'description', 'status', 'type', 'vendor', 
             'collection_id', 'gender', 'olfactory_family', 
             'intensity', 'oil_concentration', 'notes_top', 'notes_heart', 'notes_base',
             'min_order_qty', 'max_order_qty', 'continue_selling_when_out_of_stock'
-        ]));
+        ]);
+
+        if (array_key_exists('vendor', $data) && is_null($data['vendor'])) {
+            $tenantId = session('active_tenant_id') ?? auth()->user()->tenant_id ?? 1;
+            $tenant = \App\Models\Tenant::find($tenantId);
+            $data['vendor'] = $tenant ? $tenant->name : 'Fresh Grocery';
+        }
+
+        $product = Product::create($data);
 
         if ($request->has('tags_json')) {
             $tagsData = json_decode($request->tags_json, true);
@@ -226,12 +234,20 @@ class ProductController extends Controller
             return back()->withInput()->withErrors(['media' => "You can only have a maximum of 5 images. You currently have $currentCount, are deleting $deletedCount, and trying to add $newCount."]);
         }
         
-        $product->update($request->only([
+        $data = $request->only([
             'title', 'description', 'status', 'type', 'vendor', 
             'collection_id', 'gender', 'olfactory_family', 
             'intensity', 'oil_concentration', 'notes_top', 'notes_heart', 'notes_base',
             'min_order_qty', 'max_order_qty', 'continue_selling_when_out_of_stock'
-        ]));
+        ]);
+
+        if (array_key_exists('vendor', $data) && is_null($data['vendor'])) {
+            $tenantId = session('active_tenant_id') ?? auth()->user()->tenant_id ?? 1;
+            $tenant = \App\Models\Tenant::find($tenantId);
+            $data['vendor'] = $tenant ? $tenant->name : 'Fresh Grocery';
+        }
+
+        $product->update($data);
 
         if ($request->has('tags_json')) {
             $tagsData = json_decode($request->tags_json, true);
