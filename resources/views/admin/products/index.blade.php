@@ -32,7 +32,7 @@
             </button>
             <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0" aria-labelledby="importTallyDropdown">
                 <li><a class="dropdown-item py-2" href="#" data-bs-toggle="modal" data-bs-target="#importModal"><i class="fas fa-upload me-2 text-muted"></i> Upload File</a></li>
-                <li><a class="dropdown-item py-2" href="#" onclick="openLiveExcel()"><i class="fas fa-table me-2 text-success"></i> Live Excel Editor</a></li>
+                <li><a class="dropdown-item py-2 disabled" href="#" style="opacity: 0.5; cursor: not-allowed;" onclick="event.preventDefault();"><i class="fas fa-table me-2 text-success"></i> Live Excel Editor <span class="badge bg-secondary ms-1" style="font-size: 0.6rem;">Soon</span></a></li>
                 <li><hr class="dropdown-divider my-1"></li>
                 <li><a class="dropdown-item py-2" href="{{ route('admin.products.sample') }}"><i class="fas fa-download me-2 text-muted"></i> Download Sample Format</a></li>
             </ul>
