@@ -58,16 +58,16 @@
                 <div class="order-items-list">
                     @foreach($order->items as $item)
                     <div style="display: flex; align-items: center; gap: 1.5rem; margin-bottom: 1.5rem;">
+                        @php 
+                            $itemImg = asset('Images/default.png');
+                            if($item->product_id && $item->product) {
+                                $itemImg = $item->product->main_image_url ?? asset('Images/default.png');
+                            } elseif($item->bundle_id && $item->bundle) {
+                                $itemImg = $item->bundle->image ? \Illuminate\Support\Facades\Storage::url($item->bundle->image) : asset('Images/default.png');
+                            }
+                        @endphp
                         <div style="width: 70px; height: 70px; background: var(--section-bg); border-radius: 1rem; overflow: hidden; flex-shrink: 0;">
-                            @php 
-                                $itemImg = asset('Images/g-load.webp');
-                                if($item->product_id && $item->product) {
-                                    $itemImg = $item->product->main_image_url ?? asset('Images/g-load.webp');
-                                } elseif($item->bundle_id && $item->bundle) {
-                                    $itemImg = $item->bundle->image ? \Illuminate\Support\Facades\Storage::url($item->bundle->image) : asset('Images/g-load.webp');
-                                }
-                            @endphp
-                            <img src="{{ $itemImg }}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='{{ asset('Images/g-load.webp') }}'">
+                            <img src="{{ $itemImg }}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='{{ asset('Images/default.png') }}'">
                         </div>
                         <div style="flex-grow: 1;">
                             <h4 style="font-weight: 700; color: var(--primary-color); margin-bottom: 0.25rem;">

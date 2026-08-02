@@ -17,12 +17,12 @@
             <div class="cart-item-card" id="item-{{ $id }}">
                 <div class="item-visual">
                     @php 
-                        $itemImg = $item['image'] ?? 'Images/g-load.webp';
+                        $itemImg = $item['image'] ?? 'Images/default.png';
                         if (!$itemImg || $itemImg == '') {
-                            $itemImg = 'Images/g-load.webp';
+                            $itemImg = 'Images/default.png';
                         }
                     @endphp
-                    <img src="{{ asset($itemImg) }}" alt="{{ $item['name'] }}" onerror="this.src='{{ asset('Images/g-load.webp') }}'">
+                    <img src="{{ asset($itemImg) }}" alt="{{ $item['name'] }}" onerror="this.src='{{ asset('Images/default.png') }}'">
                 </div>
                 <div class="item-info-lg">
                     <div class="item-top-row">

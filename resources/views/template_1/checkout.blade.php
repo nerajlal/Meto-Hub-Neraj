@@ -96,12 +96,12 @@
                     <div class="s-item-row">
                         <div class="s-item-img">
                             @php 
-                                $checkoutImg = $item['image'] ?? 'Images/g-load.webp';
+                                $checkoutImg = $item['image'] ?? 'Images/default.png';
                                 if (!$checkoutImg || $checkoutImg == '') {
-                                    $checkoutImg = 'Images/g-load.webp';
+                                    $checkoutImg = 'Images/default.png';
                                 }
                             @endphp
-                            <img src="{{ asset($checkoutImg) }}" alt="{{ $item['name'] }}" onerror="this.src='{{ asset('Images/g-load.webp') }}'">
+                            <img src="{{ asset($checkoutImg) }}" alt="{{ $item['name'] }}" onerror="this.src='{{ asset('Images/default.png') }}'">
                             <span class="s-item-qty">{{ $item['quantity'] }}</span>
                         </div>
                         <div class="s-item-info">

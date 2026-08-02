@@ -3,7 +3,7 @@
         @foreach($cart as $key => $item)
             <div class="n-cart-item">
                 <div class="n-item-img">
-                    <img src="{{ asset($item['image'] ?? 'Images/g-load.webp') }}" alt="{{ $item['name'] }}">
+                    <img src="{{ asset($item['image'] ?? 'Images/default.png') }}" alt="{{ $item['name'] }}">
                 </div>
                 <div class="n-item-details">
                     <h4 class="n-item-name">{{ $item['name'] }}</h4>
