@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Http;
 
 class LandingController extends Controller
 {
@@ -48,5 +49,31 @@ class LandingController extends Controller
             // but log the error for the developer.
             return response()->json(['success' => true, 'message' => 'Request processed (Mail logged).']);
         }
+    }
+    public function blogs()
+    {
+        $response = Http::withHeaders([
+            'x-api-key' => 'pk_niVQ6VEvYX6vs9iWkh4rNMTtsb1AGgfU'
+        ])->get('https://lightgoldenrodyellow-mink-721714.hostingersite.com/api/v1/projects/blogs');
+
+        $blogs = $response->successful() ? $response->json('blogs') : [];
+
+        return view('landing.blogs.index', compact('blogs'));
+    }
+
+    public function blogShow($id)
+    {
+        $response = Http::withHeaders([
+            'x-api-key' => 'pk_niVQ6VEvYX6vs9iWkh4rNMTtsb1AGgfU'
+        ])->get('https://lightgoldenrodyellow-mink-721714.hostingersite.com/api/v1/projects/blogs');
+
+        $blogs = $response->successful() ? $response->json('blogs') : [];
+        $blog = collect($blogs)->firstWhere('id', (int)$id);
+
+        if (!$blog) {
+            abort(404);
+        }
+
+        return view('landing.blogs.show', compact('blog'));
     }
 }

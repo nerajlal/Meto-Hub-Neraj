@@ -38,6 +38,8 @@ Route::get('/home1', function() {
 
 Route::get('/home', [App\Http\Controllers\LandingController::class, 'index'])->name('landing.old');
 Route::get('/templates', [App\Http\Controllers\LandingController::class, 'templates'])->name('landing.templates');
+Route::get('/blogs', [App\Http\Controllers\LandingController::class, 'blogs'])->name('landing.blogs');
+Route::get('/blogs/{id}', [App\Http\Controllers\LandingController::class, 'blogShow'])->name('landing.blog.show');
 Route::post('/demo-request', [App\Http\Controllers\LandingController::class, 'handleDemoRequest'])->name('demo.request');
 
 // Shared Actions (Global)
