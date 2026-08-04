@@ -2041,12 +2041,12 @@
       </a>
 
       <nav class="main-nav" id="mainNav" aria-label="Primary">
-        <a href="#home">Home</a>
-        <a href="#features">Features</a>
-        <a href="#solutions">Solutions</a>
-        <a href="#pricing">Pricing</a>
-        <a href="#themes">Themes</a>
-        <a href="#analytics">Analytics</a>
+        <a href="{{ url('/') }}#home">Home</a>
+        <a href="{{ url('/') }}#features">Features</a>
+        <a href="{{ url('/') }}#solutions">Solutions</a>
+        <a href="{{ url('/') }}#pricing">Pricing</a>
+        <a href="{{ url('/') }}#themes">Themes</a>
+        <a href="{{ url('/') }}#analytics">Analytics</a>
         <a href="#contact">Contact</a>
       </nav>
 
@@ -2082,8 +2082,8 @@
       </div>
       <div class="footer-col">
         <h4>Platform</h4>
-        <a href="#features">Features</a><a href="#analytics">Analytics</a><a href="#themes">Themes</a><a
-          href="#pricing">Pricing</a>
+        <a href="{{ url('/') }}#features">Features</a><a href="{{ url('/') }}#analytics">Analytics</a><a href="{{ url('/') }}#themes">Themes</a><a
+          href="{{ url('/') }}#pricing">Pricing</a>
       </div>
       <div class="footer-col">
         <h4>Solutions</h4>
