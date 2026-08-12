@@ -54,7 +54,7 @@ class LandingController extends Controller
     {
         $response = Http::withHeaders([
             'x-api-key' => 'pk_niVQ6VEvYX6vs9iWkh4rNMTtsb1AGgfU'
-        ])->get('https://lightgoldenrodyellow-mink-721714.hostingersite.com/api/v1/projects/blogs');
+        ])->get('https://blogs.task19.com/api/v1/projects/blogs');
 
         $blogs = $response->successful() ? $response->json('blogs') : [];
 
@@ -65,7 +65,7 @@ class LandingController extends Controller
     {
         $response = Http::withHeaders([
             'x-api-key' => 'pk_niVQ6VEvYX6vs9iWkh4rNMTtsb1AGgfU'
-        ])->get('https://lightgoldenrodyellow-mink-721714.hostingersite.com/api/v1/projects/blogs');
+        ])->get('https://blogs.task19.com/api/v1/projects/blogs');
 
         $blogs = $response->successful() ? $response->json('blogs') : [];
         $blog = collect($blogs)->firstWhere('id', (int)$id);
@@ -74,6 +74,8 @@ class LandingController extends Controller
             abort(404);
         }
 
-        return view('landing.blogs.show', compact('blog'));
+        $recentBlogs = collect($blogs)->where('id', '!=', (int)$id)->take(3);
+
+        return view('landing.blogs.show', compact('blog', 'recentBlogs'));
     }
 }

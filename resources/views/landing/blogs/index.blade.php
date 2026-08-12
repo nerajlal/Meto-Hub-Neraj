@@ -117,7 +117,7 @@
       @foreach($blogs as $blog)
         <div class="blog-card">
           @if($blog['cover_image'])
-            <img src="{{ 'https://lightgoldenrodyellow-mink-721714.hostingersite.com' . $blog['cover_image'] }}" alt="{{ $blog['title'] }}" class="blog-image">
+            <img src="{{ 'https://blogs.task19.com' . $blog['cover_image'] }}" alt="{{ $blog['title'] }}" class="blog-image">
           @else
             <div class="blog-image" style="display: flex; align-items: center; justify-content: center; background: #e2e8f0; color: #94a3b8;">
               <i class="fa-solid fa-image fa-2x"></i>
@@ -129,7 +129,7 @@
             <p class="blog-excerpt">{{ $blog['excerpt'] ?? Str::limit(strip_tags(Str::markdown($blog['content'])), 120) }}</p>
             <div class="blog-meta">
               @if($blog['author_avatar'])
-                <img src="{{ 'https://lightgoldenrodyellow-mink-721714.hostingersite.com' . $blog['author_avatar'] }}" alt="{{ $blog['author_name'] }}" class="blog-avatar">
+                <img src="{{ 'https://blogs.task19.com' . $blog['author_avatar'] }}" alt="{{ $blog['author_name'] }}" class="blog-avatar">
               @else
                 <div class="blog-avatar" style="background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.8rem;">
                   {{ substr($blog['author_name'], 0, 1) }}
