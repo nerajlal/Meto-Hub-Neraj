@@ -4,26 +4,30 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GoSlot Store — The Platform Behind Grocery Stores That Sell Online</title>
+  <title>Slot Store — The Platform Behind Grocery Stores That Sell Online</title>
   <meta name="description"
-    content="GoSlot Store is the SaaS platform grocery businesses use to build, price, promote, and run their own online stores — pricing engine, promotions, themes, analytics, and payments in one place.">
-  <meta name="keywords" content="grocery ecommerce, saas for grocery stores, create grocery website, online supermarket platform, delivery software, grocery POS integration">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>S</text></svg>">
-  
+    content="Slot Store is the SaaS platform grocery businesses use to build, price, promote, and run their own online stores — pricing engine, promotions, themes, analytics, and payments in one place.">
+  <meta name="keywords"
+    content="grocery ecommerce, saas for grocery stores, create grocery website, online supermarket platform, delivery software, grocery POS integration">
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>S</text></svg>">
+
   <link rel="canonical" href="{{ url()->current() }}">
 
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="{{ url()->current() }}">
-  <meta property="og:title" content="GoSlot Store — Start Your Online Grocery Business">
-  <meta property="og:description" content="GoSlot Store is the SaaS platform grocery businesses use to build, price, promote, and run their own online stores.">
+  <meta property="og:title" content="Slot Store — Start Your Online Grocery Business">
+  <meta property="og:description"
+    content="Slot Store is the SaaS platform grocery businesses use to build, price, promote, and run their own online stores.">
   <meta property="og:image" content="{{ asset('images/og-image.jpg') }}">
 
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:url" content="{{ url()->current() }}">
-  <meta property="twitter:title" content="GoSlot Store — Start Your Online Grocery Business">
-  <meta property="twitter:description" content="GoSlot Store is the SaaS platform grocery businesses use to build, price, promote, and run their own online stores.">
+  <meta property="twitter:title" content="Slot Store — Start Your Online Grocery Business">
+  <meta property="twitter:description"
+    content="Slot Store is the SaaS platform grocery businesses use to build, price, promote, and run their own online stores.">
   <meta property="twitter:image" content="{{ asset('images/og-image.jpg') }}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -33,7 +37,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <style>
     /* =========================================================
-   GoSlot Store — Premium SaaS Homepage
+   Slot Store — Premium SaaS Homepage
    ========================================================= */
 
     :root {
@@ -396,7 +400,7 @@
       .header-actions .btn-ghost {
         display: none;
       }
-      
+
       .header-actions .btn-primary {
         padding: 8px 16px;
         font-size: 0.85rem;
@@ -406,7 +410,7 @@
         display: flex;
         margin-left: 8px;
       }
-      
+
       .header-inner {
         gap: 12px;
       }
@@ -1048,16 +1052,19 @@
         padding: 20px;
         background: linear-gradient(135deg, var(--white), #f8faf7);
       }
+
       .p-icon {
         margin: 0;
         grid-row: 1 / span 2;
         align-self: start;
         box-shadow: 0 4px 12px rgba(255, 179, 0, 0.15);
       }
+
       .promo-card h3 {
         margin-bottom: 2px;
         align-self: end;
       }
+
       .promo-card p {
         align-self: start;
       }
@@ -1389,6 +1396,7 @@
         gap: 32px;
         position: relative;
       }
+
       .timeline::before {
         content: '';
         position: absolute;
@@ -1440,15 +1448,18 @@
         text-align: left;
         align-items: center;
       }
+
       .step-num {
         margin-bottom: 0;
         grid-row: 1 / span 2;
         box-shadow: 0 4px 12px rgba(46, 125, 50, 0.15);
       }
+
       .timeline-step h4 {
         margin-bottom: 2px;
         align-self: end;
       }
+
       .timeline-step p {
         align-self: start;
       }
@@ -1881,6 +1892,7 @@
       .footer-top {
         grid-template-columns: repeat(3, 1fr);
       }
+
       .footer-brand {
         grid-column: 1 / -1;
       }
@@ -1890,6 +1902,7 @@
       .footer-top {
         grid-template-columns: repeat(2, 1fr);
       }
+
       .footer-col {
         margin-bottom: 24px;
       }
@@ -2010,14 +2023,14 @@
     {
       "@@context": "https://schema.org",
       "@@type": "SoftwareApplication",
-      "name": "GoSlot Store",
+      "name": "Slot Store",
       "applicationCategory": "BusinessApplication",
       "operatingSystem": "Web",
-      "description": "GoSlot Store is the SaaS platform grocery businesses use to build, price, promote, and run their own online stores.",
+      "description": "Slot Store is the SaaS platform grocery businesses use to build, price, promote, and run their own online stores.",
       "url": "{{ url()->current() }}",
       "publisher": {
         "@@type": "Organization",
-        "name": "GoSlot Store"
+        "name": "Slot Store"
       }
     }
   </script>
@@ -2028,7 +2041,7 @@
   <!-- ================= HEADER ================= -->
   <header class="site-header" id="siteHeader">
     <div class="header-inner">
-      <a href="#" class="logo" aria-label="GoSlot Store home">
+      <a href="#" class="logo" aria-label="Slot Store home">
         <span class="logo-mark" aria-hidden="true">
           <svg viewBox="0 0 32 32" width="30" height="30">
             <rect x="3" y="10" width="26" height="18" rx="4" fill="var(--primary)" />
@@ -2037,7 +2050,7 @@
               stroke-linecap="round" stroke-linejoin="round" />
           </svg>
         </span>
-        <span class="logo-text">GoSlot<span class="logo-accent">Store</span></span>
+        <span class="logo-text">Slot<span class="logo-accent">Store</span></span>
       </a>
 
       <nav class="main-nav" id="mainNav" aria-label="Primary">
@@ -2080,7 +2093,7 @@
           <div class="avatars" aria-hidden="true">
             <span></span><span></span><span></span><span></span>
           </div>
-          <p><strong>2,400+</strong> grocery merchants run on GoSlot Store</p>
+          <p><strong>2,400+</strong> grocery merchants run on Slot Store</p>
         </div>
       </div>
 
@@ -2235,7 +2248,7 @@
     <div class="engine-copy">
       <span class="eyebrow">Pricing engine</span>
       <h2>Set the right price for every customer, automatically</h2>
-      <p>GoSlot Store's rule-based pricing engine applies the correct rate at checkout — no manual price lists, no
+      <p>Slot Store's rule-based pricing engine applies the correct rate at checkout — no manual price lists, no
         spreadsheets.</p>
       <ul class="engine-list">
         <li>Customer Pricing</li>
@@ -2557,7 +2570,7 @@
   <!-- ================= COMPARISON ================= -->
   <section class="comparison" id="pricing-solutions">
     <div class="section-head">
-      <span class="eyebrow">Why GoSlot Store</span>
+      <span class="eyebrow">Why Slot Store</span>
       <h2>A traditional website vs. a real grocery platform</h2>
     </div>
     <div class="compare-table-wrap">
@@ -2566,7 +2579,7 @@
           <tr>
             <th>Compare</th>
             <th>Traditional Website</th>
-            <th>GoSlot Store</th>
+            <th>Slot Store</th>
           </tr>
         </thead>
         <tbody>
@@ -2628,7 +2641,7 @@
     </div>
     <div class="testi-carousel" id="testiCarousel">
       <div class="testi-slide active">
-        <p class="testi-quote">Switching to GoSlot Store cut our order processing time in half. The pricing engine alone
+        <p class="testi-quote">Switching to Slot Store cut our order processing time in half. The pricing engine alone
           paid for the subscription in a month.</p>
         <div class="testi-author"><span class="testi-avatar">R</span>
           <div><strong>Rahul Menon</strong><small>Owner, Urban Grocery</small></div>
@@ -2711,10 +2724,10 @@
     </div>
     <div class="faq-list" id="faqList">
       <div class="faq-item">
-        <button class="faq-question" aria-expanded="false">Is GoSlot Store a grocery shopping site or a platform? <span
+        <button class="faq-question" aria-expanded="false">Is Slot Store a grocery shopping site or a platform? <span
             class="faq-toggle">+</span></button>
         <div class="faq-answer">
-          <p>GoSlot Store is a SaaS platform for grocery business owners. It's not a place to buy groceries — it's the
+          <p>Slot Store is a SaaS platform for grocery business owners. It's not a place to buy groceries — it's the
             software merchants use to build and run their own online grocery stores.</p>
         </div>
       </div>
@@ -2772,7 +2785,7 @@
   <footer class="site-footer" id="contact">
     <div class="footer-top">
       <div class="footer-brand">
-        <span class="logo-text">GoSlot<span class="logo-accent">Store</span></span>
+        <span class="logo-text text-white" style="color: white;">Slot<span class="logo-accent">Store</span></span>
         <p>The platform grocery businesses use to build and run their own online stores.</p>
         <form class="newsletter" id="newsletterForm">
           <input type="email" placeholder="Your work email" required aria-label="Email address for newsletter">
@@ -2799,7 +2812,7 @@
     </div>
     <div class="footer-bottom">
       <div class="footer-bottom-left">
-        <span>© 2026 GoSlot Store. All rights reserved.</span>
+        <span>© 2026 Slot Store. All rights reserved.</span>
         <div class="footer-legal-links">
           <a href="#">Privacy</a>
           <a href="#">Terms</a>
@@ -3663,6 +3676,7 @@
         grid-template-columns: 1fr;
         gap: 16px;
       }
+
       .saas-modal-card {
         padding: 24px 20px;
       }
