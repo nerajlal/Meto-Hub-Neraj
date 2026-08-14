@@ -4,9 +4,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Slot Store â€” The Platform Behind Grocery Stores That Sell Online</title>
+  <title>Slot Store — The Platform Behind Grocery Stores That Sell Online</title>
   <meta name="description"
-    content="Slot Store is the SaaS platform grocery businesses use to build, price, promote, and run their own online stores â€” pricing engine, promotions, themes, analytics, and payments in one place.">
+    content="Slot Store is the SaaS platform grocery businesses use to build, price, promote, and run their own online stores — pricing engine, promotions, themes, analytics, and payments in one place.">
   <meta name="keywords"
     content="grocery ecommerce, saas for grocery stores, create grocery website, online supermarket platform, delivery software, grocery POS integration">
   <link rel="icon"
@@ -17,7 +17,7 @@
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="{{ url()->current() }}">
-  <meta property="og:title" content="Slot Store â€” Start Your Online Grocery Business">
+  <meta property="og:title" content="Slot Store — Start Your Online Grocery Business">
   <meta property="og:description"
     content="Slot Store is the SaaS platform grocery businesses use to build, price, promote, and run their own online stores.">
   <meta property="og:image" content="{{ asset('images/og-image.jpg') }}">
@@ -25,7 +25,7 @@
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:url" content="{{ url()->current() }}">
-  <meta property="twitter:title" content="Slot Store â€” Start Your Online Grocery Business">
+  <meta property="twitter:title" content="Slot Store — Start Your Online Grocery Business">
   <meta property="twitter:description"
     content="Slot Store is the SaaS platform grocery businesses use to build, price, promote, and run their own online stores.">
   <meta property="twitter:image" content="{{ asset('images/og-image.jpg') }}">
@@ -37,7 +37,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <style>
     /* =========================================================
-   Slot Store â€” Premium SaaS Homepage
+   Slot Store — Premium SaaS Homepage
    ========================================================= */
 
     :root {
@@ -2412,9 +2412,9 @@
               <div class="saas-form-group" style="grid-column: 1 / -1;">
                 <label for="saas_plan">Plan Selection (Optional)</label>
                 <select id="saas_plan">
-                  <option value="sprout">Sprout â€” $9/month (20 products)</option>
-                  <option value="maison">Maison â€” $19/month (100 products)</option>
-                  <option value="heritage">Heritage â€” $49/month (Unlimited)</option>
+                  <option value="sprout">Sprout — $9/month (20 products)</option>
+                  <option value="maison">Maison — $19/month (100 products)</option>
+                  <option value="heritage">Heritage — $49/month (Unlimited)</option>
                   <option value="not_sure">Not sure yet</option>
                 </select>
               </div>

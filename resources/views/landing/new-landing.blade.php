@@ -8,7 +8,7 @@
         <span class="eyebrow">Grocery commerce infrastructure</span>
         <h1>Create &amp; grow your grocery store <span class="highlight">online</span></h1>
         <p class="hero-sub">Launch a powerful grocery eCommerce store with advanced pricing, promotions, analytics,
-          custom themes, payment integrations, and a seamless shopping experience â€” all run from one dashboard.</p>
+          custom themes, payment integrations, and a seamless shopping experience — all run from one dashboard.</p>
         <div class="hero-cta">
           <a href="javascript:void(0)" class="btn btn-primary btn-lg pricing-btn-trigger" data-plan="sprout">Start
             Free</a>

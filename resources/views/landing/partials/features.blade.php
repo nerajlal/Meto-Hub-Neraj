@@ -7,11 +7,11 @@
     <div class="feature-grid">
       <!-- <div class="feature-card"><span class="f-icon"><i class="fa-solid fa-shop"></i></span>
         <h3>Multi-Tenant Store Platform</h3>
-        <p>Run one merchant, ten merchants, or a whole chain â€” each with an isolated, secure storefront.</p>
+        <p>Run one merchant, ten merchants, or a whole chain — each with an isolated, secure storefront.</p>
       </div> -->
       <div class="feature-card"><span class="f-icon"><i class="fa-solid fa-gauge-high"></i></span>
         <h3>Merchant Dashboard</h3>
-        <p>One screen for orders, revenue, inventory, and customers â€” no switching tools.</p>
+        <p>One screen for orders, revenue, inventory, and customers — no switching tools.</p>
       </div>
       <div class="feature-card"><span class="f-icon"><i class="fa-solid fa-cart-shopping"></i></span>
         <h3>Product Management</h3>
@@ -76,7 +76,7 @@
         <div class="pm-row"><span><i class="fa-solid fa-leaf"></i> Organic Spinach</span><span class="pm-stock ok">312
             in stock</span></div>
         <div class="pm-row"><span><i class="fa-solid fa-bread-slice"></i> Multigrain Bread</span><span
-            class="pm-stock low">8 left â€” alert</span></div>
+            class="pm-stock low">8 left — alert</span></div>
         <div class="pm-row"><span><i class="fa-solid fa-cheese"></i> Dairy Bundle</span><span class="pm-stock ok">140 in
             stock</span></div>
         <div class="pm-row"><span><i class="fa-solid fa-apple-whole"></i> Apple Crate (10kg)</span><span

@@ -2,7 +2,7 @@
     <div class="engine-copy">
       <span class="eyebrow">Pricing engine</span>
       <h2>Set the right price for every customer, automatically</h2>
-      <p>Slot Store's rule-based pricing engine applies the correct rate at checkout â€” no manual price lists, no
+      <p>Slot Store's rule-based pricing engine applies the correct rate at checkout — no manual price lists, no
         spreadsheets.</p>
       <ul class="engine-list">
         <li>Customer Pricing</li>
@@ -62,7 +62,7 @@
       </div>
       <div class="promo-card"><span class="p-icon"><i class="fa-solid fa-calendar-days"></i></span>
         <h3>Scheduled Promotions</h3>
-        <p>Set start and end dates â€” promotions run themselves.</p>
+        <p>Set start and end dates — promotions run themselves.</p>
       </div>
       <div class="promo-card"><span class="p-icon"><i class="fa-solid fa-gift"></i></span>
         <h3>Gift Offers</h3>

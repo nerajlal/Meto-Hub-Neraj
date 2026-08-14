@@ -56,7 +56,7 @@
         <button class="faq-question" aria-expanded="false">Is Slot Store a grocery shopping site or a platform? <span
             class="faq-toggle">+</span></button>
         <div class="faq-answer">
-          <p>Slot Store is a SaaS platform for grocery business owners. It's not a place to buy groceries â€” it's the
+          <p>Slot Store is a SaaS platform for grocery business owners. It's not a place to buy groceries — it's the
             software merchants use to build and run their own online grocery stores.</p>
         </div>
       </div>
@@ -64,7 +64,7 @@
         <button class="faq-question" aria-expanded="false">Do I need a developer to launch my store? <span
             class="faq-toggle">+</span></button>
         <div class="faq-answer">
-          <p>No. Themes, product setup, and pricing rules are all configured from the merchant dashboard â€” no code
+          <p>No. Themes, product setup, and pricing rules are all configured from the merchant dashboard — no code
             required.</p>
         </div>
       </div>

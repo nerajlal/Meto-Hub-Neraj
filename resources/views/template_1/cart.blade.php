@@ -1,6 +1,6 @@
 @extends('layouts.storefront')
 
-@section('title', 'Shopping Cart | VESPR Perfumes')
+@section('title', 'Shopping Cart | ' . ($currentTenant->name ?? 'Store'))
 
 @section('content')
 <div class="cart-page-inner">
