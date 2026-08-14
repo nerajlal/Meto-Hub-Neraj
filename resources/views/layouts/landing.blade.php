@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -2079,7 +2079,17 @@
   <footer class="site-footer" id="contact">
     <div class="footer-top">
       <div class="footer-brand">
-        <span class="logo-text text-white" style="color: white;">Slot<span class="logo-accent">Store</span></span>
+        <a href="#" class="logo text-decoration-none" aria-label="Slot Store home" style="display: flex; align-items: center; gap: 8px; margin-bottom: 15px;">
+          <span class="logo-mark" aria-hidden="true">
+            <svg viewBox="0 0 32 32" width="30" height="30">
+              <rect x="3" y="10" width="26" height="18" rx="4" fill="var(--primary)" />
+              <rect x="3" y="10" width="26" height="6" rx="3" fill="var(--accent)" />
+              <path d="M9 10 L11 4 H21 L23 10" stroke="var(--primary)" stroke-width="2.4" fill="none"
+                stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </span>
+          <span class="logo-text text-white" style="color: white;">Slot<span class="logo-accent">Store</span></span>
+        </a>
         <p>The platform grocery businesses use to build and run their own online stores.</p>
         <form class="newsletter" id="newsletterForm">
           <input type="email" placeholder="Your work email" required aria-label="Email address for newsletter">
