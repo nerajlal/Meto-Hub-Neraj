@@ -67,7 +67,7 @@
                                 </td>
                                 <td class="px-4 py-3">
                                     @if($item->product->variants->isNotEmpty())
-                                        ₹{{ number_format($item->product->variants->min('price'), 2) }}
+                                        {{ $currentTenant->currency ?? '₹' }}{{ number_format($item->product->variants->min('price'), 2) }}
                                     @else
                                         <span class="text-muted">No variants</span>
                                     @endif

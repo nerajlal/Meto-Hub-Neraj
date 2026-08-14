@@ -30,6 +30,7 @@ class Order extends Model
         'placed_at',
         'tracking_number',
         'delivery_partner_id',
+        'delivery_boy_id',
         'tenant_id',
         'tax_name',
         'tax_rate',
@@ -58,5 +59,10 @@ class Order extends Model
     public function deliveryPartner()
     {
         return $this->belongsTo(DeliveryPartner::class);
+    }
+
+    public function deliveryBoy()
+    {
+        return $this->belongsTo(User::class, 'delivery_boy_id');
     }
 }

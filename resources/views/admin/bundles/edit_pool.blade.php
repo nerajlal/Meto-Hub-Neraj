@@ -102,7 +102,7 @@
                          <div>
                             <label class="form-label fw-medium text-secondary small">Fixed Discount Amount</label>
                             <div class="input-group">
-                                <span class="input-group-text bg-light border-end-0 small">₹</span>
+                                <span class="input-group-text bg-light border-end-0 small">{{ $currentTenant->currency ?? '₹' }}</span>
                                 <input type="number" name="discount_amount" class="form-control border-start-0" value="{{ $bundle->discount_value }}" placeholder="100.00" step="0.01" min="0" required>
                             </div>
                             <div class="form-text small mt-2">This amount will be deducted from the total.</div>

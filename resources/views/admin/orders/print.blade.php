@@ -191,7 +191,7 @@
                     @if($item->size) Size: {{ $item->size }}<br> @endif
                     @if($item->sku) SKU: {{ $item->sku }} @endif
                 </td>
-                <td style="text-align: right;">₹{{ number_format($item->price, 2) }}</td>
+                <td style="text-align: right;">{{ $currentTenant->currency ?? '₹' }}{{ number_format($item->price, 2) }}</td>
             </tr>
             @endforeach
         </tbody>
@@ -201,15 +201,15 @@
         <div class="total-box">
             <div class="total-row">
                 <span>Subtotal</span>
-                <span>₹{{ number_format($order->subtotal, 2) }}</span>
+                <span>{{ $currentTenant->currency ?? '₹' }}{{ number_format($order->subtotal, 2) }}</span>
             </div>
             <div class="total-row">
                 <span>Shipping</span>
-                <span>₹{{ number_format($order->shipping_cost, 2) }}</span>
+                <span>{{ $currentTenant->currency ?? '₹' }}{{ number_format($order->shipping_cost, 2) }}</span>
             </div>
             <div class="total-row final">
                 <span>Total</span>
-                <span>₹{{ number_format($order->total_amount, 2) }}</span>
+                <span>{{ $currentTenant->currency ?? '₹' }}{{ number_format($order->total_amount, 2) }}</span>
             </div>
         </div>
     </div>

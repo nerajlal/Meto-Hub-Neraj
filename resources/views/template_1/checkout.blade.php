@@ -82,7 +82,7 @@
                 </div>
 
                 <button type="submit" class="btn-complete-order">
-                    Complete Order • ₹{{ number_format($total, 2) }}
+                    Complete Order • {{ $currentTenant->currency ?? '₹' }}{{ number_format($total, 2) }}
                 </button>
             </form>
         </div>
@@ -108,7 +108,7 @@
                             <span class="s-item-name">{{ $item['name'] }}</span>
                             <span class="s-item-meta">{{ $item['size'] }}</span>
                         </div>
-                        <span class="s-item-price">₹{{ number_format($item['price'] * $item['quantity'], 2) }}</span>
+                        <span class="s-item-price">{{ $currentTenant->currency ?? '₹' }}{{ number_format($item['price'] * $item['quantity'], 2) }}</span>
                     </div>
                     @endforeach
                 </div>
@@ -116,12 +116,12 @@
                 <div class="summary-totals-lg">
                     <div class="st-row">
                         <span>Subtotal</span>
-                        <span>₹{{ number_format($subtotal, 2) }}</span>
+                        <span>{{ $currentTenant->currency ?? '₹' }}{{ number_format($subtotal, 2) }}</span>
                     </div>
                     @if($savings > 0)
                     <div class="st-row" style="color: #10b981;">
                         <span>Volume Discount</span>
-                        <span>-₹{{ number_format($savings, 2) }}</span>
+                        <span>-{{ $currentTenant->currency ?? '₹' }}{{ number_format($savings, 2) }}</span>
                     </div>
                     @endif
                     <div class="st-row">
@@ -131,7 +131,7 @@
                     <hr class="st-divider">
                     <div class="st-row grand-total-lg">
                         <span>Grand Total</span>
-                        <span>₹{{ number_format($total, 2) }}</span>
+                        <span>{{ $currentTenant->currency ?? '₹' }}{{ number_format($total, 2) }}</span>
                     </div>
                 </div>
 

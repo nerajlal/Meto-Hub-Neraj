@@ -45,7 +45,7 @@
                                 {{ $order->payment_method == 'cod' ? 'Collect COD' : 'Prepaid' }}
                             </div>
                             <div class="fw-bold text-dark">
-                                {{ $order->payment_method == 'cod' ? '$' . number_format($order->total_amount, 2) : 'Paid' }}
+                                {{ $order->payment_method == 'cod' ? ($currentTenant->currency ?? '₹') . number_format($order->total_amount, 2) : 'Paid' }}
                             </div>
                         </div>
                     </div>

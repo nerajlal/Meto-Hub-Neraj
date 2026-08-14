@@ -143,7 +143,7 @@
                         <div class="mb-2">
                             <label for="currency" class="form-label fw-semibold">Default Currency</label>
                             <select class="form-select @error('currency') is-invalid @enderror" id="currency" name="currency" required>
-                                <option value="INR" {{ old('currency', $tenant->currency ?? 'INR') == 'INR' ? 'selected' : '' }}>INR (₹) - Indian Rupee</option>
+                                <option value="INR" {{ old('currency', $tenant->currency ?? 'INR') == 'INR' ? 'selected' : '' }}>INR ({{ $currentTenant->currency ?? '₹' }}) - Indian Rupee</option>
                                 <option value="USD" {{ old('currency', $tenant->currency ?? 'INR') == 'USD' ? 'selected' : '' }}>USD ($) - US Dollar</option>
                                 <option value="EUR" {{ old('currency', $tenant->currency ?? 'INR') == 'EUR' ? 'selected' : '' }}>EUR (€) - Euro</option>
                                 <option value="GBP" {{ old('currency', $tenant->currency ?? 'INR') == 'GBP' ? 'selected' : '' }}>GBP (£) - British Pound</option>
@@ -299,7 +299,7 @@
 
                         <div class="mb-3">
                             <label for="delivery_info" class="form-label fw-semibold">Delivery Details Text</label>
-                            <textarea class="form-control @error('delivery_info') is-invalid @enderror" id="delivery_info" name="delivery_info" rows="3" placeholder="e.g. We deliver fresh groceries directly to your home within 2 hours. Free shipping applies to all orders over ₹499.">{{ old('delivery_info', $tenant->delivery_info) }}</textarea>
+                            <textarea class="form-control @error('delivery_info') is-invalid @enderror" id="delivery_info" name="delivery_info" rows="3" placeholder="e.g. We deliver fresh groceries directly to your home within 2 hours. Free shipping applies to all orders over {{ $currentTenant->currency ?? '₹' }}499.">{{ old('delivery_info', $tenant->delivery_info) }}</textarea>
                             @error('delivery_info')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror

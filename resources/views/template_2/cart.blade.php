@@ -41,7 +41,7 @@
                             <span id="qty-{{ $id }}" style="font-weight: 700; min-width: 15px; text-align: center;">{{ $item['quantity'] }}</span>
                             <button onclick="updateCartQty('{{ $id }}', 1)" style="border: none; background: none; font-weight: 700; cursor: pointer;">+</button>
                         </div>
-                        <span class="item-price-lg" id="price-{{ $id }}" style="font-size: 1.25rem; font-weight: 800; color: var(--accent-color);">₹{{ number_format($item['price'] * $item['quantity'], 2) }}</span>
+                        <span class="item-price-lg" id="price-{{ $id }}" style="font-size: 1.25rem; font-weight: 800; color: var(--accent-color);">{{ $currentTenant->currency ?? '₹' }}{{ number_format($item['price'] * $item['quantity'], 2) }}</span>
                     </div>
                     @if((isset($item['min_order_qty']) && $item['min_order_qty']) || (isset($item['max_order_qty']) && $item['max_order_qty']))
                     <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem; text-align: left;">
@@ -76,12 +76,12 @@
                 <h3 class="summary-heading" style="font-size: 1.35rem; font-weight: 800; margin-bottom: 1.5rem; color: var(--accent-color);">Order Total</h3>
                 <div class="summary-row-lg" style="display: flex; justify-content: space-between; margin-bottom: 1rem; color: #94a3b8;">
                     <span>Subtotal</span>
-                    <span id="subtotal-val">₹{{ number_format($cartTotalBeforeTax, 2) }}</span>
+                    <span id="subtotal-val">{{ $currentTenant->currency ?? '₹' }}{{ number_format($cartTotalBeforeTax, 2) }}</span>
                 </div>
                 @if($taxRate)
                 <div class="summary-row-lg" style="display: flex; justify-content: space-between; margin-bottom: 1rem; color: #94a3b8;">
                     <span>{{ $taxName }} ({{ $taxRate }}%)</span>
-                    <span id="tax-val">₹{{ number_format($taxAmount, 2) }}</span>
+                    <span id="tax-val">{{ $currentTenant->currency ?? '₹' }}{{ number_format($taxAmount, 2) }}</span>
                 </div>
                 @endif
                 <div class="summary-row-lg" style="display: flex; justify-content: space-between; margin-bottom: 1rem; color: #94a3b8;">
@@ -90,19 +90,19 @@
                 </div>
                 <div class="summary-row-lg" id="savings-row" style="{{ $savings > 0 ? 'display: flex;' : 'display: none;' }} justify-content: space-between; margin-bottom: 1rem; color: #94a3b8;">
                     <span>Volume Discount</span>
-                    <span style="color: #10b981; font-weight: 700;">-₹<span id="savings-val">{{ number_format($savings, 2) }}</span></span>
+                    <span style="color: #10b981; font-weight: 700;">-{{ $currentTenant->currency ?? '₹' }}<span id="savings-val">{{ number_format($savings, 2) }}</span></span>
                 </div>
                 <hr class="summary-hr" style="border: none; border-top: 1px solid rgba(255,255,255,0.1); margin: 1rem 0;">
                 <div class="summary-row-lg grand-total" style="display: flex; justify-content: space-between; font-size: 1.5rem; font-weight: 800; color: #fff;">
                     <span>Total</span>
-                    <span id="total-val" data-val="{{ $total }}">₹{{ number_format($total, 2) }}</span>
+                    <span id="total-val" data-val="{{ $total }}">{{ $currentTenant->currency ?? '₹' }}{{ number_format($total, 2) }}</span>
                 </div>
 
                 @if(isset($minOrderValue) && $minOrderValue > 0)
                 <div class="min-order-progress-container mt-3 mb-2">
                     <div class="d-flex justify-content-between mb-2" style="font-size: 0.85rem; color: #E2E8F0;">
                         <span id="min-order-msg">Calculating...</span>
-                        <span>₹{{ number_format($minOrderValue, 2) }}</span>
+                        <span>{{ $currentTenant->currency ?? '₹' }}{{ number_format($minOrderValue, 2) }}</span>
                     </div>
                     <div class="progress" style="height: 6px; border-radius: 999px; background: rgba(255,255,255,0.15);">
                         <div id="min-order-bar" class="progress-bar" role="progressbar" style="width: 0%; background: var(--accent-color); border-radius: 999px; transition: width 0.3s ease;"></div>
@@ -159,7 +159,7 @@
             
             if (totalVal < minVal) {
                 let diff = minVal - totalVal;
-                if (msg) msg.innerHTML = `Add <strong>₹${new Intl.NumberFormat().format(diff)}</strong> more to checkout`;
+                if (msg) msg.innerHTML = `Add <strong>{{ $currentTenant->currency ?? '₹' }}${new Intl.NumberFormat().format(diff)}</strong> more to checkout`;
                 btn.style.opacity = '0.5';
                 btn.style.pointerEvents = 'none';
                 if (bar) bar.style.background = 'var(--accent-color)';
@@ -195,12 +195,12 @@
             },
             success: function(response) {
                 qtyEl.innerText = newQty;
-                document.getElementById('price-' + id).innerText = '₹' + new Intl.NumberFormat().format(response.itemTotal);
-                document.getElementById('subtotal-val').innerText = '₹' + new Intl.NumberFormat().format(response.cartTotalBeforeTax);
+                document.getElementById('price-' + id).innerText = '{{ $currentTenant->currency ?? '₹' }}' + new Intl.NumberFormat().format(response.itemTotal);
+                document.getElementById('subtotal-val').innerText = '{{ $currentTenant->currency ?? '₹' }}' + new Intl.NumberFormat().format(response.cartTotalBeforeTax);
                 if (document.getElementById('tax-val')) {
-                    document.getElementById('tax-val').innerText = '₹' + new Intl.NumberFormat().format(response.taxAmount);
+                    document.getElementById('tax-val').innerText = '{{ $currentTenant->currency ?? '₹' }}' + new Intl.NumberFormat().format(response.taxAmount);
                 }
-                document.getElementById('total-val').innerText = '₹' + new Intl.NumberFormat().format(response.cartTotal);
+                document.getElementById('total-val').innerText = '{{ $currentTenant->currency ?? '₹' }}' + new Intl.NumberFormat().format(response.cartTotal);
                 $('#cart-count').text(response.cartCount);
                 
                 if (response.savings > 0) {
@@ -239,11 +239,11 @@
                     document.getElementById('item-' + id).style.opacity = '0';
                     setTimeout(() => {
                         document.getElementById('item-' + id).remove();
-                        document.getElementById('subtotal-val').innerText = '₹' + new Intl.NumberFormat().format(response.cartTotalBeforeTax);
+                        document.getElementById('subtotal-val').innerText = '{{ $currentTenant->currency ?? '₹' }}' + new Intl.NumberFormat().format(response.cartTotalBeforeTax);
                         if (document.getElementById('tax-val')) {
-                            document.getElementById('tax-val').innerText = '₹' + new Intl.NumberFormat().format(response.taxAmount);
+                            document.getElementById('tax-val').innerText = '{{ $currentTenant->currency ?? '₹' }}' + new Intl.NumberFormat().format(response.taxAmount);
                         }
-                        document.getElementById('total-val').innerText = '₹' + new Intl.NumberFormat().format(response.cartTotal);
+                        document.getElementById('total-val').innerText = '{{ $currentTenant->currency ?? '₹' }}' + new Intl.NumberFormat().format(response.cartTotal);
                         $('#cart-count').text(response.cartCount);
                         checkMinOrder(response.cartTotal);
                     }, 300);

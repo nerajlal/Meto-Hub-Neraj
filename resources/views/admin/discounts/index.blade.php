@@ -167,9 +167,9 @@
                         </div>
 
                         <div class="mb-4">
-                            <label class="form-label small fw-semibold text-secondary">Custom Price (₹)</label>
+                            <label class="form-label small fw-semibold text-secondary">Custom Price ({{ $currentTenant->currency ?? '₹' }})</label>
                             <div class="input-group shadow-sm">
-                                <span class="input-group-text bg-light text-muted">₹</span>
+                                <span class="input-group-text bg-light text-muted">{{ $currentTenant->currency ?? '₹' }}</span>
                                 <input type="number" step="0.01" name="price" class="form-control" placeholder="0.00" required>
                             </div>
                         </div>
@@ -216,7 +216,7 @@
                                         {{ $cp->product?->title ?? 'Deleted Product' }}
                                     </td>
                                     <td class="px-3 py-3 text-success fw-bold">
-                                        ₹{{ number_format($cp->price, 2) }}
+                                        {{ $currentTenant->currency ?? '₹' }}{{ number_format($cp->price, 2) }}
                                     </td>
                                     <td class="px-3 py-3 text-end">
                                         <form action="{{ route('admin.custom-prices.destroy', $cp->id) }}" method="POST" onsubmit="return confirm('Delete this custom pricing rule?')" class="d-inline">
@@ -308,9 +308,9 @@
                             </select>
                         </div>
                         <div class="mb-4">
-                            <label class="form-label small fw-semibold text-secondary">Custom Price (₹)</label>
+                            <label class="form-label small fw-semibold text-secondary">Custom Price ({{ $currentTenant->currency ?? '₹' }})</label>
                             <div class="input-group shadow-sm">
-                                <span class="input-group-text bg-light text-muted">₹</span>
+                                <span class="input-group-text bg-light text-muted">{{ $currentTenant->currency ?? '₹' }}</span>
                                 <input type="number" step="0.01" name="price" class="form-control" placeholder="0.00" required>
                             </div>
                         </div>
@@ -399,7 +399,7 @@
                                         {{ $gcp->product?->title ?? 'Deleted Product' }}
                                     </td>
                                     <td class="px-3 py-3 text-success fw-bold">
-                                        ₹{{ number_format($gcp->price, 2) }}
+                                        {{ $currentTenant->currency ?? '₹' }}{{ number_format($gcp->price, 2) }}
                                     </td>
                                     <td class="px-3 py-3 text-end">
                                         <form action="{{ route('admin.group-custom-prices.destroy', $gcp->id) }}" method="POST" onsubmit="return confirm('Delete this group custom pricing rule?')" class="d-inline">

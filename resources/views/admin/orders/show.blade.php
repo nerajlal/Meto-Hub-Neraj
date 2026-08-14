@@ -80,15 +80,15 @@
                             </p>
                         </div>
                         <div class="text-end">
-                            <p class="small text-dark mb-1">₹{{ number_format($item->price, 2) }} x {{ $item->quantity }}</p>
-                            <p class="small fw-medium text-dark mb-0">₹{{ number_format($item->total, 2) }}</p>
+                            <p class="small text-dark mb-1">{{ $currentTenant->currency ?? '₹' }}{{ number_format($item->price, 2) }} x {{ $item->quantity }}</p>
+                            <p class="small fw-medium text-dark mb-0">{{ $currentTenant->currency ?? '₹' }}{{ number_format($item->total, 2) }}</p>
                             @if(isset($item->options['coupon_code']) && $item->options['coupon_code'])
                                 <div class="mt-1">
                                     <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-10" style="font-size: 0.7em;">
                                         {{ $item->options['coupon_code'] }} Applied
                                     </span>
                                     <p class="small text-success mb-0" style="font-size: 0.75rem;">
-                                        Saved ₹{{ number_format($item->options['saved_amount'] * $item->quantity, 2) }}
+                                        Saved {{ $currentTenant->currency ?? '₹' }}{{ number_format($item->options['saved_amount'] * $item->quantity, 2) }}
                                     </p>
                                 </div>
                             @endif
@@ -107,15 +107,15 @@
                 <div class="card-body p-3">
                     <div class="d-flex justify-content-between small mb-2">
                         <span class="text-muted">Subtotal</span>
-                        <span class="text-dark">₹{{ number_format($order->subtotal, 2) }}</span>
+                        <span class="text-dark">{{ $currentTenant->currency ?? '₹' }}{{ number_format($order->subtotal, 2) }}</span>
                     </div>
                     <div class="d-flex justify-content-between small mb-2">
                         <span class="text-muted">Shipping</span>
-                        <span class="text-dark">₹{{ number_format($order->shipping_cost, 2) }}</span>
+                        <span class="text-dark">{{ $currentTenant->currency ?? '₹' }}{{ number_format($order->shipping_cost, 2) }}</span>
                     </div>
                     <div class="d-flex justify-content-between fw-bold text-dark border-top pt-3 mb-3">
                         <span>Total</span>
-                        <span>₹{{ number_format($order->total_amount, 2) }}</span>
+                        <span>{{ $currentTenant->currency ?? '₹' }}{{ number_format($order->total_amount, 2) }}</span>
                     </div>
                     <div class="border-top pt-3 small text-muted">
                         <div class="d-flex justify-content-between">
@@ -225,7 +225,7 @@
                             <select name="delivery_partner_id" class="form-select" required>
                                 <option value="">Select a delivery boy</option>
                                 @foreach($deliveryStaff as $staff)
-                                    <option value="{{ $staff->id }}" {{ $order->delivery_partner_id == $staff->id ? 'selected' : '' }}>
+                                    <option value="{{ $staff->id }}" {{ $order->delivery_boy_id == $staff->id ? 'selected' : '' }}>
                                         {{ $staff->name }}
                                     </option>
                                 @endforeach

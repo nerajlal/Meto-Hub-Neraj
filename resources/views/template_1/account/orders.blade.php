@@ -51,7 +51,7 @@
                         <span style="display: inline-block; padding: 0.5rem 1rem; border-radius: 9999px; background: {{ $order->status == 'completed' ? '#ecfdf5' : ($order->status == 'pending' ? '#fffbeb' : '#f8fafc') }}; color: {{ $order->status == 'completed' ? '#065f46' : ($order->status == 'pending' ? '#92400e' : '#1e293b') }}; font-size: 0.85rem; font-weight: 700; text-transform: capitalize;">
                             {{ $order->status }}
                         </span>
-                        <p style="margin-top: 0.75rem; font-weight: 800; font-size: 1.25rem; color: var(--primary-color);">₹{{ number_format($order->total_amount, 2) }}</p>
+                        <p style="margin-top: 0.75rem; font-weight: 800; font-size: 1.25rem; color: var(--primary-color);">{{ $currentTenant->currency ?? '₹' }}{{ number_format($order->total_amount, 2) }}</p>
                     </div>
                 </div>
 
@@ -78,7 +78,7 @@
                             </p>
                         </div>
                         <div style="font-weight: 700; color: var(--primary-color);">
-                            ₹{{ number_format($item->price * $item->quantity, 2) }}
+                            {{ $currentTenant->currency ?? '₹' }}{{ number_format($item->price * $item->quantity, 2) }}
                         </div>
                     </div>
                     @endforeach

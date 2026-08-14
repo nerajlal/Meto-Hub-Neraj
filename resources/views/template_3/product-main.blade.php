@@ -59,11 +59,11 @@
             
             <div class="price-block">
                 <span class="current-price" id="t3-price-display">
-                    ₹{{ number_format($product->discounted_price, 2) }}
+                    {{ $currentTenant->currency ?? '₹' }}{{ number_format($product->discounted_price, 2) }}
                 </span>
                 @if($product->compare_at_price > $product->discounted_price)
                     <span class="compare-price">
-                        ₹{{ number_format($product->compare_at_price, 2) }}
+                        {{ $currentTenant->currency ?? '₹' }}{{ number_format($product->compare_at_price, 2) }}
                     </span>
                     <span style="background: #EF4444; color: white; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.85rem; font-weight: 700;">
                         {{ round((($product->compare_at_price - $product->discounted_price) / $product->compare_at_price) * 100) }}% OFF
@@ -111,7 +111,7 @@
                         <div style="font-size: 0.85rem; color: var(--text-muted);">Get special wholesale pricing</div>
                     </div>
                     <div style="font-weight: 800; color: var(--accent-color); font-size: 1.1rem;">
-                        ₹{{ number_format($deal->price, 2) }} / ea
+                        {{ $currentTenant->currency ?? '₹' }}{{ number_format($deal->price, 2) }} / ea
                     </div>
                 </div>
                 @endforeach
@@ -169,7 +169,7 @@
             }).format(price);
             const priceDisplay = document.getElementById('t3-price-display');
             if (priceDisplay) {
-                priceDisplay.innerText = '₹' + formattedPrice;
+                priceDisplay.innerText = '{{ $currentTenant->currency ?? '₹' }}' + formattedPrice;
             }
         }
         

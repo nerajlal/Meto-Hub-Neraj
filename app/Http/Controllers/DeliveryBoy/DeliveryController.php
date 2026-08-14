@@ -16,14 +16,14 @@ class DeliveryController extends Controller
 
         // Active orders (processing, shipped)
         $activeOrders = Order::where('tenant_id', $tenantId)
-            ->where('delivery_partner_id', $deliveryBoyId)
+            ->where('delivery_boy_id', $deliveryBoyId)
             ->whereNotIn('status', ['delivered', 'cancelled'])
             ->orderBy('created_at', 'desc')
             ->get();
 
         // Completed orders today
         $completedOrdersCount = Order::where('tenant_id', $tenantId)
-            ->where('delivery_partner_id', $deliveryBoyId)
+            ->where('delivery_boy_id', $deliveryBoyId)
             ->where('status', 'delivered')
             ->whereDate('updated_at', today())
             ->count();
@@ -31,25 +31,25 @@ class DeliveryController extends Controller
         return view('delivery.dashboard', compact('activeOrders', 'completedOrdersCount'));
     }
 
-    public function showOrder($tenant, $id)
+    public function showOrder($id)
     {
-        $tenantId = session('active_tenant_id') ?? $tenant ?? 1;
+        $tenantId = session('active_tenant_id') ?? 1;
         $deliveryBoyId = Auth::id();
 
         $order = Order::with('items.product')->where('tenant_id', $tenantId)
-            ->where('delivery_partner_id', $deliveryBoyId)
+            ->where('delivery_boy_id', $deliveryBoyId)
             ->findOrFail($id);
 
         return view('delivery.order', compact('order'));
     }
 
-    public function updateStatus(Request $request, $tenant, $id)
+    public function updateStatus(Request $request, $id)
     {
-        $tenantId = session('active_tenant_id') ?? $tenant ?? 1;
+        $tenantId = session('active_tenant_id') ?? 1;
         $deliveryBoyId = Auth::id();
 
         $order = Order::where('tenant_id', $tenantId)
-            ->where('delivery_partner_id', $deliveryBoyId)
+            ->where('delivery_boy_id', $deliveryBoyId)
             ->findOrFail($id);
 
         $validated = $request->validate([

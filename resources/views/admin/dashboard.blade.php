@@ -36,8 +36,8 @@
                 </span>
             </div>
             <h3 class="small fw-medium text-muted mb-1">Total Sales</h3>
-            <span class="fs-4 fw-bold text-dark">₹{{ number_format($currentSales, 2) }}</span>
-            <p class="small text-muted mt-2 mb-0">vs. ₹{{ number_format($prevSales, 2) }} last 30d</p>
+            <span class="fs-4 fw-bold text-dark">{{ $currentTenant->currency ?? '₹' }}{{ number_format($currentSales, 2) }}</span>
+            <p class="small text-muted mt-2 mb-0">vs. {{ $currentTenant->currency ?? '₹' }}{{ number_format($prevSales, 2) }} last 30d</p>
         </div>
     </div>
 
@@ -125,7 +125,7 @@
                                     <span class="small text-muted">{{ $order->customer_email }}</span>
                                 </div>
                             </td>
-                            <td class="px-3 py-3 text-dark">₹{{ number_format($order->total_amount, 2) }}</td>
+                            <td class="px-3 py-3 text-dark">{{ $currentTenant->currency ?? '₹' }}{{ number_format($order->total_amount, 2) }}</td>
                             <td class="px-3 py-3">
                                 @php
                                     $statusClass = match($order->status) {

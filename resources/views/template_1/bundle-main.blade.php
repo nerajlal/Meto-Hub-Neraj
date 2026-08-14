@@ -50,7 +50,7 @@
             <h1 class="p-title" style="font-size: 2.2rem; font-weight: 800; color: var(--primary-color); margin-bottom: 0.5rem; line-height: 1.2;">{{ $bundle->title }}</h1>
             
             <div class="p-price-row" style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem;">
-                <span class="p-current-price" style="font-size: 2rem; font-weight: 800; color: var(--accent-color);">₹{{ number_format($bundle->total_price, 2) }}</span>
+                <span class="p-current-price" style="font-size: 2rem; font-weight: 800; color: var(--accent-color);">{{ $currentTenant->currency ?? '₹' }}{{ number_format($bundle->total_price, 2) }}</span>
                 @php
                     $originalPrice = $bundle->products->sum(function($p) {
                         return $p->variants->min('price') ?? 0;
@@ -58,8 +58,8 @@
                 @endphp
                 @if($originalPrice > $bundle->total_price)
                     <div style="display: flex; align-items: center; gap: 0.5rem;">
-                        <span class="p-compare-at" style="font-size: 1.1rem; text-decoration: line-through; color: var(--text-muted);">₹{{ number_format($originalPrice, 2) }}</span>
-                        <span class="p-discount-badge" style="background: #ecfdf5; color: var(--accent-color); padding: 0.2rem 0.5rem; border-radius: 9999px; font-size: 0.7rem; font-weight: 800; white-space: nowrap;">Save ₹{{ number_format($originalPrice - $bundle->total_price, 2) }}</span>
+                        <span class="p-compare-at" style="font-size: 1.1rem; text-decoration: line-through; color: var(--text-muted);">{{ $currentTenant->currency ?? '₹' }}{{ number_format($originalPrice, 2) }}</span>
+                        <span class="p-discount-badge" style="background: #ecfdf5; color: var(--accent-color); padding: 0.2rem 0.5rem; border-radius: 9999px; font-size: 0.7rem; font-weight: 800; white-space: nowrap;">Save {{ $currentTenant->currency ?? '₹' }}{{ number_format($originalPrice - $bundle->total_price, 2) }}</span>
                     </div>
                 @endif
             </div>
@@ -114,7 +114,7 @@
                 <button class="btn-add-to-cart add-to-cart-btn" id="add-to-cart-bundle-btn" onclick="addOrOpenCart()" style="flex-grow: 1; height: 100%; background: var(--accent-color); color: #fff; border: none; border-radius: 0.75rem; font-weight: 800; font-size: 1rem; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.5rem; white-space: nowrap;">
                     <span>ADD TO BAG</span>
                     <span style="width: 1px; height: 16px; background: rgba(255,255,255,0.3); margin: 0 0.5rem;"></span>
-                    <span id="btn-price-display">₹{{ number_format($bundle->total_price, 2) }}</span>
+                    <span id="btn-price-display">{{ $currentTenant->currency ?? '₹' }}{{ number_format($bundle->total_price, 2) }}</span>
                 </button>
             </div>
 
@@ -162,7 +162,7 @@
             btn.innerHTML = '<i class="fa-solid fa-check"></i> VIEW CART';
             btn.style.background = '#10B981';
         } else if (btn) {
-            btn.innerHTML = '<span>ADD TO BAG</span><span style="width: 1px; height: 16px; background: rgba(255,255,255,0.3); margin: 0 0.5rem;"></span><span id="btn-price-display">₹{{ number_format($bundle->total_price, 2) }}</span>';
+            btn.innerHTML = '<span>ADD TO BAG</span><span style="width: 1px; height: 16px; background: rgba(255,255,255,0.3); margin: 0 0.5rem;"></span><span id="btn-price-display">{{ $currentTenant->currency ?? '₹' }}{{ number_format($bundle->total_price, 2) }}</span>';
             btn.style.background = 'var(--accent-color)';
         }
     }

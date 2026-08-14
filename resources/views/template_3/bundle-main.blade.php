@@ -48,14 +48,14 @@
             
             <div class="price-block">
                 <span class="current-price">
-                    ₹{{ number_format($bundle->total_price, 2) }}
+                    {{ $currentTenant->currency ?? '₹' }}{{ number_format($bundle->total_price, 2) }}
                 </span>
                 @if($bundle->base_price > $bundle->total_price)
                     <span class="compare-price">
-                        ₹{{ number_format($bundle->base_price, 2) }}
+                        {{ $currentTenant->currency ?? '₹' }}{{ number_format($bundle->base_price, 2) }}
                     </span>
                     <span style="background: #EF4444; color: white; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.85rem; font-weight: 700;">
-                        Save ₹{{ number_format($bundle->base_price - $bundle->total_price, 2) }}
+                        Save {{ $currentTenant->currency ?? '₹' }}{{ number_format($bundle->base_price - $bundle->total_price, 2) }}
                     </span>
                 @endif
             </div>

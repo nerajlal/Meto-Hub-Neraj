@@ -20,7 +20,7 @@
             </div>
             <div class="card-body vstack gap-4">
                 <div class="d-flex align-items-baseline">
-                    <h2 class="fw-bold text-dark mb-0">₹{{ number_format($plan['price'] * 85, 0) }}</h2>
+                    <h2 class="fw-bold text-dark mb-0">{{ $currentTenant->currency ?? '₹' }}{{ number_format($plan['price'] * 85, 0) }}</h2>
                     <span class="text-muted small ms-2">/ {{ $plan['billing'] }}</span>
                 </div>
 

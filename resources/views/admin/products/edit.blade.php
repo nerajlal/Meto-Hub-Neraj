@@ -213,11 +213,11 @@
                                     <input type="number" class="form-control form-control-sm shadow-sm variant-stock-input" name="variants[{{ $loop->index }}][stock]" value="{{ $variant->stock }}" placeholder="0">
                                 </div>
                                 <div class="col-4 col-md-2">
-                                    <label class="form-label extra-small fw-medium text-muted mb-1">Price (₹)</label>
+                                    <label class="form-label extra-small fw-medium text-muted mb-1">Price ({{ $currentTenant->currency ?? '₹' }})</label>
                                     <input type="text" class="form-control form-control-sm shadow-sm variant-price-input" name="variants[{{ $loop->index }}][price]" value="{{ $variant->price }}" placeholder="0.00" required>
                                 </div>
                                 <div class="col-4 col-md-2">
-                                    <label class="form-label extra-small fw-medium text-muted mb-1">Compare Price (₹)</label>
+                                    <label class="form-label extra-small fw-medium text-muted mb-1">Compare Price ({{ $currentTenant->currency ?? '₹' }})</label>
                                     <input type="text" class="form-control form-control-sm shadow-sm variant-compare-input" name="variants[{{ $loop->index }}][compare_at_price]" value="{{ $variant->compare_at_price }}" placeholder="0.00">
                                 </div>
                                 <div class="col-12 col-md-2 text-end">
@@ -254,7 +254,7 @@
                                     <label class="form-label extra-small fw-medium text-muted mb-1">Select Variant</label>
                                     <select class="form-select form-select-sm shadow-sm pack-variant-select" name="packs[{{ $pIndex }}][variant_id]" data-temp-size="{{ $currentSize }}" required onchange="const activeOption = this.options[this.selectedIndex]; this.closest('.pack-row').querySelector('.pack-variant-size-hidden').value = activeOption ? (activeOption.getAttribute('data-size') || '') : '';">
                                         @foreach($product->variants as $v)
-                                            <option value="{{ $v->id }}" @selected($v->id == $variantId) data-size="{{ $v->size }}">{{ $v->size }} (₹{{ $v->price }})</option>
+                                            <option value="{{ $v->id }}" @selected($v->id == $variantId) data-size="{{ $v->size }}">{{ $v->size }} ({{ $currentTenant->currency ?? '₹' }}{{ $v->price }})</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -263,7 +263,7 @@
                                     <input type="number" class="form-control form-control-sm shadow-sm pack-qty-input" name="packs[{{ $pIndex }}][quantity]" value="{{ $qty }}" min="2" placeholder="e.g. 6" required>
                                 </div>
                                 <div class="col-6 col-md-3">
-                                    <label class="form-label extra-small fw-medium text-muted mb-1">Special Pack Price (₹)</label>
+                                    <label class="form-label extra-small fw-medium text-muted mb-1">Special Pack Price ({{ $currentTenant->currency ?? '₹' }})</label>
                                     <input type="text" class="form-control form-control-sm shadow-sm pack-price-input" name="packs[{{ $pIndex }}][pack_price]" value="{{ $packPrice }}" placeholder="0.00" required>
                                 </div>
                                 <div class="col-12 col-md-2 text-end">
@@ -352,7 +352,7 @@
                             variants.push({
                                 id: idVal,
                                 size: sizeVal,
-                                price: priceVal ? '₹' + priceVal : ''
+                                price: priceVal ? '{{ $currentTenant->currency ?? '₹' }}' + priceVal : ''
                             });
                         }
                     });
@@ -404,11 +404,11 @@
                                 <input type="number" class="form-control form-control-sm shadow-sm variant-stock-input" name="variants[${index}][stock]" placeholder="0">
                             </div>
                             <div class="col-4 col-md-2">
-                                <label class="form-label extra-small fw-medium text-muted mb-1">Price (₹)</label>
+                                <label class="form-label extra-small fw-medium text-muted mb-1">Price ({{ $currentTenant->currency ?? '₹' }})</label>
                                 <input type="text" class="form-control form-control-sm shadow-sm variant-price-input" name="variants[${index}][price]" placeholder="0.00" required>
                             </div>
                             <div class="col-4 col-md-2">
-                                <label class="form-label extra-small fw-medium text-muted mb-1">Compare Price (₹)</label>
+                                <label class="form-label extra-small fw-medium text-muted mb-1">Compare Price ({{ $currentTenant->currency ?? '₹' }})</label>
                                 <input type="text" class="form-control form-control-sm shadow-sm variant-compare-input" name="variants[${index}][compare_at_price]" placeholder="0.00">
                             </div>
                             <div class="col-12 col-md-2 text-end">
@@ -451,7 +451,7 @@
                                 <input type="number" class="form-control form-control-sm shadow-sm pack-qty-input" name="packs[${index}][quantity]" min="2" placeholder="e.g. 6" required>
                             </div>
                             <div class="col-6 col-md-3">
-                                <label class="form-label extra-small fw-medium text-muted mb-1">Special Pack Price (₹)</label>
+                                <label class="form-label extra-small fw-medium text-muted mb-1">Special Pack Price ({{ $currentTenant->currency ?? '₹' }})</label>
                                 <input type="text" class="form-control form-control-sm shadow-sm pack-price-input" name="packs[${index}][pack_price]" placeholder="0.00" required>
                             </div>
                             <div class="col-12 col-md-2 text-end">

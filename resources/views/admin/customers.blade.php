@@ -92,7 +92,7 @@
                         @endif
                     </td>
                     <td class="px-3 py-3">{{ $customer->orders_count ?? 0 }} orders</td>
-                    <td class="px-3 py-3 text-end fw-medium text-dark">₹{{ number_format($customer->total_spent ?? 0, 2) }}</td>
+                    <td class="px-3 py-3 text-end fw-medium text-dark">{{ $currentTenant->currency ?? '₹' }}{{ number_format($customer->total_spent ?? 0, 2) }}</td>
                 </tr>
                 @empty
                 <tr>

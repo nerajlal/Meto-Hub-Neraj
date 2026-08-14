@@ -10,8 +10,10 @@
         </a>
         <h1 class="h4 fw-bold mt-2 mb-0">Order #{{ $order->order_number }}</h1>
     </div>
-    <!-- Customer Info -->
-    <div class="card border-0 shadow-sm rounded-3 overflow-hidden mb-3">
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Customer Info -->
+            <div class="card border-0 shadow-sm rounded-3 overflow-hidden mb-3">
         <div class="card-body p-3">
             <h6 class="fw-bold text-muted small text-uppercase mb-3">Customer Details</h6>
             
@@ -44,50 +46,93 @@
         </div>
     </div>
 
-    <!-- Payment Info -->
-    <div class="card border-0 shadow-sm rounded-3 overflow-hidden mb-3">
-        <div class="card-body p-3">
-            <h6 class="fw-bold text-muted small text-uppercase mb-3">Payment Info</h6>
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <span class="d-block small text-muted">Method</span>
-                    <span class="fw-bold text-dark fs-5">
-                        {{ strtoupper($order->payment_method) }}
-                    </span>
+
+    <!-- Order Items -->
+    <div class="card border shadow-sm mb-4 overflow-hidden">
+        <div class="card-header bg-light border-bottom d-flex justify-content-between align-items-center py-3">
+            <h2 class="h6 fw-semibold text-secondary mb-0">Order Items ({{ $order->items->count() }})</h2>
+        </div>
+        <div class="list-group list-group-flush">
+            @foreach($order->items as $item)
+            <div class="list-group-item p-3 d-flex gap-3">
+                <div class="bg-light rounded border d-flex align-items-center justify-content-center flex-shrink-0" style="width: 64px; height: 64px; overflow:hidden;">
+                    @if($item->product && $item->product->main_image_url)
+                        <img src="{{ $item->product->main_image_url }}" alt="{{ $item->name }}" style="width:100%; height:100%; object-fit:cover;">
+                    @elseif($item->bundle && $item->bundle->image)
+                        <img src="{{ \Illuminate\Support\Facades\Storage::url($item->bundle->image) }}" alt="{{ $item->name }}" style="width:100%; height:100%; object-fit:cover;">
+                    @else
+                        <i class="fas fa-image text-secondary opacity-50 fs-4"></i>
+                    @endif
+                </div>
+                <div class="flex-grow-1">
+                    <h4 class="h6 fw-medium text-primary mb-1"><a href="#" class="text-decoration-none">{{ $item->name }}</a></h4>
+                    <p class="small text-muted mb-0">
+                        @if($item->size) Size: {{ $item->size }}<br> @endif
+                        @if($item->type == 'bundle') 
+                            <span class="badge bg-secondary bg-opacity-10 text-secondary" style="font-size: 0.7em;">Bundle</span>
+                            @if($item->bundle && $item->bundle->products->count() > 0)
+                                <div class="mt-1 ps-2 border-start border-2">
+                                    <small class="text-muted d-block fw-bold">Includes:</small>
+                                    @foreach($item->bundle->products as $bProduct)
+                                        <small class="text-muted d-block">• {{ $bProduct->title }} 
+                                            @if($bProduct->variants->isNotEmpty())
+                                                ({{ $bProduct->variants->first()->size }})
+                                            @endif
+                                        </small>
+                                    @endforeach
+                                </div>
+                            @endif
+                        @endif
+                    </p>
                 </div>
                 <div class="text-end">
-                    <span class="d-block small text-muted">Amount to Collect</span>
-                    @if($order->payment_method == 'cod' && $order->payment_status != 'paid')
-                        <span class="fw-bold text-success fs-3">${{ number_format($order->total_amount, 2) }}</span>
-                    @else
-                        <span class="badge bg-success bg-opacity-10 text-success border border-success-subtle px-3 py-2 fs-6 rounded-pill">PAID</span>
+                    <p class="small text-dark mb-1">{{ $currentTenant->currency ?? '₹' }}{{ number_format($item->price, 2) }} x {{ $item->quantity }}</p>
+                    <p class="small fw-medium text-dark mb-0">{{ $currentTenant->currency ?? '₹' }}{{ number_format($item->total, 2) }}</p>
+                    @if(isset($item->options['coupon_code']) && $item->options['coupon_code'])
+                        <div class="mt-1">
+                            <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-10" style="font-size: 0.7em;">
+                                {{ $item->options['coupon_code'] }} Applied
+                            </span>
+                            <p class="small text-success mb-0" style="font-size: 0.75rem;">
+                                Saved {{ $currentTenant->currency ?? '₹' }}{{ number_format($item->options['saved_amount'] * $item->quantity, 2) }}
+                            </p>
+                        </div>
                     @endif
                 </div>
             </div>
+            @endforeach
         </div>
     </div>
 
-    <!-- Order Items -->
-    <div class="card border-0 shadow-sm rounded-3 overflow-hidden mb-4">
-        <div class="card-body p-3">
-            <h6 class="fw-bold text-muted small text-uppercase mb-3">Items ({{ $order->items->count() }})</h6>
-            
-            <ul class="list-group list-group-flush mb-0">
-                @foreach($order->items as $item)
-                <li class="list-group-item px-0 py-2 d-flex justify-content-between align-items-start border-0">
-                    <div class="ms-2 me-auto small">
-                        <div class="fw-bold text-dark">{{ $item->product->title ?? 'Unknown Product' }}</div>
-                        <div class="text-muted">{{ $item->quantity }}x @ ${{ number_format($item->price, 2) }}</div>
+        </div>
+        
+        <div class="col-lg-4">
+            <!-- Payment Info -->
+            <div class="card border-0 shadow-sm rounded-3 overflow-hidden mb-3">
+                <div class="card-body p-3">
+                    <h6 class="fw-bold text-muted small text-uppercase mb-3">Payment Info</h6>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="d-block small text-muted">Method</span>
+                            <span class="fw-bold text-dark fs-5">
+                                {{ strtoupper($order->payment_method) }}
+                            </span>
+                        </div>
+                        <div class="text-end">
+                            <span class="d-block small text-muted">Amount to Collect</span>
+                            @if($order->payment_method == 'cod' && $order->payment_status != 'paid')
+                                <span class="fw-bold text-success fs-3">{{ $currentTenant->currency ?? '₹' }}{{ number_format($order->total_amount, 2) }}</span>
+                            @else
+                                <span class="badge bg-success bg-opacity-10 text-success border border-success-subtle px-3 py-2 fs-6 rounded-pill">PAID</span>
+                            @endif
+                        </div>
                     </div>
-                </li>
-                @endforeach
-            </ul>
-        </div>
-    </div>
+                </div>
+            </div>
 
-    <!-- Action Buttons -->
-    <div class="card border-0 bg-transparent shadow-none mb-4">
-        <form action="{{ route('delivery.orders.update-status', ['tenant' => request()->route('tenant') ?? session('active_tenant_id') ?? 1, 'id' => $order->id]) }}" method="POST">
+            <!-- Action Buttons -->
+            <div class="card border-0 bg-transparent shadow-none mb-4 position-sticky" style="top: 20px;">
+                <form action="{{ route('delivery.orders.update-status', ['tenant' => request()->route('tenant') ?? session('active_tenant_id') ?? 1, 'id' => $order->id]) }}" method="POST">
             @csrf
             
             @if($order->status != 'out_for_delivery' && $order->status != 'shipped' && $order->status != 'delivered')
@@ -103,7 +148,9 @@
                     <i class="fa-solid fa-check-circle me-2"></i> Mark as Delivered
                 </button>
             @endif
-        </form>
+                </form>
+            </div>
+        </div>
     </div>
 </div>
 @endsection

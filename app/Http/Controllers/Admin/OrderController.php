@@ -110,7 +110,7 @@ class OrderController extends Controller
         // Ensure the assigned user is actually a delivery boy
         $deliveryBoy = \App\Models\User::where('type', 'delivery_boy')->findOrFail($validated['delivery_partner_id']);
         
-        $order->delivery_partner_id = $deliveryBoy->id;
+        $order->delivery_boy_id = $deliveryBoy->id;
         $order->save();
 
         return redirect()->back()->with('success', 'Order assigned to ' . $deliveryBoy->name . ' successfully.');

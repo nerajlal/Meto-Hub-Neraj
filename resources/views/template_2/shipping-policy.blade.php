@@ -16,7 +16,7 @@
         <p style="color: var(--primary-color); line-height: 1.6;">Our standard delivery time is within 2 hours of order confirmation. Delivery slots can also be scheduled at your convenience during checkout.</p>
 
         <h2 style="font-weight: 700; font-size: 1.4rem; margin-top: 2rem; margin-bottom: 1rem;">Shipping Rates</h2>
-        <p style="color: var(--primary-color); line-height: 1.6;">Free delivery is applicable on all orders above ₹499. For orders below this threshold, a flat delivery fee of ₹40 will be charged.</p>
+        <p style="color: var(--primary-color); line-height: 1.6;">Free delivery is applicable on all orders above {{ $currentTenant->currency ?? '₹' }}499. For orders below this threshold, a flat delivery fee of {{ $currentTenant->currency ?? '₹' }}40 will be charged.</p>
     @endif
 </div>
 @endsection

@@ -17,14 +17,14 @@
     
     <div class="card-content">
         <div class="p-price-wrap">
-            <span class="p-price">₹{{ number_format($bundle->total_price, 2) }}</span>
+            <span class="p-price">{{ $currentTenant->currency ?? '₹' }}{{ number_format($bundle->total_price, 2) }}</span>
             @php
                 $originalPrice = $bundle->products->sum(function($p) {
                     return $p->variants->min('price') ?? 0;
                 });
             @endphp
             @if($originalPrice > $bundle->total_price)
-                <span class="p-compare">₹{{ number_format($originalPrice, 2) }}</span>
+                <span class="p-compare">{{ $currentTenant->currency ?? '₹' }}{{ number_format($originalPrice, 2) }}</span>
             @endif
         </div>
         

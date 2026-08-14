@@ -289,7 +289,7 @@
                         $bestQty = $bestPack->products->first()->pivot->quantity;
                     @endphp
                     <div class="p-gallery-badge" style="position: absolute; top: 1.25rem; left: 1.25rem; background: #6366f1; color: #fff; padding: 0.5rem 1rem; border-radius: 0.5rem; font-weight: 800; font-size: 0.8rem; box-shadow: 0 4px 15px rgba(99, 102, 241, 0.2); z-index: 10;">
-                        <i class="fa-solid fa-tags"></i> Buy {{ $bestQty }} for ₹{{ number_format($bestPack->total_price, 0) }}
+                        <i class="fa-solid fa-tags"></i> Buy {{ $bestQty }} for {{ $currentTenant->currency ?? '₹' }}{{ number_format($bestPack->total_price, 0) }}
                     </div>
                 @endif
                 @php 
@@ -322,10 +322,10 @@
             <h1 class="p-title" style="font-size: 2.2rem; font-weight: 800; color: var(--primary-color); margin-bottom: 1rem; line-height: 1.2;">{{ $product->title }}</h1>
             
             <div class="p-price-row" style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem;">
-                <span class="p-current-price" id="p-price-display" style="font-size: 2rem; font-weight: 800; color: var(--accent-color);">₹{{ number_format($product->discounted_price, 2) }}</span>
+                <span class="p-current-price" id="p-price-display" style="font-size: 2rem; font-weight: 800; color: var(--accent-color);">{{ $currentTenant->currency ?? '₹' }}{{ number_format($product->discounted_price, 2) }}</span>
                 @if($product->compare_at_price > $product->discounted_price)
                     <div style="display: flex; align-items: center; gap: 0.5rem;">
-                        <span class="p-compare-at" style="font-size: 1.1rem; text-decoration: line-through; color: var(--text-muted);">₹{{ number_format($product->compare_at_price, 2) }}</span>
+                        <span class="p-compare-at" style="font-size: 1.1rem; text-decoration: line-through; color: var(--text-muted);">{{ $currentTenant->currency ?? '₹' }}{{ number_format($product->compare_at_price, 2) }}</span>
                         @php $discount = round((($product->compare_at_price - $product->discounted_price) / $product->compare_at_price) * 100); @endphp
                         <span class="p-discount-badge" style="background: #ecfdf5; color: var(--accent-color); padding: 0.2rem 0.5rem; border-radius: 9999px; font-size: 0.7rem; font-weight: 800; white-space: nowrap;">Save {{ $discount }}%</span>
                     </div>
@@ -345,7 +345,7 @@
                     @foreach($product->variants as $variant)
                         <div class="size-rect {{ $loop->first ? 'active' : '' }}" onclick="selectVariant(this, {{ $variant->price ?? 0 }}, '{{ $variant->size }}', {{ $variant->id ?? 0 }}, {{ $variant->stock ?? 999 }}, {{ $product->continue_selling_when_out_of_stock ? 'true' : 'false' }})" style="border: 2px solid {{ $loop->first ? 'var(--accent-color)' : 'var(--border-color)' }}; border-radius: 0.75rem; padding: 0.75rem 1.25rem; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 1rem; background: #fff;">
                             <span class="s-size" style="font-weight: 700; color: var(--primary-color);">{{ $variant->size }}</span>
-                            <span class="s-price" style="color: var(--text-muted);">₹{{ number_format($variant->price, 2) }}</span>
+                            <span class="s-price" style="color: var(--text-muted);">{{ $currentTenant->currency ?? '₹' }}{{ number_format($variant->price, 2) }}</span>
                         </div>
                     @endforeach
                 </div>
@@ -372,10 +372,10 @@
                                         ({{ $pb_variant->size }})
                                     @endif
                                 </span>
-                                <span class="deal-save" style="display: block; font-size: 0.75rem; color: #10b981; font-weight: 700;">Save ₹{{ number_format(($pb_variant ? $pb_variant->price : $pb_prod->starting_price) * $pb_prod->pivot->quantity - $pb->total_price, 2) }} instantly</span>
+                                <span class="deal-save" style="display: block; font-size: 0.75rem; color: #10b981; font-weight: 700;">Save {{ $currentTenant->currency ?? '₹' }}{{ number_format(($pb_variant ? $pb_variant->price : $pb_prod->starting_price) * $pb_prod->pivot->quantity - $pb->total_price, 2) }} instantly</span>
                             </div>
                             <button onclick="addPackToCart(event, {{ $pb->id }})" class="btn-deal-add" style="background: var(--primary-color); color: #fff; border: none; padding: 0.6rem 1rem; border-radius: 0.5rem; font-weight: 700; font-size: 0.8rem; cursor: pointer; transition: 0.2s;">
-                                Add @ ₹{{ number_format($pb->total_price, 2) }}
+                                Add @ {{ $currentTenant->currency ?? '₹' }}{{ number_format($pb->total_price, 2) }}
                             </button>
                         </div>
                         @endif
@@ -401,7 +401,7 @@
                     @if($isOut)
                         OUT OF STOCK
                     @else
-                        ADD TO CART <span class="btn-price-display">₹{{ number_format($product->discounted_price, 2) }}</span>
+                        ADD TO CART <span class="btn-price-display">{{ $currentTenant->currency ?? '₹' }}{{ number_format($product->discounted_price, 2) }}</span>
                     @endif
                 </button>
             </div>
@@ -437,11 +437,11 @@
                 <p>{!! nl2br(e($product->description)) !!}</p>
             </div>
             <div class="tab-content-minimal d-none" id="tab-shipping" style="font-size: 0.95rem; color: var(--text-muted); line-height: 1.6;">
-                <p>{!! nl2br(e($currentTenant->delivery_info ?? 'We deliver fresh groceries directly to your home within 2 hours. Free shipping applies to all orders over ₹499. Orders are packed using eco-friendly, hygienically sealed bags.')) !!}</p>
+                <p>{!! nl2br(e($currentTenant->delivery_info ?? 'We deliver fresh groceries directly to your home within 2 hours. Free shipping applies to all orders over {{ $currentTenant->currency ?? '₹' }}499. Orders are packed using eco-friendly, hygienically sealed bags.')) !!}</p>
             </div>
             @else
             <div class="tab-content-minimal" id="tab-shipping" style="font-size: 0.95rem; color: var(--text-muted); line-height: 1.6;">
-                <p>{!! nl2br(e($currentTenant->delivery_info ?? 'We deliver fresh groceries directly to your home within 2 hours. Free shipping applies to all orders over ₹499. Orders are packed using eco-friendly, hygienically sealed bags.')) !!}</p>
+                <p>{!! nl2br(e($currentTenant->delivery_info ?? 'We deliver fresh groceries directly to your home within 2 hours. Free shipping applies to all orders over {{ $currentTenant->currency ?? '₹' }}499. Orders are packed using eco-friendly, hygienically sealed bags.')) !!}</p>
             </div>
             @endif
         </div>
@@ -506,7 +506,7 @@
             maximumFractionDigits: 2
         }).format(price);
         
-        document.getElementById('p-price-display').innerText = '₹' + formattedPrice;
+        document.getElementById('p-price-display').innerText = '{{ $currentTenant->currency ?? '₹' }}' + formattedPrice;
         
         let isOut = stock <= 0 && !continueSelling;
         let btn = document.getElementById('add-to-cart-page-btn');
@@ -523,7 +523,7 @@
             buyBtn.style.cursor = 'not-allowed';
             buyBtn.disabled = true;
         } else {
-            btn.innerHTML = 'ADD TO CART <span class="btn-price-display">₹' + formattedPrice + '</span>';
+            btn.innerHTML = 'ADD TO CART <span class="btn-price-display">{{ $currentTenant->currency ?? '₹' }}' + formattedPrice + '</span>';
             btn.style.background = 'var(--accent-color)';
             btn.style.cursor = 'pointer';
             btn.disabled = false;

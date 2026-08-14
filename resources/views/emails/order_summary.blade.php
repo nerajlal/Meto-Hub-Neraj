@@ -110,20 +110,20 @@
                                 @endif
                             </td>
                             <td>{{ $item->quantity }}</td>
-                            <td>{{ $order->tenant->currency ?? '₹' }}{{ number_format($item->price, 2) }}</td>
-                            <td>{{ $order->tenant->currency ?? '₹' }}{{ number_format($item->total, 2) }}</td>
+                            <td>{{ $order->tenant->currency ?? '{{ $currentTenant->currency ?? '₹' }}' }}{{ number_format($item->price, 2) }}</td>
+                            <td>{{ $order->tenant->currency ?? '{{ $currentTenant->currency ?? '₹' }}' }}{{ number_format($item->total, 2) }}</td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
 
             <div class="totals">
-                <p>Subtotal: {{ $order->tenant->currency ?? '₹' }}{{ number_format($order->subtotal, 2) }}</p>
-                <p>Shipping: {{ $order->tenant->currency ?? '₹' }}{{ number_format($order->shipping_cost, 2) }}</p>
+                <p>Subtotal: {{ $order->tenant->currency ?? '{{ $currentTenant->currency ?? '₹' }}' }}{{ number_format($order->subtotal, 2) }}</p>
+                <p>Shipping: {{ $order->tenant->currency ?? '{{ $currentTenant->currency ?? '₹' }}' }}{{ number_format($order->shipping_cost, 2) }}</p>
                 @if($order->tax_amount > 0)
-                    <p>{{ $order->tax_name ?? 'Tax' }} ({{ $order->tax_rate }}%): {{ $order->tenant->currency ?? '₹' }}{{ number_format($order->tax_amount, 2) }}</p>
+                    <p>{{ $order->tax_name ?? 'Tax' }} ({{ $order->tax_rate }}%): {{ $order->tenant->currency ?? '{{ $currentTenant->currency ?? '₹' }}' }}{{ number_format($order->tax_amount, 2) }}</p>
                 @endif
-                <p class="total-amount">Total: {{ $order->tenant->currency ?? '₹' }}{{ number_format($order->total_amount, 2) }}</p>
+                <p class="total-amount">Total: {{ $order->tenant->currency ?? '{{ $currentTenant->currency ?? '₹' }}' }}{{ number_format($order->total_amount, 2) }}</p>
             </div>
 
             <div class="shipping-address">

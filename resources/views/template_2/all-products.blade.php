@@ -74,7 +74,7 @@
             </div>
 
             <div class="filter-group" style="margin-bottom: 1.5rem;">
-                <label style="font-weight: 700; color: var(--primary-color); display: block; margin-bottom: 0.75rem;">Price Range (₹)</label>
+                <label style="font-weight: 700; color: var(--primary-color); display: block; margin-bottom: 0.75rem;">Price Range ({{ $currentTenant->currency ?? '₹' }})</label>
                 <div style="display: flex; gap: 0.5rem; align-items: center;">
                     <input type="number" name="min_price" value="{{ $currentMinPrice }}" placeholder="Min" style="width: 100%; padding: 0.5rem; border-radius: 0.5rem; border: 1px solid var(--border-color);">
                     <span style="color: var(--text-muted);">-</span>
@@ -156,7 +156,7 @@
                         </div>
                     </a>
                     <div class="card-info" style="padding: 1rem; display: flex; flex-direction: column; gap: 0.25rem;">
-                        <span class="p-price" style="font-weight: 800; font-size: 1.15rem; color: var(--accent-color);">₹{{ number_format($bundle->total_price, 2) }}</span>
+                        <span class="p-price" style="font-weight: 800; font-size: 1.15rem; color: var(--accent-color);">{{ $currentTenant->currency ?? '₹' }}{{ number_format($bundle->total_price, 2) }}</span>
                         <a href="{{ route('velvet.combo', ['id' => $bundle->id]) }}" class="p-name" style="font-weight: 700; font-size: 0.95rem; color: var(--primary-color); text-decoration: none; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; height: 2.6rem;">{{ $bundle->title }}</a>
                         <span class="p-meta" style="font-size: 0.75rem; color: var(--text-muted);">{{ $bundle->products->count() }} Products Included</span>
                     </div>

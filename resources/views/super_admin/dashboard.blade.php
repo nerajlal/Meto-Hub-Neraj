@@ -39,7 +39,7 @@
             <div class="d-flex justify-content-between align-items-start">
                 <div>
                     <span class="text-uppercase small fw-bold text-muted d-block mb-1">Platform GMV</span>
-                    <h3 class="fw-bold text-dark mb-0">₹{{ number_format($totalRevenue, 2) }}</h3>
+                    <h3 class="fw-bold text-dark mb-0">{{ $currentTenant->currency ?? '₹' }}{{ number_format($totalRevenue, 2) }}</h3>
                 </div>
                 <div class="bg-success bg-opacity-10 text-success p-2 rounded-3">
                     <i class="fas fa-indian-rupee-sign fa-lg"></i>
@@ -261,7 +261,7 @@
                         @endphp
                         <span class="badge {{ $colorClass }} bg-opacity-10 px-2 py-1 rounded small fw-bold text-capitalize">{{ $order->status }}</span>
                     </td>
-                    <td class="px-3 py-3 text-dark fw-bold text-end">₹{{ number_format($order->total_amount, 2) }}</td>
+                    <td class="px-3 py-3 text-dark fw-bold text-end">{{ $currentTenant->currency ?? '₹' }}{{ number_format($order->total_amount, 2) }}</td>
                 </tr>
                 @empty
                 <tr>

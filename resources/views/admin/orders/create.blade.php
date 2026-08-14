@@ -208,13 +208,13 @@
                 
                 <div class="d-flex justify-content-between mb-2 small text-secondary">
                     <span>Subtotal</span>
-                    <span id="summary_subtotal">₹0.00</span>
+                    <span id="summary_subtotal">{{ $currentTenant->currency ?? '₹' }}0.00</span>
                 </div>
                 
                 <div class="mb-3">
                     <label for="shipping_cost" class="form-label small text-secondary d-flex justify-content-between">
                         <span>Shipping Cost</span>
-                        <span id="display_shipping_cost">₹0.00</span>
+                        <span id="display_shipping_cost">{{ $currentTenant->currency ?? '₹' }}0.00</span>
                     </label>
                     <input type="number" class="form-control form-control-sm" id="shipping_cost" name="shipping_cost" value="0" min="0" step="1" oninput="calculateTotals()">
                 </div>
@@ -222,7 +222,7 @@
                 <div class="mb-3">
                     <label for="discount_amount" class="form-label small text-secondary d-flex justify-content-between">
                         <span>Discount Amount</span>
-                        <span id="display_discount_amount">-₹0.00</span>
+                        <span id="display_discount_amount">-{{ $currentTenant->currency ?? '₹' }}0.00</span>
                     </label>
                     <input type="number" class="form-control form-control-sm" id="discount_amount" name="discount_amount" value="0" min="0" step="1" oninput="calculateTotals()">
                 </div>
@@ -231,7 +231,7 @@
 
                 <div class="d-flex justify-content-between mb-0 fw-bold text-dark fs-5">
                     <span>Total</span>
-                    <span id="summary_total">₹0.00</span>
+                    <span id="summary_total">{{ $currentTenant->currency ?? '₹' }}0.00</span>
                 </div>
             </div>
 
@@ -456,7 +456,7 @@
             if (product.variants && product.variants.length > 0) {
                 product.variants.forEach((v, idx) => {
                     const selected = idx === 0 ? 'selected' : '';
-                    variantSelect.innerHTML += `<option value="${v.id}" data-price="${v.price}" ${selected}>Size: ${v.size} (₹${v.price})</option>`;
+                    variantSelect.innerHTML += `<option value="${v.id}" data-price="${v.price}" ${selected}>Size: ${v.size} ({{ $currentTenant->currency ?? '₹' }}${v.price})</option>`;
                 });
                 
                 // Set default variant price
@@ -501,10 +501,10 @@
         const total = Math.max(0, subtotal + shipping - discount);
 
         // Display updates
-        document.getElementById('summary_subtotal').textContent = `₹${subtotal.toFixed(2)}`;
-        document.getElementById('display_shipping_cost').textContent = `₹${shipping.toFixed(2)}`;
-        document.getElementById('display_discount_amount').textContent = `-₹${discount.toFixed(2)}`;
-        document.getElementById('summary_total').textContent = `₹${total.toFixed(2)}`;
+        document.getElementById('summary_subtotal').textContent = `{{ $currentTenant->currency ?? '₹' }}${subtotal.toFixed(2)}`;
+        document.getElementById('display_shipping_cost').textContent = `{{ $currentTenant->currency ?? '₹' }}${shipping.toFixed(2)}`;
+        document.getElementById('display_discount_amount').textContent = `-{{ $currentTenant->currency ?? '₹' }}${discount.toFixed(2)}`;
+        document.getElementById('summary_total').textContent = `{{ $currentTenant->currency ?? '₹' }}${total.toFixed(2)}`;
     }
 </script>
 @endsection

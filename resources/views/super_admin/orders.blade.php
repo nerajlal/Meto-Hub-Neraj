@@ -54,7 +54,7 @@
                         <span class="badge {{ $colorClass }} bg-opacity-10 px-2 py-1 rounded small fw-bold text-capitalize">{{ $order->status }}</span>
                     </td>
                     <td class="px-3 py-3 text-muted small">{{ $order->created_at->format('M d, Y H:i') }}</td>
-                    <td class="px-3 py-3 text-dark fw-bold text-end">₹{{ number_format($order->total_amount, 2) }}</td>
+                    <td class="px-3 py-3 text-dark fw-bold text-end">{{ $currentTenant->currency ?? '₹' }}{{ number_format($order->total_amount, 2) }}</td>
                 </tr>
                 @empty
                 <tr>

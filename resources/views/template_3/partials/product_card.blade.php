@@ -46,9 +46,9 @@
 
     <div class="card-content">
         <div class="p-price-wrap">
-            <span class="p-price">₹{{ number_format($product->discounted_price, 2) }}</span>
+            <span class="p-price">{{ $currentTenant->currency ?? '₹' }}{{ number_format($product->discounted_price, 2) }}</span>
             @if($product->compare_at_price > $product->discounted_price)
-                <span class="p-compare">₹{{ number_format($product->compare_at_price, 2) }}</span>
+                <span class="p-compare">{{ $currentTenant->currency ?? '₹' }}{{ number_format($product->compare_at_price, 2) }}</span>
             @endif
         </div>
         

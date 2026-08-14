@@ -227,7 +227,7 @@
                 </div>
                 <div class="flex-grow-1">
                     <span class="d-block small fw-medium text-dark">${title}</span>
-                    <p class="mb-0 small text-muted">Starts at ₹ ${price}</p>
+                    <p class="mb-0 small text-muted">Starts at {{ $currentTenant->currency ?? '₹' }} ${price}</p>
                 </div>
                 <button type="button" onclick="removeProduct('${uniqueId}')" class="btn btn-link btn-sm p-0 text-secondary hover-text-danger"><i class="fas fa-times"></i></button>
             `;
@@ -284,7 +284,7 @@
             // Ensure non-negative
             finalPrice = Math.max(0, finalPrice);
 
-            document.getElementById('summary_total').innerText = '₹ ' + finalPrice.toFixed(2);
+            document.getElementById('summary_total').innerText = '{{ $currentTenant->currency ?? '₹' }} ' + finalPrice.toFixed(2);
         }
     </script>
 </div>

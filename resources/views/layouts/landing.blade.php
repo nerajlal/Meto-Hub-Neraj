@@ -915,7 +915,7 @@
     }
 
     .engine-list li::before {
-      content: 'âœ“';
+      content: '\2713';
       position: absolute;
       left: 0;
       top: 0;
@@ -1777,7 +1777,7 @@
     }
 
     .plan-card li::before {
-      content: 'âœ“';
+      content: '\2713';
       position: absolute;
       left: 0;
       color: var(--secondary);
@@ -2464,7 +2464,7 @@
             <span class="sim-badge">SaaS Simulation Tool</span>
             <p>Click below to simulate clicking the verification link in your email.</p>
             <button onclick="simulateVerificationSuccess()" class="saas-simulate-btn">Simulate Email Verification Link
-              Click âœ“</button>
+              Click ✓</button>
           </div>
         </div>
       </div>
@@ -2472,7 +2472,7 @@
       <!-- STAGE 4: Success / Welcome Screen -->
       <div id="saasStageSuccess" class="saas-stage">
         <div class="saas-success-container">
-          <div class="saas-success-icon-check">âœ“</div>
+          <div class="saas-success-icon-check">✓</div>
           <h2>Account Verified!</h2>
           <p>Your email has been verified successfully. Welcome to Slot Store! Let's get started setting up your
             customized

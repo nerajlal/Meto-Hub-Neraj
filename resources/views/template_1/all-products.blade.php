@@ -74,7 +74,7 @@
             </div>
 
             <div class="filter-group" style="margin-bottom: 1.5rem;">
-                <label style="font-weight: 700; color: var(--primary-color); display: block; margin-bottom: 0.75rem;">Price Range (₹)</label>
+                <label style="font-weight: 700; color: var(--primary-color); display: block; margin-bottom: 0.75rem;">Price Range ({{ $currentTenant->currency ?? '₹' }})</label>
                 <div style="display: flex; gap: 0.5rem; align-items: center;">
                     <input type="number" name="min_price" value="{{ $currentMinPrice }}" placeholder="Min" style="width: 100%; padding: 0.5rem; border-radius: 0.5rem; border: 1px solid var(--border-color);">
                     <span style="color: var(--text-muted);">-</span>

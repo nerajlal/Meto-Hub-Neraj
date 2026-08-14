@@ -61,7 +61,7 @@
                 @for ($i = 1; $i <= 5; $i++)
                 <tr>
                     <td class="px-4 py-3">Dec {{ 31 - $i }}, 2025</td>
-                    <td class="px-4 py-3 text-end fw-medium text-dark">{{ $i % 2 == 0 ? '₹1,200.00' : '150' }}</td>
+                    <td class="px-4 py-3 text-end fw-medium text-dark">{{ $i % 2 == 0 ? '{{ $currentTenant->currency ?? '₹' }}1,200.00' : '150' }}</td>
                     <td class="px-4 py-3 text-end text-success">+5%</td>
                 </tr>
                 @endfor

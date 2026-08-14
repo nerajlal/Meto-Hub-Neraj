@@ -57,7 +57,7 @@
                     <div class="col-6">
                         <label class="form-label small fw-bold text-secondary">4. Pack Price</label>
                         <div class="input-group">
-                            <span class="input-group-text bg-light border-end-0 small">₹</span>
+                            <span class="input-group-text bg-light border-end-0 small">{{ $currentTenant->currency ?? '₹' }}</span>
                             <input type="number" name="pack_price" class="form-control border-start-0" placeholder="0.00" required>
                         </div>
                     </div>
@@ -208,7 +208,7 @@
                     .then(variants => {
                         packVariantSelect.innerHTML = '<option value="">Choose a size...</option>';
                         variants.forEach(v => {
-                            packVariantSelect.innerHTML += `<option value="${v.id}">${v.size} - ₹${v.price}</option>`;
+                            packVariantSelect.innerHTML += `<option value="${v.id}">${v.size} - {{ $currentTenant->currency ?? '₹' }}${v.price}</option>`;
                         });
                         variantContainer.classList.remove('d-none');
                     })

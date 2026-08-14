@@ -33,7 +33,7 @@
                  <div class="card border shadow-sm overflow-hidden">
                      <div class="card-header bg-light border-bottom d-flex justify-content-between align-items-center p-3">
                         <h2 class="h6 fw-bold text-secondary mb-0">Orders</h2>
-                        <span class="small text-muted">Total spent: <span class="fw-bold text-dark">₹{{ number_format($customer->total_spent ?? 0, 2) }}</span></span>
+                        <span class="small text-muted">Total spent: <span class="fw-bold text-dark">{{ $currentTenant->currency ?? '₹' }}{{ number_format($customer->total_spent ?? 0, 2) }}</span></span>
                      </div>
                      
                      <div class="table-responsive">
@@ -72,7 +72,7 @@
                                         </span>
                                     </td>
                                     <td class="px-3 py-3 text-end fw-medium text-dark">
-                                        ₹{{ number_format($order->total_amount, 2) }}
+                                        {{ $currentTenant->currency ?? '₹' }}{{ number_format($order->total_amount, 2) }}
                                     </td>
                                 </tr>
                                 @empty

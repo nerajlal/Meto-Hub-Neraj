@@ -32,7 +32,7 @@
             <div class="d-flex justify-content-between align-items-center mb-2">
                 <h3 class="h6 text-muted text-uppercase small fw-bold mb-0">Total Sales</h3>
             </div>
-            <div class="h3 fw-bold text-dark mb-1">₹{{ number_format($totalSales, 2) }}</div>
+            <div class="h3 fw-bold text-dark mb-1">{{ $currentTenant->currency ?? '₹' }}{{ number_format($totalSales, 2) }}</div>
             <div class="small {{ $salesGrowth >= 0 ? 'text-success' : 'text-danger' }} fw-medium">
                  <i class="fas fa-arrow-{{ $salesGrowth >= 0 ? 'up' : 'down' }} me-1"></i> {{ number_format(abs($salesGrowth), 1) }}%
             </div>
@@ -64,7 +64,7 @@
             <div class="d-flex justify-content-between align-items-center mb-2">
                 <h3 class="h6 text-muted text-uppercase small fw-bold mb-0">Avg. Order Value</h3>
             </div>
-            <div class="h3 fw-bold text-dark mb-1">₹{{ number_format($avgOrderValue, 2) }}</div>
+            <div class="h3 fw-bold text-dark mb-1">{{ $currentTenant->currency ?? '₹' }}{{ number_format($avgOrderValue, 2) }}</div>
             <div class="small {{ $aovGrowth >= 0 ? 'text-success' : 'text-danger' }} fw-medium">
                  <i class="fas fa-arrow-{{ $aovGrowth >= 0 ? 'up' : 'down' }} me-1"></i> {{ number_format(abs($aovGrowth), 1) }}%
             </div>
@@ -125,7 +125,7 @@
                                 </div>
                             </td>
                             <td class="px-3 py-3 text-end text-secondary">{{ $product->total_qty }}</td>
-                            <td class="px-3 py-3 text-end fw-medium text-dark">₹{{ number_format($product->total_revenue, 2) }}</td>
+                            <td class="px-3 py-3 text-end fw-medium text-dark">{{ $currentTenant->currency ?? '₹' }}{{ number_format($product->total_revenue, 2) }}</td>
                         </tr>
                         @empty
                         <tr>

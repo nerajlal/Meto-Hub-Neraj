@@ -323,7 +323,7 @@
                 </div>
 
                 <button type="submit" class="btn-complete-order" style="width: 100%; background: var(--accent-color); color: #fff; border: none; padding: 1.25rem; border-radius: 9999px; font-weight: 800; font-size: 1.2rem; cursor: pointer; transition: 0.2s;">
-                    Complete Order • ₹{{ number_format($total, 2) }}
+                    Complete Order • {{ $currentTenant->currency ?? '₹' }}{{ number_format($total, 2) }}
                 </button>
             </form>
         </div>
@@ -351,9 +351,9 @@
                         </div>
                         <div style="display: flex; flex-direction: column; align-items: flex-end;">
                             @if(isset($item['line_savings']) && $item['line_savings'] > 0)
-                                <span style="text-decoration: line-through; color: #94a3b8; font-size: 0.75rem; margin-bottom: 2px;">₹{{ number_format($item['price'] * $item['quantity'], 2) }}</span>
+                                <span style="text-decoration: line-through; color: #94a3b8; font-size: 0.75rem; margin-bottom: 2px;">{{ $currentTenant->currency ?? '₹' }}{{ number_format($item['price'] * $item['quantity'], 2) }}</span>
                             @endif
-                            <span style="font-weight: 700; color: var(--primary-color); font-size: 0.95rem;">₹{{ number_format(($item['price'] * $item['quantity']) - ($item['line_savings'] ?? 0), 2) }}</span>
+                            <span style="font-weight: 700; color: var(--primary-color); font-size: 0.95rem;">{{ $currentTenant->currency ?? '₹' }}{{ number_format(($item['price'] * $item['quantity']) - ($item['line_savings'] ?? 0), 2) }}</span>
                         </div>
                     </div>
                     @endforeach
@@ -362,12 +362,12 @@
                 <div style="border-top: 1px solid var(--border-color); padding-top: 1.5rem;">
                     <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem; font-size: 0.95rem; color: var(--text-muted);">
                         <span>Subtotal</span>
-                        <span>₹{{ number_format($subtotal, 2) }}</span>
+                        <span>{{ $currentTenant->currency ?? '₹' }}{{ number_format($subtotal, 2) }}</span>
                     </div>
                     @if($savings > 0)
                     <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem; font-size: 0.95rem; color: #10b981; font-weight: 600;">
                         <span>Volume Discount</span>
-                        <span>-₹{{ number_format($savings, 2) }}</span>
+                        <span>-{{ $currentTenant->currency ?? '₹' }}{{ number_format($savings, 2) }}</span>
                     </div>
                     @endif
                     <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem; font-size: 0.95rem; color: var(--text-muted);">
@@ -377,12 +377,12 @@
                     @if(isset($taxName) && isset($taxRate) && $taxAmount > 0)
                     <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem; font-size: 0.95rem; color: var(--text-muted);">
                         <span>{{ $taxName }} ({{ $taxRate }}%)</span>
-                        <span>₹{{ number_format($taxAmount, 2) }}</span>
+                        <span>{{ $currentTenant->currency ?? '₹' }}{{ number_format($taxAmount, 2) }}</span>
                     </div>
                     @endif
                     <div style="border-top: 2px solid var(--border-color); padding-top: 1rem; display: flex; justify-content: space-between; font-size: 1.4rem; font-weight: 800; color: var(--primary-color);">
                         <span>Grand Total</span>
-                        <span>₹{{ number_format($total, 2) }}</span>
+                        <span>{{ $currentTenant->currency ?? '₹' }}{{ number_format($total, 2) }}</span>
                     </div>
                 </div>
 

@@ -190,7 +190,7 @@
                     <div style="background: #f8fafc; height: 160px; border-radius: 0.5rem; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
                         <i class="fa-solid fa-basket-shopping fa-3x text-muted opacity-20"></i>
                     </div>
-                    <span style="font-weight: 800; font-size: 1.15rem; color: var(--accent-color); display: block;">₹99.00</span>
+                    <span style="font-weight: 800; font-size: 1.15rem; color: var(--accent-color); display: block;">{{ $currentTenant->currency ?? '₹' }}99.00</span>
                     <h3 style="font-size: 0.95rem; font-weight: 700; margin: 0.5rem 0;">{{ $fallbackName }}</h3>
                     <button class="cart-add-btn" style="position: absolute; bottom: 10px; right: 10px; width: 36px; height: 36px; border-radius: 50%; background: #f1f5f9; border: none; display: flex; align-items: center; justify-content: center;">
                         <i class="fa-solid fa-plus"></i>

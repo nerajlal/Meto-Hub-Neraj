@@ -82,7 +82,7 @@
                     <td class="px-3 py-3 fw-semibold text-dark"><a href="{{ route('admin.orders.show', $order->id) }}" class="text-decoration-none text-dark hover-primary">{{ $order->order_number }}</a></td>
                     <td class="px-3 py-3 text-secondary">{{ $order->created_at->format('M d, Y h:i A') }}</td>
                     <td class="px-3 py-3">{{ $order->customer_name }}</td>
-                    <td class="px-3 py-3 text-dark">₹{{ number_format($order->total_amount, 2) }}</td>
+                    <td class="px-3 py-3 text-dark">{{ $currentTenant->currency ?? '₹' }}{{ number_format($order->total_amount, 2) }}</td>
                     <td class="px-3 py-3">
                         @if($order->payment_status == 'paid')
                             <span class="badge bg-success bg-opacity-10 text-success px-2 py-1 rounded-pill fw-medium">Paid</span>

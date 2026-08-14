@@ -77,7 +77,7 @@
                                                 @if($item->bundle) (Bundle) @endif
                                             </span>
                                             <span class="text-secondary small">
-                                                 ₹{{ number_format($price * $item->quantity, 2) }}
+                                                 {{ $currentTenant->currency ?? '₹' }}{{ number_format($price * $item->quantity, 2) }}
                                             </span>
                                         </div>
                                     </div>
@@ -101,7 +101,7 @@
                                 return 0;
                             });
                         @endphp
-                        ₹{{ number_format($cartTotal, 2) }}
+                        {{ $currentTenant->currency ?? '₹' }}{{ number_format($cartTotal, 2) }}
                     </td>
                     <td class="px-3 py-3 text-end align-top text-muted small">
                         {{ $user->cart->first()->updated_at->diffForHumans() }}
