@@ -58,7 +58,7 @@
             </p>
             
             <div class="price-block">
-                <span class="current-price">
+                <span class="current-price" id="t3-price-display">
                     ₹{{ number_format($product->discounted_price, 2) }}
                 </span>
                 @if($product->compare_at_price > $product->discounted_price)
@@ -82,7 +82,7 @@
                 <h4>Select Size / Weight</h4>
                 <div class="variant-options">
                     @foreach($product->variants as $index => $variant)
-                        <button class="variant-btn {{ $index === 0 ? 'active' : '' }}" onclick="selectVariant(this, '{{ $variant->id }}', '{{ $variant->size }}')">
+                        <button class="variant-btn {{ $index === 0 ? 'active' : '' }}" onclick="selectVariant(this, '{{ $variant->id ?? 0 }}', '{{ $variant->size }}', {{ $variant->price ?? 0 }}, {{ $variant->stock ?? 999 }}, {{ $product->continue_selling_when_out_of_stock ? 'true' : 'false' }})">
                             {{ $variant->size }}
                         </button>
                     @endforeach
@@ -155,11 +155,41 @@
         element.classList.add('active');
     }
     
-    function selectVariant(element, id, size) {
+    function selectVariant(element, id, size, price, stock, continueSelling) {
         document.querySelectorAll('.variant-btn').forEach(btn => btn.classList.remove('active'));
         element.classList.add('active');
         selectedVariantId = id;
         selectedSize = size;
+        
+        // Update price display if passed
+        if(price !== undefined) {
+            const formattedPrice = new Intl.NumberFormat('en-IN', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }).format(price);
+            const priceDisplay = document.getElementById('t3-price-display');
+            if (priceDisplay) {
+                priceDisplay.innerText = '₹' + formattedPrice;
+            }
+        }
+        
+        // Handle out of stock state
+        if(stock !== undefined && continueSelling !== undefined) {
+            let isOut = stock <= 0 && !continueSelling;
+            let btn = document.getElementById('add-to-cart-page-btn');
+            if (isOut) {
+                btn.innerHTML = 'OUT OF STOCK';
+                btn.style.background = '#cbd5e1';
+                btn.style.cursor = 'not-allowed';
+                btn.disabled = true;
+            } else {
+                btn.innerHTML = 'Add to Cart';
+                btn.style.background = 'var(--primary-color)';
+                btn.style.cursor = 'pointer';
+                btn.disabled = false;
+            }
+        }
+        
         syncMainProductUI();
     }
 
