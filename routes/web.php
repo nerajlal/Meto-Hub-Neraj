@@ -24,7 +24,7 @@ Route::get('/', function(Illuminate\Http\Request $request) {
     
     // Fallback if domain not found
     return view('landing.new-landing');
-})->name('landing')->middleware([\Illuminate\Session\Middleware\StartSession::class]);
+})->name('landing');
 
 // Demo routes to set tenant
 Route::get('/demo/{tenantId}', function($tenantId) {
@@ -38,6 +38,17 @@ Route::get('/home1', function() {
 
 Route::get('/home', [App\Http\Controllers\LandingController::class, 'index'])->name('landing.old');
 Route::get('/templates', [App\Http\Controllers\LandingController::class, 'templates'])->name('landing.templates');
+
+Route::get('/features', [App\Http\Controllers\LandingController::class, 'features'])->name('landing.features');
+Route::get('/solutions', [App\Http\Controllers\LandingController::class, 'solutions'])->name('landing.solutions');
+Route::get('/pricing', [App\Http\Controllers\LandingController::class, 'pricing'])->name('landing.pricing');
+Route::get('/themes', [App\Http\Controllers\LandingController::class, 'themes'])->name('landing.themes');
+Route::get('/analytics', [App\Http\Controllers\LandingController::class, 'analytics'])->name('landing.analytics');
+Route::get('/contact', [App\Http\Controllers\LandingController::class, 'contact'])->name('landing.contact');
+Route::get('/about', [App\Http\Controllers\LandingController::class, 'about'])->name('landing.about');
+Route::get('/privacy-policy', [App\Http\Controllers\LandingController::class, 'privacy'])->name('landing.privacy');
+Route::get('/terms', [App\Http\Controllers\LandingController::class, 'terms'])->name('landing.terms');
+
 Route::get('/blogs', [App\Http\Controllers\LandingController::class, 'blogs'])->name('landing.blogs');
 Route::get('/blogs/{id}', [App\Http\Controllers\LandingController::class, 'blogShow'])->name('landing.blog.show');
 Route::post('/demo-request', [App\Http\Controllers\LandingController::class, 'handleDemoRequest'])->name('demo.request');

@@ -18,6 +18,16 @@ class LandingController extends Controller
         return view('landing.templates');
     }
 
+    public function features() { return view('landing.features'); }
+    public function solutions() { return view('landing.solutions'); }
+    public function pricing() { return view('landing.pricing'); }
+    public function themes() { return view('landing.themes'); }
+    public function analytics() { return view('landing.analytics'); }
+    public function contact() { return view('landing.contact'); }
+    public function about() { return view('landing.about'); }
+    public function privacy() { return view('landing.privacy'); }
+    public function terms() { return view('landing.terms'); }
+
     public function handleDemoRequest(Request $request)
     {
         $validated = $request->validate([
