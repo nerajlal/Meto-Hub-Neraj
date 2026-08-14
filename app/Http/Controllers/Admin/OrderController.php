@@ -61,7 +61,11 @@ class OrderController extends Controller
     {
         $order = Order::with(['items.product', 'items.bundle.products.variants', 'user', 'deliveryPartner'])->findOrFail($id);
         $deliveryPartners = DeliveryPartner::where('status', true)->orderBy('is_default', 'desc')->get();
-        return view('admin.orders.show', compact('order', 'deliveryPartners'));
+        
+        $tenantId = session('active_tenant_id') ?? request()->route('tenant') ?? 1;
+        $deliveryStaff = \App\Models\User::where('tenant_id', $tenantId)->where('type', 'delivery_boy')->get();
+        
+        return view('admin.orders.show', compact('order', 'deliveryPartners', 'deliveryStaff'));
     }
 
     public function updateStatus(Request $request, $id)
@@ -93,6 +97,23 @@ class OrderController extends Controller
         }
 
         return response()->json(['success' => true, 'message' => 'Order status updated successfully']);
+    }
+
+    public function assignDelivery(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'delivery_partner_id' => 'required|exists:users,id',
+        ]);
+
+        $order = Order::findOrFail($id);
+        
+        // Ensure the assigned user is actually a delivery boy
+        $deliveryBoy = \App\Models\User::where('type', 'delivery_boy')->findOrFail($validated['delivery_partner_id']);
+        
+        $order->delivery_partner_id = $deliveryBoy->id;
+        $order->save();
+
+        return redirect()->back()->with('success', 'Order assigned to ' . $deliveryBoy->name . ' successfully.');
     }
 
     public function print($id)

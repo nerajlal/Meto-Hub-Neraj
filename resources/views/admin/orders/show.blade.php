@@ -212,6 +212,30 @@
             </div>
             @endif
 
+            <!-- Delivery Staff Assignment Card -->
+            <div class="card border shadow-sm overflow-hidden mb-4">
+                <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center py-3">
+                    <h2 class="h6 fw-semibold text-secondary mb-0"><i class="fa-solid fa-motorcycle text-success me-2"></i> Local Delivery Boy</h2>
+                </div>
+                <div class="card-body p-3">
+                    <form action="{{ route('admin.orders.assign-delivery', $order->id) }}" method="POST">
+                        @csrf
+                        <div class="mb-3">
+                            <label class="form-label small fw-medium text-muted">Assign to Delivery Boy</label>
+                            <select name="delivery_partner_id" class="form-select" required>
+                                <option value="">Select a delivery boy</option>
+                                @foreach($deliveryStaff as $staff)
+                                    <option value="{{ $staff->id }}" {{ $order->delivery_partner_id == $staff->id ? 'selected' : '' }}>
+                                        {{ $staff->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-sm btn-success w-100">Update Assignment</button>
+                    </form>
+                </div>
+            </div>
+
         </div>
     </div>
     <!-- Shipment Modal -->

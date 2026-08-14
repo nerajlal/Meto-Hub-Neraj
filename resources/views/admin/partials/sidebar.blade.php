@@ -2,12 +2,20 @@
 
     <nav class="flex-grow-1 overflow-auto py-2">
         <ul class="list-unstyled mb-0 px-2 d-flex flex-column gap-1">
-            <li>
-                <a href="{{ route('admin.dashboard') }}" class="sidebar-item {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
-                    <i class="fa-solid fa-house"></i>
-                    <span>Home</span>
-                </a>
-            </li>
+            @if(auth()->check() && auth()->user()->type === 'delivery_boy')
+                <li>
+                    <a href="{{ route('delivery.dashboard', request()->route('tenant') ?? session('active_tenant_id') ?? 1) }}" class="sidebar-item {{ request()->routeIs('delivery.dashboard') || request()->routeIs('delivery.orders.*') ? 'active' : '' }}">
+                        <i class="fa-solid fa-list-check"></i>
+                        <span>My Deliveries</span>
+                    </a>
+                </li>
+            @else
+                <li>
+                    <a href="{{ route('admin.dashboard') }}" class="sidebar-item {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
+                        <i class="fa-solid fa-house"></i>
+                        <span>Home</span>
+                    </a>
+                </li>
             <li>
                 <a href="{{ route('admin.orders') }}" class="sidebar-item {{ request()->routeIs('admin.orders') ? 'active' : '' }}">
                     <i class="fa-solid fa-inbox"></i>
@@ -88,6 +96,12 @@
                     <span>Delivery Partners</span>
                 </a>
             </li>
+            <li>
+                 <a href="{{ route('admin.delivery-staff.index') }}" class="sidebar-item {{ request()->routeIs('admin.delivery-staff*') ? 'active' : '' }}">
+                    <i class="fa-solid fa-motorcycle"></i>
+                    <span>Delivery Staff</span>
+                </a>
+            </li>
              <li>
                   <a href="{{ route('admin.settings.theme') }}" class="sidebar-item {{ request()->routeIs('admin.settings.theme*') ? 'active' : '' }}">
                      <i class="fa-solid fa-palette"></i>
@@ -125,7 +139,8 @@
                      <i class="fa-solid fa-cash-register"></i>
                      <span>Custom Checkout</span>
                  </a>
-             </li>
+                </li>
+            @endif
         </ul>
 
     </nav>

@@ -177,6 +177,7 @@ Route::prefix('{tenant}/admin')->name('admin.')->middleware(['identify_tenant', 
     Route::get('/orders/{id}', [App\Http\Controllers\Admin\OrderController::class, 'show'])->name('orders.show');
     Route::get('/orders/{id}/print', [App\Http\Controllers\Admin\OrderController::class, 'print'])->name('orders.print');
     Route::post('/orders/{id}/update-status', [App\Http\Controllers\Admin\OrderController::class, 'updateStatus'])->name('orders.update-status');
+    Route::post('/orders/{id}/assign-delivery', [App\Http\Controllers\Admin\OrderController::class, 'assignDelivery'])->name('orders.assign-delivery');
 
     Route::get('/collections', [App\Http\Controllers\Admin\CollectionController::class, 'index'])->name('collections');
     Route::get('/collections/create', [App\Http\Controllers\Admin\CollectionController::class, 'create'])->name('collections.create');
@@ -289,6 +290,14 @@ Route::prefix('{tenant}/admin')->name('admin.')->middleware(['identify_tenant', 
     Route::view('/settings/managers', 'admin.settings.managers.index')->name('settings.managers');
     Route::view('/settings/managers/create', 'admin.settings.managers.create')->name('settings.managers.create');
 
+    // Delivery Staff Management
+    Route::get('/settings/delivery-staff', [App\Http\Controllers\Admin\DeliveryStaffController::class, 'index'])->name('delivery-staff.index');
+    Route::get('/settings/delivery-staff/create', [App\Http\Controllers\Admin\DeliveryStaffController::class, 'create'])->name('delivery-staff.create');
+    Route::post('/settings/delivery-staff', [App\Http\Controllers\Admin\DeliveryStaffController::class, 'store'])->name('delivery-staff.store');
+    Route::get('/settings/delivery-staff/{id}/edit', [App\Http\Controllers\Admin\DeliveryStaffController::class, 'edit'])->name('delivery-staff.edit');
+    Route::put('/settings/delivery-staff/{id}', [App\Http\Controllers\Admin\DeliveryStaffController::class, 'update'])->name('delivery-staff.update');
+    Route::delete('/settings/delivery-staff/{id}', [App\Http\Controllers\Admin\DeliveryStaffController::class, 'destroy'])->name('delivery-staff.destroy');
+
     Route::post('/settings/delivery-partners/{id}/default', [App\Http\Controllers\Admin\DeliveryPartnerController::class, 'setDefault'])->name('settings.delivery-partners.default');
 
     Route::resource('/settings/delivery-partners', App\Http\Controllers\Admin\DeliveryPartnerController::class, [
@@ -311,6 +320,13 @@ Route::prefix('{tenant}/admin')->name('admin.')->middleware(['identify_tenant', 
     Route::post('/settings/storefront', [App\Http\Controllers\Admin\SettingController::class, 'storefrontUpdate'])->name('settings.storefront.update');
     Route::get('/settings/checkout-fields', [App\Http\Controllers\Admin\SettingController::class, 'checkoutFields'])->name('settings.checkout-fields');
     Route::post('/settings/checkout-fields', [App\Http\Controllers\Admin\SettingController::class, 'checkoutFieldsUpdate'])->name('settings.checkout-fields.update');
+});
+
+// Protected Delivery Boy Routes
+Route::prefix('{tenant}/delivery')->name('delivery.')->middleware(['identify_tenant', 'auth'])->group(function () {
+    Route::get('/', [App\Http\Controllers\DeliveryBoy\DeliveryController::class, 'dashboard'])->name('dashboard');
+    Route::get('/orders/{id}', [App\Http\Controllers\DeliveryBoy\DeliveryController::class, 'showOrder'])->name('orders.show');
+    Route::post('/orders/{id}/status', [App\Http\Controllers\DeliveryBoy\DeliveryController::class, 'updateStatus'])->name('orders.update-status');
 });
 
 

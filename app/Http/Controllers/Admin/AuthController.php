@@ -17,6 +17,9 @@ class AuthController extends Controller
             if (Auth::user()->type === 'admin' && Auth::user()->tenant_id) {
                 return redirect()->route('admin.dashboard', ['tenant' => Auth::user()->tenant_id]);
             }
+            if (Auth::user()->type === 'delivery_boy' && Auth::user()->tenant_id) {
+                return redirect()->route('delivery.dashboard', ['tenant' => Auth::user()->tenant_id]);
+            }
             Auth::logout();
         }
         return view('admin.auth.common-login');
@@ -44,10 +47,15 @@ class AuthController extends Controller
                 return redirect()->route('admin.dashboard', ['tenant' => $user->tenant_id]);
             }
 
+            if ($user->type === 'delivery_boy' && $user->tenant_id) {
+                session(['active_tenant_id' => $user->tenant_id]);
+                return redirect()->route('delivery.dashboard', ['tenant' => $user->tenant_id]);
+            }
+
             // Fallback if user doesn't have a tenant or super_admin type
             Auth::logout();
             return back()->withErrors([
-                'email' => 'This account does not have admin privileges or is not associated with any store.',
+                'email' => 'This account does not have admin or delivery privileges, or is not associated with any store.',
             ])->onlyInput('email');
         }
 
@@ -62,6 +70,9 @@ class AuthController extends Controller
         if (Auth::check()) {
             if (Auth::user()->type === 'super_admin' || Auth::user()->type === 'admin') {
                 return redirect()->route('admin.dashboard', ['tenant' => $tenant]);
+            }
+            if (Auth::user()->type === 'delivery_boy') {
+                return redirect()->route('delivery.dashboard', ['tenant' => $tenant]);
             }
             Auth::logout();
         }
@@ -81,6 +92,19 @@ class AuthController extends Controller
 
             if (Auth::user()->type === 'super_admin') {
                 return redirect()->route('super_admin.dashboard');
+            }
+            
+            if (Auth::user()->type === 'delivery_boy') {
+                // Enforce strict tenant boundary checks
+                $resolvedTenantId = session('active_tenant_id') ?? $tenant;
+                if (Auth::user()->tenant_id != $resolvedTenantId) {
+                    Auth::logout();
+                    return back()->withErrors([
+                        'email' => 'This account does not have access to this store.',
+                    ])->onlyInput('email');
+                }
+                session(['active_tenant_id' => Auth::user()->tenant_id]);
+                return redirect()->route('delivery.dashboard', ['tenant' => Auth::user()->tenant_id]);
             }
             
             if (Auth::user()->type !== 'admin') {

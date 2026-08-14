@@ -97,6 +97,21 @@
   </section>
 
   <!-- ================= FEATURES ================= -->
+  @include('landing.partials.features')
+
+  <!-- ================= SOLUTIONS ================= -->
+  @include('landing.partials.solutions')
+
+  <!-- ================= THEMES ================= -->
+  @include('landing.partials.themes')
+
+  <!-- ================= ANALYTICS ================= -->
+  @include('landing.partials.analytics')
+
+  <!-- ================= PRICING ================= -->
+  @include('landing.partials.pricing')
+
+  <!-- ================= FINAL CTA ================= -->
   <section class="final-cta">
     <h2>Start your grocery business today</h2>
     <p>Everything you need to launch, manage, and grow a successful grocery store online.</p>

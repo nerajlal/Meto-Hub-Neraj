@@ -10,7 +10,7 @@ class LandingController extends Controller
 {
     public function index()
     {
-        return view('landing.index');
+        return view('landing.new-landing');
     }
 
     public function templates()
@@ -18,15 +18,42 @@ class LandingController extends Controller
         return view('landing.templates');
     }
 
-    public function features() { return view('landing.features'); }
-    public function solutions() { return view('landing.solutions'); }
-    public function pricing() { return view('landing.pricing'); }
-    public function themes() { return view('landing.themes'); }
-    public function analytics() { return view('landing.analytics'); }
-    public function contact() { return view('landing.contact'); }
-    public function about() { return view('landing.about'); }
-    public function privacy() { return view('landing.privacy'); }
-    public function terms() { return view('landing.terms'); }
+    public function features()
+    {
+        return view('landing.features');
+    }
+    public function solutions()
+    {
+        return view('landing.solutions');
+    }
+    public function pricing()
+    {
+        return view('landing.pricing');
+    }
+    public function themes()
+    {
+        return view('landing.themes');
+    }
+    public function analytics()
+    {
+        return view('landing.analytics');
+    }
+    public function contact()
+    {
+        return view('landing.contact');
+    }
+    public function about()
+    {
+        return view('landing.about');
+    }
+    public function privacy()
+    {
+        return view('landing.privacy');
+    }
+    public function terms()
+    {
+        return view('landing.terms');
+    }
 
     public function handleDemoRequest(Request $request)
     {
@@ -42,14 +69,14 @@ class LandingController extends Controller
             $appName = config('app.name');
 
             $messageContent = "New Demo Request Received for {$appName}:\n\n" .
-                             "Email: {$validated['email']}\n" .
-                             "Business Name: {$validated['business_name']}\n" .
-                             "Requested Demo: {$validated['target_url']}\n\n" .
-                             "Timestamp: " . now()->format('Y-m-d H:i:s');
+                "Email: {$validated['email']}\n" .
+                "Business Name: {$validated['business_name']}\n" .
+                "Requested Demo: {$validated['target_url']}\n\n" .
+                "Timestamp: " . now()->format('Y-m-d H:i:s');
 
             Mail::raw($messageContent, function ($message) use ($adminEmail, $appName) {
                 $message->to($adminEmail)
-                        ->subject("New Lead: Demo Request from {$appName}");
+                    ->subject("New Lead: Demo Request from {$appName}");
             });
 
             return response()->json(['success' => true, 'message' => 'Request submitted successfully.']);
@@ -78,13 +105,13 @@ class LandingController extends Controller
         ])->get('https://blogs.task19.com/api/v1/projects/blogs');
 
         $blogs = $response->successful() ? $response->json('blogs') : [];
-        $blog = collect($blogs)->firstWhere('id', (int)$id);
+        $blog = collect($blogs)->firstWhere('id', (int) $id);
 
         if (!$blog) {
             abort(404);
         }
 
-        $recentBlogs = collect($blogs)->where('id', '!=', (int)$id)->take(3);
+        $recentBlogs = collect($blogs)->where('id', '!=', (int) $id)->take(3);
 
         return view('landing.blogs.show', compact('blog', 'recentBlogs'));
     }
