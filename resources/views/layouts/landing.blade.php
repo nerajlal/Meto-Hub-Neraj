@@ -159,9 +159,16 @@
       padding: 110px 8vw;
     }
 
+    main.page-content > section:first-of-type {
+      padding-top: 160px;
+    }
+
     @media (max-width: 768px) {
       section {
         padding: 72px 6vw;
+      }
+      main.page-content > section:first-of-type {
+        padding-top: 120px;
       }
     }
 
@@ -874,7 +881,6 @@
 
     /* ---------- Pricing engine ---------- */
     .pricing-engine {
-      background: var(--white);
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 60px;
@@ -2041,7 +2047,7 @@
   <!-- ================= HEADER ================= -->
   <header class="site-header" id="siteHeader">
     <div class="header-inner">
-      <a href="#" class="logo" aria-label="Slot Store home">
+      <a href="{{ route('landing') }}" class="logo" aria-label="Slot Store home">
         <span class="logo-mark" aria-hidden="true">
           <svg viewBox="0 0 32 32" width="30" height="30">
             <rect x="3" y="10" width="26" height="18" rx="4" fill="var(--primary)" />
@@ -2075,11 +2081,13 @@
   </header>
 
   <!-- ================= HERO ================= -->
-@yield('content')
+  <main class="page-content">
+    @yield('content')
+  </main>
   <footer class="site-footer" id="contact">
     <div class="footer-top">
       <div class="footer-brand">
-        <a href="#" class="logo text-decoration-none" aria-label="Slot Store home" style="display: flex; align-items: center; gap: 8px; margin-bottom: 15px;">
+        <a href="{{ route('landing') }}" class="logo text-decoration-none" aria-label="Slot Store home" style="display: flex; align-items: center; gap: 8px; margin-bottom: 15px;">
           <span class="logo-mark" aria-hidden="true">
             <svg viewBox="0 0 32 32" width="30" height="30">
               <rect x="3" y="10" width="26" height="18" rx="4" fill="var(--primary)" />
@@ -2098,7 +2106,7 @@
       </div>
       <div class="footer-col">
         <h4>Company</h4>
-        <a href="{{ route('landing.about') }}">About</a><a href="#">Careers</a><a href="#">Press</a><a href="{{ route('landing.blogs') }}">Blog</a>
+        <a href="{{ route('landing.about') }}">About</a><a href="{{ route('landing.careers') }}">Careers</a><a href="{{ route('landing.press') }}">Press</a><a href="{{ route('landing.blogs') }}">Blog</a>
       </div>
       <div class="footer-col">
         <h4>Platform</h4>
@@ -2107,20 +2115,20 @@
       </div>
       <div class="footer-col">
         <h4>Solutions</h4>
-        <a href="#">Independent Grocers</a><a href="#">Grocery Chains</a><a href="#">Farmers Markets</a>
+        <a href="{{ route('landing.independent-grocers') }}">Independent Grocers</a><a href="{{ route('landing.grocery-chains') }}">Grocery Chains</a><a href="{{ route('landing.farmers-markets') }}">Farmers Markets</a>
       </div>
       <div class="footer-col">
         <h4>Resources</h4>
-        <a href="#">Help Center</a><a href="#">API Docs</a><a href="#">Guides</a>
+        <a href="{{ route('landing.help-center') }}">Help Center</a><a href="{{ route('landing.api-docs') }}">API Docs</a><a href="{{ route('landing.guides') }}">Guides</a>
       </div>
     </div>
     <div class="footer-bottom">
       <div class="footer-bottom-left">
-        <span>Â© 2026 Slot Store. All rights reserved.</span>
+        <span>&copy; 2026 Slot Store. All rights reserved.</span>
         <div class="footer-legal-links">
           <a href="{{ route('landing.privacy') }}">Privacy</a>
           <a href="{{ route('landing.terms') }}">Terms</a>
-          <a href="#">Security</a>
+          <a href="{{ route('landing.security') }}">Security</a>
         </div>
       </div>
       <div class="social-icons" aria-label="Social media">

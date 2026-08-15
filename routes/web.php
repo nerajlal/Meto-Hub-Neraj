@@ -48,6 +48,15 @@ Route::get('/contact', [App\Http\Controllers\LandingController::class, 'contact'
 Route::get('/about', [App\Http\Controllers\LandingController::class, 'about'])->name('landing.about');
 Route::get('/privacy-policy', [App\Http\Controllers\LandingController::class, 'privacy'])->name('landing.privacy');
 Route::get('/terms', [App\Http\Controllers\LandingController::class, 'terms'])->name('landing.terms');
+Route::get('/careers', [App\Http\Controllers\LandingController::class, 'careers'])->name('landing.careers');
+Route::get('/press', [App\Http\Controllers\LandingController::class, 'press'])->name('landing.press');
+Route::get('/independent-grocers', [App\Http\Controllers\LandingController::class, 'independentGrocers'])->name('landing.independent-grocers');
+Route::get('/grocery-chains', [App\Http\Controllers\LandingController::class, 'groceryChains'])->name('landing.grocery-chains');
+Route::get('/farmers-markets', [App\Http\Controllers\LandingController::class, 'farmersMarkets'])->name('landing.farmers-markets');
+Route::get('/help-center', [App\Http\Controllers\LandingController::class, 'helpCenter'])->name('landing.help-center');
+Route::get('/api-docs', [App\Http\Controllers\LandingController::class, 'apiDocs'])->name('landing.api-docs');
+Route::get('/guides', [App\Http\Controllers\LandingController::class, 'guides'])->name('landing.guides');
+Route::get('/security', [App\Http\Controllers\LandingController::class, 'security'])->name('landing.security');
 
 Route::get('/blogs', [App\Http\Controllers\LandingController::class, 'blogs'])->name('landing.blogs');
 Route::get('/blogs/{id}', [App\Http\Controllers\LandingController::class, 'blogShow'])->name('landing.blog.show');
