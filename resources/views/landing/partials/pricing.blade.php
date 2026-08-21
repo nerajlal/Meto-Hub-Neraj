@@ -278,20 +278,20 @@
 
   <div class="pricing-grid">
     
-    <!-- Starter Plan -->
+    <!-- Web App Only Plan -->
     <div class="pricing-card">
       <div class="card-top">
         <div class="card-icon icon-starter"><i class="fa-solid fa-store"></i></div>
         <div>
-          <h3>Starter</h3>
+          <h3>Web App Only</h3>
           <p>Perfect for small grocery stores</p>
         </div>
       </div>
-      <div class="price-monthly">$2,999 <span>/month</span></div>
+      <div class="price-monthly">₹30,000 <span>one-time</span></div>
       
       <div class="setup-fee icon-starter-setup">
-        <p>One-time Setup</p>
-        <h4>$24,999</h4>
+        <p>Annual Maintenance</p>
+        <h4>₹10,000 /year</h4>
       </div>
 
       <div class="divider"><span>What's Included</span></div>
@@ -308,21 +308,21 @@
       <a href="javascript:void(0)" class="btn-pricing btn-outline-green pricing-btn-trigger" data-plan="starter">Choose Starter</a>
     </div>
 
-    <!-- Business Plan -->
+    <!-- Web + Mobile Plan -->
     <div class="pricing-card featured">
       <div class="featured-badge">MOST POPULAR <i class="fa-solid fa-star"></i></div>
       <div class="card-top">
-        <div class="card-icon icon-business"><i class="fa-solid fa-shop"></i></div>
+        <div class="card-icon icon-business"><i class="fa-solid fa-mobile-screen-button"></i></div>
         <div>
-          <h3>Business</h3>
-          <p>Grow with B2B + B2C</p>
+          <h3>Web App + Mobile App</h3>
+          <p>Grow with Web and App</p>
         </div>
       </div>
-      <div class="price-monthly">$5,999 <span>/month</span></div>
+      <div class="price-monthly">₹49,000 <span>one-time</span></div>
       
       <div class="setup-fee icon-business-setup">
-        <p>One-time Setup</p>
-        <h4>$49,999</h4>
+        <p>Annual Maintenance</p>
+        <h4>₹20,000 /year</h4>
       </div>
 
       <div class="divider"><span>Everything in Starter, Plus</span></div>
@@ -340,20 +340,20 @@
       <div class="best-value-badge"><i class="fa-solid fa-star"></i> Best Value for Serious Businesses</div>
     </div>
 
-    <!-- Pro Plan -->
+    <!-- Everything Plan -->
     <div class="pricing-card">
       <div class="card-top">
         <div class="card-icon icon-pro"><i class="fa-solid fa-building"></i></div>
         <div>
-          <h3>Pro</h3>
-          <p>For established & multi-location</p>
+          <h3>Everything</h3>
+          <p>Web + Mobile + Delivery App</p>
         </div>
       </div>
-      <div class="price-monthly icon-pro-price">$9,999 <span>/month</span></div>
+      <div class="price-monthly icon-pro-price">₹75,000 <span>one-time</span></div>
       
       <div class="setup-fee icon-pro-setup">
-        <p>One-time Setup</p>
-        <h4>$99,999</h4>
+        <p>Annual Maintenance</p>
+        <h4>₹25,000 /year</h4>
       </div>
 
       <div class="divider"><span>Everything in Business, Plus</span></div>
