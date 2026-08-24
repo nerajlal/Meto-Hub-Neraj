@@ -9,7 +9,8 @@
     content="Slot Store is the SaaS platform grocery businesses use to build, price, promote, and run their own online stores — pricing engine, promotions, themes, analytics, and payments in one place.">
   <meta name="keywords"
     content="grocery ecommerce, saas for grocery stores, create grocery website, online supermarket platform, delivery software, grocery POS integration">
-  <link rel="icon" type="image/svg+xml" href="{{ asset('images/fav-icon.svg') }}">
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>S</text></svg>">
 
   <link rel="canonical" href="{{ url()->current() }}">
 
@@ -2046,8 +2047,16 @@
   <!-- ================= HEADER ================= -->
   <header class="site-header" id="siteHeader">
     <div class="header-inner">
-      <a href="{{ url('/') }}" class="logo" aria-label="Slot Store home">
-        <img src="{{ asset('images/logo.svg') }}" alt="Logo" style="height: 70px; max-width: 220px; object-fit: contain;">
+      <a href="{{ route('landing') }}" class="logo" aria-label="Slot Store home">
+        <span class="logo-mark" aria-hidden="true">
+          <svg viewBox="0 0 32 32" width="30" height="30">
+            <rect x="3" y="10" width="26" height="18" rx="4" fill="var(--primary)" />
+            <rect x="3" y="10" width="26" height="6" rx="3" fill="var(--accent)" />
+            <path d="M9 10 L11 4 H21 L23 10" stroke="var(--primary)" stroke-width="2.4" fill="none"
+              stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </span>
+        <span class="logo-text">Slot<span class="logo-accent">Store</span></span>
       </a>
 
       <nav class="main-nav" id="mainNav" aria-label="Primary">
@@ -2078,8 +2087,16 @@
   <footer class="site-footer" id="contact">
     <div class="footer-top">
       <div class="footer-brand">
-        <a href="{{ url('/') }}" class="logo text-decoration-none" aria-label="Slot Store home" style="display: flex; align-items: center; gap: 8px; margin-bottom: 15px;">
-          <img src="{{ asset('images/logo.svg') }}" alt="Logo" style="height: 70px; max-width: 220px; object-fit: contain;">
+        <a href="{{ route('landing') }}" class="logo text-decoration-none" aria-label="Slot Store home" style="display: flex; align-items: center; gap: 8px; margin-bottom: 15px;">
+          <span class="logo-mark" aria-hidden="true">
+            <svg viewBox="0 0 32 32" width="30" height="30">
+              <rect x="3" y="10" width="26" height="18" rx="4" fill="var(--primary)" />
+              <rect x="3" y="10" width="26" height="6" rx="3" fill="var(--accent)" />
+              <path d="M9 10 L11 4 H21 L23 10" stroke="var(--primary)" stroke-width="2.4" fill="none"
+                stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </span>
+          <span class="logo-text text-white" style="color: white;">Slot<span class="logo-accent">Store</span></span>
         </a>
         <p>The platform grocery businesses use to build and run their own online stores.</p>
         <form class="newsletter" id="newsletterForm">
