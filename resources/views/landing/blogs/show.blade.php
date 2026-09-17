@@ -277,7 +277,7 @@
 
     <div class="blog-content">
       @if(!empty($blog['content']))
-        {!! Str::markdown($blog['content']) !!}
+        {!! $blog['content'] !!}
       @endif
       
       @if(isset($blog['sections']) && count($blog['sections']) > 0)
@@ -286,7 +286,7 @@
             <img src="{{ 'https://blogs.task19.com' . $section['image_path'] }}" alt="Section image" style="width: 100%; border-radius: 12px; margin: 2rem 0; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
           @endif
           @if(!empty($section['text_content']))
-            <div style="margin-bottom: 1.5rem;">{!! nl2br(e($section['text_content'])) !!}</div>
+            <div style="margin-bottom: 1.5rem;">{!! $section['text_content'] !!}</div>
           @endif
         @endforeach
       @endif
