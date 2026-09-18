@@ -431,6 +431,9 @@
         font-size: 0.55rem !important;
         line-height: 1.1;
       }
+      .mission-section, .values-section {
+        padding: 50px 5vw;
+      }
     }
   </style>
 
@@ -475,7 +478,7 @@
       
       <div class="mission-image-wrapper">
         <div class="mission-image">
-          <img src="{{ asset('images/grocery_tech_aisle.jpg') }}" alt="Modern Grocery Tech Aisle">
+          <img src="https://images.unsplash.com/photo-1628102491629-778571d893a3?q=80&w=880&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Grocery Supermarket Aisle">
         </div>
         
         <div class="mission-glass-card">
