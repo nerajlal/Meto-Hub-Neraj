@@ -297,16 +297,22 @@
     font-size: 1rem;
     font-weight: 600;
     border-radius: 999px;
-    color: #0f763e;
+    color: #0f763e !important;
     cursor: pointer;
     transition: all 0.3s ease;
     display: flex;
     align-items: center;
     gap: 8px;
   }
-  .toggle-btn.active {
-    background: #0f763e;
-    color: white;
+  .toggle-btn.toggle-active {
+    background: #0f763e !important;
+    color: white !important;
+  }
+  .toggle-btn.toggle-active .toggle-text {
+    color: white !important;
+  }
+  .toggle-btn:not(.toggle-active) .toggle-text {
+    color: #0f763e !important;
   }
   .save-badge {
     background: #fcd34d;
@@ -330,9 +336,9 @@
 
   <div class="pricing-toggle-container">
     <div class="pricing-toggle">
-      <button class="toggle-btn active" id="btn-monthly">Monthly</button>
+      <button class="toggle-btn toggle-active" id="btn-monthly"><span class="toggle-text">Monthly</span></button>
       <button class="toggle-btn" id="btn-yearly">
-        Yearly
+        <span class="toggle-text">Yearly</span>
         <span class="save-badge">Save 2 Months</span>
       </button>
     </div>
@@ -354,7 +360,7 @@
         <p class="billing-info">billed monthly</p>
       </div>
       <div class="price-show-yearly">
-        <div class="price-monthly">₹35,988 <span>/yr</span></div>
+        <div class="price-monthly">₹29,990 <span>/yr</span></div>
         <p class="billing-info">billed yearly</p>
       </div>
 
@@ -534,14 +540,14 @@
     
     if (btnMonthly && btnYearly && pricingGrid) {
       btnMonthly.addEventListener('click', () => {
-        btnMonthly.classList.add('active');
-        btnYearly.classList.remove('active');
+        btnMonthly.classList.add('toggle-active');
+        btnYearly.classList.remove('toggle-active');
         pricingGrid.classList.remove('show-yearly');
       });
       
       btnYearly.addEventListener('click', () => {
-        btnYearly.classList.add('active');
-        btnMonthly.classList.remove('active');
+        btnYearly.classList.add('toggle-active');
+        btnMonthly.classList.remove('toggle-active');
         pricingGrid.classList.add('show-yearly');
       });
     }
