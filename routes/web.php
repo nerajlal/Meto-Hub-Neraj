@@ -48,6 +48,7 @@ Route::get('/contact', [App\Http\Controllers\LandingController::class, 'contact'
 Route::get('/about', [App\Http\Controllers\LandingController::class, 'about'])->name('landing.about');
 Route::get('/privacy-policy', [App\Http\Controllers\LandingController::class, 'privacy'])->name('landing.privacy');
 Route::get('/terms', [App\Http\Controllers\LandingController::class, 'terms'])->name('landing.terms');
+Route::get('/refund-cancellation', [App\Http\Controllers\LandingController::class, 'refund'])->name('landing.refund');
 Route::get('/careers', [App\Http\Controllers\LandingController::class, 'careers'])->name('landing.careers');
 Route::get('/press', [App\Http\Controllers\LandingController::class, 'press'])->name('landing.press');
 Route::get('/independent-grocers', [App\Http\Controllers\LandingController::class, 'independentGrocers'])->name('landing.independent-grocers');

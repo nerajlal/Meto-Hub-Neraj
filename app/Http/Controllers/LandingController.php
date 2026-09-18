@@ -54,6 +54,11 @@ class LandingController extends Controller
     {
         return view('landing.terms');
     }
+    
+    public function refund()
+    {
+        return view('landing.refund');
+    }
 
     public function careers() { return view('landing.careers'); }
     public function press() { return view('landing.press'); }

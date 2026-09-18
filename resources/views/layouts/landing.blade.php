@@ -2130,6 +2130,7 @@
           <a href="{{ route('landing.privacy') }}">Privacy</a>
           <a href="{{ route('landing.terms') }}">Terms</a>
           <a href="{{ route('landing.security') }}">Security</a>
+          <a href="{{ route('landing.refund') }}">Refund & Cancellation</a>
         </div>
       </div>
       <div class="social-icons" aria-label="Social media">
