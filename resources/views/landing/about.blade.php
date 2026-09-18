@@ -1,12 +1,18 @@
 @extends('layouts.landing')
 @section('content')
   <style>
+    .about-page-wrapper {
+      overflow-x: hidden;
+      width: 100%;
+      max-width: 100vw;
+      position: relative;
+    }
+    
     /* Ultra Premium 3D Hero */
     .about-hero {
       padding: 100px 8vw 40px !important;
       background: radial-gradient(circle at 50% 0%, rgba(67, 160, 71, 0.08), transparent 70%), var(--bg);
       position: relative;
-      overflow: hidden;
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 40px;
@@ -201,7 +207,18 @@
         margin: 0 auto;
       }
       .hero-3d-scene {
-        height: 500px;
+        height: 400px;
+        transform: scale(0.85);
+        transform-origin: top center;
+        margin-top: 20px;
+      }
+    }
+    
+    @media(max-width: 576px) {
+      .hero-3d-scene {
+        height: 300px;
+        transform: scale(0.65);
+        margin-top: 10px;
       }
     }
     
@@ -372,28 +389,52 @@
     }
     
     .stats-section {
-      padding: 80px 8vw;
+      padding: 40px 8vw;
       background: linear-gradient(135deg, var(--primary), var(--primary-dark));
       color: var(--white);
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 40px;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
       text-align: center;
     }
     
     .stat-item h4 {
-      font-size: 3.5rem;
+      font-size: clamp(1.2rem, 3vw, 3.5rem);
       color: var(--white);
       margin-bottom: 8px;
     }
     
     .stat-item p {
       color: rgba(255, 255, 255, 0.8);
-      font-size: 1.1rem;
+      font-size: clamp(0.6rem, 1.5vw, 1.1rem);
       font-weight: 500;
+    }
+    
+    @media(max-width: 768px) {
+      .stats-section {
+        padding: 20px 1vw;
+        gap: 2px;
+        grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+        overflow: hidden;
+      }
+      .stat-item {
+        padding: 0;
+        min-width: 0;
+        word-wrap: break-word;
+        word-break: break-word;
+      }
+      .stat-item h4 {
+        margin-bottom: 2px;
+        font-size: 0.95rem !important;
+      }
+      .stat-item p {
+        font-size: 0.55rem !important;
+        line-height: 1.1;
+      }
     }
   </style>
 
+  <div class="about-page-wrapper">
   <section class="about-hero">
     <div class="about-hero-header fade-up">
       <span class="eyebrow">Our Story</span>
@@ -454,7 +495,7 @@
       <p>Stores Powered</p>
     </div>
     <div class="stat-item">
-      <h4>$2M+</h4>
+      <h4>₹2M+</h4>
       <p>Orders Processed</p>
     </div>
     <div class="stat-item">
@@ -492,6 +533,7 @@
       </div>
     </div>
   </section>
+  </div>
   
   <script>
     document.addEventListener('DOMContentLoaded', () => {
