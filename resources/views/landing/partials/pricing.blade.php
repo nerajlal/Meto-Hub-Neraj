@@ -267,6 +267,58 @@
   }
   .trust-text h5 { margin: 0; font-size: 0.9rem; color: #1f2937; }
   .trust-text p { margin: 0; font-size: 0.8rem; color: #6b7280; }
+
+  .billing-info {
+    font-size: 0.85rem;
+    color: #6b7280;
+    margin-top: -10px;
+    margin-bottom: 20px;
+    font-weight: 500;
+  }
+
+  .pricing-toggle-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 3rem;
+  }
+  .pricing-toggle {
+    display: inline-flex;
+    align-items: center;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 999px;
+    padding: 6px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  }
+  .toggle-btn {
+    border: none;
+    background: transparent;
+    padding: 10px 24px;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 999px;
+    color: #0f763e;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .toggle-btn.active {
+    background: #0f763e;
+    color: white;
+  }
+  .save-badge {
+    background: #fcd34d;
+    color: #000;
+    font-size: 0.75rem;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-weight: 700;
+  }
+  .pricing-grid.show-yearly .price-show-monthly { display: none; }
+  .pricing-grid.show-yearly .price-show-yearly { display: block; }
+  .price-show-yearly { display: none; }
 </style>
 
 <section class="pricing-section" id="pricing">
@@ -276,7 +328,17 @@
     <p>B2B + B2C &bull; Payments &bull; Delivery &bull; Apps &bull; Everything You Need</p>
   </div>
 
-  <div class="pricing-grid">
+  <div class="pricing-toggle-container">
+    <div class="pricing-toggle">
+      <button class="toggle-btn active" id="btn-monthly">Monthly</button>
+      <button class="toggle-btn" id="btn-yearly">
+        Yearly
+        <span class="save-badge">Save 2 Months</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="pricing-grid" id="pricingGrid">
     
     <!-- Web App Only Plan -->
     <div class="pricing-card">
@@ -287,11 +349,13 @@
           <p>Perfect for small grocery stores</p>
         </div>
       </div>
-      <div class="price-monthly">₹30,000 <span>one-time</span></div>
-      
-      <div class="setup-fee icon-starter-setup">
-        <p>Annual Maintenance</p>
-        <h4>₹10,000 /year</h4>
+      <div class="price-show-monthly">
+        <div class="price-monthly">₹2,999 <span>/mo</span></div>
+        <p class="billing-info">billed monthly</p>
+      </div>
+      <div class="price-show-yearly">
+        <div class="price-monthly">₹35,988 <span>/yr</span></div>
+        <p class="billing-info">billed yearly</p>
       </div>
 
       <div class="divider"><span>What's Included</span></div>
@@ -318,11 +382,13 @@
           <p>Grow with Web and App</p>
         </div>
       </div>
-      <div class="price-monthly">₹49,000 <span>one-time</span></div>
-      
-      <div class="setup-fee icon-business-setup">
-        <p>Annual Maintenance</p>
-        <h4>₹20,000 /year</h4>
+      <div class="price-show-monthly">
+        <div class="price-monthly">₹4,999 <span>/mo</span></div>
+        <p class="billing-info">billed monthly</p>
+      </div>
+      <div class="price-show-yearly">
+        <div class="price-monthly">₹49,990 <span>/yr</span></div>
+        <p class="billing-info">billed yearly</p>
       </div>
 
       <div class="divider"><span>Everything in Starter, Plus</span></div>
@@ -349,11 +415,13 @@
           <p>Web + Mobile + Delivery App</p>
         </div>
       </div>
-      <div class="price-monthly icon-pro-price">₹75,000 <span>one-time</span></div>
-      
-      <div class="setup-fee icon-pro-setup">
-        <p>Annual Maintenance</p>
-        <h4>₹25,000 /year</h4>
+      <div class="price-show-monthly">
+        <div class="price-monthly">₹7,999 <span>/mo</span></div>
+        <p class="billing-info">billed monthly</p>
+      </div>
+      <div class="price-show-yearly">
+        <div class="price-monthly">₹79,990 <span>/yr</span></div>
+        <p class="billing-info">billed yearly</p>
       </div>
 
       <div class="divider"><span>Everything in Business, Plus</span></div>
@@ -455,4 +523,27 @@
       </div>
     </div>
   </div>
+  </div>
 </section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const btnMonthly = document.getElementById('btn-monthly');
+    const btnYearly = document.getElementById('btn-yearly');
+    const pricingGrid = document.getElementById('pricingGrid');
+    
+    if (btnMonthly && btnYearly && pricingGrid) {
+      btnMonthly.addEventListener('click', () => {
+        btnMonthly.classList.add('active');
+        btnYearly.classList.remove('active');
+        pricingGrid.classList.remove('show-yearly');
+      });
+      
+      btnYearly.addEventListener('click', () => {
+        btnYearly.classList.add('active');
+        btnMonthly.classList.remove('active');
+        pricingGrid.classList.add('show-yearly');
+      });
+    }
+  });
+</script>
