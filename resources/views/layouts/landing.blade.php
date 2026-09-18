@@ -2061,6 +2061,7 @@
 
       <nav class="main-nav" id="mainNav" aria-label="Primary">
         <a href="{{ route('landing.old') }}">Home</a>
+        <a href="{{ route('landing.about') }}">About Us</a>
         <a href="{{ route('landing.features') }}">Features</a>
         <a href="{{ route('landing.solutions') }}">Solutions</a>
         <a href="{{ route('landing.pricing') }}">Pricing</a>
