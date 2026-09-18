@@ -253,6 +253,69 @@
   .back-link:hover {
     color: var(--primary-dark);
   }
+
+  .bottom-articles {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 2rem 6rem;
+  }
+  .bottom-articles h3 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    color: var(--dark);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .bottom-articles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+  }
+  .bottom-article-card {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: flex;
+    flex-direction: column;
+  }
+  .bottom-article-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.08);
+  }
+  .bottom-article-img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    background: #f1f5f9;
+  }
+  .bottom-article-content {
+    padding: 1.5rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .bottom-article-content h4 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    line-height: 1.4;
+  }
+  .bottom-article-content h4 a {
+    color: var(--dark);
+    text-decoration: none;
+  }
+  .bottom-article-content h4 a:hover {
+    color: var(--primary);
+  }
+  .bottom-article-date {
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-top: auto;
+  }
 </style>
 
 <div class="blog-hero">
@@ -318,28 +381,7 @@
       </div>
     </div>
 
-    @if(isset($recentBlogs) && count($recentBlogs) > 0)
-    <div class="sidebar-widget">
-      <h3 class="widget-title"><i class="fa-solid fa-newspaper text-primary"></i> More Articles</h3>
-      <div class="recent-blogs-list">
-        @foreach($recentBlogs as $recent)
-        <div class="recent-blog">
-          @if($recent['cover_image'])
-            <img src="{{ 'https://blogs.task19.com' . $recent['cover_image'] }}" class="recent-blog-img" alt="Blog cover">
-          @else
-             <div class="recent-blog-img" style="background: #e2e8f0; display:flex; align-items:center; justify-content:center; color:#94a3b8;">
-               <i class="fa-solid fa-image"></i>
-             </div>
-          @endif
-          <div class="recent-blog-info">
-            <h4><a href="{{ route('landing.blog.show', $recent['id']) }}">{{ Str::limit($recent['title'], 45) }}</a></h4>
-            <div class="recent-blog-date">{{ \Carbon\Carbon::parse($recent['created_at'])->format('M d, Y') }}</div>
-          </div>
-        </div>
-        @endforeach
-      </div>
-    </div>
-    @endif
+
     
     <div class="sidebar-widget" style="background: var(--primary); color: white; text-align: center;">
       <h3 style="color: white; font-size: 1.5rem; margin-bottom: 1rem; font-weight: 700;">Start selling online today</h3>
@@ -348,4 +390,28 @@
     </div>
   </aside>
 </div>
+
+@if(isset($recentBlogs) && count($recentBlogs) > 0)
+<div class="bottom-articles">
+  <h3><i class="fa-solid fa-newspaper text-primary"></i> More Articles</h3>
+  <div class="bottom-articles-grid">
+    @foreach($recentBlogs as $recent)
+    <div class="bottom-article-card">
+      @if($recent['cover_image'])
+        <img src="{{ 'https://blogs.task19.com' . $recent['cover_image'] }}" class="bottom-article-img" alt="Blog cover">
+      @else
+         <div class="bottom-article-img" style="display:flex; align-items:center; justify-content:center; color:#94a3b8;">
+           <i class="fa-solid fa-image fa-2x"></i>
+         </div>
+      @endif
+      <div class="bottom-article-content">
+        <h4><a href="{{ route('landing.blog.show', $recent['id']) }}">{{ Str::limit($recent['title'], 60) }}</a></h4>
+        <div class="bottom-article-date">{{ \Carbon\Carbon::parse($recent['created_at'])->format('M d, Y') }}</div>
+      </div>
+    </div>
+    @endforeach
+  </div>
+</div>
+@endif
+
 @endsection
