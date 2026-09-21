@@ -275,6 +275,39 @@
     margin-bottom: 20px;
     font-weight: 500;
   }
+  .save-prompt {
+    display: inline-block;
+    font-size: 0.85rem;
+    color: #106f3e;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    margin-bottom: 20px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  .price-show-monthly .billing-info {
+    margin-bottom: 5px;
+  }
+  .price-strikethrough {
+    font-size: 0.85rem;
+    color: #9ca3af;
+    text-decoration: line-through;
+    margin-bottom: 5px;
+    font-weight: 500;
+  }
+  .save-badge-inline {
+    display: inline-block;
+    background: #fef08a;
+    color: #854d0e;
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+  }
+  .price-show-yearly .billing-info {
+    margin-bottom: 10px;
+  }
 
   .pricing-toggle-container {
     display: flex;
@@ -358,10 +391,13 @@
       <div class="price-show-monthly">
         <div class="price-monthly">₹2,999 <span>/mo</span></div>
         <p class="billing-info">billed monthly</p>
+        <a class="save-prompt" onclick="document.getElementById('btn-yearly').click()">Switch to yearly and save ₹5,998</a>
       </div>
       <div class="price-show-yearly">
-        <div class="price-monthly">₹29,990 <span>/yr</span></div>
-        <p class="billing-info">billed yearly</p>
+        <div class="price-strikethrough">₹2,999/mo billed monthly</div>
+        <div class="price-monthly">₹2,499 <span>/mo</span></div>
+        <p class="billing-info">billed ₹29,990 /yr</p>
+        <div class="save-badge-inline">↑ Save ₹5,998/yr</div>
       </div>
 
       <div class="divider"><span>What's Included</span></div>
@@ -391,10 +427,13 @@
       <div class="price-show-monthly">
         <div class="price-monthly">₹4,999 <span>/mo</span></div>
         <p class="billing-info">billed monthly</p>
+        <a class="save-prompt" onclick="document.getElementById('btn-yearly').click()">Switch to yearly and save ₹9,998</a>
       </div>
       <div class="price-show-yearly">
-        <div class="price-monthly">₹49,990 <span>/yr</span></div>
-        <p class="billing-info">billed yearly</p>
+        <div class="price-strikethrough">₹4,999/mo billed monthly</div>
+        <div class="price-monthly">₹4,166 <span>/mo</span></div>
+        <p class="billing-info">billed ₹49,990 /yr</p>
+        <div class="save-badge-inline">↑ Save ₹9,998/yr</div>
       </div>
 
       <div class="divider"><span>Everything in Starter, Plus</span></div>
@@ -424,10 +463,13 @@
       <div class="price-show-monthly">
         <div class="price-monthly">₹7,999 <span>/mo</span></div>
         <p class="billing-info">billed monthly</p>
+        <a class="save-prompt" onclick="document.getElementById('btn-yearly').click()">Switch to yearly and save ₹15,998</a>
       </div>
       <div class="price-show-yearly">
-        <div class="price-monthly">₹79,990 <span>/yr</span></div>
-        <p class="billing-info">billed yearly</p>
+        <div class="price-strikethrough">₹7,999/mo billed monthly</div>
+        <div class="price-monthly">₹6,666 <span>/mo</span></div>
+        <p class="billing-info">billed ₹79,990 /yr</p>
+        <div class="save-badge-inline">↑ Save ₹15,998/yr</div>
       </div>
 
       <div class="divider"><span>Everything in Business, Plus</span></div>
