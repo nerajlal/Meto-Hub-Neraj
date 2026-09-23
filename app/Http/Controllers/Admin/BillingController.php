@@ -29,20 +29,18 @@ class BillingController extends Controller
 
         try {
             $api = new Api(env('RAZORPAY_KEY'), env('RAZORPAY_SECRET'));
-            
-            $basePlanName = match ($tier) {
-                'blossom' => 'Grocery Blossom',
-                'tree' => 'Grocery Tree',
-                default => 'Grocery Sprout',
-            };
+            if ($tier === 'blossom') {
+                $basePlanName = 'Grocery Blossom';
+                $baseAmount = 4999;
+            } elseif ($tier === 'tree') {
+                $basePlanName = 'Grocery Tree';
+                $baseAmount = 7999;
+            } else {
+                $basePlanName = 'Grocery Sprout';
+                $baseAmount = 2999;
+            }
             
             $planName = $isYearly ? $basePlanName . ' Yearly' : $basePlanName;
-            
-            $baseAmount = match ($tier) {
-                'blossom' => 4999,
-                'tree' => 7999,
-                default => 2999,
-            };
             
             // Yearly gives 2 months free (10 months cost)
             $planAmount = $isYearly ? ($baseAmount * 10) : $baseAmount;
@@ -95,7 +93,7 @@ class BillingController extends Controller
                 'subscription_id' => $subscription->id,
                 'key' => env('RAZORPAY_KEY')
             ]);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }
     }
@@ -121,7 +119,7 @@ class BillingController extends Controller
             $tenant->save();
 
             return response()->json(['success' => true, 'message' => 'Subscription activated successfully!']);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }
     }
