@@ -33,6 +33,9 @@ class Tenant extends Model
         'checkout_fields',
         'min_order_value',
         'domain',
+        'razorpay_customer_id',
+        'razorpay_subscription_id',
+        'subscription_status',
     ];
 
     protected $casts = [

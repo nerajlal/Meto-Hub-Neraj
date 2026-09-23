@@ -248,8 +248,11 @@ Route::prefix('{tenant}/admin')->name('admin.')->middleware(['identify_tenant', 
     Route::view('/customers/create', 'admin.customers.create')->name('customers.create');
     Route::get('/customers/{id}', [App\Http\Controllers\Admin\CustomerController::class, 'show'])->name('customers.show');
 
-    Route::get('/carts', [App\Http\Controllers\Admin\CartController::class, 'index'])->name('carts');
+    Route::get('/billing', [App\Http\Controllers\Admin\BillingController::class, 'index'])->name('billing');
+    Route::post('/billing/subscribe', [App\Http\Controllers\Admin\BillingController::class, 'subscribe'])->name('billing.subscribe');
+    Route::post('/billing/verify', [App\Http\Controllers\Admin\BillingController::class, 'verify'])->name('billing.verify');
 
+    Route::get('/carts', [App\Http\Controllers\Admin\CartController::class, 'index'])->name('carts');
     Route::get('/analytics', [App\Http\Controllers\Admin\AnalyticsController::class, 'index'])->name('analytics');
     Route::get('/analytics/export', [App\Http\Controllers\Admin\AnalyticsController::class, 'export'])->name('analytics.export');
     Route::get('/analytics/{type}', function ($type) {

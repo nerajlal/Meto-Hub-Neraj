@@ -76,6 +76,13 @@
                 </a>
             </li> -->
 
+            <li>
+                <a href="{{ route('admin.billing') }}" class="sidebar-item {{ request()->routeIs('admin.billing*') ? 'active' : '' }}">
+                    <i class="fa-solid fa-file-invoice-dollar"></i>
+                    <span>Billing</span>
+                </a>
+            </li>
+
             <li class="sidebar-heading">
                 Settings
             </li>

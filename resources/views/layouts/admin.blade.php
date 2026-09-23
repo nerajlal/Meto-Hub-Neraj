@@ -159,6 +159,7 @@
             color: #6d7175 !important;
         }
     </style>
+    @yield('styles')
 </head>
 <body class="text-secondary">
 
