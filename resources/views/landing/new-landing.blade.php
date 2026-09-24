@@ -12,7 +12,7 @@
         <div class="hero-cta">
           <a href="javascript:void(0)" class="btn btn-primary btn-lg pricing-btn-trigger" data-plan="sprout">Start
             Free</a>
-          <a href="https://wa.me/7012639646?text=Hello!%20I%20would%20like%20to%20schedule%20a%20demo%20to%20learn%20more%20about%20Slot%20Store." target="_blank" class="btn btn-outline btn-lg">Book a Demo</a>
+          <a href="https://wa.me/7012639646?text=Hello!%20I%20would%20like%20to%20schedule%20a%20demo%20to%20learn%20more%20about%20MetoHub." target="_blank" class="btn btn-outline btn-lg">Book a Demo</a>
         </div>
         <div class="hero-proof">
           <div class="avatars" aria-hidden="true">
@@ -117,7 +117,7 @@
     <p>Everything you need to launch, manage, and grow a successful grocery store online.</p>
     <div class="hero-cta">
       <a href="javascript:void(0)" class="btn btn-primary btn-lg pricing-btn-trigger" data-plan="sprout">Start Free</a>
-      <a href="https://wa.me/7012639646?text=Hello!%20I%20would%20like%20to%20schedule%20a%20demo%20to%20learn%20more%20about%20Slot%20Store." target="_blank" class="btn btn-outline-light btn-lg">Book Demo</a>
+      <a href="https://wa.me/7012639646?text=Hello!%20I%20would%20like%20to%20schedule%20a%20demo%20to%20learn%20more%20about%20MetoHub." target="_blank" class="btn btn-outline-light btn-lg">Book Demo</a>
     </div>
   </section>
 

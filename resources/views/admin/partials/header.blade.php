@@ -4,7 +4,7 @@
     <!-- Shopify Brand Logo in Top Left -->
     <div class="d-flex align-items-center me-4 d-none d-md-flex">
         <!-- <i class="fa-brands fa-shopify text-white fs-4 me-2"></i> -->
-        <span class="fw-bold text-white small" style="letter-spacing: -0.5px; font-size: 14px;">SLOT STORE</span>
+        <span class="fw-bold text-white small" style="letter-spacing: -0.5px; font-size: 14px;">METOHUB</span>
     </div>
 
     <!-- Centered Search Box -->

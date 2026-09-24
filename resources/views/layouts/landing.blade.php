@@ -2056,7 +2056,7 @@
               stroke-linecap="round" stroke-linejoin="round" />
           </svg>
         </span>
-        <span class="logo-text">Slot<span class="logo-accent">Store</span></span>
+        <span class="logo-text">Meto<span class="logo-accent">Hub</span></span>
       </a>
 
       <nav class="main-nav" id="mainNav" aria-label="Primary">
@@ -2097,7 +2097,7 @@
                 stroke-linecap="round" stroke-linejoin="round" />
             </svg>
           </span>
-          <span class="logo-text text-white" style="color: white;">Slot<span class="logo-accent">Store</span></span>
+          <span class="logo-text text-white" style="color: white;">Meto<span class="logo-accent">Hub</span></span>
         </a>
         <p>The platform grocery businesses use to build and run their own online stores.</p>
         <form class="newsletter" id="newsletterForm">
