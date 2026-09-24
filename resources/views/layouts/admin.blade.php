@@ -198,7 +198,7 @@
                     <div class="mt-5 pt-4 border-top text-center small text-muted">
                         @if(isset($currentTenant))
                             @php
-                                $displayDomain = $currentTenant->domain ?? (strtolower(str_replace(' ', '', $currentTenant->name)) . '.slotstore.com');
+                                $displayDomain = $currentTenant->domain ?? (strtolower(str_replace(' ', '', $currentTenant->name)) . '.metohub.com');
                             @endphp
                             @if($currentTenant->domain)
                                 Developed by MetoHub. Running on <a href="http://{{ $displayDomain }}" target="_blank" class="text-decoration-none fw-medium text-secondary">{{ $displayDomain }}</a>

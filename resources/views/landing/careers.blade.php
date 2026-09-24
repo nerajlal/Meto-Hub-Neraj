@@ -97,7 +97,7 @@
         
         <div style="margin-top: 50px; text-align: center; padding: 30px;">
           <p style="color: var(--muted); margin-bottom: 15px;">Don't see a role that fits? We are always looking for exceptional talent.</p>
-          <a href="mailto:careers@slotstore.com" style="color: var(--primary); font-weight: 600; text-decoration: none;">Send your resume to careers@slotstore.com â†’</a>
+          <a href="mailto:careers@metohub.com" style="color: var(--primary); font-weight: 600; text-decoration: none;">Send your resume to careers@metohub.com â†’</a>
         </div>
       </div>
       

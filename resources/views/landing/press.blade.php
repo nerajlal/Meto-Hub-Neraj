@@ -51,7 +51,7 @@
           <div style="font-size: 0.95rem;">
             <strong style="display: block; color: var(--dark); margin-bottom: 4px;">Sarah Jenkins</strong>
             <span style="display: block; color: var(--muted); margin-bottom: 10px;">Director of Communications</span>
-            <a href="mailto:press@slotstore.com" style="color: var(--primary); font-weight: 500;">press@slotstore.com</a>
+            <a href="mailto:press@metohub.com" style="color: var(--primary); font-weight: 500;">press@metohub.com</a>
           </div>
         </div>
       </div>

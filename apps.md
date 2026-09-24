@@ -7,7 +7,7 @@ All mobile apps are contained within the `mobile-apps` directory on the `app` br
 
 ```text
 mobile-apps/
-├── SlotStore/    (App for https://www.metohub.com/)
+├── MetoHub/    (App for https://www.metohub.com/)
 └── Chocolayt/    (App for https://store.chocolayt.com/)
 ```
 
@@ -18,7 +18,7 @@ When a new store signs up and needs their own app, follow these steps:
 ### 1. Duplicate an Existing App
 Copy an existing app folder to create a new one. For example, to create an app for a store named "FreshFoods":
 ```bash
-cp -r mobile-apps/SlotStore mobile-apps/FreshFoods
+cp -r mobile-apps/MetoHub mobile-apps/FreshFoods
 ```
 
 ### 2. Update the Website URL (and use the stable code)

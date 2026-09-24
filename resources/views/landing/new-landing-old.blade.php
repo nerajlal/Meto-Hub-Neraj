@@ -1204,7 +1204,7 @@
             </svg></div>
           <h3>Email Support</h3>
           <p style="margin-bottom:24px;">Current customer needing technical help? Drop us a line anytime.</p>
-          <a href="mailto:support@slotstore.com" class="btn btn-outline">support@task19.com</a>
+          <a href="mailto:support@metohub.com" class="btn btn-outline">support@task19.com</a>
         </div>
       </div>
     </div>

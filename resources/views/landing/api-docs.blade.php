@@ -47,7 +47,7 @@
           
           <div style="background: var(--dark); border-radius: 8px; padding: 20px; overflow-x: auto;">
             <code style="color: #e6edf3; font-family: monospace; font-size: 0.95rem;">
-              <span style="color: #ff7b72;">curl</span> https://api.slotstore.com/v1/products \<br>
+              <span style="color: #ff7b72;">curl</span> https://api.metohub.com/v1/products \<br>
               &nbsp;&nbsp;-H <span style="color: #a5d6ff;">"Authorization: Bearer sk_live_your_secret_key"</span>
             </code>
           </div>

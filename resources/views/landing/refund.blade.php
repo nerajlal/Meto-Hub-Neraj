@@ -32,7 +32,7 @@
 
         <h3>4. Contact Us</h3>
         <p>
-          If you have any questions or need to request a refund, please contact us at <a href="mailto:support@slotstore.com">support@slotstore.com</a>.
+          If you have any questions or need to request a refund, please contact us at <a href="mailto:support@metohub.com">support@metohub.com</a>.
         </p>
 
        </div>

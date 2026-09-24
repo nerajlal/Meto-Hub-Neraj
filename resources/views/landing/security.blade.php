@@ -59,7 +59,7 @@
        <div class="vulnerability-box">
           <h4>Vulnerability Reporting</h4>
           <p>If you believe you have found a security vulnerability in our platform, please disclose it to us responsibly.</p>
-          <a href="mailto:security@slotstore.com">security@slotstore.com</a>
+          <a href="mailto:security@metohub.com">security@metohub.com</a>
        </div>
 
     </div>

@@ -32,7 +32,7 @@
 
         <h3>4. Contact Us</h3>
         <p>
-          If you have any questions about this Privacy Policy, please contact us at <a href="mailto:privacy@slotstore.com">privacy@slotstore.com</a>.
+          If you have any questions about this Privacy Policy, please contact us at <a href="mailto:privacy@metohub.com">privacy@metohub.com</a>.
         </p>
 
        </div>
