@@ -7,7 +7,7 @@ All mobile apps are contained within the `mobile-apps` directory on the `app` br
 
 ```text
 mobile-apps/
-├── SlotStore/    (App for https://www.goslot.store/)
+├── SlotStore/    (App for https://www.metohub.com/)
 └── Chocolayt/    (App for https://store.chocolayt.com/)
 ```
 

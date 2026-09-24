@@ -18,7 +18,7 @@
           <div class="avatars" aria-hidden="true">
             <span></span><span></span><span></span><span></span>
           </div>
-          <p><strong>2,400+</strong> grocery merchants run on Slot Store</p>
+          <p><strong>2,400+</strong> grocery merchants run on MetoHub</p>
         </div>
       </div>
 

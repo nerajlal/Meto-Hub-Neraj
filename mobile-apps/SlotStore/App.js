@@ -24,7 +24,7 @@ export default function App() {
       <StatusBar barStyle="light-content" backgroundColor="#0F172A" />
       <WebView 
         ref={webViewRef}
-        source={{ uri: 'https://www.goslot.store/' }} 
+        source={{ uri: 'https://www.metohub.com/' }} 
         style={styles.webview} 
         originWhitelist={['*']}
         javaScriptEnabled={true}

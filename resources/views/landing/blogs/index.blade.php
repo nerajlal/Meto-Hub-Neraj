@@ -109,7 +109,7 @@
 <div class="blogs-container">
   <div class="blogs-header">
     <h1>Our Blog</h1>
-    <p>Insights, updates, and stories from the GoSlot Store team.</p>
+    <p>Insights, updates, and stories from the MetoHub team.</p>
   </div>
 
   @if(count($blogs) > 0)

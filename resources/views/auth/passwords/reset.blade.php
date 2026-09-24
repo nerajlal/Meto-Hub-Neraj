@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GoSlot Store - Create New Password</title>
+    <title>MetoHub - Create New Password</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -277,7 +277,7 @@
     <!-- HEADER -->
     <header class="site-header" id="siteHeader">
       <div class="header-inner">
-        <a href="{{ route('landing') }}" class="logo" aria-label="GoSlot Store home">
+        <a href="{{ route('landing') }}" class="logo" aria-label="MetoHub home">
           <span class="logo-mark" aria-hidden="true">
             <svg viewBox="0 0 32 32" width="30" height="30">
               <rect x="3" y="10" width="26" height="18" rx="4" fill="var(--primary)"/>
@@ -285,7 +285,7 @@
               <path d="M9 10 L11 4 H21 L23 10" stroke="var(--primary)" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
           </span>
-          <span class="logo-text">GoSlot<span class="logo-accent">Store</span></span>
+          <span class="logo-text">MetoHub<span class="logo-accent">Store</span></span>
         </a>
 
         <nav class="main-nav" id="mainNav" aria-label="Primary">
@@ -352,7 +352,7 @@
                 <path d="M9 10 L11 4 H21 L23 10" stroke="var(--primary)" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </span>
-            <span class="logo-text" style="color: #fff;">GoSlot<span class="logo-accent">Store</span></span>
+            <span class="logo-text" style="color: #fff;">MetoHub<span class="logo-accent">Store</span></span>
           </div>
           <p>The SaaS platform built for independent grocers, running advanced inventory systems and real-time delivery routes.</p>
         </div>
@@ -376,7 +376,7 @@
         </div>
       </div>
       <div class="footer-bottom">
-        <span>© 2026 GoSlot Store. All rights reserved.</span>
+        <span>© 2026 MetoHub. All rights reserved.</span>
         <span>Made for grocers worldwide.</span>
       </div>
     </footer>

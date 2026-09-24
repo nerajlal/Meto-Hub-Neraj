@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function(Illuminate\Http\Request $request) {
     $host = $request->getHost();
     // If it's a known main domain, show the SaaS landing page
-    if (in_array($host, ['localhost', '127.0.0.1', 'goslot.store', 'www.goslot.store'])) {
+    if (in_array($host, ['localhost', '127.0.0.1', 'metohub.com', 'www.metohub.com'])) {
         if ($request->has('demo_tenant')) {
             session(['demo_tenant_id' => $request->demo_tenant]);
         }

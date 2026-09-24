@@ -472,7 +472,7 @@
               var options = {
                 "key": data.key,
                 "subscription_id": data.subscription_id,
-                "name": "GoSlot Store",
+                "name": "MetoHub",
                 "description": "Software Subscription",
                 "handler": function (response) {
                   // Verify payment

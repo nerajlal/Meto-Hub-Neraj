@@ -17,7 +17,7 @@
         
         <h3>1. Subscription Cancellations</h3>
         <p>
-          You may cancel your subscription to Slot Store at any time through your account settings or by contacting our support team. Upon cancellation, your subscription will remain active until the end of your current billing cycle, after which it will not be renewed.
+          You may cancel your subscription to MetoHub at any time through your account settings or by contacting our support team. Upon cancellation, your subscription will remain active until the end of your current billing cycle, after which it will not be renewed.
         </p>
         
         <h3>2. Refunds</h3>

@@ -535,9 +535,9 @@
   </div>
   <div class="faq-list" id="faqList">
     <div class="faq-item">
-      <button class="faq-question" aria-expanded="false">Is Slot Store a grocery shopping site or a platform? <span class="faq-toggle">+</span></button>
+      <button class="faq-question" aria-expanded="false">Is MetoHub a grocery shopping site or a platform? <span class="faq-toggle">+</span></button>
       <div class="faq-answer">
-        <p>Slot Store is a SaaS platform for grocery business owners. It's not a place to buy groceries — it's the software merchants use to build and run their own online grocery stores.</p>
+        <p>MetoHub is a SaaS platform for grocery business owners. It's not a place to buy groceries — it's the software merchants use to build and run their own online grocery stores.</p>
       </div>
     </div>
     <div class="faq-item">

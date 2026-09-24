@@ -12,7 +12,7 @@
       <div style="text-align: center; margin-bottom: 60px;">
         <h3 style="color: var(--dark); margin-bottom: 20px; font-size: 2rem;">Unified Commerce Across All Locations</h3>
         <p style="color: var(--muted); line-height: 1.8; max-width: 750px; margin: 0 auto; font-size: 1.1rem;">
-          Managing a multi-location grocery chain introduces immense complexity in inventory syncing, regional pricing, and delivery logistics. Slot Store Enterprise provides a centralized command center to orchestrate your entire digital ecosystem seamlessly.
+          Managing a multi-location grocery chain introduces immense complexity in inventory syncing, regional pricing, and delivery logistics. MetoHub Enterprise provides a centralized command center to orchestrate your entire digital ecosystem seamlessly.
         </p>
       </div>
 
@@ -34,7 +34,7 @@
           <div>
             <h3 style="color: var(--dark); margin-top: 5px; margin-bottom: 15px; font-size: 1.5rem;">Advanced ERP & POS Integration</h3>
             <p style="color: var(--muted); line-height: 1.8; font-size: 1rem; margin: 0;">
-              Slot Store isn't an island. We integrate deeply with your existing enterprise resource planning (ERP) software and point-of-sale (POS) systems. Through real-time webhooks and our REST API, sync complex data like weighted items, tiered pricing, and perishable stock constraints without manual intervention.
+              MetoHub isn't an island. We integrate deeply with your existing enterprise resource planning (ERP) software and point-of-sale (POS) systems. Through real-time webhooks and our REST API, sync complex data like weighted items, tiered pricing, and perishable stock constraints without manual intervention.
             </p>
           </div>
         </div>

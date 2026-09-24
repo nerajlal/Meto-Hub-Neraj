@@ -17,7 +17,7 @@
             Farm-to-Table Digitization
           </h3>
           <p style="color: var(--muted); line-height: 1.8; font-size: 1.05rem; margin: 0;">
-            Farmers markets represent the best of local produce, but relying solely on weekend foot traffic limits growth. Slot Store empowers farmers, collectives, and market organizers to launch dedicated digital storefronts. Sell organic vegetables, grass-fed meats, and artisanal goods online for local delivery or pre-order pickup.
+            Farmers markets represent the best of local produce, but relying solely on weekend foot traffic limits growth. MetoHub empowers farmers, collectives, and market organizers to launch dedicated digital storefronts. Sell organic vegetables, grass-fed meats, and artisanal goods online for local delivery or pre-order pickup.
           </p>
         </div>
 

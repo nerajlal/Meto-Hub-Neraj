@@ -2,7 +2,7 @@
     <div class="engine-copy">
       <span class="eyebrow">Pricing engine</span>
       <h2>Set the right price for every customer, automatically</h2>
-      <p>Slot Store's rule-based pricing engine applies the correct rate at checkout — no manual price lists, no
+      <p>MetoHub's rule-based pricing engine applies the correct rate at checkout — no manual price lists, no
         spreadsheets.</p>
       <ul class="engine-list">
         <li>Customer Pricing</li>
@@ -74,7 +74,7 @@
   <!-- ================= PRODUCT MANAGEMENT ================= -->
   <section class="comparison" id="pricing-solutions">
     <div class="section-head">
-      <span class="eyebrow">Why Slot Store</span>
+      <span class="eyebrow">Why MetoHub</span>
       <h2>A traditional website vs. a real grocery platform</h2>
     </div>
     <div class="compare-table-wrap">
@@ -83,7 +83,7 @@
           <tr>
             <th>Compare</th>
             <th>Traditional Website</th>
-            <th>Slot Store</th>
+            <th>MetoHub</th>
           </tr>
         </thead>
         <tbody>

@@ -100,7 +100,7 @@
                             <div class="col-4 text-muted fw-semibold">Host/Name:</div>
                             <div class="col-8 text-dark">www</div>
                             <div class="col-4 text-muted fw-semibold">Value/Target:</div>
-                            <div class="col-8 text-dark fw-bold">goslot.store</div>
+                            <div class="col-8 text-dark fw-bold">metohub.com</div>
                         </div>
                     </div>
                 </div>

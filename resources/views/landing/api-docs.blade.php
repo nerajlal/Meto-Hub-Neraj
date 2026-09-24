@@ -4,7 +4,7 @@
     <div class="section-head">
       <span class="eyebrow">Developers</span>
       <h2>API Documentation</h2>
-      <p>Build custom integrations and extend the Slot Store platform.</p>
+      <p>Build custom integrations and extend the MetoHub platform.</p>
     </div>
     
     <div style="max-width: 1200px; margin: 0 auto; padding: 0 5vw; display: flex; gap: 60px; flex-wrap: wrap;">
@@ -35,7 +35,7 @@
         <div class="feature-card" style="padding: 40px; margin-bottom: 40px;">
           <h3 style="color: var(--dark); margin-top: 0; margin-bottom: 20px; font-size: 1.8rem;">Introduction</h3>
           <p style="color: var(--muted); line-height: 1.8; margin-bottom: 0;">
-            The Slot Store API is organized around REST. Our API has predictable resource-oriented URLs, accepts form-encoded request bodies, returns JSON-encoded responses, and uses standard HTTP response codes, authentication, and verbs.
+            The MetoHub API is organized around REST. Our API has predictable resource-oriented URLs, accepts form-encoded request bodies, returns JSON-encoded responses, and uses standard HTTP response codes, authentication, and verbs.
           </p>
         </div>
 

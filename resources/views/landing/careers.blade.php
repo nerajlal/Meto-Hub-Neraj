@@ -3,16 +3,16 @@
   <section class="features" style="padding-top: 150px; padding-bottom: 100px; background: var(--bg);">
     <div class="section-head">
       <span class="eyebrow">Join the Team</span>
-      <h2>Careers at Slot Store</h2>
+      <h2>Careers at MetoHub</h2>
       <p>Help us build the most powerful commerce platform for modern grocers.</p>
     </div>
     
     <div style="max-width: 1000px; margin: 0 auto; padding: 0 5vw;">
       
       <div style="margin-bottom: 60px; text-align: center;">
-        <h3 style="color: var(--dark); margin-bottom: 20px; font-size: 2rem;">Why Slot Store?</h3>
+        <h3 style="color: var(--dark); margin-bottom: 20px; font-size: 2rem;">Why MetoHub?</h3>
         <p style="color: var(--muted); line-height: 1.8; font-size: 1.1rem; max-width: 800px; margin: 0 auto;">
-          At Slot Store, we're fundamentally changing how grocery stores operate online. We believe that independent grocers, large chains, and local farmers' markets all deserve access to enterprise-grade technology without the enterprise-level overhead. When you join our team, you're not just writing code, designing interfaces, or selling softwareâ€”you're empowering local economies and transforming the food supply chain.
+          At MetoHub, we're fundamentally changing how grocery stores operate online. We believe that independent grocers, large chains, and local farmers' markets all deserve access to enterprise-grade technology without the enterprise-level overhead. When you join our team, you're not just writing code, designing interfaces, or selling softwareâ€”you're empowering local economies and transforming the food supply chain.
         </p>
       </div>
 

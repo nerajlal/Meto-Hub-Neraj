@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Slot Store Admin - Login</title>
+    <title>MetoHub Admin - Login</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -62,7 +62,7 @@
 <body>
     <header>
       <nav>
-        <a href="{{ route('landing') }}" class="logo"><span class="logo-mark"></span>Slot Store</a>
+        <a href="{{ route('landing') }}" class="logo"><span class="logo-mark"></span>MetoHub</a>
         <div class="nav-links">
           <a href="{{ route('landing') }}#how">How it works</a>
           <a href="{{ route('landing') }}#templates">Templates</a>
@@ -79,7 +79,7 @@
     <div class="main-content">
         <div class="login-card">
             <div class="login-header">
-                <h1>Log in to {{ $currentTenant->name ?? 'Slot Store' }} Admin</h1>
+                <h1>Log in to {{ $currentTenant->name ?? 'MetoHub' }} Admin</h1>
                 <p>Enter your email and password to access your store's dashboard.</p>
             </div>
 
@@ -122,7 +122,7 @@
       <div class="wrap">
         <div class="footer-grid">
           <div class="footer-col">
-            <div class="logo" style="margin-bottom:14px;"><span class="logo-mark"></span>Slot Store</div>
+            <div class="logo" style="margin-bottom:14px;"><span class="logo-mark"></span>MetoHub</div>
             <p style="font-size:13.5px;color:var(--ink-faint);max-width:240px;">The storefront builder for independent grocers, made for real inventory and real delivery routes.</p>
           </div>
           <div class="footer-col">
@@ -144,7 +144,7 @@
           </div>
         </div>
         <div class="footer-bottom">
-          <span>© 2026 Slot Store. Made for grocers.</span>
+          <span>© 2026 MetoHub. Made for grocers.</span>
           <span>Kayamkulam · Remote</span>
         </div>
       </div>

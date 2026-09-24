@@ -1,6 +1,6 @@
 # Delivery Management Module Specification
 
-This document outlines the architecture, features, and implementation plan for the new Delivery Management Module for GoSlot Store. This module allows individual store owners to manage their own local delivery fleets and gives delivery personnel a dedicated interface to manage their assigned orders.
+This document outlines the architecture, features, and implementation plan for the new Delivery Management Module for MetoHub. This module allows individual store owners to manage their own local delivery fleets and gives delivery personnel a dedicated interface to manage their assigned orders.
 
 ## 1. Overview
 The Delivery Module will introduce a new user role (`delivery_boy`) scoped to individual stores (tenants). Store admins can assign incoming orders to these delivery personnel. Delivery personnel will have their own secure login to view their assigned tasks, update order statuses, and collect payments (e.g., Cash on Delivery). 

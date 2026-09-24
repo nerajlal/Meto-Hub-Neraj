@@ -201,12 +201,12 @@
                                 $displayDomain = $currentTenant->domain ?? (strtolower(str_replace(' ', '', $currentTenant->name)) . '.slotstore.com');
                             @endphp
                             @if($currentTenant->domain)
-                                Developed by Slot Store. Running on <a href="http://{{ $displayDomain }}" target="_blank" class="text-decoration-none fw-medium text-secondary">{{ $displayDomain }}</a>
+                                Developed by MetoHub. Running on <a href="http://{{ $displayDomain }}" target="_blank" class="text-decoration-none fw-medium text-secondary">{{ $displayDomain }}</a>
                             @else
-                                Developed by Slot Store
+                                Developed by MetoHub
                             @endif
                         @else
-                            Developed by Slot Store
+                            Developed by MetoHub
                         @endif
                     </div>
                 </div>

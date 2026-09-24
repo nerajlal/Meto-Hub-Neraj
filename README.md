@@ -1,6 +1,6 @@
-# Slot Store (formerly Task19-Grocery)
+# MetoHub (formerly MetoHub)
 
-Slot Store is a multi-tenant SaaS e-commerce platform designed specifically for grocers and niche retailers. It enables merchants to instantly launch beautiful, high-conversion online stores with dynamic themes, integrated inventory, and a comprehensive admin panel.
+MetoHub is a multi-tenant SaaS e-commerce platform designed specifically for grocers and niche retailers. It enables merchants to instantly launch beautiful, high-conversion online stores with dynamic themes, integrated inventory, and a comprehensive admin panel.
 
 ## Key Features
 
@@ -27,8 +27,8 @@ Slot Store is a multi-tenant SaaS e-commerce platform designed specifically for 
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/nerajlal/Task19-Grocery.git
-   cd Task19-Grocery
+   git clone https://github.com/nerajlal/MetoHub.git
+   cd MetoHub
    ```
 
 2. **Install dependencies:**
@@ -66,4 +66,4 @@ Slot Store is a multi-tenant SaaS e-commerce platform designed specifically for 
 - Admins and customers are unified in the `users` table, distinguished by the `type` column (`super_admin`, `admin`, `user`) and scoped by `tenant_id`.
 
 ## License
-© 2026 Slot Store. All rights reserved.
+© 2026 MetoHub. All rights reserved.

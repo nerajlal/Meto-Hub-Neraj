@@ -180,7 +180,7 @@
     <section class="login-section">
         <div class="login-card">
             <div class="login-header">
-                <h1>Log in to GoSlot Store</h1>
+                <h1>Log in to MetoHub</h1>
                 <p>Access your centralized merchant dashboard</p>
             </div>
 

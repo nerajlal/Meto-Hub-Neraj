@@ -385,7 +385,7 @@
     
     <div class="sidebar-widget" style="background: var(--primary); color: white; text-align: center;">
       <h3 style="color: white; font-size: 1.5rem; margin-bottom: 1rem; font-weight: 700;">Start selling online today</h3>
-      <p style="color: rgba(255,255,255,0.9); margin-bottom: 1.5rem; font-size: 0.95rem;">Join thousands of grocery stores upgrading to GoSlot Store.</p>
+      <p style="color: rgba(255,255,255,0.9); margin-bottom: 1.5rem; font-size: 0.95rem;">Join thousands of grocery stores upgrading to MetoHub.</p>
       <a href="/#pricing" class="btn btn-white" style="width: 100%;">Start Free Trial</a>
     </div>
   </aside>

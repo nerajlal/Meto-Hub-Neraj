@@ -12,7 +12,7 @@
       <div style="text-align: center; margin-bottom: 60px;">
         <h3 style="color: var(--dark); margin-bottom: 20px; font-size: 2rem;">Take Back Your Customers</h3>
         <p style="color: var(--muted); line-height: 1.8; max-width: 700px; margin: 0 auto; font-size: 1.1rem;">
-          Stop paying 30% commissions to third-party delivery apps. With Slot Store, independent grocers can build their own branded apps and websites, retain customer data, and keep 100% of their margins.
+          Stop paying 30% commissions to third-party delivery apps. With MetoHub, independent grocers can build their own branded apps and websites, retain customer data, and keep 100% of their margins.
         </p>
       </div>
 
@@ -45,7 +45,7 @@
       <div style="background: var(--white); border: 1px solid var(--line); padding: 50px; border-radius: var(--radius-lg); text-align: center; max-width: 800px; margin: 0 auto;">
         <h3 style="color: var(--dark); margin-bottom: 20px; font-size: 1.8rem;">Why Local Matters</h3>
         <p style="color: var(--muted); line-height: 1.8; margin-bottom: 20px;">
-          Your community relies on your independent grocery store for fresh produce, local specialty items, and excellent service. Slot Store's platform is designed to amplify these strengths online. Unlike massive corporate chains, you can offer highly localized assortments. 
+          Your community relies on your independent grocery store for fresh produce, local specialty items, and excellent service. MetoHub's platform is designed to amplify these strengths online. Unlike massive corporate chains, you can offer highly localized assortments. 
         </p>
         <p style="color: var(--muted); line-height: 1.8; margin-bottom: 30px;">
           Don't let third-party marketplaces commoditize your brand. Take ownership of your digital presence today.

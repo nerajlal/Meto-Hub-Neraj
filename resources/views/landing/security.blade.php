@@ -5,7 +5,7 @@
     <div class="legal-hero-blob"></div>
     <div class="legal-hero-inner">
       <span class="eyebrow fade-up">Trust & Compliance</span>
-      <h1 class="fade-up" style="animation-delay: 0.1s;">Security at Slot Store</h1>
+      <h1 class="fade-up" style="animation-delay: 0.1s;">Security at MetoHub</h1>
       <p class="fade-up" style="animation-delay: 0.2s;">How we protect your data, your customers, and your business.</p>
     </div>
   </section>

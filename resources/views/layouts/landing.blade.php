@@ -4,9 +4,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Slot Store — The Platform Behind Grocery Stores That Sell Online</title>
+  <title>MetoHub — The Platform Behind Grocery Stores That Sell Online</title>
   <meta name="description"
-    content="Slot Store is the SaaS platform grocery businesses use to build, price, promote, and run their own online stores — pricing engine, promotions, themes, analytics, and payments in one place.">
+    content="MetoHub is the SaaS platform grocery businesses use to build, price, promote, and run their own online stores — pricing engine, promotions, themes, analytics, and payments in one place.">
   <meta name="keywords"
     content="grocery ecommerce, saas for grocery stores, create grocery website, online supermarket platform, delivery software, grocery POS integration">
   <link rel="icon"
@@ -17,17 +17,17 @@
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="{{ url()->current() }}">
-  <meta property="og:title" content="Slot Store — Start Your Online Grocery Business">
+  <meta property="og:title" content="MetoHub — Start Your Online Grocery Business">
   <meta property="og:description"
-    content="Slot Store is the SaaS platform grocery businesses use to build, price, promote, and run their own online stores.">
+    content="MetoHub is the SaaS platform grocery businesses use to build, price, promote, and run their own online stores.">
   <meta property="og:image" content="{{ asset('images/og-image.jpg') }}">
 
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:url" content="{{ url()->current() }}">
-  <meta property="twitter:title" content="Slot Store — Start Your Online Grocery Business">
+  <meta property="twitter:title" content="MetoHub — Start Your Online Grocery Business">
   <meta property="twitter:description"
-    content="Slot Store is the SaaS platform grocery businesses use to build, price, promote, and run their own online stores.">
+    content="MetoHub is the SaaS platform grocery businesses use to build, price, promote, and run their own online stores.">
   <meta property="twitter:image" content="{{ asset('images/og-image.jpg') }}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -37,7 +37,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <style>
     /* =========================================================
-   Slot Store — Premium SaaS Homepage
+   MetoHub — Premium SaaS Homepage
    ========================================================= */
 
     :root {
@@ -2029,14 +2029,14 @@
     {
       "@@context": "https://schema.org",
       "@@type": "SoftwareApplication",
-      "name": "Slot Store",
+      "name": "MetoHub",
       "applicationCategory": "BusinessApplication",
       "operatingSystem": "Web",
-      "description": "Slot Store is the SaaS platform grocery businesses use to build, price, promote, and run their own online stores.",
+      "description": "MetoHub is the SaaS platform grocery businesses use to build, price, promote, and run their own online stores.",
       "url": "{{ url()->current() }}",
       "publisher": {
         "@@type": "Organization",
-        "name": "Slot Store"
+        "name": "MetoHub"
       }
     }
   </script>
@@ -2047,7 +2047,7 @@
   <!-- ================= HEADER ================= -->
   <header class="site-header" id="siteHeader">
     <div class="header-inner">
-      <a href="{{ route('landing') }}" class="logo" aria-label="Slot Store home">
+      <a href="{{ route('landing') }}" class="logo" aria-label="MetoHub home">
         <span class="logo-mark" aria-hidden="true">
           <svg viewBox="0 0 32 32" width="30" height="30">
             <rect x="3" y="10" width="26" height="18" rx="4" fill="var(--primary)" />
@@ -2088,7 +2088,7 @@
   <footer class="site-footer" id="contact">
     <div class="footer-top">
       <div class="footer-brand">
-        <a href="{{ route('landing') }}" class="logo text-decoration-none" aria-label="Slot Store home" style="display: flex; align-items: center; gap: 8px; margin-bottom: 15px;">
+        <a href="{{ route('landing') }}" class="logo text-decoration-none" aria-label="MetoHub home" style="display: flex; align-items: center; gap: 8px; margin-bottom: 15px;">
           <span class="logo-mark" aria-hidden="true">
             <svg viewBox="0 0 32 32" width="30" height="30">
               <rect x="3" y="10" width="26" height="18" rx="4" fill="var(--primary)" />
@@ -2125,7 +2125,7 @@
     </div>
     <div class="footer-bottom">
       <div class="footer-bottom-left">
-        <span>&copy; 2026 Slot Store. All rights reserved.</span>
+        <span>&copy; 2026 MetoHub. All rights reserved.</span>
         <div class="footer-legal-links">
           <a href="{{ route('landing.privacy') }}">Privacy</a>
           <a href="{{ route('landing.terms') }}">Terms</a>
@@ -2484,7 +2484,7 @@
         <div class="saas-success-container">
           <div class="saas-success-icon-check">✓</div>
           <h2>Account Verified!</h2>
-          <p>Your email has been verified successfully. Welcome to Slot Store! Let's get started setting up your
+          <p>Your email has been verified successfully. Welcome to MetoHub! Let's get started setting up your
             customized
             grocery store.</p>
           <button onclick="closeSaaSModal()" class="saas-success-finish-btn">Go to your SaaS dashboard â†’</button>

@@ -442,7 +442,7 @@
     <div class="about-hero-header fade-up">
       <span class="eyebrow">Our Story</span>
       <h1>Redefining the <br><span>Grocery Experience</span></h1>
-      <p>Slot Store is the operating system for modern grocery. We're building the infrastructure that empowers grocers to run, scale, and transform their businesses in a digital-first world.</p>
+      <p>MetoHub is the operating system for modern grocery. We're building the infrastructure that empowers grocers to run, scale, and transform their businesses in a digital-first world.</p>
     </div>
     
     <div class="hero-3d-scene fade-up" style="animation-delay: 0.2s;">
@@ -473,7 +473,7 @@
         <span class="eyebrow">The Challenge</span>
         <h2>Built for the <br><span>Complexities</span> of Grocery</h2>
         <p>Traditional ecommerce platforms weren't built for the nuances of the grocery industry—inventory that spoils, weight-based pricing, regional variations, and complex fulfillment logistics.</p>
-        <p>Slot Store was founded with a simple mission: to provide a platform built from the ground up to solve these exact challenges, giving you the powerful tools needed to compete and succeed.</p>
+        <p>MetoHub was founded with a simple mission: to provide a platform built from the ground up to solve these exact challenges, giving you the powerful tools needed to compete and succeed.</p>
       </div>
       
       <div class="mission-image-wrapper">
