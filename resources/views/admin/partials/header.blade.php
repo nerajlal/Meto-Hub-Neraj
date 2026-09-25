@@ -18,6 +18,22 @@
 
     <!-- Right Side Profile and Settings -->
     <div class="d-flex align-items-center gap-3 ms-auto">
+        @if(isset($isPaidPlan) && !$isPaidPlan)
+            @if(isset($isTrialExpired) && $isTrialExpired)
+                <span class="badge bg-danger rounded-pill fw-medium d-flex align-items-center gap-1" style="font-size: 11px; padding: 5px 10px;">
+                    <i class="fas fa-exclamation-circle"></i> Trial Expired
+                </span>
+            @else
+                <span class="badge rounded-pill fw-medium d-flex align-items-center gap-1" style="background-color: rgba(255,255,255,0.15); color: #fff; font-size: 11px; padding: 5px 10px;">
+                    <i class="fas fa-clock"></i> {{ $trialDaysRemaining ?? 0 }} days left in trial
+                </span>
+            @endif
+        @elseif(isset($isPaidPlan) && $isPaidPlan)
+            <span class="badge rounded-pill fw-medium d-flex align-items-center gap-1" style="background-color: rgba(255,255,255,0.15); color: #fff; font-size: 11px; padding: 5px 10px;">
+                <i class="fas fa-sync-alt"></i> Renews in {{ $renewsIn ?? 30 }} days
+            </span>
+        @endif
+
         <a href="{{ $storefrontUrl }}" target="_blank" class="btn btn-sm d-none d-sm-flex align-items-center gap-2" style="background-color: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); color: #ffffff; font-size: 11px; font-weight: 500; border-radius: 6px; padding: 4px 10px;">
             <i class="fas fa-external-link-alt" style="font-size: 9px;"></i>
             View Store
