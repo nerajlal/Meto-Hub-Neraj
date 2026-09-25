@@ -28,7 +28,7 @@
                 <div class="card-body p-4">
                     <div class="mb-3">
                         <label class="form-label fw-medium text-secondary small mb-1">Title</label>
-                        <input type="text" name="title" class="form-control shadow-sm" placeholder="e.g. Fresh Organic Apples" required>
+                        <input type="text" name="title" class="form-control shadow-sm" placeholder="e.g. Classic White T-Shirt" required>
                     </div>
                     <div>
                         <label class="form-label fw-medium text-secondary small mb-1">Description</label>
@@ -201,7 +201,7 @@
              <div class="card border shadow-sm mb-4">
                 <div class="card-body p-4">
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h2 class="h6 fw-semibold text-secondary mb-0">Product Variants (Wholesale & Retail)</h2>
+                        <h2 class="h6 fw-semibold text-secondary mb-0">Product Variants</h2>
                         <button type="button" class="btn btn-outline-success btn-sm fw-medium" onclick="addVariantRow()">+ Add Variant</button>
                     </div>
                     <div id="variants-container" class="vstack gap-3">
@@ -326,8 +326,8 @@
                     row.innerHTML = `
                         <div class="row g-2 align-items-end">
                             <div class="col-12 col-md-3">
-                                <label class="form-label extra-small fw-medium text-muted mb-1">Variant Name (e.g. 1kg, Pack of 10)</label>
-                                <input type="text" class="form-control form-control-sm shadow-sm variant-size-input" name="variants[${index}][size]" placeholder="e.g. 1kg" required>
+                                <label class="form-label extra-small fw-medium text-muted mb-1">Variant Name (e.g. S, M, L, XL)</label>
+                                <input type="text" class="form-control form-control-sm shadow-sm variant-size-input" name="variants[${index}][size]" placeholder="e.g. Medium" required>
                             </div>
                             <div class="col-4 col-md-3">
                                 <label class="form-label extra-small fw-medium text-muted mb-1">Stock</label>
@@ -432,8 +432,8 @@
                     
                     <div class="form-check form-switch mt-4">
                         <input class="form-check-input" type="checkbox" role="switch" id="continue_selling" name="continue_selling_when_out_of_stock" value="1">
-                        <label class="form-check-label fw-medium text-secondary small" for="continue_selling">Open when out of stock</label>
-                        <div class="form-text text-muted extra-small">Allow customers to purchase this item even when stock reaches 0.</div>
+                        <label class="form-check-label fw-medium text-secondary small" for="continue_selling">Continue selling when out of stock</label>
+                        <div class="form-text text-muted extra-small">Allow customers to purchase this product even when inventory reaches zero.</div>
                     </div>
                 </div>
             </div>
@@ -445,11 +445,11 @@
                     <div class="vstack gap-3">
                         <div>
                             <label class="form-label fw-medium text-secondary small mb-1">Product type</label>
-                            <input type="text" name="type" class="form-control shadow-sm" placeholder="e.g. Fruits, Beverages" value="Grocery">
+                            <input type="text" name="type" class="form-control shadow-sm" placeholder="e.g. Clothing, Electronics, Accessories">
                         </div>
                         <div>
                             <label class="form-label fw-medium text-secondary small mb-1">Vendor</label>
-                            <input type="text" name="vendor" class="form-control shadow-sm" placeholder="e.g. Local Farms">
+                            <input type="text" name="vendor" class="form-control shadow-sm" placeholder="e.g. Nike, Samsung, Handmade">
                         </div>
                         <div>
                             <label class="form-label fw-medium text-secondary small mb-1">Collections</label>
@@ -472,7 +472,7 @@
             <!-- Purchase Quantity Limits -->
             <div class="card border shadow-sm mb-4">
                 <div class="card-body p-4">
-                    <h2 class="h6 fw-semibold text-secondary mb-3">Purchase Limits (Wholesale/Promo)</h2>
+                    <h2 class="h6 fw-semibold text-secondary mb-3">Purchase Limits</h2>
                     <div class="row g-2">
                         <div class="col-6">
                             <label class="form-label fw-medium text-secondary small mb-1">Min Order Qty</label>

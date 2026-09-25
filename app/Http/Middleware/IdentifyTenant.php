@@ -49,12 +49,6 @@ class IdentifyTenant
                 if ($renewsIn === 0) $renewsIn = 30;
             }
 
-            // Restrict admin access to billing page only if trial is expired
-            $routeName = $request->route() ? $request->route()->getName() : '';
-            if ($isTrialExpired && $routeName && !str_contains($routeName, 'billing') && !str_contains($routeName, 'logout')) {
-                return redirect()->route('billing', ['tenant' => $tenantParam]);
-            }
-
             // Share resolved tenant globally with all views
             view()->share('currentTenant', $tenant);
             view()->share('trialDaysRemaining', $daysRemaining);
