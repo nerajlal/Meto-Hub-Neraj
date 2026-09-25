@@ -9,13 +9,13 @@
         <a href="{{ route('admin.customers') }}" class="text-secondary hover-text-dark">
             <i class="fas fa-arrow-left"></i>
         </a>
-        <h1 class="h3 mb-0 text-dark">Import customers</h1>
+        <h1 class="h3 mb-0 text-primary">Import customers</h1>
     </div>
 
     <div class="card border shadow-sm p-4 text-center">
         <div class="mb-4">
             <i class="fas fa-file-csv text-success display-4 mb-3"></i>
-            <h2 class="h5 fw-bold text-dark">Upload CSV file</h2>
+            <h2 class="h5 fw-bold text-primary">Upload CSV file</h2>
             <p class="small text-muted mt-1">Download a <a href="#" class="text-decoration-underline text-primary">sample CSV template</a> to see an example of the format required.</p>
         </div>
 
@@ -37,7 +37,7 @@
 
         <div class="d-flex justify-content-between align-items-center">
             <button type="button" class="btn btn-link text-secondary text-decoration-none fw-medium small">Cancel</button>
-            <button type="button" class="btn btn-success shadow-sm">Import customers</button>
+            <button type="button" class="btn btn-primary shadow-sm">Import customers</button>
         </div>
     </div>
 </div>

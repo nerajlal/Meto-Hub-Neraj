@@ -8,10 +8,10 @@
     <!-- Header -->
     <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-4">
         <div>
-            <h1 class="h3 mb-1 text-dark">Delivery Staff</h1>
+            <h1 class="h3 mb-1 text-primary">Delivery Staff</h1>
             <p class="text-muted small mb-0">Manage your local delivery boys and their access.</p>
         </div>
-        <a href="{{ route('admin.delivery-staff.create') }}" class="btn btn-success shadow-sm d-flex align-items-center gap-2">
+        <a href="{{ route('admin.delivery-staff.create') }}" class="btn btn-primary shadow-sm d-flex align-items-center gap-2">
             <i class="fas fa-user-plus"></i> Add Delivery Boy
         </a>
     </div>
@@ -70,7 +70,7 @@
 </div>
 <style>
     .hover-bg-danger-soft:hover { background-color: #fef2f2 !important; color: #dc3545 !important; }
-    .hover-bg-primary-soft:hover { background-color: #e0e7ff !important; color: #0d6efd !important; }
+    .hover-bg-primary-soft:hover { background-color: #ede9fe !important; color: #0d6efd !important; }
     .text-light-gray { color: #cbd5e1; }
 </style>
 @endsection

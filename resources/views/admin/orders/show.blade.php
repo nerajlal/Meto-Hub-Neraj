@@ -11,7 +11,7 @@
                 <a href="{{ route('admin.orders') }}" class="text-secondary text-decoration-none">
                     <i class="fas fa-arrow-left"></i>
                 </a>
-                <h1 class="h4 fw-bold text-dark mb-0">Order {{ $order->order_number }}</h1>
+                <h1 class="h4 fw-bold text-primary mb-0">Order {{ $order->order_number }}</h1>
 
                 <span id="fulfillmentBadge" class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-10 text-uppercase" style="font-size: 0.7rem; letter-spacing: 0.05em;">{{ $order->status }}</span>
             </div>
@@ -231,7 +231,7 @@
                                 @endforeach
                             </select>
                         </div>
-                        <button type="submit" class="btn btn-sm btn-success w-100">Update Assignment</button>
+                        <button type="submit" class="btn btn-sm btn-primary w-100">Update Assignment</button>
                     </form>
                 </div>
             </div>
@@ -377,7 +377,7 @@
                     badge.className = 'badge bg-info bg-opacity-10 text-info border border-info border-opacity-10 text-uppercase';
                     badge.innerText = 'Shipped';
                     btn.innerHTML = 'Mark as Delivered';
-                    btn.className = 'btn btn-success text-white shadow-sm btn-sm fw-medium';
+                    btn.className = 'btn btn-primary text-white shadow-sm btn-sm fw-medium';
                     
                     // Show tracking info
                     const trackingDisplay = document.getElementById('trackingInfo');
@@ -416,7 +416,7 @@
              btn.className = 'btn btn-info text-white shadow-sm btn-sm fw-medium';
         } else if(orderStatus === 'shipped') {
              btn.innerHTML = 'Mark as Delivered';
-             btn.className = 'btn btn-success text-white shadow-sm btn-sm fw-medium';
+             btn.className = 'btn btn-primary text-white shadow-sm btn-sm fw-medium';
         } else if(orderStatus === 'delivered') {
              btn.innerHTML = 'Completed';
              btn.className = 'btn btn-light text-muted border shadow-sm btn-sm fw-medium disabled';

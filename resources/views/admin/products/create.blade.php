@@ -11,11 +11,11 @@
                 <a href="{{ route('admin.products') }}" class="text-secondary text-decoration-none">
                     <i class="fas fa-arrow-left"></i>
                 </a>
-                <h1 class="h3 fw-bold text-dark mb-0">Add product</h1>
+                <h1 class="h3 fw-bold text-primary mb-0">Add product</h1>
             </div>
             <div class="d-flex gap-2">
                 <a href="{{ route('admin.products') }}" class="btn btn-white border shadow-sm text-secondary">Discard</a>
-                <button type="submit" class="btn btn-success shadow-sm">Save</button>
+                <button type="submit" class="btn btn-primary shadow-sm">Save</button>
             </div>
         </div>
 
@@ -493,7 +493,7 @@
         
         <div class="col-12 d-flex justify-content-end gap-2 border-top pt-3">
             <button type="button" class="btn btn-white border shadow-sm text-secondary">Discard</button>
-            <button type="submit" class="btn btn-success shadow-sm">Save</button>
+            <button type="submit" class="btn btn-primary shadow-sm">Save</button>
         </div>
         </div> <!-- Close row g-4 -->
     </form>

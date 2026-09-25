@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
-    <h1 class="h3 fw-bold text-dark mb-0">Home Products</h1>
+    <h1 class="h3 fw-bold text-primary mb-0">Home Products</h1>
     <span class="badge bg-success rounded-pill shadow-sm py-2 px-3">{{ $selectedProducts->count() }} / 8 Selected</span>
 </div>
 
@@ -116,15 +116,15 @@
     .nav-tabs .nav-link.active {
         color: #202223 !important;
         background-color: transparent !important;
-        border-bottom-color: #008060 !important;
+        border-bottom-color: #8b5cf6 !important;
         font-weight: 600;
     }
     .nav-tabs .nav-link:not(.active):hover {
         border-bottom-color: transparent !important;
-        color: #008060 !important;
+        color: #8b5cf6 !important;
     }
     .hover-text-success:hover {
-        color: #008060 !important;
+        color: #8b5cf6 !important;
     }
     .hover-bg-danger:hover {
         background-color: var(--bs-danger) !important;

@@ -11,7 +11,7 @@
                 <a href="{{ route('admin.bundles') }}" class="text-secondary hover-text-dark">
                     <i class="fas fa-arrow-left"></i>
                 </a>
-                <h1 class="h3 mb-0 text-dark">Create bundle pool</h1>
+                <h1 class="h3 mb-0 text-primary">Create bundle pool</h1>
             </div>
             <div class="d-flex gap-3">
                  <a href="{{ route('admin.bundles') }}" class="btn btn-white border shadow-sm text-secondary">Discard</a>

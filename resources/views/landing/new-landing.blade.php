@@ -5,9 +5,9 @@
     <div class="hero-blob blob-b" aria-hidden="true"></div>
     <div class="hero-inner">
       <div class="hero-copy fade-up">
-        <span class="eyebrow">Grocery commerce infrastructure</span>
-        <h1>Create &amp; grow your grocery store <span class="highlight">online</span></h1>
-        <p class="hero-sub">Launch a powerful grocery eCommerce store with advanced pricing, promotions, analytics,
+        <span class="eyebrow">Ecommerce infrastructure</span>
+        <h1>Create &amp; grow your online store <span class="highlight">online</span></h1>
+        <p class="hero-sub">Launch a powerful eCommerce website with advanced pricing, promotions, analytics,
           custom themes, payment integrations, and a seamless shopping experience — all run from one dashboard.</p>
         <div class="hero-cta">
           <a href="javascript:void(0)" class="btn btn-primary btn-lg pricing-btn-trigger" data-plan="sprout">Start
@@ -18,7 +18,7 @@
           <div class="avatars" aria-hidden="true">
             <span></span><span></span><span></span><span></span>
           </div>
-          <p><strong>2,400+</strong> grocery merchants run on MetoHub</p>
+          <p><strong>2,400+</strong> businesses run on MetoHub</p>
         </div>
       </div>
 
@@ -26,7 +26,7 @@
         <div class="dash-card dash-main">
           <div class="dash-topbar">
             <div class="dash-dots"><span></span><span></span><span></span></div>
-            <span class="dash-title">FreshMart Dashboard</span>
+            <span class="dash-title">Storefront Dashboard</span>
           </div>
           <div class="dash-grid">
             <div class="dash-tile">
@@ -85,13 +85,13 @@
 
   <!-- ================= TRUSTED BY ================= -->
   <section class="trusted">
-    <p class="trusted-label">Trusted by grocery businesses building online</p>
+    <p class="trusted-label">Trusted by businesses building online</p>
     <div class="marquee">
       <div class="marquee-track">
-        <span>FreshMart</span><span>Green Basket</span><span>Daily Foods</span><span>Urban Grocery</span><span>Family
-          Market</span><span>Farm Fresh</span>
-        <span>FreshMart</span><span>Green Basket</span><span>Daily Foods</span><span>Urban Grocery</span><span>Family
-          Market</span><span>Farm Fresh</span>
+        <span>TechNova</span><span>Urban Style</span><span>Daily Goods</span><span>NextGen Retail</span><span>Family
+          Market</span><span>Prime Gear</span>
+        <span>TechNova</span><span>Urban Style</span><span>Daily Goods</span><span>NextGen Retail</span><span>Family
+          Market</span><span>Prime Gear</span>
       </div>
     </div>
   </section>
@@ -113,8 +113,8 @@
 
   <!-- ================= FINAL CTA ================= -->
   <section class="final-cta">
-    <h2>Start your grocery business today</h2>
-    <p>Everything you need to launch, manage, and grow a successful grocery store online.</p>
+    <h2>Start your online business today</h2>
+    <p>Everything you need to launch, manage, and grow a successful eCommerce store.</p>
     <div class="hero-cta">
       <a href="javascript:void(0)" class="btn btn-primary btn-lg pricing-btn-trigger" data-plan="sprout">Start Free</a>
       <a href="https://wa.me/7012639646?text=Hello!%20I%20would%20like%20to%20schedule%20a%20demo%20to%20learn%20more%20about%20MetoHub." target="_blank" class="btn btn-outline-light btn-lg">Book Demo</a>

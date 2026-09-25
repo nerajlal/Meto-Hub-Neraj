@@ -50,8 +50,8 @@
 </div>
 <style>
     .hover-bg-success:hover {
-        background-color: #008060 !important;
-        border-color: #008060 !important;
+        background-color: #8b5cf6 !important;
+        border-color: #8b5cf6 !important;
         color: white !important;
     }
 </style>

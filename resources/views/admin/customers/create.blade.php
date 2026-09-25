@@ -9,7 +9,7 @@
         <a href="{{ route('admin.customers') }}" class="text-secondary hover-text-dark">
             <i class="fas fa-arrow-left"></i>
         </a>
-        <h1 class="h3 mb-0 text-dark">Add customer</h1>
+        <h1 class="h3 mb-0 text-primary">Add customer</h1>
     </div>
 
     <form action="#" method="POST">
@@ -111,7 +111,7 @@
         
         <div class="d-flex justify-content-end gap-3 pt-4 border-top">
              <button type="button" class="btn btn-white border text-secondary shadow-sm">Discard</button>
-            <button type="submit" class="btn btn-success shadow-sm">Save</button>
+            <button type="submit" class="btn btn-primary shadow-sm">Save</button>
         </div>
 
     </form>

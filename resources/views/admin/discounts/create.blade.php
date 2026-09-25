@@ -8,7 +8,7 @@
         <a href="{{ route('admin.discounts') }}" class="text-secondary hover-text-dark">
             <i class="fas fa-arrow-left"></i>
         </a>
-        <h1 class="h3 mb-0 text-dark">Create discount</h1>
+        <h1 class="h3 mb-0 text-primary">Create discount</h1>
     </div>
 
     <form action="{{ route('admin.discounts.store') }}" method="POST">
@@ -103,7 +103,7 @@
                     <!-- Summary -->
                      <div class="card border shadow-sm p-4">
                         <h2 class="h6 fw-bold text-secondary mb-3">Summary</h2>
-                        <h3 class="h6 fw-bold text-dark mb-2" id="summary_code">--</h3>
+                        <h3 class="h6 fw-bold text-primary mb-2" id="summary_code">--</h3>
                         <ul class="list-unstyled mb-0 small text-secondary">
                             <li class="mb-1"><i class="fas fa-circle text-secondary me-2" style="font-size: 4px; vertical-align: middle;"></i>Applies to <span id="summary_products_count">0</span> products</li>
                             <li class="mb-1"><i class="fas fa-circle text-secondary me-2" style="font-size: 4px; vertical-align: middle;"></i><span id="summary_value">--</span></li>
@@ -116,7 +116,7 @@
         
         <div class="d-flex justify-content-end gap-3 mt-4 pt-4 border-top">
              <a href="{{ route('admin.discounts') }}" class="btn btn-white border shadow-sm text-secondary fw-medium hover-bg-light">Discard</a>
-            <button type="submit" class="btn btn-success shadow-sm fw-medium">Save discount</button>
+            <button type="submit" class="btn btn-primary shadow-sm fw-medium">Save discount</button>
         </div>
 
     </form>

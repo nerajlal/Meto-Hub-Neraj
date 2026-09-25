@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h1 class="h3 fw-bold text-dark mb-0">Orders</h1>
+    <h1 class="h3 fw-bold text-primary mb-0">Orders</h1>
     <div class="d-flex gap-2">
         <a href="{{ route('admin.orders.export', ['tenant' => request()->route('tenant'), 'status' => request('status'), 'date_filter' => request('date_filter', 'this_month'), 'start_date' => request('start_date'), 'end_date' => request('end_date')]) }}" class="btn btn-white border shadow-sm fw-medium d-flex align-items-center gap-2" style="font-size: 13px; border-radius: 6px;">
             <i class="fa-solid fa-file-export fs-6"></i> Export Excel

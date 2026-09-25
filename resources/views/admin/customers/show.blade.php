@@ -11,7 +11,7 @@
             <i class="fas fa-arrow-left"></i>
         </a>
         <div class="flex-grow-1">
-            <h1 class="h3 mb-1 text-dark d-flex align-items-center gap-2">
+            <h1 class="h3 mb-1 text-primary d-flex align-items-center gap-2">
                 {{ $customer->name }}
                 @if($customer->email_verified_at)
                     <span class="badge bg-success bg-opacity-10 text-success fw-bold text-uppercase small tracking-wide" style="letter-spacing: 0.05em;">Verified</span>

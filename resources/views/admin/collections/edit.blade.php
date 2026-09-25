@@ -8,7 +8,7 @@
         <a href="{{ route('admin.collections') }}" class="text-secondary hover-text-dark">
             <i class="fas fa-arrow-left"></i>
         </a>
-        <h1 class="h3 mb-0 text-dark">Edit collection</h1>
+        <h1 class="h3 mb-0 text-primary">Edit collection</h1>
     </div>
 
     <form action="{{ route('admin.collections.update', ['id' => $collection->id]) }}" method="POST" enctype="multipart/form-data" class="row g-4">
@@ -73,7 +73,7 @@
         
         <div class="col-12 d-flex justify-content-end gap-3 mt-4 pt-4 border-top">
             <a href="{{ route('admin.collections') }}" class="btn btn-white border shadow-sm text-secondary fw-medium hover-bg-light">Discard</a>
-            <button type="submit" class="btn btn-success shadow-sm fw-medium">Save Changes</button>
+            <button type="submit" class="btn btn-primary shadow-sm fw-medium">Save Changes</button>
         </div>
     </form>
     

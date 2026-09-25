@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
-    <h1 class="h3 fw-bold text-dark mb-0">Products</h1>
+    <h1 class="h3 fw-bold text-primary mb-0">Products</h1>
     <div class="d-flex flex-wrap gap-2">
         @if(isset($zohoConnected) && $zohoConnected)
             <form action="{{ route('admin.zoho.sync', request()->route('tenant') ?? 1) }}" method="POST" class="d-inline">
@@ -37,7 +37,7 @@
                 <li><a class="dropdown-item py-2" href="{{ route('admin.products.sample') }}"><i class="fas fa-download me-2 text-muted"></i> Download Sample Format</a></li>
             </ul>
         </div>
-        <a href="{{ route('admin.products.create') }}" class="btn btn-success shadow-sm">Add product</a>
+        <a href="{{ route('admin.products.create') }}" class="btn btn-primary shadow-sm">Add product</a>
     </div>
 </div>
 
@@ -181,7 +181,7 @@
 </script>
 <style>
     .hover-success:hover {
-        color: #008060 !important;
+        color: #8b5cf6 !important;
     }
     .hover-danger:hover {
         color: var(--bs-danger) !important;
@@ -189,17 +189,17 @@
     
     /* Pagination Overrides */
     .page-link {
-        color: #008060;
+        color: #8b5cf6;
         border-color: #dee2e6;
     }
     .page-link:hover {
-        color: #004d3a;
+        color: #6d28d9;
         background-color: #e6f2f0;
         border-color: #dee2e6;
     }
     .page-item.active .page-link {
-        background-color: #008060;
-        border-color: #008060;
+        background-color: #8b5cf6;
+        border-color: #8b5cf6;
         color: white;
     }
     .page-item.disabled .page-link {
@@ -230,7 +230,7 @@
                 </div>
                 <div class="modal-footer border-top-0 pt-0">
                     <button type="button" class="btn btn-white border fw-medium px-4" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-success fw-medium px-4">Upload and Import</button>
+                    <button type="submit" class="btn btn-primary fw-medium px-4">Upload and Import</button>
                 </div>
             </div>
         </form>
@@ -245,7 +245,7 @@
                 <h5 class="modal-title fw-bold" id="liveExcelModalLabel"><i class="fas fa-table text-success me-2"></i>Live Excel Editor</h5>
                 <div>
                     <button type="button" class="btn btn-secondary shadow-sm me-2" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-success shadow-sm" onclick="saveLiveExcel()"><i class="fas fa-save me-1"></i> Save & Sync</button>
+                    <button type="button" class="btn btn-primary shadow-sm" onclick="saveLiveExcel()"><i class="fas fa-save me-1"></i> Save & Sync</button>
                 </div>
             </div>
             <div class="modal-body p-0" style="overflow: auto; height: calc(100vh - 130px);">
@@ -342,7 +342,7 @@
         
         // Get all data from the spreadsheet
         const data = mySpreadsheet.getData();
-        const btn = document.querySelector('#liveExcelModal .btn-success');
+        const btn = document.querySelector('#liveExcelModal .btn-primary');
         const originalText = btn.innerHTML;
         btn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Saving...';
         btn.disabled = true;

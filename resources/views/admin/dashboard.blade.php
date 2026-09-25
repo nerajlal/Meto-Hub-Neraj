@@ -6,11 +6,11 @@
 <!-- Welcome Section -->
 <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
-        <h1 class="h3 fw-bold text-dark mb-1">Dashboard</h1>
+        <h1 class="h3 fw-bold text-primary mb-1">Dashboard</h1>
         <p class="text-muted small">Overview of your store's performance.</p>
     </div>
     <div class="d-flex align-items-center gap-2">
-        <!-- <a href="{{ $storefrontUrl }}" target="_blank" class="btn btn-sm bg-shopify-green text-white d-none d-sm-flex align-items-center gap-2">
+        <!-- <a href="{{ $storefrontUrl }}" target="_blank" class="btn btn-sm bg-primary text-white d-none d-sm-flex align-items-center gap-2">
             <i class="fas fa-external-link-alt"></i>
             View Storefront
         </a> -->
@@ -28,15 +28,15 @@
         <div class="card p-3 h-100 border shadow-sm position-relative">
             <a href="{{ route('admin.analytics') }}" class="stretched-link"></a>
             <div class="d-flex justify-content-between align-items-start mb-3">
-                <div class="p-2 bg-success bg-opacity-10 rounded">
-                    <i class="fas fa-coins text-success"></i>
+                <div class="p-2 bg-primary bg-opacity-10 rounded">
+                    <i class="fas fa-coins text-primary"></i>
                 </div>
                 <span class="badge {{ $salesGrowth >= 0 ? 'bg-success text-success' : 'bg-danger text-danger' }} bg-opacity-10 rounded-pill px-2 py-1 small d-flex align-items-center">
                     <i class="fas fa-arrow-{{ $salesGrowth >= 0 ? 'up' : 'down' }} me-1"></i> {{ number_format(abs($salesGrowth), 1) }}%
                 </span>
             </div>
             <h3 class="small fw-medium text-muted mb-1">Total Sales</h3>
-            <span class="fs-4 fw-bold text-dark">{{ $currentTenant->currency ?? '₹' }}{{ number_format($currentSales, 2) }}</span>
+            <span class="fs-4 fw-bold text-primary">{{ $currentTenant->currency ?? '₹' }}{{ number_format($currentSales, 2) }}</span>
             <p class="small text-muted mt-2 mb-0">vs. {{ $currentTenant->currency ?? '₹' }}{{ number_format($prevSales, 2) }} last 30d</p>
         </div>
     </div>
@@ -54,7 +54,7 @@
                 </span>
             </div>
             <h3 class="small fw-medium text-muted mb-1">Total Orders</h3>
-            <span class="fs-4 fw-bold text-dark">{{ number_format($currentOrders) }}</span>
+            <span class="fs-4 fw-bold text-primary">{{ number_format($currentOrders) }}</span>
             <p class="small text-muted mt-2 mb-0">vs. {{ number_format($prevOrders) }} last 30d</p>
         </div>
     </div>
@@ -64,15 +64,15 @@
         <div class="card p-3 h-100 border shadow-sm position-relative">
             <a href="{{ route('admin.customers') }}" class="stretched-link"></a>
             <div class="d-flex justify-content-between align-items-start mb-3">
-                 <div class="p-2 bg-info bg-opacity-10 rounded">
-                    <i class="fas fa-users text-info"></i>
+                 <div class="p-2 bg-primary bg-opacity-10 rounded">
+                    <i class="fas fa-users text-primary"></i>
                 </div>
                 <span class="badge {{ $customersGrowth >= 0 ? 'bg-success text-success' : 'bg-danger text-danger' }} bg-opacity-10 rounded-pill px-2 py-1 small d-flex align-items-center">
                     <i class="fas fa-arrow-{{ $customersGrowth >= 0 ? 'up' : 'down' }} me-1"></i> {{ number_format(abs($customersGrowth), 1) }}%
                 </span>
             </div>
             <h3 class="small fw-medium text-muted mb-1">New Customers</h3>
-            <span class="fs-4 fw-bold text-dark">{{ number_format($currentCustomers) }}</span>
+            <span class="fs-4 fw-bold text-primary">{{ number_format($currentCustomers) }}</span>
             <p class="small text-muted mt-2 mb-0">vs. {{ number_format($prevCustomers) }} last 30d</p>
         </div>
     </div>
@@ -101,7 +101,7 @@
     <div class="col-12 col-lg-8">
         <div class="card border shadow-sm h-100">
             <div class="p-3 border-bottom d-flex justify-content-between align-items-center">
-                <h2 class="h6 fw-bold text-dark mb-0">Recent Orders</h2>
+                <h2 class="h6 fw-bold text-primary mb-0">Recent Orders</h2>
                 <a href="{{ route('admin.orders') }}" class="small text-success text-decoration-none fw-medium">View all</a>
             </div>
             <div class="table-responsive">
@@ -156,7 +156,7 @@
     <div class="col-12 col-lg-4">
         <div class="card border shadow-sm h-100">
             <div class="p-3 border-bottom d-flex justify-content-between align-items-center">
-                <h2 class="h6 fw-bold text-dark mb-0">Low Stock Alerts</h2>
+                <h2 class="h6 fw-bold text-primary mb-0">Low Stock Alerts</h2>
                 <span class="badge bg-danger bg-opacity-10 text-danger rounded-pill">3</span>
             </div>
             <div class="p-3 d-flex flex-column gap-3">
@@ -167,7 +167,7 @@
                             <i class="fas fa-{{ $item->stock == 0 ? 'exclamation-circle' : 'box-open' }} small"></i>
                         </div>
                         <div>
-                            <h4 class="small fw-medium text-dark mb-0">{{ $item->product ? $item->product->title : 'Unknown Product' }} @if($item->size) ({{ $item->size }}) @endif</h4>
+                            <h4 class="small fw-medium text-primary mb-0">{{ $item->product ? $item->product->title : 'Unknown Product' }} @if($item->size) ({{ $item->size }}) @endif</h4>
                             <p class="small text-{{ $item->stock == 0 ? 'danger' : 'warning' }} fw-medium mb-0">{{ $item->stock == 0 ? 'Out of Stock' : 'Only ' . $item->stock . ' left' }}</p>
                         </div>
                     </div>

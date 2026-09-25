@@ -9,7 +9,7 @@
     <!-- Header -->
     <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-4">
         <div>
-            <h1 class="h3 mb-1 text-dark">Product Reviews</h1>
+            <h1 class="h3 mb-1 text-primary">Product Reviews</h1>
             <p class="text-muted small mb-0">Manage, approve, and reply to customer reviews.</p>
         </div>
         <!-- Tabs -->
@@ -43,7 +43,7 @@
                     <div class="flex-grow-1">
                         <div class="d-flex justify-content-between align-items-start">
                             <div>
-                                <h3 class="h6 fw-bold text-dark mb-1">White Oud</h3>
+                                <h3 class="h6 fw-bold text-primary mb-1">White Oud</h3>
                                 <div class="d-flex align-items-center gap-2">
                                     <div class="text-warning small" style="line-height: 1;">
                                         <i class="fas fa-star"></i>
@@ -92,7 +92,7 @@
                     <div class="flex-grow-1">
                         <div class="d-flex justify-content-between align-items-start">
                             <div>
-                                <h3 class="h6 fw-bold text-dark mb-1">Sea Breeze</h3>
+                                <h3 class="h6 fw-bold text-primary mb-1">Sea Breeze</h3>
                                 <div class="d-flex align-items-center gap-2">
                                     <div class="text-warning small" style="line-height: 1;">
                                         <i class="fas fa-star"></i>
@@ -129,7 +129,7 @@
                             <textarea rows="3" class="form-control form-control-sm mb-2" placeholder="Write a reply to the customer..."></textarea>
                             <div class="d-flex justify-content-end gap-2">
                                 <button onclick="toggleReply('reply-2')" class="btn btn-white btn-sm border text-secondary">Cancel</button>
-                                <button class="btn btn-success btn-sm">Send Reply</button>
+                                <button class="btn btn-primary btn-sm">Send Reply</button>
                             </div>
                         </div>
                     </div>
@@ -147,7 +147,7 @@
                     <div class="flex-grow-1">
                         <div class="d-flex justify-content-between align-items-start">
                             <div>
-                                <h3 class="h6 fw-bold text-dark mb-1">Oud Al Arab</h3>
+                                <h3 class="h6 fw-bold text-primary mb-1">Oud Al Arab</h3>
                                 <div class="d-flex align-items-center gap-2">
                                     <div class="text-warning small" style="line-height: 1;">
                                         <i class="fas fa-star"></i>
@@ -187,7 +187,7 @@
                             <textarea rows="3" class="form-control form-control-sm mb-2" placeholder="Write a reply to the customer..."></textarea>
                             <div class="d-flex justify-content-end gap-2">
                                 <button onclick="toggleReply('reply-3')" class="btn btn-white btn-sm border text-secondary">Cancel</button>
-                                <button class="btn btn-success btn-sm">Send Reply</button>
+                                <button class="btn btn-primary btn-sm">Send Reply</button>
                             </div>
                         </div>
                     </div>

@@ -8,7 +8,7 @@
         <a href="{{ route('admin.bundles') }}" class="text-secondary hover-text-dark">
             <i class="fas fa-arrow-left"></i>
         </a>
-        <h1 class="h3 mb-0 text-dark">Create bundle</h1>
+        <h1 class="h3 mb-0 text-primary">Create bundle</h1>
     </div>
 
     @if ($errors->any())
@@ -125,7 +125,7 @@
         
         <div class="d-flex justify-content-end gap-3 pt-4 border-top mt-4">
              <a href="{{ route('admin.bundles') }}" class="btn btn-white border shadow-sm text-secondary">Discard</a>
-            <button type="submit" class="btn btn-success shadow-sm">Save bundle</button>
+            <button type="submit" class="btn btn-primary shadow-sm">Save bundle</button>
         </div>
 
     </form>

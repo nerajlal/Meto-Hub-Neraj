@@ -8,7 +8,7 @@
         <a href="{{ route('admin.blog') }}" class="text-secondary hover-text-dark">
             <i class="fas fa-arrow-left"></i>
         </a>
-        <h1 class="h3 mb-0 text-dark">Create New Post</h1>
+        <h1 class="h3 mb-0 text-primary">Create New Post</h1>
     </div>
 
     <form action="#" method="POST" class="row g-4">
@@ -108,7 +108,7 @@
         
         <div class="col-12 d-flex justify-content-end gap-3 mt-4 pt-4 border-top">
             <button type="button" class="btn btn-white border shadow-sm text-secondary fw-medium hover-bg-light">Discard</button>
-            <button type="submit" class="btn btn-success shadow-sm fw-medium">Save Post</button>
+            <button type="submit" class="btn btn-primary shadow-sm fw-medium">Save Post</button>
         </div>
     </form>
 </div>

@@ -9,7 +9,7 @@
             <i class="fas fa-arrow-left"></i>
         </a>
         <div>
-            <h1 class="h3 mb-1 text-dark">Add Delivery Staff</h1>
+            <h1 class="h3 mb-1 text-primary">Add Delivery Staff</h1>
             <p class="text-muted small mb-0">Create a new delivery boy account.</p>
         </div>
     </div>
@@ -41,7 +41,7 @@
 
                 <div class="d-flex justify-content-end gap-2">
                     <a href="{{ route('admin.delivery-staff.index') }}" class="btn btn-light">Cancel</a>
-                    <button type="submit" class="btn btn-success px-4">Create Account</button>
+                    <button type="submit" class="btn btn-primary px-4">Create Account</button>
                 </div>
             </form>
         </div>

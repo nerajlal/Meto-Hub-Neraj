@@ -10,7 +10,7 @@ Route::get('/', function(Illuminate\Http\Request $request) {
         if ($request->has('demo_tenant')) {
             session(['demo_tenant_id' => $request->demo_tenant]);
         }
-        return view('landing.new-landing');
+        return view('landing.new-landing1');
     }
 
     // Otherwise, assume it's a custom domain and dispatch to the tenant storefront
@@ -23,7 +23,7 @@ Route::get('/', function(Illuminate\Http\Request $request) {
     }
     
     // Fallback if domain not found
-    return view('landing.new-landing');
+    return view('landing.new-landing1');
 })->name('landing');
 
 // Demo routes to set tenant

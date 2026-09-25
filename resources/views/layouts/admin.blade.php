@@ -14,8 +14,8 @@
     <style>
         body { 
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
-            background-color: #f6f6f7; 
-            color: #202223;
+            background-color: var(--sf-bg); 
+            color: var(--sf-text);
             -webkit-font-smoothing: antialiased;
         }
         
@@ -23,22 +23,59 @@
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
         }
         
-        /* Shopify style variables */
+        /* MetoHub style variables */
         :root {
-            --sf-bg: #f6f6f7;
-            --sf-sidebar-bg: #f1f1f1; /* Shopify neutral light gray */
+            --sf-bg: #f5f3ff; /* Extremely light, subtle purple tint to match the brand */
+            --sf-sidebar-bg: var(--bs-primary); 
             --sf-card-bg: #ffffff;
             --sf-border: #e1e3e5;
             --sf-text: #202223;
             --sf-text-secondary: #6d7175;
-            --sf-accent: #008060; /* Shopify Green */
-            --sf-accent-hover: #006e52;
+            --sf-accent: #8b5cf6; /* Soft Lavender Purple */
+            --sf-accent-hover: #7c3aed;
             --sf-btn-dark: #1a1a1a;
         }
 
         .shopify-green { color: var(--sf-accent); }
         .bg-shopify-green { background-color: var(--sf-accent); }
         .bg-shopify-green:hover { background-color: var(--sf-accent-hover); }
+
+        /* Override Bootstrap Primary colors to use MetoHub Soft Purple */
+        :root {
+            --bs-primary: #8B5CF6;
+            --bs-primary-rgb: 139, 92, 246;
+            --bs-link-color: #8B5CF6;
+            --bs-link-hover-color: #7C3AED;
+        }
+
+        .btn-primary, .btn-dark {
+            --bs-btn-bg: var(--bs-primary);
+            --bs-btn-border-color: var(--bs-primary);
+            --bs-btn-hover-bg: #7C3AED;
+            --bs-btn-hover-border-color: #7C3AED;
+            --bs-btn-active-bg: #6D28D9;
+            --bs-btn-active-border-color: #6D28D9;
+            --bs-btn-disabled-bg: #C4B5FD;
+            --bs-btn-disabled-border-color: #C4B5FD;
+            color: #fff !important;
+        }
+
+        .bg-dark {
+            background-color: var(--bs-primary) !important;
+        }
+
+        /* Make all table headers primary color */
+        table thead th {
+            color: var(--bs-primary) !important;
+        }
+
+        .btn-primary:hover, .btn-primary:active {
+            color: #fff !important;
+        }
+
+        .text-primary {
+            color: var(--bs-primary) !important;
+        }
         
         /* Flat clean cards */
         .card { 
@@ -59,7 +96,7 @@
             width: 240px; 
             flex-shrink: 0; 
             overflow-y: auto; 
-            background-color: #f1f1f1 !important; /* Shopify neutral light gray */
+            background-color: var(--sf-sidebar-bg) !important; 
             border-right: none !important; 
         }
         .main-content { flex: 1; display: flex; flex-direction: column; min-width: 0; }
@@ -97,13 +134,13 @@
             }
         }
 
-        /* Sidebar Item Shopify Redesign */
+        /* Sidebar Item MetoHub Redesign */
         .sidebar-item {
             margin: 2px 8px !important;
             padding: 8px 12px !important;
             font-size: 13px !important;
             font-weight: 500 !important;
-            color: #202223 !important;
+            color: rgba(255, 255, 255, 0.7) !important;
             border-left: none !important;
             transition: background-color 0.15s ease, color 0.15s ease;
             border-radius: 6px !important;
@@ -114,7 +151,7 @@
 
         .sidebar-item i {
             font-size: 16px !important;
-            color: #6d7175 !important;
+            color: rgba(255, 255, 255, 0.5) !important;
             width: 20px;
             text-align: center;
             margin-right: 12px;
@@ -122,23 +159,23 @@
         }
 
         .sidebar-item:hover {
-            background-color: rgba(0, 0, 0, 0.05) !important;
-            color: #202223 !important;
+            background-color: rgba(255, 255, 255, 0.1) !important;
+            color: #ffffff !important;
         }
 
         .sidebar-item:hover i {
-            color: #202223 !important;
+            color: #ffffff !important;
         }
 
         .sidebar-item.active {
-            background-color: #ffffff !important;
-            color: #202223 !important;
+            background-color: rgba(0, 0, 0, 0.2) !important;
+            color: #ffffff !important;
             font-weight: 600 !important;
-            box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.08) !important;
+            box-shadow: none !important;
         }
 
         .sidebar-item.active i {
-            color: #202223 !important;
+            color: #ffffff !important;
         }
 
         .sidebar-item .badge {
@@ -156,7 +193,7 @@
             font-weight: 600 !important;
             text-transform: uppercase !important;
             letter-spacing: 0.5px !important;
-            color: #6d7175 !important;
+            color: rgba(255, 255, 255, 0.6) !important;
         }
     </style>
     @yield('styles')
@@ -195,13 +232,13 @@
 
                     @yield('content')
 
-                    <div class="mt-5 pt-4 border-top text-center small text-muted">
+                    <div class="mt-5 pt-4 border-top text-center small text-primary fw-medium">
                         @if(isset($currentTenant))
                             @php
                                 $displayDomain = $currentTenant->domain ?? (strtolower(str_replace(' ', '', $currentTenant->name)) . '.metohub.com');
                             @endphp
                             @if($currentTenant->domain)
-                                Developed by MetoHub. Running on <a href="http://{{ $displayDomain }}" target="_blank" class="text-decoration-none fw-medium text-secondary">{{ $displayDomain }}</a>
+                                Developed by MetoHub. Running on <a href="http://{{ $displayDomain }}" target="_blank" class="text-decoration-none fw-bold text-primary">{{ $displayDomain }}</a>
                             @else
                                 Developed by MetoHub
                             @endif

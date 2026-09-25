@@ -7,7 +7,7 @@
     <a href="{{ route('admin.orders', ['tenant' => request()->route('tenant')]) }}" class="text-decoration-none text-secondary small fw-medium">
         <i class="fa-solid fa-arrow-left me-1"></i> Back to Orders
     </a>
-    <h1 class="h3 fw-bold text-dark mt-2 mb-0">Create Order</h1>
+    <h1 class="h3 fw-bold text-primary mt-2 mb-0">Create Order</h1>
 </div>
 
 @if ($errors->any())

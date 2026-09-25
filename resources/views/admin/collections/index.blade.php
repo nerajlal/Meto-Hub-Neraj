@@ -4,8 +4,8 @@
 
 @section('content')
 <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-4">
-    <h1 class="h3 mb-0 text-dark">Collections</h1>
-    <a href="{{ route('admin.collections.create') }}" class="btn btn-success shadow-sm fw-medium">Create collection</a>
+    <h1 class="h3 mb-0 text-primary">Collections</h1>
+    <a href="{{ route('admin.collections.create') }}" class="btn btn-primary shadow-sm fw-medium">Create collection</a>
 </div>
 
 <div class="card border shadow-sm container-fluid p-0 overflow-hidden">
@@ -109,23 +109,23 @@
 </script>
 <style>
     .text-decoration-underline-hover:hover { text-decoration: underline !important; }
-    .hover-text-primary:hover { color: #008060 !important; }
+    .hover-text-primary:hover { color: #8b5cf6 !important; }
     .hover-text-danger:hover { color: var(--bs-danger) !important; }
     .cursor-pointer { cursor: pointer; }
 
     /* Pagination Overrides */
     .page-link {
-        color: #008060;
+        color: #8b5cf6;
         border-color: #dee2e6;
     }
     .page-link:hover {
-        color: #004d3a;
+        color: #6d28d9;
         background-color: #e6f2f0;
         border-color: #dee2e6;
     }
     .page-item.active .page-link {
-        background-color: #008060;
-        border-color: #008060;
+        background-color: #8b5cf6;
+        border-color: #8b5cf6;
         color: white;
     }
     .page-item.disabled .page-link {

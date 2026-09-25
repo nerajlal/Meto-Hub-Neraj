@@ -1,4 +1,4 @@
-<header class="navbar navbar-expand sticky-top px-4 py-2 flex-shrink-0" style="height: 48px; background-color: #1a1a1a; border-bottom: none; color: #ffffff;">
+<header class="navbar navbar-expand sticky-top px-4 py-2 flex-shrink-0" style="height: 48px; background-color: var(--bs-primary); border-bottom: 1px solid rgba(255,255,255,0.1); color: #ffffff;">
     <button class="btn btn-link p-1 d-md-none me-3" onclick="toggleSidebar()" style="color: #ffffff !important;"><i class="fas fa-bars"></i></button>
     
     <!-- Shopify Brand Logo in Top Left -->
@@ -9,7 +9,7 @@
 
     <!-- Centered Search Box -->
     <div class="d-flex align-items-center justify-content-center flex-grow-1" style="max-width: 480px; margin: 0 auto;">
-        <div class="input-group border rounded-3" style="background-color: #303030; border-color: #4a4a4a !important; overflow: hidden; height: 32px; max-width: 380px;">
+        <div class="input-group border rounded-3" style="background-color: rgba(0, 0, 0, 0.15); border-color: transparent !important; overflow: hidden; height: 32px; max-width: 380px;">
             <span class="input-group-text bg-transparent border-0 text-white-50 pe-1" style="padding-top: 4px;"><i class="fas fa-search small"></i></span>
             <input type="text" class="form-control bg-transparent border-0 shadow-none ps-2" placeholder="Search" style="font-size: 13px; color: #ffffff; padding: 2px 0;">
             <span class="input-group-text bg-transparent border-0 text-white-50 px-2" style="font-size: 10px; cursor: pointer; opacity: 0.7;">⌘ K</span>
@@ -18,7 +18,7 @@
 
     <!-- Right Side Profile and Settings -->
     <div class="d-flex align-items-center gap-3 ms-auto">
-        <a href="{{ $storefrontUrl }}" target="_blank" class="btn btn-sm d-none d-sm-flex align-items-center gap-2" style="background-color: #303030; border: 1px solid #4a4a4a; color: #ffffff; font-size: 11px; font-weight: 500; border-radius: 6px; padding: 4px 10px;">
+        <a href="{{ $storefrontUrl }}" target="_blank" class="btn btn-sm d-none d-sm-flex align-items-center gap-2" style="background-color: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); color: #ffffff; font-size: 11px; font-weight: 500; border-radius: 6px; padding: 4px 10px;">
             <i class="fas fa-external-link-alt" style="font-size: 9px;"></i>
             View Store
         </a>
@@ -39,10 +39,10 @@
         @endphp
         
         <div class="dropdown">
-            <button class="btn btn-link p-1 position-relative text-decoration-none" data-bs-toggle="dropdown" aria-expanded="false" style="color: #cccccc !important;">
+            <button class="btn btn-link p-1 position-relative text-decoration-none" data-bs-toggle="dropdown" aria-expanded="false" style="color: rgba(255,255,255,0.8) !important;">
                 <i class="fas fa-bell"></i>
                 @if($hasNotifications)
-                <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-dark rounded-circle" style="margin-top: 5px; margin-left: -5px;">
+                <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-primary rounded-circle" style="margin-top: 5px; margin-left: -5px;">
                     <span class="visually-hidden">New alerts</span>
                 </span>
                 @endif
@@ -91,8 +91,8 @@
         
         <div class="dropdown">
             <div class="d-flex align-items-center gap-2 cursor-pointer" data-bs-toggle="dropdown" aria-expanded="false">
-                <div class="d-flex align-items-center justify-content-center rounded text-dark fw-bold" style="width: 28px; height: 28px; background-color: #00d2c4; font-size: 11px;">{{ strtoupper(substr($currentTenant->name ?? auth()->user()->name ?? 'DR', 0, 2)) }}</div>
-                <span class="small fw-medium text-white-50 d-none d-sm-block" style="font-size: 12px;">{{ $currentTenant->name ?? 'Deity & Relics' }}</span>
+                <div class="d-flex align-items-center justify-content-center rounded fw-bold" style="width: 28px; height: 28px; background-color: rgba(255,255,255,0.2); color: #ffffff; font-size: 11px;">{{ strtoupper(substr($currentTenant->name ?? auth()->user()->name ?? 'DR', 0, 2)) }}</div>
+                <span class="small fw-medium text-white d-none d-sm-block" style="font-size: 12px;">{{ $currentTenant->name ?? 'Deity & Relics' }}</span>
             </div>
             <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2">
                 <li><a class="dropdown-item small" href="#" data-bs-toggle="modal" data-bs-target="#profileModal"><i class="fas fa-user-edit me-2 text-muted"></i> Edit Profile</a></li>
@@ -144,7 +144,7 @@
             </div>
             <div class="modal-footer border-0 bg-light py-2">
                 <button type="button" class="btn btn-white border text-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-success btn-sm text-white">Save Changes</button>
+                <button type="button" class="btn btn-primary btn-sm text-white">Save Changes</button>
             </div>
         </div>
     </div>

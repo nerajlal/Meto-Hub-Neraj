@@ -2,8 +2,8 @@
 
 @section('content')
 <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
-    <h1 class="h3 fw-bold text-dark mb-0">Delivery Partners</h1>
-    <button class="btn btn-success shadow-sm" data-bs-toggle="modal" data-bs-target="#addPartnerModal">Add Partner</button>
+    <h1 class="h3 fw-bold text-primary mb-0">Delivery Partners</h1>
+    <button class="btn btn-primary shadow-sm" data-bs-toggle="modal" data-bs-target="#addPartnerModal">Add Partner</button>
 </div>
 
 <div class="card border shadow-sm">
@@ -106,7 +106,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-success">Save</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
                 </div>
             </div>
         </form>
@@ -147,7 +147,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-success">Update</button>
+                    <button type="submit" class="btn btn-primary">Update</button>
                 </div>
             </div>
         </form>

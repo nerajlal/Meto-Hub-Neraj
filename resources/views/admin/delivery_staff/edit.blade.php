@@ -9,7 +9,7 @@
             <i class="fas fa-arrow-left"></i>
         </a>
         <div>
-            <h1 class="h3 mb-1 text-dark">Edit Delivery Staff</h1>
+            <h1 class="h3 mb-1 text-primary">Edit Delivery Staff</h1>
             <p class="text-muted small mb-0">Update account details for {{ $staff->name }}.</p>
         </div>
     </div>

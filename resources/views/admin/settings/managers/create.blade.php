@@ -9,7 +9,7 @@
         <a href="{{ route('admin.settings.managers') }}" class="text-secondary hover-text-dark">
             <i class="fas fa-arrow-left"></i>
         </a>
-        <h1 class="h3 mb-0 text-dark">Add Site Manager</h1>
+        <h1 class="h3 mb-0 text-primary">Add Site Manager</h1>
     </div>
 
     <form class="card border shadow-sm p-4">
@@ -91,7 +91,7 @@
 
         <div class="pt-4 border-top mt-4 d-flex justify-content-end gap-3">
              <a href="{{ route('admin.settings.managers') }}" class="btn btn-white border text-secondary shadow-sm">Cancel</a>
-            <button type="button" class="btn btn-success shadow-sm">Create Manager</button>
+            <button type="button" class="btn btn-primary shadow-sm">Create Manager</button>
         </div>
 
     </form>

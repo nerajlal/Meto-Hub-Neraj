@@ -4,15 +4,21 @@
 
 @section('content')
     <div class="container-fluid py-4">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <div>
-                <h1 class="h3 mb-0 text-gray-800 fw-bold">Custom Checkout Fields</h1>
-                <p class="text-muted mb-0">Configure which additional fields to ask customers during checkout.</p>
-            </div>
-            <div>
-                <button type="submit" form="checkoutFieldsForm" class="btn btn-primary rounded-pill px-4 fw-bold shadow-sm">
-                    <i class="fa-solid fa-save me-2"></i> Save Configurations
-                </button>
+        <!-- Premium Header -->
+        <div class="mb-4 mb-md-5 position-relative overflow-hidden p-3 p-md-4 rounded-4" style="background: linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%); border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
+            <div class="position-absolute rounded-circle" style="width: 250px; height: 250px; background: rgba(255, 255, 255, 0.15); filter: blur(80px); top: -100px; right: -50px; pointer-events: none;"></div>
+            
+            <div class="position-relative z-1 d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+                <div>
+                    <span class="badge mb-2 px-3 py-1.5 rounded-pill uppercase tracking-wider text-white-50" style="background: rgba(255,255,255,0.08); font-size: 10px; font-weight: 600; letter-spacing: 1.2px; border: 1px solid rgba(255,255,255,0.12);">SYSTEM SETTINGS</span>
+                    <h1 class="h2 text-white mb-2 fw-bold" style="font-family: 'Playfair Display', Georgia, serif; letter-spacing: -0.5px;">Custom Checkout Fields</h1>
+                    <p class="text-white-50 small mb-0" style="max-width: 600px; line-height: 1.6;">Configure which additional fields to ask customers during checkout.</p>
+                </div>
+                <div>
+                    <button type="submit" form="checkoutFieldsForm" class="btn btn-light rounded-pill px-4 fw-bold shadow-sm text-primary">
+                        <i class="fa-solid fa-save me-2"></i> Save Configurations
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -29,7 +35,7 @@
                 <div class="col-lg-8">
                     <div class="card shadow-sm mb-4 border-0 rounded-4">
                         <div class="card-header bg-white py-3 border-bottom d-flex align-items-center">
-                            <i class="fa-solid fa-cash-register me-2 shopify-green"></i>
+                            <i class="fa-solid fa-cash-register me-2 text-primary"></i>
                             <h5 class="m-0 fw-bold">Available Checkout Fields</h5>
                         </div>
                         <div class="card-body p-0 table-responsive">

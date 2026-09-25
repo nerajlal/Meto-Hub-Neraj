@@ -8,7 +8,7 @@
         <a href="{{ route('admin.blog') }}" class="text-secondary hover-text-dark">
             <i class="fas fa-arrow-left"></i>
         </a>
-        <h1 class="h3 mb-0 text-dark">Edit Post</h1>
+        <h1 class="h3 mb-0 text-primary">Edit Post</h1>
         <span class="badge bg-success bg-opacity-10 text-success fw-bold text-uppercase small tracking-wide" style="letter-spacing: 0.05em;">Published</span>
     </div>
 
@@ -128,7 +128,7 @@ Layering allows you to:
         <div class="col-12 d-flex justify-content-end gap-3 mt-4 pt-4 border-top">
              <button type="button" class="btn btn-danger bg-danger bg-opacity-10 text-danger border-0 hover-bg-danger-soft me-auto">Delete post</button>
             <button type="button" class="btn btn-white border shadow-sm text-secondary fw-medium hover-bg-light">Discard</button>
-            <button type="submit" class="btn btn-success shadow-sm fw-medium">Update Post</button>
+            <button type="submit" class="btn btn-primary shadow-sm fw-medium">Update Post</button>
         </div>
     </form>
 </div>

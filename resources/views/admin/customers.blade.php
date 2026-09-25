@@ -4,9 +4,9 @@
 
 @section('content')
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h1 class="h3 mb-0 text-dark">Customers</h1>
+    <h1 class="h3 mb-0 text-primary">Customers</h1>
     <!-- <div class="d-flex gap-2">
-        <a href="{{ route('admin.customers.create') }}" class="btn btn-success shadow-sm">Add customer</a>
+        <a href="{{ route('admin.customers.create') }}" class="btn btn-primary shadow-sm">Add customer</a>
     </div> -->
 </div>
 

@@ -4,10 +4,14 @@
 
 @section('content')
 <div class="container-fluid py-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h1 class="h3 mb-1 text-gray-800">Storefront Pages Settings</h1>
-            <p class="text-muted">Manage the content for your About Us, Contact, Shipping, Return Policies, and Terms of Service pages.</p>
+    <!-- Premium Header -->
+    <div class="mb-4 mb-md-5 position-relative overflow-hidden p-3 p-md-4 rounded-4" style="background: linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%); border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
+        <div class="position-absolute rounded-circle" style="width: 250px; height: 250px; background: rgba(255, 255, 255, 0.15); filter: blur(80px); top: -100px; right: -50px; pointer-events: none;"></div>
+        
+        <div class="position-relative z-1">
+            <span class="badge mb-2 px-3 py-1.5 rounded-pill uppercase tracking-wider text-white-50" style="background: rgba(255,255,255,0.08); font-size: 10px; font-weight: 600; letter-spacing: 1.2px; border: 1px solid rgba(255,255,255,0.12);">SYSTEM SETTINGS</span>
+            <h1 class="h2 text-white mb-2 fw-bold" style="font-family: 'Playfair Display', Georgia, serif; letter-spacing: -0.5px;">Storefront Pages Settings</h1>
+            <p class="text-white-50 small mb-0" style="max-width: 600px; line-height: 1.6;">Manage the content for your About Us, Contact, Shipping, Return Policies, and Terms of Service pages.</p>
         </div>
     </div>
 
@@ -27,7 +31,7 @@
                 <div class="card mb-4 shadow-sm">
                     <div class="card-header py-3 d-flex align-items-center justify-content-between">
                         <div class="d-flex align-items-center">
-                            <i class="fa-solid fa-palette me-2 shopify-green"></i>
+                            <i class="fa-solid fa-palette me-2 text-primary"></i>
                             <h5 class="m-0 fw-bold">Storefront Branding & Colors</h5>
                         </div>
                     </div>
@@ -99,8 +103,8 @@
                                     <button type="button" class="btn btn-sm btn-outline-secondary d-flex align-items-center gap-2" onclick="applyPreset('#10B981', '#064E3B', '#ECFDF5')">
                                         <span style="width: 12px; height: 12px; border-radius: 50%; background: #10B981; display: inline-block;"></span> Emerald (Default)
                                     </button>
-                                    <button type="button" class="btn btn-sm btn-outline-secondary d-flex align-items-center gap-2" onclick="applyPreset('#4F46E5', '#0F172A', '#E0E7FF')">
-                                        <span style="width: 12px; height: 12px; border-radius: 50%; background: #4F46E5; display: inline-block;"></span> Indigo Def
+                                    <button type="button" class="btn btn-sm btn-outline-secondary d-flex align-items-center gap-2" onclick="applyPreset('#8b5cf6', '#0F172A', '#ede9fe')">
+                                        <span style="width: 12px; height: 12px; border-radius: 50%; background: #8b5cf6; display: inline-block;"></span> Indigo Def
                                     </button>
                                     <button type="button" class="btn btn-sm btn-outline-secondary d-flex align-items-center gap-2" onclick="applyPreset('#FF6B35', '#2B2D42', '#F7FFF7')">
                                         <span style="width: 12px; height: 12px; border-radius: 50%; background: #FF6B35; display: inline-block;"></span> Edu Orange
@@ -161,20 +165,20 @@
                 <!-- About Page Settings -->
                 <div class="card mb-4 shadow-sm">
                     <div class="card-header py-3 d-flex align-items-center">
-                        <i class="fa-solid fa-address-card me-2 shopify-green"></i>
+                        <i class="fa-solid fa-address-card me-2 text-primary"></i>
                         <h5 class="m-0 fw-bold">About Us Page Content</h5>
                     </div>
                     <div class="card-body">
                         <div class="mb-3">
                             <label for="about_title" class="form-label fw-semibold">About Page Hero Title</label>
-                            <input type="text" class="form-control @error('about_title') is-invalid @enderror" id="about_title" name="about_title" value="{{ old('about_title', $tenant->about_title) }}" required>
+                            <input type="text" class="form-control @error('about_title') is-invalid @enderror" id="about_title" name="about_title" value="{{ old('about_title', $tenant->about_title ?? 'Welcome to Our Store') }}" required>
                             @error('about_title')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="mb-3">
                             <label for="about_text" class="form-label fw-semibold">About Page Main Description</label>
-                            <textarea class="form-control @error('about_text') is-invalid @enderror" id="about_text" name="about_text" rows="8" placeholder="Tell your customers about your farm-to-table journey, organic certifications, quality standards, etc.">{{ old('about_text', $tenant->about_text) }}</textarea>
+                            <textarea class="form-control @error('about_text') is-invalid @enderror" id="about_text" name="about_text" rows="8" placeholder="Tell your customers about your brand story, product quality, mission, etc.">{{ old('about_text', $tenant->about_text ?? "We are passionate about delivering the highest quality products directly to your doorstep. Our journey began with a simple idea: to provide innovative, reliable, and premium goods to our customers. Every item we offer is carefully curated to ensure it meets our strict standards of excellence.\n\nThank you for choosing us as your trusted shopping partner.") }}</textarea>
                             @error('about_text')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -185,27 +189,27 @@
                 <!-- Policy Pages Settings -->
                 <div class="card mb-4 shadow-sm">
                     <div class="card-header py-3">
-                        <i class="fa-solid fa-shield-halved me-2 shopify-green"></i>
+                        <i class="fa-solid fa-shield-halved me-2 text-primary"></i>
                         <h5 class="m-0 d-inline-block fw-bold">Store Policies</h5>
                     </div>
                     <div class="card-body">
                         <div class="mb-4">
                             <label for="shipping_policy" class="form-label fw-semibold">Shipping & Delivery Policy</label>
-                            <textarea class="form-control @error('shipping_policy') is-invalid @enderror" id="shipping_policy" name="shipping_policy" rows="5" placeholder="Details about delivery timeframes (e.g. 2 hours express), charges, regions covered, etc.">{{ old('shipping_policy', $tenant->shipping_policy) }}</textarea>
+                            <textarea class="form-control @error('shipping_policy') is-invalid @enderror" id="shipping_policy" name="shipping_policy" rows="5" placeholder="Details about delivery timeframes (e.g. 2 hours express), charges, regions covered, etc.">{{ old('shipping_policy', $tenant->shipping_policy ?? "Our standard delivery time is within 2-3 business days of order confirmation. Delivery slots can also be scheduled at your convenience during checkout.\n\nFree delivery is applicable on all orders above ₹499. For orders below this threshold, a flat delivery fee will be charged.") }}</textarea>
                             @error('shipping_policy')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="mb-4">
                             <label for="return_policy" class="form-label fw-semibold">Return & Refund Policy</label>
-                            <textarea class="form-control @error('return_policy') is-invalid @enderror" id="return_policy" name="return_policy" rows="5" placeholder="Information about returns guarantee (e.g. refund at door if quality isn't up to standard), processing time, etc.">{{ old('return_policy', $tenant->return_policy) }}</textarea>
+                            <textarea class="form-control @error('return_policy') is-invalid @enderror" id="return_policy" name="return_policy" rows="5" placeholder="Information about returns guarantee (e.g. 7-day return policy), processing time, etc.">{{ old('return_policy', $tenant->return_policy ?? "We want you to be completely satisfied with your purchase. You can return eligible items within 7 days of delivery if they do not meet your expectations.\n\nFor online returns, please contact our support team. Approved refunds will be issued to your original payment method within 3-5 business days.") }}</textarea>
                             @error('return_policy')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="mb-3">
                             <label for="terms_of_service" class="form-label fw-semibold">Terms of Service</label>
-                            <textarea class="form-control @error('terms_of_service') is-invalid @enderror" id="terms_of_service" name="terms_of_service" rows="5" placeholder="General rules, pricing updates, and legal usage conditions.">{{ old('terms_of_service', $tenant->terms_of_service) }}</textarea>
+                            <textarea class="form-control @error('terms_of_service') is-invalid @enderror" id="terms_of_service" name="terms_of_service" rows="5" placeholder="General rules, pricing updates, and legal usage conditions.">{{ old('terms_of_service', $tenant->terms_of_service ?? "By accessing and placing an order with our store, you confirm that you are in agreement with and bound by the terms of service contained herein. These terms apply to the entire website and any email or other type of communication between you and our store.\n\nPrices for our products are subject to change without notice. We reserve the right at any time to modify or discontinue the Service without notice.") }}</textarea>
                             @error('terms_of_service')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -219,7 +223,7 @@
                 <!-- Contact Info Settings -->
                 <div class="card mb-4 shadow-sm">
                     <div class="card-header py-3 d-flex align-items-center">
-                        <i class="fa-solid fa-envelope-open-text me-2 shopify-green"></i>
+                        <i class="fa-solid fa-envelope-open-text me-2 text-primary"></i>
                         <h5 class="m-0 fw-bold">Contact Page Details</h5>
                     </div>
                     <div class="card-body">
@@ -258,7 +262,7 @@
                 <!-- Mobile Layout Settings -->
                 <div class="card mb-4 shadow-sm">
                     <div class="card-header py-3 d-flex align-items-center">
-                        <i class="fa-solid fa-mobile-screen-button me-2 shopify-green"></i>
+                        <i class="fa-solid fa-mobile-screen-button me-2 text-primary"></i>
                         <h5 class="m-0 fw-bold">Mobile View Options</h5>
                     </div>
                     <div class="card-body">
@@ -282,7 +286,7 @@
                 <!-- Delivery Settings -->
                 <div class="card mb-4 shadow-sm">
                     <div class="card-header py-3 d-flex align-items-center">
-                        <i class="fa-solid fa-truck-fast me-2 shopify-green"></i>
+                        <i class="fa-solid fa-truck-fast me-2 text-primary"></i>
                         <h5 class="m-0 fw-bold">Delivery Settings</h5>
                     </div>
                     <div class="card-body">
@@ -299,7 +303,7 @@
 
                         <div class="mb-3">
                             <label for="delivery_info" class="form-label fw-semibold">Delivery Details Text</label>
-                            <textarea class="form-control @error('delivery_info') is-invalid @enderror" id="delivery_info" name="delivery_info" rows="3" placeholder="e.g. We deliver fresh groceries directly to your home within 2 hours. Free shipping applies to all orders over {{ $currentTenant->currency ?? '₹' }}499.">{{ old('delivery_info', $tenant->delivery_info) }}</textarea>
+                            <textarea class="form-control @error('delivery_info') is-invalid @enderror" id="delivery_info" name="delivery_info" rows="3" placeholder="e.g. We deliver our products directly to your home within 3-5 days. Free shipping applies to all orders over {{ $currentTenant->currency ?? '₹' }}499.">{{ old('delivery_info', $tenant->delivery_info) }}</textarea>
                             @error('delivery_info')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -313,7 +317,7 @@
                 <!-- Tax Configuration -->
                 <div class="card mb-4 shadow-sm">
                     <div class="card-header py-3 d-flex align-items-center">
-                        <i class="fa-solid fa-percent me-2 shopify-green"></i>
+                        <i class="fa-solid fa-percent me-2 text-primary"></i>
                         <h5 class="m-0 fw-bold">Tax Options</h5>
                     </div>
                     <div class="card-body">
@@ -340,7 +344,7 @@
                 <!-- Checkout Constraints -->
                 <div class="card mb-4 shadow-sm">
                     <div class="card-header py-3 d-flex align-items-center">
-                        <i class="fa-solid fa-money-bill-wave me-2 shopify-green"></i>
+                        <i class="fa-solid fa-money-bill-wave me-2 text-primary"></i>
                         <h5 class="m-0 fw-bold">Checkout Constraints</h5>
                     </div>
                     <div class="card-body">
@@ -360,7 +364,7 @@
                 <!-- Submit Card -->
                 <div class="card shadow-sm mb-4">
                     <div class="card-body text-center p-4">
-                        <button type="submit" class="btn btn-success bg-shopify-green w-100 py-2 fw-semibold">
+                        <button type="submit" class="btn btn-primary bg-primary w-100 py-2 fw-semibold">
                             <i class="fa-solid fa-cloud-arrow-up me-2"></i>Save Changes
                         </button>
                     </div>

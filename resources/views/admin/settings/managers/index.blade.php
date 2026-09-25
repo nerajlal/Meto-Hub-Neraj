@@ -8,10 +8,10 @@
     <!-- Header -->
     <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-4">
         <div>
-            <h1 class="h3 mb-1 text-dark">Site Managers</h1>
+            <h1 class="h3 mb-1 text-primary">Site Managers</h1>
             <p class="text-muted small mb-0">Manage site managers and their permissions.</p>
         </div>
-        <a href="{{ route('admin.settings.managers.create') }}" class="btn btn-success shadow-sm d-flex align-items-center gap-2">
+        <a href="{{ route('admin.settings.managers.create') }}" class="btn btn-primary shadow-sm d-flex align-items-center gap-2">
             <i class="fas fa-user-plus"></i> Add Manager
         </a>
     </div>

@@ -6,7 +6,7 @@
 <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h1 class="h3 mb-1 text-dark">Attributes & Product Tags</h1>
+            <h1 class="h3 mb-1 text-primary">Attributes & Product Tags</h1>
             <p class="text-muted small mb-0">Manage grocery departments, categories, and tags for your products.</p>
         </div>
     </div>
@@ -24,7 +24,7 @@
         <div class="col-12 col-lg-6">
             <div class="card border shadow-sm h-100">
                 <div class="card-header bg-white border-bottom p-3 d-flex justify-content-between align-items-center">
-                    <h2 class="h5 fw-bold text-dark mb-0">Grocery Departments / Families</h2>
+                    <h2 class="h5 fw-bold text-primary mb-0">Grocery Departments / Families</h2>
                     <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill">{{ count($families) }} Departments</span>
                 </div>
                 
@@ -69,7 +69,7 @@
                                 @method('PUT')
                                 <input type="color" name="color" class="form-control form-control-color form-control-sm" value="{{ $family->color ?? '#563d7c' }}" title="Choose color">
                                 <input type="text" name="name" class="form-control form-control-sm" value="{{ $family->name }}" required>
-                                <button type="submit" class="btn btn-sm btn-success"><i class="fas fa-check"></i></button>
+                                <button type="submit" class="btn btn-sm btn-primary"><i class="fas fa-check"></i></button>
                                 <button type="button" onclick="toggleEdit('family', {{ $family->id }})" class="btn btn-sm btn-secondary"><i class="fas fa-times"></i></button>
                             </form>
                         </div>
@@ -84,7 +84,7 @@
         <div class="col-12 col-lg-6">
             <div class="card border shadow-sm h-100">
                  <div class="card-header bg-white border-bottom p-3 d-flex justify-content-between align-items-center">
-                    <h2 class="h5 fw-bold text-dark mb-0">Product Tags & Attributes</h2>
+                    <h2 class="h5 fw-bold text-primary mb-0">Product Tags & Attributes</h2>
                     <span class="badge bg-secondary bg-opacity-10 text-secondary rounded-pill">{{ count($notes) }} Tags</span>
                 </div>
 
@@ -95,7 +95,7 @@
                         <input type="hidden" name="type" value="note">
                         <div class="input-group">
                             <input type="text" name="name" placeholder="Add new tag (e.g. Organic, Fresh, Vegan)" class="form-control form-control-sm" required>
-                            <button class="btn btn-success btn-sm">Add</button>
+                            <button class="btn btn-primary btn-sm">Add</button>
                         </div>
                     </form>
 
@@ -130,7 +130,7 @@
                                     @csrf
                                     @method('PUT')
                                     <input type="text" name="name" class="form-control form-control-sm" value="{{ $note->name }}" required>
-                                    <button type="submit" class="btn btn-sm btn-success"><i class="fas fa-check"></i></button>
+                                    <button type="submit" class="btn btn-sm btn-primary"><i class="fas fa-check"></i></button>
                                     <button type="button" onclick="toggleEdit('note', {{ $note->id }})" class="btn btn-sm btn-secondary"><i class="fas fa-times"></i></button>
                                 </form>
                             </div>

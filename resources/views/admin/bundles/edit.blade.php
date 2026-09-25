@@ -8,7 +8,7 @@
             <a href="{{ route('admin.bundles') }}" class="text-secondary hover-text-dark">
                 <i class="fas fa-arrow-left"></i>
             </a>
-            <h1 class="h3 mb-0 text-dark">Edit bundle</h1>
+            <h1 class="h3 mb-0 text-primary">Edit bundle</h1>
         </div>
 
         @if ($errors->any())
@@ -219,7 +219,7 @@
             <div class="d-flex justify-content-end gap-3 pt-4 border-top mt-4">
                 <button type="button" onclick="confirmDelete()"
                     class="btn btn-white border-danger text-danger hover-bg-danger-soft">Delete bundle</button>
-                <button type="submit" class="btn btn-success shadow-sm">Update bundle</button>
+                <button type="submit" class="btn btn-primary shadow-sm">Update bundle</button>
             </div>
         </form>
 

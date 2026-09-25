@@ -91,7 +91,7 @@
     }
 
     .feature-list-large li i {
-      color: #10b981;
+      color: #8b5cf6;
       font-size: 1.1rem;
     }
 
@@ -158,7 +158,7 @@
     }
 
     .secure-text i {
-      color: #10b981;
+      color: #8b5cf6;
     }
 
     .billing-history-card {
@@ -203,26 +203,26 @@
 
 @section('content')
   @php
-    $currentPlan = $tenant->plan ?? 'sprout';
+    $currentPlan = $tenant->plan ?? 'base';
 
     // Dynamic values based on plan
     $planName = ucfirst($currentPlan);
 
-    $monthlyPrice = 2999;
-    $yearlyPriceDisplay = "29,990";
-    $planIdMonthly = env('RAZORPAY_PLAN_SPROUT_MONTHLY', env('RAZORPAY_PLAN_SPROUT'));
-    $planIdYearly = env('RAZORPAY_PLAN_SPROUT_YEARLY', env('RAZORPAY_PLAN_SPROUT'));
+    $monthlyPrice = 99;
+    $yearlyPriceDisplay = "1,089";
+    $planIdMonthly = env('RAZORPAY_PLAN_BASE_MONTHLY', env('RAZORPAY_PLAN_BASE'));
+    $planIdYearly = env('RAZORPAY_PLAN_BASE_YEARLY', env('RAZORPAY_PLAN_BASE'));
     
-    if ($currentPlan == 'blossom') {
-        $monthlyPrice = 4999;
-        $yearlyPriceDisplay = "49,990";
-        $planIdMonthly = env('RAZORPAY_PLAN_BLOSSOM_MONTHLY', env('RAZORPAY_PLAN_BLOSSOM'));
-        $planIdYearly = env('RAZORPAY_PLAN_BLOSSOM_YEARLY', env('RAZORPAY_PLAN_BLOSSOM'));
-    } else if ($currentPlan == 'tree') {
-        $monthlyPrice = 7999;
-        $yearlyPriceDisplay = "79,990";
-        $planIdMonthly = env('RAZORPAY_PLAN_TREE_MONTHLY', env('RAZORPAY_PLAN_TREE'));
-        $planIdYearly = env('RAZORPAY_PLAN_TREE_YEARLY', env('RAZORPAY_PLAN_TREE'));
+    if ($currentPlan == 'pro') {
+        $monthlyPrice = 249;
+        $yearlyPriceDisplay = "2,739";
+        $planIdMonthly = env('RAZORPAY_PLAN_PRO_MONTHLY', env('RAZORPAY_PLAN_PRO'));
+        $planIdYearly = env('RAZORPAY_PLAN_PRO_YEARLY', env('RAZORPAY_PLAN_PRO'));
+    } else if ($currentPlan == 'enterprise') {
+        $monthlyPrice = 749;
+        $yearlyPriceDisplay = "8,239";
+        $planIdMonthly = env('RAZORPAY_PLAN_ENTERPRISE_MONTHLY', env('RAZORPAY_PLAN_ENTERPRISE'));
+        $planIdYearly = env('RAZORPAY_PLAN_ENTERPRISE_YEARLY', env('RAZORPAY_PLAN_ENTERPRISE'));
     }
   @endphp
 
@@ -237,7 +237,7 @@
           <button class="toggle-btn toggle-active" id="custom-btn-monthly">Monthly</button>
           <button class="toggle-btn" id="custom-btn-yearly">
             Yearly
-            <span class="save-badge-toggle">2 Months Free</span>
+            <span class="save-badge-toggle">1 Month Free</span>
           </button>
         </div>
 
@@ -317,59 +317,59 @@
           <button class="toggle-btn toggle-active explore-btn-monthly">Monthly</button>
           <button class="toggle-btn explore-btn-yearly">
             Yearly
-            <span class="save-badge-toggle">2 Months Free</span>
+            <span class="save-badge-toggle">1 Month Free</span>
           </button>
         </div>
       </div>
 
       <div class="col-md-4 mb-4">
-        <div class="status-card" style="border-top-color: #10b981; align-items: flex-start; text-align: left;">
-          <h4 class="fw-bold">Sprout</h4>
+        <div class="status-card" style="border-top-color: #64748b; align-items: flex-start; text-align: left;">
+          <h4 class="fw-bold">Base</h4>
           <div class="price-display mb-3 explore-price-monthly">
-            <span class="price-amount" style="font-size: 1.5rem;">₹2,999</span> / month
+            <span class="price-amount" style="font-size: 1.5rem;">₹99</span> / month
           </div>
           <div class="price-display mb-3 explore-price-yearly" style="display: none;">
-            <span class="price-amount" style="font-size: 1.5rem;">₹29,990</span> / year
+            <span class="price-amount" style="font-size: 1.5rem;">₹1,089</span> / year
           </div>
           <ul class="feature-list-large" style="margin-bottom: 20px;">
-            <li style="font-size: 0.85rem;"><i class="fa-solid fa-check"></i> Web App Only</li>
-            <li style="font-size: 0.85rem;"><i class="fa-solid fa-check"></i> 200 Products</li>
+            <li style="font-size: 0.85rem;"><i class="fa-solid fa-check"></i> Subdomain from us only</li>
+            <li style="font-size: 0.85rem;"><i class="fa-solid fa-check"></i> Unlimited visitors</li>
           </ul>
-          <button class="btn btn-outline-dark w-100 subscribe-btn" data-tier="sprout">Select Plan</button>
-        </div>
-      </div>
-
-      <div class="col-md-4 mb-4">
-        <div class="status-card" style="border-top-color: #3b82f6; align-items: flex-start; text-align: left;">
-          <h4 class="fw-bold">Blossom</h4>
-          <div class="price-display mb-3 explore-price-monthly">
-            <span class="price-amount" style="font-size: 1.5rem;">₹4,999</span> / month
-          </div>
-          <div class="price-display mb-3 explore-price-yearly" style="display: none;">
-            <span class="price-amount" style="font-size: 1.5rem;">₹49,990</span> / year
-          </div>
-          <ul class="feature-list-large" style="margin-bottom: 20px;">
-            <li style="font-size: 0.85rem;"><i class="fa-solid fa-check"></i> Web + User Mobile App</li>
-            <li style="font-size: 0.85rem;"><i class="fa-solid fa-check"></i> Unlimited Products</li>
-          </ul>
-          <button class="btn btn-outline-dark w-100 subscribe-btn" data-tier="blossom">Select Plan</button>
+          <button class="btn btn-outline-dark w-100 subscribe-btn" data-tier="base">Select Plan</button>
         </div>
       </div>
 
       <div class="col-md-4 mb-4">
         <div class="status-card" style="border-top-color: #8b5cf6; align-items: flex-start; text-align: left;">
-          <h4 class="fw-bold">Tree</h4>
+          <h4 class="fw-bold">Pro</h4>
           <div class="price-display mb-3 explore-price-monthly">
-            <span class="price-amount" style="font-size: 1.5rem;">₹7,999</span> / month
+            <span class="price-amount" style="font-size: 1.5rem;">₹249</span> / month
           </div>
           <div class="price-display mb-3 explore-price-yearly" style="display: none;">
-            <span class="price-amount" style="font-size: 1.5rem;">₹79,990</span> / year
+            <span class="price-amount" style="font-size: 1.5rem;">₹2,739</span> / year
           </div>
           <ul class="feature-list-large" style="margin-bottom: 20px;">
-            <li style="font-size: 0.85rem;"><i class="fa-solid fa-check"></i> Web + User App + Delivery App</li>
+            <li style="font-size: 0.85rem;"><i class="fa-solid fa-check"></i> Custom Domain</li>
+            <li style="font-size: 0.85rem;"><i class="fa-solid fa-check"></i> No watermark in footer</li>
+          </ul>
+          <button class="btn btn-outline-dark w-100 subscribe-btn" data-tier="pro">Select Plan</button>
+        </div>
+      </div>
+
+      <div class="col-md-4 mb-4">
+        <div class="status-card" style="border-top-color: #3b82f6; align-items: flex-start; text-align: left;">
+          <h4 class="fw-bold">Enterprise</h4>
+          <div class="price-display mb-3 explore-price-monthly">
+            <span class="price-amount" style="font-size: 1.5rem;">₹749</span> / month
+          </div>
+          <div class="price-display mb-3 explore-price-yearly" style="display: none;">
+            <span class="price-amount" style="font-size: 1.5rem;">₹8,239</span> / year
+          </div>
+          <ul class="feature-list-large" style="margin-bottom: 20px;">
+            <li style="font-size: 0.85rem;"><i class="fa-solid fa-check"></i> Sell Unlimited products</li>
             <li style="font-size: 0.85rem;"><i class="fa-solid fa-check"></i> Priority Support</li>
           </ul>
-          <button class="btn btn-outline-dark w-100 subscribe-btn" data-tier="tree">Select Plan</button>
+          <button class="btn btn-outline-dark w-100 subscribe-btn" data-tier="enterprise">Select Plan</button>
         </div>
       </div>
     </div>
@@ -452,7 +452,7 @@
             e.preventDefault();
         const isYearly = btnYearlyTop && btnYearlyTop.classList.contains('toggle-active');
         const cycle = isYearly ? 'yearly' : 'monthly';
-        const planTier = this.dataset.tier || 'sprout';
+        const planTier = this.dataset.tier || 'base';
         
         const originalText = this.innerHTML;
         this.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...';
@@ -499,7 +499,7 @@
                     });
                 },
                 "theme": {
-                  "color": "#106f3e"
+                  "color": "#8b5cf6"
                 }
               };
               var rzp1 = new Razorpay(options);

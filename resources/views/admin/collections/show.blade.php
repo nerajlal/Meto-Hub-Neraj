@@ -10,7 +10,7 @@
              <a href="{{ route('admin.collections') }}" class="text-secondary hover-text-dark">
                 <i class="fas fa-arrow-left"></i>
             </a>
-            <h1 class="h3 mb-0 text-dark">{{ $collection->name }}</h1>
+            <h1 class="h3 mb-0 text-primary">{{ $collection->name }}</h1>
         </div>
         <div class="d-flex gap-2">
              <a href="{{ route('admin.collections.edit', ['id' => $collection->id]) }}" class="btn btn-white border shadow-sm text-secondary hover-bg-light fw-medium">Edit Collection</a>

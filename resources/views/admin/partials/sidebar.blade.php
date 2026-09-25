@@ -97,7 +97,7 @@
                     <span>Home Products</span>
                 </a>
             </li> -->
-            <li>
+            <!-- <li>
                  <a href="{{ route('admin.settings.delivery-partners.index') }}" class="sidebar-item {{ request()->routeIs('admin.settings.delivery-partners*') ? 'active' : '' }}">
                     <i class="fa-solid fa-truck-ramp-box"></i>
                     <span>Delivery Partners</span>
@@ -108,7 +108,7 @@
                     <i class="fa-solid fa-motorcycle"></i>
                     <span>Delivery Staff</span>
                 </a>
-            </li>
+            </li> -->
              <li>
                   <a href="{{ route('admin.settings.theme') }}" class="sidebar-item {{ request()->routeIs('admin.settings.theme*') ? 'active' : '' }}">
                      <i class="fa-solid fa-palette"></i>

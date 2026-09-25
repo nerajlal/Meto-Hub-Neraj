@@ -4,11 +4,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MetoHub — The Platform Behind Grocery Stores That Sell Online</title>
+  <title>MetoHub — The Ultimate Ecommerce Website Builder</title>
   <meta name="description"
-    content="MetoHub is the SaaS platform grocery businesses use to build, price, promote, and run their own online stores — pricing engine, promotions, themes, analytics, and payments in one place.">
+    content="MetoHub is the SaaS platform businesses use to build, price, promote, and run their own online stores — pricing engine, promotions, themes, analytics, and payments in one place.">
   <meta name="keywords"
-    content="grocery ecommerce, saas for grocery stores, create grocery website, online supermarket platform, delivery software, grocery POS integration">
+    content="ecommerce builder, saas for online stores, create website, online shop platform, delivery software, POS integration">
   <link rel="icon"
     href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>S</text></svg>">
 
@@ -17,17 +17,17 @@
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="{{ url()->current() }}">
-  <meta property="og:title" content="MetoHub — Start Your Online Grocery Business">
+  <meta property="og:title" content="MetoHub — Start Your Online Business">
   <meta property="og:description"
-    content="MetoHub is the SaaS platform grocery businesses use to build, price, promote, and run their own online stores.">
+    content="MetoHub is the SaaS platform businesses use to build, price, promote, and run their own online stores.">
   <meta property="og:image" content="{{ asset('images/og-image.jpg') }}">
 
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:url" content="{{ url()->current() }}">
-  <meta property="twitter:title" content="MetoHub — Start Your Online Grocery Business">
+  <meta property="twitter:title" content="MetoHub — Start Your Online Business">
   <meta property="twitter:description"
-    content="MetoHub is the SaaS platform grocery businesses use to build, price, promote, and run their own online stores.">
+    content="MetoHub is the SaaS platform businesses use to build, price, promote, and run their own online stores.">
   <meta property="twitter:image" content="{{ asset('images/og-image.jpg') }}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -41,10 +41,10 @@
    ========================================================= */
 
     :root {
-      --primary: #2E7D32;
-      --primary-dark: #1B5E20;
-      --secondary: #43A047;
-      --accent: #FFB300;
+      --primary: #4F46E5;
+      --primary-dark: #3730A3;
+      --secondary: #6366F1;
+      --accent: #F43F5E;
       --bg: #F8FAF7;
       --dark: #1F2937;
       --white: #FFFFFF;
@@ -159,7 +159,7 @@
       padding: 110px 8vw;
     }
 
-    main.page-content > section:first-of-type {
+    main.page-content>section:first-of-type {
       padding-top: 160px;
     }
 
@@ -167,7 +167,8 @@
       section {
         padding: 72px 6vw;
       }
-      main.page-content > section:first-of-type {
+
+      main.page-content>section:first-of-type {
         padding-top: 120px;
       }
     }
@@ -231,12 +232,12 @@
     .btn-primary {
       background: linear-gradient(135deg, var(--primary), var(--secondary));
       color: var(--white);
-      box-shadow: 0 8px 24px rgba(46, 125, 50, 0.28);
+      box-shadow: 0 8px 24px rgba(79, 70, 229, 0.28);
     }
 
     .btn-primary:hover {
       transform: translateY(-2px);
-      box-shadow: 0 14px 32px rgba(46, 125, 50, 0.36);
+      box-shadow: 0 14px 32px rgba(79, 70, 229, 0.36);
     }
 
     .btn-outline {
@@ -1890,13 +1891,13 @@
       max-width: 1300px;
       margin: 0 auto 50px;
       display: grid;
-      grid-template-columns: 1.6fr repeat(4, 1fr);
+      grid-template-columns: 2fr 1fr 1fr;
       gap: 32px;
     }
 
     @media (max-width: 980px) {
       .footer-top {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(2, 1fr);
       }
 
       .footer-brand {
@@ -2060,19 +2061,19 @@
       </a>
 
       <nav class="main-nav" id="mainNav" aria-label="Primary">
-        <a href="{{ route('landing.old') }}">Home</a>
+        <!-- <a href="{{ route('landing.old') }}">Home</a> -->
         <a href="{{ route('landing.about') }}">About Us</a>
-        <a href="{{ route('landing.features') }}">Features</a>
-        <a href="{{ route('landing.solutions') }}">Solutions</a>
-        <a href="{{ route('landing.pricing') }}">Pricing</a>
+        <!-- <a href="{{ route('landing.features') }}">Features</a> -->
+        <!-- <a href="{{ route('landing.solutions') }}">Solutions</a> -->
+        <a href="{{ route('landing') }}#pricing">Pricing</a>
         <a href="{{ route('landing.themes') }}">Themes</a>
-        <a href="{{ route('landing.analytics') }}">Analytics</a>
+        <!-- <a href="{{ route('landing.analytics') }}">Analytics</a> -->
         <a href="{{ route('landing.contact') }}">Contact</a>
       </nav>
 
       <div class="header-actions">
         <a href="{{ route('admin.common.login') }}" class="btn btn-ghost">Log in</a>
-        <a href="javascript:void(0)" class="btn btn-primary pricing-btn-trigger" data-plan="sprout">Get Started</a>
+        <a href="javascript:void(0)" class="btn btn-primary pricing-btn-trigger" data-plan="base">Get Started</a>
       </div>
 
       <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">
@@ -2088,7 +2089,8 @@
   <footer class="site-footer" id="contact">
     <div class="footer-top">
       <div class="footer-brand">
-        <a href="{{ route('landing') }}" class="logo text-decoration-none" aria-label="MetoHub home" style="display: flex; align-items: center; gap: 8px; margin-bottom: 15px;">
+        <a href="{{ route('landing') }}" class="logo text-decoration-none" aria-label="MetoHub home"
+          style="display: flex; align-items: center; gap: 8px; margin-bottom: 15px;">
           <span class="logo-mark" aria-hidden="true">
             <svg viewBox="0 0 32 32" width="30" height="30">
               <rect x="3" y="10" width="26" height="18" rx="4" fill="var(--primary)" />
@@ -2099,7 +2101,7 @@
           </span>
           <span class="logo-text text-white" style="color: white;">Meto<span class="logo-accent">Hub</span></span>
         </a>
-        <p>The platform grocery businesses use to build and run their own online stores.</p>
+        <p>The platform merchants use to build and run their own online stores and scale globally.</p>
         <form class="newsletter" id="newsletterForm">
           <input type="email" placeholder="Your work email" required aria-label="Email address for newsletter">
           <button type="submit" class="btn btn-primary">Subscribe</button>
@@ -2107,20 +2109,15 @@
       </div>
       <div class="footer-col">
         <h4>Company</h4>
-        <a href="{{ route('landing.about') }}">About</a><a href="{{ route('landing.careers') }}">Careers</a><a href="{{ route('landing.press') }}">Press</a><a href="{{ route('landing.blogs') }}">Blog</a>
+        <a href="{{ route('landing.about') }}">About</a>
+        <a href="{{ route('landing.blogs') }}">Blog</a>
+        <a href="{{ route('landing.contact') }}">Contact</a>
       </div>
       <div class="footer-col">
         <h4>Platform</h4>
-        <a href="{{ route('landing.features') }}">Features</a><a href="{{ route('landing.analytics') }}">Analytics</a><a href="{{ route('landing.themes') }}">Themes</a><a
-          href="{{ route('landing.pricing') }}">Pricing</a>
-      </div>
-      <div class="footer-col">
-        <h4>Solutions</h4>
-        <a href="{{ route('landing.independent-grocers') }}">Independent Grocers</a><a href="{{ route('landing.grocery-chains') }}">Grocery Chains</a><a href="{{ route('landing.farmers-markets') }}">Farmers Markets</a>
-      </div>
-      <div class="footer-col">
-        <h4>Resources</h4>
-        <a href="{{ route('landing.help-center') }}">Help Center</a><a href="{{ route('landing.api-docs') }}">API Docs</a><a href="{{ route('landing.guides') }}">Guides</a>
+        <a href="{{ route('landing.features') }}">Features</a>
+        <a href="{{ route('landing.themes') }}">Themes</a>
+        <a href="{{ route('landing') }}#pricing">Pricing</a>
       </div>
     </div>
     <div class="footer-bottom">
@@ -2323,9 +2320,9 @@
           <!-- STEP 1: Tell us about yourself -->
           <div id="saasFormStep1" class="saas-form-step active">
             <div class="saas-modal-header">
-              <span class="saas-badge class-plan-badge">Starter</span>
+              <span class="saas-badge class-plan-badge">Base</span>
               <h2>Tell us about yourself</h2>
-              <p class="saas-lead">Provide your details to initiate your premium grocery store</p>
+              <p class="saas-lead">Provide your details to initiate your premium online store</p>
             </div>
 
             <div class="saas-form-group">
@@ -2377,14 +2374,14 @@
                 <label for="saas_whatsapp">WhatsApp Number *</label>
                 <div class="saas-phone-input-wrapper">
                   <select id="saas_phone_code" class="saas-phone-code">
-                    <option value="+91" selected>ðŸ‡®ðŸ‡³ +91</option>
-                    <option value="+971">ðŸ‡¦ðŸ‡ª +971</option>
-                    <option value="+966">ðŸ‡¸ðŸ‡¦ +966</option>
-                    <option value="+44">ðŸ‡¬ðŸ‡§ +44</option>
-                    <option value="+1">ðŸ‡ºðŸ‡¸ +1</option>
-                    <option value="+33">ðŸ‡«ðŸ‡· +33</option>
-                    <option value="+65">ðŸ‡¸ðŸ‡¬ +65</option>
-                    <option value="+61">ðŸ‡¦ðŸ‡º +61</option>
+                    <option value="+91" selected>🇮🇳 +91</option>
+                    <option value="+971">🇦🇪 +971</option>
+                    <option value="+966">🇸🇦 +966</option>
+                    <option value="+44">🇬🇧 +44</option>
+                    <option value="+1">🇺🇸 +1</option>
+                    <option value="+33">🇫🇷 +33</option>
+                    <option value="+65">🇸🇬 +65</option>
+                    <option value="+61">🇦🇺 +61</option>
                   </select>
                   <input type="tel" id="saas_whatsapp" placeholder="98765 43210" required />
                 </div>
@@ -2396,7 +2393,7 @@
           <!-- STEP 3: Configure your credentials & theme -->
           <div id="saasFormStep3" class="saas-form-step">
             <div class="saas-modal-header">
-              <span class="saas-badge class-plan-badge">Starter</span>
+              <span class="saas-badge class-plan-badge">Base</span>
               <h2>Configure store settings</h2>
               <p class="saas-lead">Secure your brand dashboard and select your pricing plan</p>
             </div>
@@ -2422,9 +2419,9 @@
               <div class="saas-form-group" style="grid-column: 1 / -1;">
                 <label for="saas_plan">Plan Selection (Optional)</label>
                 <select id="saas_plan">
-                  <option value="sprout">Sprout — $9/month (20 products)</option>
-                  <option value="maison">Maison — $19/month (100 products)</option>
-                  <option value="heritage">Heritage — $49/month (Unlimited)</option>
+                  <option value="base">Base — ₹99/month</option>
+                  <option value="pro">Pro — ₹249/month</option>
+                  <option value="enterprise">Enterprise — ₹749/month</option>
                   <option value="not_sure">Not sure yet</option>
                 </select>
               </div>
@@ -2499,18 +2496,18 @@
     .demo-modal-overlay {
       --black: #1F2937;
       --white: #FFFFFF;
-      --cream: #F8FAF7;
-      --gold: #2E7D32;
-      --gold-light: rgba(46, 125, 50, 0.08);
-      --gold-dark: #1B5E20;
+      --cream: #F8FAFC;
+      --gold: #4F46E5;
+      --gold-light: rgba(79, 70, 229, 0.1);
+      --gold-dark: #4F46E5;
       --gray-100: #F3F4F6;
       --gray-200: #E5E7EB;
       --gray-400: #9CA3AF;
       --gray-600: #4B5563;
-      --gray-800: #1B5E20;
-      --text: #16241A;
-      --text-muted: #5B6B60;
-      --border: rgba(31, 41, 55, 0.08);
+      --gray-800: #1F2937;
+      --text: #334155;
+      --text-muted: #64748B;
+      --border: rgba(31, 41, 55, 0.1);
     }
 
     /* â”€â”€ MOBILE PREVIEW MODAL â”€â”€ */
@@ -3298,8 +3295,8 @@
       const urlParams = new URLSearchParams(window.location.search);
       if (urlParams.has('get_started') && saasModal) {
         if (planSelector) {
-          planSelector.value = 'sprout';
-          updatePlanBadges('sprout');
+          planSelector.value = 'base';
+          updatePlanBadges('base');
         }
         saasModal.classList.add('active');
         document.body.style.overflow = 'hidden';
@@ -3478,7 +3475,7 @@
       // Update Next button label
       const nextBtn = document.getElementById('saasNextBtn');
       if (step === 3) {
-        nextBtn.textContent = 'Create my account â†’';
+        nextBtn.textContent = 'Create my account →';
       } else {
         nextBtn.textContent = 'Next';
       }

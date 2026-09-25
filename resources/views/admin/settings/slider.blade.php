@@ -8,10 +8,10 @@
     <!-- Header -->
     <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-4">
         <div>
-            <h1 class="h3 mb-1 text-dark">Hero Slider</h1>
+            <h1 class="h3 mb-1 text-primary">Hero Slider</h1>
             <p class="text-muted small mb-0">Manage home page hero banner slides order and content.</p>
         </div>
-        <a href="{{ route('admin.settings.slider.create') }}" class="btn btn-success shadow-sm d-flex align-items-center gap-2">
+        <a href="{{ route('admin.settings.slider.create') }}" class="btn btn-primary shadow-sm d-flex align-items-center gap-2">
             <i class="fas fa-plus"></i> Add New Slide
         </a>
     </div>
@@ -45,7 +45,7 @@
 
                 <!-- Info -->
                 <div class="flex-grow-1 min-w-0">
-                    <h3 class="h6 fw-bold text-dark mb-0 text-truncate">{{ $slider->title ?? 'Untitled Slide' }}</h3>
+                    <h3 class="h6 fw-bold text-primary mb-0 text-truncate">{{ $slider->title ?? 'Untitled Slide' }}</h3>
                 </div>
 
                 <!-- Meta Row (Status + Actions) -->

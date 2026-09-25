@@ -3,13 +3,13 @@
 @section('title', 'Theme Selection')
 
 @section('content')
-<div class="container-fluid py-4" style="background: #FAF9F6; min-height: 100vh;">
+<div class="container-fluid py-4" style="background: var(--sf-bg); min-height: 100vh;">
 
     <!-- Premium Header -->
-    <div class="mb-4 mb-md-5 position-relative overflow-hidden p-3 p-md-4 rounded-4" style="background: linear-gradient(135deg, #111 0%, #222 100%); border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
+    <div class="mb-4 mb-md-5 position-relative overflow-hidden p-3 p-md-4 rounded-4" style="background: linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%); border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
         <!-- Abstract background glow -->
-        <div class="position-absolute rounded-circle" style="width: 250px; height: 250px; background: rgba(0, 128, 96, 0.15); filter: blur(80px); top: -100px; right: -50px; pointer-events: none;"></div>
-        <div class="position-absolute rounded-circle" style="width: 200px; height: 200px; background: rgba(201, 168, 76, 0.1); filter: blur(60px); bottom: -100px; left: -50px; pointer-events: none;"></div>
+        <div class="position-absolute rounded-circle" style="width: 250px; height: 250px; background: rgba(255, 255, 255, 0.15); filter: blur(80px); top: -100px; right: -50px; pointer-events: none;"></div>
+        <div class="position-absolute rounded-circle" style="width: 200px; height: 200px; background: rgba(255, 255, 255, 0.15); filter: blur(60px); bottom: -100px; left: -50px; pointer-events: none;"></div>
         
         <div class="position-relative z-1">
             <span class="badge mb-2 px-3 py-1.5 rounded-pill uppercase tracking-wider text-white-50" style="background: rgba(255,255,255,0.08); font-size: 10px; font-weight: 600; letter-spacing: 1.2px; border: 1px solid rgba(255,255,255,0.12);">ESTHETIC MANAGEMENT</span>
@@ -20,9 +20,9 @@
 
     <!-- Alert Notifications -->
     @if(session('success'))
-        <div class="alert alert-success alert-dismissible fade show border-0 rounded-3 mb-4 p-3 shadow-sm" role="alert" style="background: #EAFDF5; border-left: 5px solid #008060 !important; color: #004d3a;">
+        <div class="alert alert-success alert-dismissible fade show border-0 rounded-3 mb-4 p-3 shadow-sm" role="alert" style="background: #ede9fe; border-left: 5px solid #8b5cf6 !important; color: #6d28d9;">
             <div class="d-flex align-items-center gap-2">
-                <i class="fas fa-check-circle" style="color: #008060; font-size: 18px;"></i>
+                <i class="fas fa-check-circle" style="color: #8b5cf6; font-size: 18px;"></i>
                 <div>
                     <strong class="fw-semibold">Success!</strong> {{ session('success') }}
                 </div>
@@ -53,7 +53,7 @@
                     
                     <!-- Top Ribbon for Active Theme -->
                     @if($isActive)
-                        <div class="position-absolute top-0 end-0 bg-success text-white px-3 py-1.5 small fw-bold shadow-sm" style="background: linear-gradient(135deg, #008060 0%, #005a43 100%) !important; font-size: 10px; z-index: 5; border-radius: 0 12px 0 12px; letter-spacing: 0.5px;">
+                        <div class="position-absolute top-0 end-0 bg-success text-white px-3 py-1.5 small fw-bold shadow-sm" style="background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%) !important; font-size: 10px; z-index: 5; border-radius: 0 12px 0 12px; letter-spacing: 0.5px;">
                             CURRENT ACTIVE
                         </div>
                     @endif
@@ -75,7 +75,7 @@
                     <div class="card-body d-flex flex-column justify-content-between p-4" style="background: #ffffff; border-radius: 0 0 12px 12px;">
                         <div>
                             <div class="d-flex align-items-center justify-content-between mb-3">
-                                <h3 class="h6 fw-bold text-dark mb-0" style="font-size: 15px;">{{ $theme['name'] }}</h3>
+                                <h3 class="h6 fw-bold text-primary mb-0" style="font-size: 15px;">{{ $theme['name'] }}</h3>
                             </div>
                             <p class="text-muted small mb-0" style="line-height: 1.6; font-size: 12.5px; height: 60px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;">
                                 {{ $theme['description'] }}
@@ -92,7 +92,7 @@
                                 <form action="{{ route('admin.settings.theme.update') }}" method="POST" class="m-0 p-0">
                                     @csrf
                                     <input type="hidden" name="theme" value="{{ $theme['id'] }}">
-                                    <button type="submit" class="btn btn-success text-white btn-sm w-100 d-flex align-items-center justify-content-center gap-2 py-2 fw-semibold" style="background: linear-gradient(135deg, #008060 0%, #006e52 100%) !important; border: none !important; font-size: 12px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0, 128, 96, 0.15);">
+                                    <button type="submit" class="btn btn-primary text-white btn-sm w-100 d-flex align-items-center justify-content-center gap-2 py-2 fw-semibold" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%) !important; border: none !important; font-size: 12px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0, 128, 96, 0.15);">
                                         <i class="fas fa-power-off" style="font-size: 11px;"></i> Activate Theme
                                     </button>
                                 </form>
@@ -192,7 +192,7 @@
     }
 
     .luxury-theme-card-active {
-        border: 2px solid #008060 !important;
+        border: 2px solid #8b5cf6 !important;
         box-shadow: 0 12px 30px rgba(0, 128, 96, 0.08) !important;
         margin: -1px;
     }

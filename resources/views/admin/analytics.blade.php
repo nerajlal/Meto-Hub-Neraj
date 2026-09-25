@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h1 class="h3 mb-0 text-dark">Analytics</h1>
+    <h1 class="h3 mb-0 text-primary">Analytics</h1>
     <div class="d-flex align-items-center gap-2">
         <a href="{{ route('admin.analytics.export', ['period' => request('period', '30_days')]) }}" class="btn btn-white border shadow-sm fw-medium d-flex align-items-center gap-2" style="font-size: 13px; border-radius: 6px;">
             <i class="fa-solid fa-file-export fs-6"></i> Export Report

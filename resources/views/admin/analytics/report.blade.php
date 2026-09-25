@@ -8,7 +8,7 @@
         <i class="fas fa-arrow-left me-1"></i> Back to Analytics
     </a>
     <div class="d-flex justify-content-between align-items-center">
-        <h1 class="h3 mb-0 text-dark">{{ $title }} Report</h1>
+        <h1 class="h3 mb-0 text-primary">{{ $title }} Report</h1>
         <div class="dropdown">
             <div class="d-flex align-items-center gap-2 border rounded bg-white px-3 py-1 shadow-sm small cursor-pointer hover-bg-light dropdown-toggle" data-bs-toggle="dropdown">
                 <i class="far fa-calendar text-secondary"></i>

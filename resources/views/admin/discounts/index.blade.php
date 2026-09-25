@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="mb-4">
-    <h1 class="h3 mb-0 text-dark">Discounts & Custom Pricing</h1>
+    <h1 class="h3 mb-0 text-primary">Discounts & Custom Pricing</h1>
 </div>
 
 <!-- Tabs Navigation -->
@@ -31,7 +31,7 @@
     <div class="tab-pane fade show active" id="coupons-pane" role="tabpanel" aria-labelledby="coupons-tab">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h2 class="h5 fw-bold text-secondary mb-0">Coupons & Promo Codes</h2>
-            <a href="{{ route('admin.discounts.create') }}" class="btn btn-success shadow-sm">Create discount</a>
+            <a href="{{ route('admin.discounts.create') }}" class="btn btn-primary shadow-sm">Create discount</a>
         </div>
 
         <!-- Stats -->
@@ -141,7 +141,7 @@
             <!-- Add Custom Price Form -->
             <div class="col-12 col-md-4">
                 <div class="card border shadow-sm p-4 bg-white">
-                    <h2 class="h5 fw-bold text-dark mb-3">Set Customer Pricing</h2>
+                    <h2 class="h5 fw-bold text-primary mb-3">Set Customer Pricing</h2>
                     <p class="small text-muted mb-4">Set specific wholesale or custom pricing rules for individual customers on specific items.</p>
                     
                     <form action="{{ route('admin.custom-prices.store') }}" method="POST">
@@ -174,7 +174,7 @@
                             </div>
                         </div>
 
-                        <button type="submit" class="btn btn-success w-100 shadow-sm">Save Custom Price</button>
+                        <button type="submit" class="btn btn-primary w-100 shadow-sm">Save Custom Price</button>
                     </form>
                 </div>
             </div>
@@ -246,20 +246,20 @@
             <div class="col-12 col-md-4">
                 <!-- Create Customer Group -->
                 <div class="card border shadow-sm p-4 bg-white mb-4">
-                    <h2 class="h5 fw-bold text-dark mb-3">Create Customer Group</h2>
+                    <h2 class="h5 fw-bold text-primary mb-3">Create Customer Group</h2>
                     <form action="{{ route('admin.customer-groups.store') }}" method="POST">
                         @csrf
                         <div class="mb-3">
                             <label class="form-label small fw-semibold text-secondary">Group Name</label>
                             <input type="text" name="name" class="form-control shadow-sm" placeholder="e.g. VIP Customers, Wholesale Buyers" required>
                         </div>
-                        <button type="submit" class="btn btn-success w-100 shadow-sm">Create Group</button>
+                        <button type="submit" class="btn btn-primary w-100 shadow-sm">Create Group</button>
                     </form>
                 </div>
 
                 <!-- Add Customers to Group -->
                 <div class="card border shadow-sm p-4 bg-white mb-4">
-                    <h2 class="h5 fw-bold text-dark mb-3">Assign Customers to Group</h2>
+                    <h2 class="h5 fw-bold text-primary mb-3">Assign Customers to Group</h2>
                     <form action="{{ route('admin.customer-groups.add-users') }}" method="POST">
                         @csrf
                         <div class="mb-3">
@@ -280,13 +280,13 @@
                             </select>
                             <div class="form-text small text-muted">Hold Ctrl/Cmd to select multiple customers.</div>
                         </div>
-                        <button type="submit" class="btn btn-success w-100 shadow-sm">Assign Customers</button>
+                        <button type="submit" class="btn btn-primary w-100 shadow-sm">Assign Customers</button>
                     </form>
                 </div>
 
                 <!-- Set Group Custom Price -->
                 <div class="card border shadow-sm p-4 bg-white">
-                    <h2 class="h5 fw-bold text-dark mb-3">Set Group Pricing</h2>
+                    <h2 class="h5 fw-bold text-primary mb-3">Set Group Pricing</h2>
                     <form action="{{ route('admin.group-custom-prices.store') }}" method="POST">
                         @csrf
                         <div class="mb-3">
@@ -314,7 +314,7 @@
                                 <input type="number" step="0.01" name="price" class="form-control" placeholder="0.00" required>
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-success w-100 shadow-sm">Save Group Price</button>
+                        <button type="submit" class="btn btn-primary w-100 shadow-sm">Save Group Price</button>
                     </form>
                 </div>
             </div>
@@ -423,22 +423,22 @@
     </div>
 </div>
 <style>
-    .hover-text-primary:hover { color: #008060 !important; }
+    .hover-text-primary:hover { color: #8b5cf6 !important; }
     .hover-text-danger:hover { color: var(--bs-danger) !important; }
 
     /* Pagination Overrides */
     .page-link {
-        color: #008060;
+        color: #8b5cf6;
         border-color: #dee2e6;
     }
     .page-link:hover {
-        color: #004d3a;
+        color: #6d28d9;
         background-color: #e6f2f0;
         border-color: #dee2e6;
     }
     .page-item.active .page-link {
-        background-color: #008060;
-        border-color: #008060;
+        background-color: #8b5cf6;
+        border-color: #8b5cf6;
         color: white;
     }
     .page-item.disabled .page-link {
@@ -520,7 +520,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary shadow-sm" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-success shadow-sm">Upload & Import</button>
+                    <button type="submit" class="btn btn-primary shadow-sm">Upload & Import</button>
                 </div>
             </form>
         </div>

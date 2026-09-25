@@ -9,7 +9,7 @@
         <a href="{{ route('admin.settings.slider') }}" class="text-secondary hover-text-dark">
             <i class="fas fa-arrow-left"></i>
         </a>
-        <h1 class="h3 mb-0 text-dark">Add New Slide</h1>
+        <h1 class="h3 mb-0 text-primary">Add New Slide</h1>
     </div>
 
     <form action="{{ route('admin.settings.slider.store') }}" method="POST" enctype="multipart/form-data">
@@ -64,7 +64,7 @@
 
         <div class="d-flex justify-content-end gap-3">
              <a href="{{ route('admin.settings.slider') }}" class="btn btn-white border text-secondary shadow-sm">Cancel</a>
-            <button type="submit" class="btn btn-success shadow-sm">Save Slide</button>
+            <button type="submit" class="btn btn-primary shadow-sm">Save Slide</button>
         </div>
     </form>
     
