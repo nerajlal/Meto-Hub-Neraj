@@ -43,6 +43,19 @@ class Tenant extends Model
         'checkout_fields' => 'array',
     ];
 
+    public function getCurrencyAttribute($value)
+    {
+        $symbols = [
+            'INR' => '₹',
+            'USD' => '$',
+            'EUR' => '€',
+            'GBP' => '£',
+            'AUD' => 'A$',
+            'CAD' => 'C$'
+        ];
+        return $symbols[$value] ?? $value;
+    }
+
     public function admin()
     {
         return $this->hasOne(User::class, 'tenant_id')->where('type', 'admin');

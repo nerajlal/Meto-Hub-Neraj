@@ -59,7 +59,8 @@ class PageController extends Controller
                             }])
                             ->get();
         $bundles = \App\Models\Bundle::where('tenant_id', $tenantId)->where('status', 'active')->where('type', 'bundle')->with(['products.variants'])->latest()->take(4)->get();
-        return view($this->getView('home'), compact('sliders', 'bestsellers', 'collections', 'bundles'));
+        $reels = \App\Models\Reel::where('tenant_id', $tenantId)->where('status', true)->orderBy('order', 'asc')->get();
+        return view($this->getView('home'), compact('sliders', 'bestsellers', 'collections', 'bundles', 'reels'));
     }
 
     public function v3Home()
@@ -69,7 +70,8 @@ class PageController extends Controller
         $bestsellers = \App\Models\HomeProduct::where('tenant_id', $tenantId)->with(['product.variants', 'product.images'])->orderBy('sort_order', 'asc')->get();
         $collections = \App\Models\Collection::where('tenant_id', $tenantId)->where('status', true)->get();
         $bundles = \App\Models\Bundle::where('tenant_id', $tenantId)->where('status', 'active')->where('type', 'bundle')->with(['products.variants'])->latest()->take(4)->get();
-        return view($this->getView('home'), compact('sliders', 'bestsellers', 'collections', 'bundles'));
+        $reels = \App\Models\Reel::where('tenant_id', $tenantId)->where('status', true)->orderBy('order', 'asc')->get();
+        return view($this->getView('home'), compact('sliders', 'bestsellers', 'collections', 'bundles', 'reels'));
     }
 
     public function ajmalHome()

@@ -91,6 +91,13 @@
                     <i class="fa-solid fa-images"></i>
                     <span>Hero Slider</span>
                 </a>
+            </li>
+            <li>
+                 <a href="{{ route('admin.settings.reels') }}" class="sidebar-item {{ request()->routeIs('admin.settings.reels*') ? 'active' : '' }}">
+                    <i class="fab fa-instagram"></i>
+                    <span>Instagram Reels</span>
+                </a>
+            </li>
             <!-- <li>
                  <a href="{{ route('admin.settings.home-products') }}" class="sidebar-item {{ request()->routeIs('admin.settings.home-products*') ? 'active' : '' }}">
                     <i class="fa-solid fa-wand-magic-sparkles"></i>

@@ -295,6 +295,15 @@ Route::prefix('{tenant}/admin')->name('admin.')->middleware(['identify_tenant', 
     Route::post('/settings/slider/reorder', [App\Http\Controllers\Admin\SliderController::class, 'reorder'])->name('settings.slider.reorder');
     Route::delete('/settings/slider/{id}', [App\Http\Controllers\Admin\SliderController::class, 'destroy'])->name('settings.slider.destroy');
 
+    // Instagram Reels
+    Route::get('/settings/reels', [App\Http\Controllers\Admin\ReelController::class, 'index'])->name('settings.reels');
+    Route::get('/settings/reels/create', [App\Http\Controllers\Admin\ReelController::class, 'create'])->name('settings.reels.create');
+    Route::post('/settings/reels', [App\Http\Controllers\Admin\ReelController::class, 'store'])->name('settings.reels.store');
+    Route::get('/settings/reels/{id}/edit', [App\Http\Controllers\Admin\ReelController::class, 'edit'])->name('settings.reels.edit');
+    Route::put('/settings/reels/{id}', [App\Http\Controllers\Admin\ReelController::class, 'update'])->name('settings.reels.update');
+    Route::post('/settings/reels/reorder', [App\Http\Controllers\Admin\ReelController::class, 'reorder'])->name('settings.reels.reorder');
+    Route::delete('/settings/reels/{id}', [App\Http\Controllers\Admin\ReelController::class, 'destroy'])->name('settings.reels.destroy');
+
     Route::get('/settings/home-products', [App\Http\Controllers\Admin\HomeProductController::class, 'index'])->name('settings.home-products');
     Route::post('/settings/home-products', [App\Http\Controllers\Admin\HomeProductController::class, 'store'])->name('settings.home-products.store');
     Route::post('/settings/home-products/reorder', [App\Http\Controllers\Admin\HomeProductController::class, 'reorder'])->name('settings.home-products.reorder');

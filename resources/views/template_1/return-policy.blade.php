@@ -1,6 +1,6 @@
 @extends('template_1.layouts.app')
 
-@section('title', 'Return Policy | ' . ($currentTenant->name ?? 'Fresh Grocery'))
+@section('title', 'Return Policy | ' . ($currentTenant->name ?? 'SaaS Store'))
 
 @section('content')
 <div style="max-width: 800px; margin: 0 auto; padding: 3rem 1.5rem; background: #fff; border-radius: 1.5rem; border: 1px solid var(--border-color);">

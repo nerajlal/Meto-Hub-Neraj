@@ -1,6 +1,6 @@
 @extends('template_1.layouts.app')
 
-@section('title', 'Contact Us | ' . ($currentTenant->name ?? 'Fresh Grocery'))
+@section('title', 'Contact Us | ' . ($currentTenant->name ?? 'SaaS Store'))
 
 @section('content')
 <div class="static-page-container">

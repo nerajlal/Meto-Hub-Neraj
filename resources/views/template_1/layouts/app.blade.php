@@ -4,12 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', ($currentTenant->name ?? 'SaaS Grocery') . ' - Home')</title>
+    <title>@yield('title', ($currentTenant->name ?? 'SaaS Store') . ' - Home')</title>
     <link rel="icon" href="{{ isset($currentTenant) && $currentTenant->favicon ? Storage::url($currentTenant->favicon) : 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>S</text></svg>' }}">
     <meta name="description"
-        content="@yield('meta_description', 'Shop fresh vegetables, fruits, dairy, bakery, and daily essentials online at ' . ($currentTenant->name ?? 'our store') . '. Fast home delivery guaranteed.')">
+        content="@yield('meta_description', 'Shop premium products online at ' . ($currentTenant->name ?? 'our store') . '. Fast home delivery guaranteed.')">
     <meta name="keywords"
-        content="@yield('meta_keywords', 'online grocery, fresh vegetables, organic fruits, daily essentials, order food online')">
+        content="@yield('meta_keywords', 'online store, premium products, online shopping')">
     <link rel="canonical" href="{{ url()->current() }}">
 
     <!-- CSS and Fonts -->
@@ -44,7 +44,7 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background-color: var(--bg-light);
+            background-color: #fff;
             color: var(--primary-color);
         }
 
@@ -85,37 +85,9 @@
 </head>
 
 <body>
-    <div class="sidebar-overlay"></div>
-
     @include('template_1.partials.header')
 
     <div class="main-wrapper">
-        <aside class="sidebar">
-            <button id="mobile-menu-close" class="mobile-close-btn">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-            <h2 class="sidebar-title">Categories</h2>
-            <ul class="sidebar-menu">
-                @php $sidebarCollections = \App\Models\Collection::where('tenant_id', $currentTenant->id ?? 2)->where('status', 1)->get(); @endphp
-                <li class="menu-item">
-                    <a href="{{ route('v1.all-products') }}" class="menu-link">
-                        <i class="fa-solid fa-border-all"></i> All Products
-                    </a>
-                </li>
-                <li class="menu-item">
-                    <a href="{{ route('v1.combos') }}" class="menu-link">
-                        <i class="fa-solid fa-layer-group"></i> Combos
-                    </a>
-                </li>
-                @foreach($sidebarCollections as $col)
-                    <li class="menu-item">
-                        <a href="{{ route('v1.collection', ['slug' => $col->slug]) }}" class="menu-link">
-                            <i class="fa-solid fa-chevron-right"></i> {{ $col->name }}
-                        </a>
-                    </li>
-                @endforeach
-            </ul>
-        </aside>
 
         <main class="main-content">
             <div class="content-container">
@@ -158,23 +130,6 @@
     
     
     <script>
-        $(document).ready(function () {
-            const $sidebar = $('.sidebar');
-            const $overlay = $('.sidebar-overlay');
-            const $toggle = $('#mobile-menu-toggle');
-            const $close = $('#mobile-menu-close');
-
-            function toggleMobileMenu() {
-                $sidebar.toggleClass('active');
-                $overlay.toggleClass('active');
-                $('body').toggleClass('menu-open');
-            }
-
-            $toggle.on('click', toggleMobileMenu);
-            $close.on('click', toggleMobileMenu);
-            $overlay.on('click', toggleMobileMenu);
-        });
-
         // Cart Drawer Animations & Actions
         function toggleNCart(open = true) {
             if (open) {

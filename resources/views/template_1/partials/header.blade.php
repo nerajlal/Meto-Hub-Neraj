@@ -1,13 +1,10 @@
-<header class="store-header">
+<header class="store-header" style="flex-direction: column; height: auto; padding-top: 10px; gap: 10px;">
     <div class="header-container">
-        <button id="mobile-menu-toggle" class="mobile-toggle">
-            <i class="fa-solid fa-bars"></i>
-        </button>
         <a href="{{ route('v1.home') }}" class="logo" style="color: var(--accent-color); font-weight: 800; font-size: 1.5rem; text-decoration: none; display: flex; align-items: center;">
             @if($currentTenant->logo)
                 <img src="{{ Storage::url($currentTenant->logo) }}" alt="{{ $currentTenant->name }}" style="max-height: 45px; width: auto; object-fit: contain;">
             @else
-                <i class="fa-solid fa-basket-shopping me-2"></i>{{ $currentTenant->name ?? 'Fresh Grocery' }}
+                <i class="fa-solid fa-basket-shopping me-2"></i>{{ $currentTenant->name ?? 'SaaS Store' }}
             @endif
         </a>
 
@@ -16,14 +13,14 @@
         @else
         {{-- Search Bar with autocomplete (Desktop) --}}
         <div class="search-bar hide-on-mobile" style="position: relative; flex: 1; max-width: 520px;">
-            <form id="t1-search-form" action="{{ route('v3.all-products') }}" method="GET" autocomplete="off" style="display: flex; align-items: center; width: 100%; position: relative;">
+            <form id="t1-search-form" action="{{ route('v1.all-products') }}" method="GET" autocomplete="off" style="display: flex; align-items: center; width: 100%; position: relative;">
                 <i class="fa-solid fa-magnifying-glass search-icon"></i>
                 <input
                     type="text"
                     name="q"
                     id="t1-search-input"
                     class="search-input"
-                    placeholder="Search for fresh vegetables, fruits, dairy..."
+                    placeholder="Search for products, categories, brands..."
                     value="{{ request('q') }}"
                     autocomplete="off"
                     style="padding-right: 2.5rem;"
@@ -95,6 +92,43 @@
                 @endphp
                 <span id="cart-count" class="cart-count" style="background-color: var(--accent-color);">{{ $cartCount }}</span>
             </a>
+        </div>
+    </div> <!-- Close header-container -->
+    
+    <!-- Top Horizontal Menu -->
+    <div class="header-nav-container" style="background: #fff; border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); width: 100%;">
+        <div class="header-container nav-items-wrapper" style="min-height: 45px; display: flex; gap: 1.5rem; flex-wrap: wrap; justify-content: center;">
+            @php $headerCollections = \App\Models\Collection::where('tenant_id', $currentTenant->id ?? 2)->where('status', 1)->get(); @endphp
+            <a href="{{ route('v1.all-products') }}" class="nav-link" style="color: var(--primary-color); text-decoration: none; font-weight: 600; font-size: 0.95rem; padding: 10px 0; display: flex; align-items: center; gap: 0.5rem;">
+                <i class="fa-solid fa-border-all text-muted"></i> All Products
+            </a>
+            <a href="{{ route('v1.combos') }}" class="nav-link" style="color: var(--primary-color); text-decoration: none; font-weight: 600; font-size: 0.95rem; padding: 10px 0; display: flex; align-items: center; gap: 0.5rem;">
+                <i class="fa-solid fa-layer-group text-muted"></i> Combos
+            </a>
+            
+            <div class="nav-dropdown" style="position: relative; display: inline-block;">
+                <a href="javascript:void(0)" onclick="this.nextElementSibling.classList.toggle('show-dropdown')" class="nav-link" style="color: var(--primary-color); text-decoration: none; font-weight: 600; font-size: 0.95rem; padding: 10px 0; display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="fa-solid fa-list text-muted"></i> Collections <i class="fa-solid fa-chevron-down ms-1" style="font-size: 0.7rem;"></i>
+                </a>
+                <div class="dropdown-menu-custom shadow-sm" style="position: absolute; top: 100%; left: 50%; transform: translateX(-50%); background: #fff; border-radius: 8px; min-width: 200px; z-index: 1000; padding: 0.5rem 0; border: 1px solid var(--border-color); visibility: hidden; opacity: 0; transition: all 0.2s ease;">
+                    @foreach($headerCollections as $col)
+                        <a href="{{ route('v1.collection', ['slug' => $col->slug]) }}" class="dropdown-item" style="display: block; padding: 0.5rem 1rem; color: var(--primary-color); text-decoration: none; font-size: 0.9rem;">{{ $col->name }}</a>
+                    @endforeach
+                </div>
+            </div>
+            
+            <style>
+                .nav-dropdown:hover .dropdown-menu-custom,
+                .dropdown-menu-custom.show-dropdown {
+                    visibility: visible !important;
+                    opacity: 1 !important;
+                    transform: translateX(-50%) translateY(0);
+                }
+                .dropdown-item:hover {
+                    background-color: #f8fafc;
+                    color: var(--accent-color) !important;
+                }
+            </style>
         </div>
     </div>
     @endmobileapp

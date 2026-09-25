@@ -52,7 +52,7 @@
             @endif
         </div>
         <a href="{{ route('v3.product', ['id' => $product->id]) }}" class="p-name" style="font-weight: 700; font-size: 0.85rem; line-height: 1.15rem; color: var(--primary-color); text-decoration: none; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; height: 3.45rem;">{{ $product->title }}</a>
-        <span class="p-meta" style="font-size: 0.75rem; color: var(--text-muted); padding-right: 2.2rem; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ $product->type ?? 'Grocery' }} • {{ $product->variants->first()->size ?? '1 Unit' }}</span>
+        <span class="p-meta" style="font-size: 0.75rem; color: var(--text-muted); padding-right: 2.2rem; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ $product->type ?? 'Product' }} • {{ $product->variants->first()->size ?? '1 Unit' }}</span>
     </div>
     
     <div class="product-action-wrapper" data-cart-key="{{ $product->id }}{{ isset($product->variants->first()->size) && $product->variants->first()->size ? '-' . $product->variants->first()->size : '' }}" style="position: absolute; bottom: 10px; right: 10px; z-index: 15;">

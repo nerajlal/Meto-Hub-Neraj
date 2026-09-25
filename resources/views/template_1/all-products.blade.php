@@ -1,6 +1,6 @@
 @extends('template_1.layouts.app')
 
-@section('title', 'Shop All Groceries | ' . ($currentTenant->name ?? 'Fresh Grocery'))
+@section('title', 'Shop All Groceries | ' . ($currentTenant->name ?? 'SaaS Store'))
 
 @section('content')
 <div class="collection-header" style="margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: flex-end; gap: 1rem; flex-wrap: wrap;">
@@ -55,56 +55,61 @@
     
     <div class="collection-layout-grid">
         <!-- Filters Sidebar -->
-    <aside class="filters-sidebar" style="background: #fff; padding: 1.5rem; border-radius: 1.5rem; border: 1px solid var(--border-color); position: sticky; top: 100px;">
-        <h3 style="font-weight: 800; color: var(--primary-color); margin-bottom: 1.5rem; font-size: 1.25rem;"><i class="fa-solid fa-filter me-2" style="color: var(--accent-color);"></i>Filters</h3>
+    <aside class="filters-sidebar" style="background: transparent; padding-right: 2rem; position: sticky; top: 100px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem;">
+            <h3 style="font-weight: 800; color: var(--primary-color); font-size: 1.1rem; margin: 0;"><i class="fa-solid fa-sliders me-2" style="color: var(--text-muted); font-size: 0.9rem;"></i>Filters</h3>
+            <a href="{{ route('v3.all-products') }}" style="color: var(--text-muted); font-size: 0.8rem; text-decoration: underline; font-weight: 600;">Clear All</a>
+        </div>
+        
         <form action="{{ route('v3.all-products') }}" method="GET" id="filter-form">
             @if(!empty($keyword))
                 <input type="hidden" name="q" value="{{ $keyword }}">
             @endif
 
-            <div class="filter-group" style="margin-bottom: 1.5rem;">
-                <label style="font-weight: 700; color: var(--primary-color); display: block; margin-bottom: 0.75rem;">Sort By</label>
-                <select name="sort" class="form-select" onchange="document.getElementById('filter-form').submit()" style="width: 100%; padding: 0.5rem; border-radius: 0.5rem; border: 1px solid var(--border-color); color: var(--text-muted);">
-                    <option value="latest" {{ $currentSort == 'latest' ? 'selected' : '' }}>Newest Arrivals</option>
-                    <option value="price_asc" {{ $currentSort == 'price_asc' ? 'selected' : '' }}>Price: Low to High</option>
-                    <option value="price_desc" {{ $currentSort == 'price_desc' ? 'selected' : '' }}>Price: High to Low</option>
-                    <option value="name_asc" {{ $currentSort == 'name_asc' ? 'selected' : '' }}>Name: A-Z</option>
-                    <option value="name_desc" {{ $currentSort == 'name_desc' ? 'selected' : '' }}>Name: Z-A</option>
-                </select>
-            </div>
-
-            <div class="filter-group" style="margin-bottom: 1.5rem;">
-                <label style="font-weight: 700; color: var(--primary-color); display: block; margin-bottom: 0.75rem;">Price Range ({{ $currentTenant->currency ?? '₹' }})</label>
-                <div style="display: flex; gap: 0.5rem; align-items: center;">
-                    <input type="number" name="min_price" value="{{ $currentMinPrice }}" placeholder="Min" style="width: 100%; padding: 0.5rem; border-radius: 0.5rem; border: 1px solid var(--border-color);">
-                    <span style="color: var(--text-muted);">-</span>
-                    <input type="number" name="max_price" value="{{ $currentMaxPrice }}" placeholder="Max" style="width: 100%; padding: 0.5rem; border-radius: 0.5rem; border: 1px solid var(--border-color);">
+            <div class="filter-group" style="margin-bottom: 2rem;">
+                <label style="font-weight: 700; color: var(--primary-color); display: block; margin-bottom: 1rem; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px;">Sort By</label>
+                <div style="position: relative;">
+                    <select name="sort" class="form-select" onchange="document.getElementById('filter-form').submit()" style="width: 100%; padding: 0.75rem 1rem; border-radius: 0.5rem; border: 1px solid var(--border-color); color: var(--primary-color); font-size: 0.95rem; font-weight: 600; background-color: #f8fafc; appearance: none; cursor: pointer;">
+                        <option value="latest" {{ $currentSort == 'latest' ? 'selected' : '' }}>Newest Arrivals</option>
+                        <option value="price_asc" {{ $currentSort == 'price_asc' ? 'selected' : '' }}>Price: Low to High</option>
+                        <option value="price_desc" {{ $currentSort == 'price_desc' ? 'selected' : '' }}>Price: High to Low</option>
+                        <option value="name_asc" {{ $currentSort == 'name_asc' ? 'selected' : '' }}>Name: A-Z</option>
+                        <option value="name_desc" {{ $currentSort == 'name_desc' ? 'selected' : '' }}>Name: Z-A</option>
+                    </select>
+                    <i class="fa-solid fa-chevron-down" style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); pointer-events: none; font-size: 0.8rem;"></i>
                 </div>
             </div>
 
+            <div class="filter-group" style="margin-bottom: 2rem;">
+                <label style="font-weight: 700; color: var(--primary-color); display: block; margin-bottom: 1rem; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px;">Price Range ({{ $currentTenant->currency ?? '₹' }})</label>
+                <div style="display: flex; gap: 0.5rem; align-items: center; margin-bottom: 1rem;">
+                    <input type="number" name="min_price" value="{{ $currentMinPrice }}" placeholder="Min" style="width: 100%; padding: 0.75rem; border-radius: 0.5rem; border: 1px solid var(--border-color); font-size: 0.95rem; background-color: #f8fafc;">
+                    <span style="color: var(--text-muted); font-weight: 600;">-</span>
+                    <input type="number" name="max_price" value="{{ $currentMaxPrice }}" placeholder="Max" style="width: 100%; padding: 0.75rem; border-radius: 0.5rem; border: 1px solid var(--border-color); font-size: 0.95rem; background-color: #f8fafc;">
+                </div>
+                <button type="submit" style="width: 100%; padding: 0.75rem; border-radius: 0.5rem; background: var(--primary-color); color: #fff; border: none; font-weight: 700; transition: 0.2s; font-size: 0.9rem; cursor: pointer;">Apply Price</button>
+            </div>
+
             @if(!empty($allTags))
-            <div class="filter-group" style="margin-bottom: 1.5rem;">
-                <label style="font-weight: 700; color: var(--primary-color); display: block; margin-bottom: 0.75rem;">Popular Tags</label>
-                <div style="max-height: 200px; overflow-y: auto; display: flex; flex-direction: column; gap: 0.5rem; padding-right: 0.5rem;">
+            <div class="filter-group" style="margin-bottom: 2rem;">
+                <label style="font-weight: 700; color: var(--primary-color); display: block; margin-bottom: 1rem; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px;">Popular Tags</label>
+                <div style="max-height: 250px; overflow-y: auto; display: flex; flex-direction: column; gap: 0.75rem; padding-right: 0.5rem; scrollbar-width: thin;">
                     @foreach($allTags as $tag)
-                    <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; color: var(--text-muted); font-size: 0.95rem;">
-                        <input type="checkbox" name="tags[]" value="{{ $tag }}" onchange="document.getElementById('filter-form').submit()" {{ in_array($tag, $currentTags) ? 'checked' : '' }} style="accent-color: var(--accent-color);">
+                    <label style="display: flex; align-items: center; gap: 0.75rem; cursor: pointer; color: var(--text-main); font-size: 0.95rem; font-weight: 500; transition: color 0.2s;">
+                        <input type="checkbox" name="tags[]" value="{{ $tag }}" onchange="document.getElementById('filter-form').submit()" {{ in_array($tag, $currentTags) ? 'checked' : '' }} style="width: 18px; height: 18px; accent-color: var(--accent-color); cursor: pointer; border-radius: 4px;">
                         {{ $tag }}
                     </label>
                     @endforeach
                 </div>
             </div>
             @endif
-
-            <button type="submit" class="btn-primary" style="width: 100%; padding: 0.75rem; border-radius: 0.5rem; background: var(--accent-color); color: #fff; border: none; font-weight: 700; margin-top: 0.5rem; transition: 0.2s;">Apply Filters</button>
-            <a href="{{ route('v3.all-products') }}" style="display: block; text-align: center; margin-top: 1rem; color: var(--text-muted); font-size: 0.9rem; text-decoration: underline;">Clear All</a>
         </form>
     </aside>
 
     <!-- Main Products Area -->
     <div class="main-products-area">
-        <div class="section-header" style="margin-bottom: 1.5rem;">
-            <h2 class="section-title" style="font-weight: 800; font-size: 1.6rem; color: var(--primary-color);">All Groceries</h2>
+        <div class="section-header" style="margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: flex-end;">
+            <h2 class="section-title" style="font-weight: 800; font-size: 1.8rem; color: var(--primary-color); margin: 0;">All Products</h2>
         </div>
 
     @if($products->count() > 0)
@@ -136,7 +141,7 @@
     @if(isset($bundles) && $bundles->count() > 0)
     <div class="department-section" style="margin-bottom: 4rem; margin-top: 4rem;">
         <div class="section-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-            <h2 class="section-title" style="font-weight: 800; font-size: 1.6rem; color: var(--primary-color);">Weekly Grocery Combos</h2>
+            <h2 class="section-title" style="font-weight: 800; font-size: 1.6rem; color: var(--primary-color);">Weekly Featured Bundles</h2>
             <a href="{{ route('v3.combos') }}" class="view-all" style="font-weight: 700; color: var(--accent-color); font-size: 0.95rem; text-decoration: none;">View All <i class="fa-solid fa-chevron-right ms-1"></i></a>
         </div>
         <div class="product-grid bundle-responsive-grid grid-cols-mobile-{{ $currentTenant->mobile_grid_cols ?? 2 }}">

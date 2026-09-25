@@ -1,6 +1,6 @@
 @extends('template_1.layouts.app')
 
-@section('title', $product->title . ' | ' . ($currentTenant->name ?? 'Fresh Grocery'))
+@section('title', $product->title . ' | ' . ($currentTenant->name ?? 'SaaS Store'))
 @section('meta_description', Str::limit(strip_tags($product->description), 160))
 @section('meta_keywords', $product->title . ', fresh, organic, grocery, order online')
 @section('og_image', $product->main_image_url ?? asset('Images/default.png'))
@@ -17,7 +17,7 @@
   "description": "{{ strip_tags($product->description) }}",
   "brand": {
     "@@type": "Brand",
-    "name": "{{ $currentTenant->name ?? 'Fresh Grocery' }}"
+    "name": "{{ $currentTenant->name ?? 'SaaS Store' }}"
   },
   "offers": {
     "@@type": "Offer",

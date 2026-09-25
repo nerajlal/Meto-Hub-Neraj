@@ -6,10 +6,10 @@
                     @if($currentTenant->logo)
                         <img src="{{ Storage::url($currentTenant->logo) }}" alt="{{ $currentTenant->name }}" style="max-height: 40px; width: auto; object-fit: contain;">
                     @else
-                        <i class="fa-solid fa-basket-shopping me-2"></i>{{ $currentTenant->name ?? 'Fresh Grocery' }}
+                        <i class="fa-solid fa-basket-shopping me-2"></i>{{ $currentTenant->name ?? 'SaaS Store' }}
                     @endif
                 </a>
-                <p>Bringing fresh, high-quality organic vegetables, fruits, dairy, and daily essentials straight from local farms to your kitchen. Fast delivery guaranteed.</p>
+                <p>Bringing high-quality premium products straight to your doorstep. Fast delivery guaranteed.</p>
                 <div class="footer-trust">
                     <div class="payment-methods">
                         <i class="fa-brands fa-cc-visa"></i>
@@ -45,7 +45,7 @@
 
             <div class="footer-newsletter">
                 <h3 class="footer-heading">Weekly Savings</h3>
-                <p>Subscribe to our newsletter to receive weekly discount coupons and farm fresh updates.</p>
+                <p>Subscribe to our newsletter to receive weekly discount coupons and store updates.</p>
                 <form class="newsletter-form">
                     <input type="email" placeholder="Enter your email">
                     <button type="button" style="background-color: var(--accent-color);">Join</button>
@@ -55,7 +55,7 @@
 
         <div class="footer-bottom">
             <div class="copyright">
-                &copy; {{ date('Y') }} {{ $currentTenant->name ?? 'Fresh Grocery' }}. All rights reserved. <span style="opacity: 0.7; margin-left: 10px;">| Powered by <a href="https://www.metohub.com/" style="color: inherit; text-decoration: none; font-weight: 600;">MetoHub</a></span>
+                &copy; {{ date('Y') }} {{ $currentTenant->name ?? 'SaaS Store' }}. All rights reserved. <span style="opacity: 0.7; margin-left: 10px;">| Powered by <a href="https://www.metohub.com/" style="color: inherit; text-decoration: none; font-weight: 600;">MetoHub</a></span>
             </div>
             <div class="social-links">
                 <a href="#"><i class="fa-brands fa-instagram"></i></a>

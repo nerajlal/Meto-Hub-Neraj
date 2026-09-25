@@ -1,6 +1,6 @@
 @extends('template_1.layouts.app')
 
-@section('title', 'Our Story | ' . ($currentTenant->name ?? 'Fresh Grocery'))
+@section('title', 'Our Story | ' . ($currentTenant->name ?? 'SaaS Store'))
 
 @section('content')
     <div class="about-hero"
@@ -39,7 +39,7 @@
                         </div>
                     @else
                         <p style="font-size: 1.1rem; color: var(--text-muted); line-height: 1.7; margin-bottom: 1.25rem;">
-                            {{ $currentTenant->name ?? 'Fresh Grocery' }} was founded on a simple principle: everyone deserves
+                            {{ $currentTenant->name ?? 'SaaS Store' }} was founded on a simple principle: everyone deserves
                             access to healthy, clean food. We partner directly with local, certified organic farmers to cut out
                             the middlemen and deliver produce within hours of harvest.</p>
                         <p style="font-size: 1.1rem; color: var(--text-muted); line-height: 1.7; margin-bottom: 1.25rem;">Every

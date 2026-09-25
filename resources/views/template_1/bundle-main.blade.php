@@ -1,6 +1,6 @@
 @extends('template_1.layouts.app')
 
-@section('title', $bundle->title . ' | Grocery Combo | ' . ($currentTenant->name ?? 'Fresh Grocery'))
+@section('title', $bundle->title . ' | Grocery Combo | ' . ($currentTenant->name ?? 'SaaS Store'))
 
 @section('content')
 <div class="product-page-container">
@@ -94,7 +94,7 @@
                                     @if($v && $v->size)
                                         Size: {{ $v->size }}
                                     @else
-                                        Category: {{ $product->type ?? 'Grocery' }}
+                                        Category: {{ $product->type ?? 'Category' }}
                                     @endif
                                 </p>
                             </div>

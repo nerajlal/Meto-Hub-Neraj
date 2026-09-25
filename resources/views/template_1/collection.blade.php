@@ -1,6 +1,6 @@
 @extends('template_1.layouts.app')
 
-@section('title', ($title ?? 'Collection') . ' | ' . ($currentTenant->name ?? 'Fresh Grocery'))
+@section('title', ($title ?? 'Collection') . ' | ' . ($currentTenant->name ?? 'SaaS Store'))
 
 @section('content')
 <div class="collection-header" style="margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: flex-end; gap: 1rem; flex-wrap: wrap;">
