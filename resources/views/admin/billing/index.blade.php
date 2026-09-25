@@ -5,7 +5,7 @@
     /* Dashboard styling */
     .dashboard-wrapper {
       padding: 20px 40px 40px 40px;
-      background: #f8fafc;
+      background: transparent;
       min-height: 100vh;
     }
 
@@ -50,8 +50,8 @@
       position: absolute;
       top: -12px;
       right: 0;
-      background: #dcfce7;
-      color: #166534;
+      background: #e0d4fc;
+      color: #4c1d95;
       font-size: 0.7rem;
       padding: 2px 8px;
       border-radius: 999px;
@@ -121,13 +121,13 @@
     }
 
     .status-badge.active {
-      background: #dcfce7;
-      color: #166534;
-      border-top-color: #166534;
+      background: #e0d4fc;
+      color: #4c1d95;
+      border-top-color: #8b5cf6;
     }
 
     .btn-pay {
-      background: #0f172a;
+      background: var(--bs-primary); border-color: var(--bs-primary);
       color: #ffffff;
       border: none;
       padding: 12px 24px;
@@ -144,7 +144,7 @@
     }
 
     .btn-pay:hover {
-      background: #1e293b;
+      background: #7c3aed;
       color: #ffffff;
     }
 
@@ -184,7 +184,7 @@
 
     .empty-icon {
       font-size: 3rem;
-      color: #cbd5e1;
+      color: #c4b5fd;
       margin-bottom: 20px;
     }
 
@@ -226,20 +226,33 @@
     }
   @endphp
 
-  <div class="dashboard-wrapper">
+  <div class="container-fluid py-4">
+    
+    <!-- Premium Header -->
+    <div class="mb-4 mb-md-5 position-relative overflow-hidden p-4 rounded-4 shadow-sm" style="background: linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%);">
+        <div class="position-absolute rounded-circle" style="width: 250px; height: 250px; background: rgba(255, 255, 255, 0.15); filter: blur(80px); top: -100px; right: -50px; pointer-events: none;"></div>
+        
+        <div class="position-relative z-1 d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+            <div>
+                <span class="badge mb-2 px-3 py-1.5 rounded-pill uppercase tracking-wider text-white-50" style="background: rgba(255,255,255,0.08); font-size: 10px; font-weight: 600; letter-spacing: 1.2px; border: 1px solid rgba(255,255,255,0.12);">CURRENT PLAN</span>
+                <h1 class="h2 text-white mb-2 fw-bold" style="font-family: 'Playfair Display', Georgia, serif; letter-spacing: -0.5px;">{{ $planName }}</h1>
+                <p class="text-white-50 small mb-0" style="max-width: 600px; line-height: 1.6;">Manage your billing cycle and explore our premium features.</p>
+            </div>
+            
+            <div class="pricing-toggle m-0" style="background: rgba(255,255,255,0.15); padding: 4px;">
+                <button class="toggle-btn toggle-active" id="custom-btn-monthly" style="color: #8b5cf6;">Monthly</button>
+                <button class="toggle-btn" id="custom-btn-yearly" style="color: rgba(255,255,255,0.7);">
+                    Yearly
+                    <span class="save-badge-toggle" style="background: #fff; color: #8b5cf6;">1 Month Free</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <div class="row align-items-start pricing-grid" id="pricingGrid">
 
       <!-- LEFT COLUMN: Plan Info -->
       <div class="col-md-7 pe-md-5">
-        <h1 class="plan-title">Plan - {{ $planName }}</h1>
-
-        <div class="pricing-toggle">
-          <button class="toggle-btn toggle-active" id="custom-btn-monthly">Monthly</button>
-          <button class="toggle-btn" id="custom-btn-yearly">
-            Yearly
-            <span class="save-badge-toggle">1 Month Free</span>
-          </button>
-        </div>
 
         <div class="price-display" id="custom-price-monthly">
           <span class="price-amount">₹{{ number_format($monthlyPrice) }}</span> / month
@@ -258,13 +271,13 @@
 
       <!-- RIGHT COLUMN: Status Card -->
       <div class="col-md-4 offset-md-1 mt-5 mt-md-0">
-        <div class="status-card" @if($tenant->subscription_status === 'active') style="border-top-color: #166534;" @endif>
+        <div class="status-card" @if($tenant->subscription_status === 'active') style="border-top-color: #8b5cf6;" @endif>
           @if($tenant->subscription_status === 'active')
             <div class="status-badge active">
               <i class="fa-solid fa-circle-check"></i> ACTIVE
             </div>
 
-            <button class="btn-pay" disabled style="background:#475569;">
+            <button class="btn-pay" disabled style="background: #a78bfa; border: none;">
               <i class="fa-solid fa-check"></i> Auto-Pay Enabled
             </button>
             <div class="secure-text">
@@ -284,7 +297,7 @@
           @endif
         </div>
 
-        <button class="btn btn-outline-secondary mt-4 fw-bold w-100" id="explorePlansBtn"
+        <button class="btn btn-outline-primary mt-4 fw-bold w-100" id="explorePlansBtn"
           style="border-radius: 12px; padding: 12px 24px;">Explore Other Plans</button>
       </div>
 
@@ -395,8 +408,14 @@
     function setPricingMode(mode) {
       if (mode === 'monthly') {
         // Update Top Buttons
-        if (btnMonthlyTop) btnMonthlyTop.classList.add('toggle-active');
-        if (btnYearlyTop) btnYearlyTop.classList.remove('toggle-active');
+        if (btnMonthlyTop) {
+            btnMonthlyTop.classList.add('toggle-active');
+            btnMonthlyTop.style.color = '#8b5cf6'; // Dark/purple on white bg
+        }
+        if (btnYearlyTop) {
+            btnYearlyTop.classList.remove('toggle-active');
+            btnYearlyTop.style.color = 'rgba(255,255,255,0.7)'; // White text on transparent bg
+        }
 
         // Update Explore Buttons
         btnsMonthlyExplore.forEach(btn => btn.classList.add('toggle-active'));
@@ -411,8 +430,14 @@
         explorePricesYearly.forEach(el => el.style.display = 'none');
       } else {
         // Update Top Buttons
-        if (btnYearlyTop) btnYearlyTop.classList.add('toggle-active');
-        if (btnMonthlyTop) btnMonthlyTop.classList.remove('toggle-active');
+        if (btnYearlyTop) {
+            btnYearlyTop.classList.add('toggle-active');
+            btnYearlyTop.style.color = '#8b5cf6'; // Dark/purple on white bg
+        }
+        if (btnMonthlyTop) {
+            btnMonthlyTop.classList.remove('toggle-active');
+            btnMonthlyTop.style.color = 'rgba(255,255,255,0.7)'; // White text on transparent bg
+        }
 
         // Update Explore Buttons
         btnsYearlyExplore.forEach(btn => btn.classList.add('toggle-active'));
