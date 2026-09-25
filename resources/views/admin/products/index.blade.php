@@ -6,6 +6,7 @@
 <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
     <h1 class="h3 fw-bold text-primary mb-0">Products</h1>
     <div class="d-flex flex-wrap gap-2">
+        {{-- 
         @if(isset($zohoConnected) && $zohoConnected)
             <form action="{{ route('admin.zoho.sync', request()->route('tenant') ?? 1) }}" method="POST" class="d-inline">
                 @csrf
@@ -25,6 +26,7 @@
                 <i class="fas fa-sync-alt me-1"></i> Sync DartPOS
             </button>
         </form>
+        --}}
         
         <div class="dropdown d-inline-block">
             <button class="btn btn-white border shadow-sm fw-medium dropdown-toggle" type="button" id="importTallyDropdown" data-bs-toggle="dropdown" aria-expanded="false">
