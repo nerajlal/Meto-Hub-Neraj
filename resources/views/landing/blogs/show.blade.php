@@ -1,4 +1,4 @@
-@extends('landing.blogs.layout')
+@extends('layouts.landing')
 
 @section('content')
 <style>
@@ -330,7 +330,7 @@
 <div class="blog-layout">
   <div class="blog-main">
     @if($blog['cover_image'])
-      <img src="{{ 'https://blogs.task19.com' . $blog['cover_image'] }}" alt="{{ $blog['title'] }}" class="blog-cover">
+      <img src="{{ 'https://blog.metora.in' . $blog['cover_image'] }}" alt="{{ $blog['title'] }}" class="blog-cover">
       @if($blog['image_credits'])
         <div class="image-credits">
           Image credits: {{ $blog['image_credits'] }}
@@ -346,7 +346,7 @@
       @if(isset($blog['sections']) && count($blog['sections']) > 0)
         @foreach($blog['sections'] as $section)
           @if(!empty($section['image_path']))
-            <img src="{{ 'https://blogs.task19.com' . $section['image_path'] }}" alt="Section image" style="width: 100%; border-radius: 12px; margin: 2rem 0; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+            <img src="{{ 'https://blog.metora.in' . $section['image_path'] }}" alt="Section image" style="width: 100%; border-radius: 12px; margin: 2rem 0; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
           @endif
           @if(!empty($section['text_content']))
             <div style="margin-bottom: 1.5rem;">{!! $section['text_content'] !!}</div>
@@ -359,7 +359,7 @@
   <aside class="blog-sidebar">
     <div class="sidebar-widget author-card">
       @if($blog['author_avatar'])
-        <img src="{{ 'https://blogs.task19.com' . $blog['author_avatar'] }}" alt="{{ $blog['author_name'] }}" class="author-avatar">
+        <img src="{{ 'https://blog.metora.in' . $blog['author_avatar'] }}" alt="{{ $blog['author_name'] }}" class="author-avatar">
       @else
         <div class="author-avatar" style="background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 2.5rem;">
           {{ substr($blog['author_name'], 0, 1) }}
@@ -398,7 +398,7 @@
     @foreach($recentBlogs as $recent)
     <div class="bottom-article-card">
       @if($recent['cover_image'])
-        <img src="{{ 'https://blogs.task19.com' . $recent['cover_image'] }}" class="bottom-article-img" alt="Blog cover">
+        <img src="{{ 'https://blog.metora.in' . $recent['cover_image'] }}" class="bottom-article-img" alt="Blog cover">
       @else
          <div class="bottom-article-img" style="display:flex; align-items:center; justify-content:center; color:#94a3b8;">
            <i class="fa-solid fa-image fa-2x"></i>

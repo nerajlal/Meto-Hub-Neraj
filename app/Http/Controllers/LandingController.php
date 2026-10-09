@@ -105,8 +105,8 @@ class LandingController extends Controller
     public function blogs()
     {
         $response = Http::withHeaders([
-            'x-api-key' => 'pk_niVQ6VEvYX6vs9iWkh4rNMTtsb1AGgfU'
-        ])->get('https://blogs.task19.com/api/v1/projects/blogs');
+            'x-api-key' => 'pk_PoMKZr02REsoX0vAHXeSjuPn1akS4E3F'
+        ])->get('https://blog.metora.in/api/v1/projects/blogs');
 
         $blogs = $response->successful() ? $response->json('blogs') : [];
 
@@ -116,8 +116,8 @@ class LandingController extends Controller
     public function blogShow($id)
     {
         $response = Http::withHeaders([
-            'x-api-key' => 'pk_niVQ6VEvYX6vs9iWkh4rNMTtsb1AGgfU'
-        ])->get('https://blogs.task19.com/api/v1/projects/blogs');
+            'x-api-key' => 'pk_PoMKZr02REsoX0vAHXeSjuPn1akS4E3F'
+        ])->get('https://blog.metora.in/api/v1/projects/blogs');
 
         $blogs = $response->successful() ? $response->json('blogs') : [];
         $blog = collect($blogs)->firstWhere('id', (int) $id);
