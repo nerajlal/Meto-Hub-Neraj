@@ -1,5 +1,5 @@
 <div class="product-card" style="border: 1px solid var(--border-color); border-radius: 1rem; overflow: hidden; background: #fff; transition: all 0.3s ease; position: relative;">
-    <a href="{{ route('v1.combo', ['id' => $bundle->id]) }}" class="card-img" style="display: block; position: relative; padding-top: 100%; background: #f8fafc;">
+    <a href="{{ app(\App\Services\StorefrontTheme::class)->url('v1.combo', ['id' => $bundle->id]) }}" class="card-img" style="display: block; position: relative; padding-top: 100%; background: #f8fafc;">
         @php 
             $imagePath = $bundle->image ? Storage::url($bundle->image) : null;
             if (!$imagePath && $bundle->type == 'pack') {
@@ -30,7 +30,7 @@
                 <span style="text-decoration: line-through; color: var(--text-muted); font-size: 0.85rem; white-space: nowrap;">{{ $currentTenant->currency ?? '₹' }}{{ number_format($originalPrice, 2) }}</span>
             @endif
         </div>
-        <a href="{{ route('v1.combo', ['id' => $bundle->id]) }}" class="p-name" style="font-weight: 700; font-size: 0.85rem; line-height: 1.15rem; color: var(--primary-color); text-decoration: none; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; height: 3.45rem;">{{ $bundle->title }}</a>
+        <a href="{{ app(\App\Services\StorefrontTheme::class)->url('v1.combo', ['id' => $bundle->id]) }}" class="p-name" style="font-weight: 700; font-size: 0.85rem; line-height: 1.15rem; color: var(--primary-color); text-decoration: none; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; height: 3.45rem;">{{ $bundle->title }}</a>
         <span class="p-meta" style="font-size: 0.75rem; color: var(--text-muted); padding-right: 2.2rem; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ $bundle->products->count() }} Products Included</span>
     </div>
     <div class="product-action-wrapper" data-cart-key="bundle-{{ $bundle->id }}" style="position: absolute; bottom: 10px; right: 10px; z-index: 15;">

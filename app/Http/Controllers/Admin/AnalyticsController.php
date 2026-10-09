@@ -115,6 +115,33 @@ class AnalyticsController extends Controller
         ));
     }
 
+    public function show(Request $request, string $type)
+    {
+        abort_unless(in_array($type, ['sales', 'orders', 'aov', 'sessions'], true), 404);
+        $titles = ['sales' => 'Total Sales', 'orders' => 'Total Orders',
+            'aov' => 'Average Order Value', 'sessions' => 'Online Store Sessions'];
+        $orders = Order::where('created_at', '>=', now()->subDays(30))
+            ->where('status', '!=', 'cancelled')->get();
+        $money = in_array($type, ['sales', 'aov'], true);
+        $metric = match ($type) {
+            'sales' => (float) $orders->sum('total_amount'),
+            'orders' => $orders->count(),
+            'aov' => $orders->count() ? $orders->sum('total_amount') / $orders->count() : 0,
+            default => null,
+        };
+        $daily = $type === 'sessions' ? collect() : $orders->groupBy(fn ($order) => $order->created_at->toDateString())
+            ->map(function ($rows, $date) use ($type) {
+                return ['date' => $date, 'value' => match ($type) {
+                    'sales' => $rows->sum('total_amount'),
+                    'orders' => $rows->count(),
+                    default => $rows->sum('total_amount') / $rows->count(),
+                }];
+            })->sortKeysDesc();
+
+        return view('admin.analytics.report', ['title' => $titles[$type], 'metric' => $metric,
+            'money' => $money, 'daily' => $daily]);
+    }
+
     private function calculateGrowth($current, $previous)
     {
         if ($previous == 0) {

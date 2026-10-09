@@ -66,21 +66,11 @@ class WishlistController extends Controller
 
         $tenantId = session('active_tenant_id') ?? 1;
         $tenant = \App\Models\Tenant::find($tenantId);
-        $theme = strtolower($tenant->theme ?? 'template_1');
-        
-        // Resolve theme view directory prefix
-        $viewPrefix = 'template_1';
-        if (in_array($theme, ['template_2', 'v2', 'velvet'])) {
-            $viewPrefix = 'template_2';
-        } elseif (in_array($theme, ['template_3', 'v3', 'app'])) {
-            $viewPrefix = 'template_3';
-        }
-
         $wishlists = Wishlist::where('user_id', Auth::id())
             ->where('tenant_id', $tenantId)
             ->with(['product.images', 'product.variants'])
             ->get();
 
-        return view($viewPrefix . '.wishlist', compact('wishlists'));
+        return view(app(\App\Services\StorefrontTheme::class)->view('wishlist'), compact('wishlists'));
     }
 }

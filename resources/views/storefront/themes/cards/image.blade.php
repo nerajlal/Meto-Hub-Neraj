@@ -1,0 +1,2 @@
+<a class="card-img sf-product-image" href="{{ $productUrl }}"><img src="{{ $cardData['images']->first() }}" alt="{{ $product->title }}" loading="lazy">@if($isOut)<span class="sf-stock-label">Out of stock</span>@endif</a>
+<button type="button" class="sf-product-wishlist wishlist-toggle-btn" onclick="toggleWishlist(event, {{ $product->id }})" aria-label="Save {{ $product->title }} to wishlist" aria-pressed="{{ $isWishlisted ? 'true' : 'false' }}"><i class="{{ $isWishlisted ? 'fa-solid' : 'fa-regular' }} fa-heart" aria-hidden="true"></i></button>

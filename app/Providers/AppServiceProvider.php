@@ -43,6 +43,10 @@ class AppServiceProvider extends ServiceProvider
             ?>";
         });
 
+        \Illuminate\Support\Facades\View::composer(['template_1.*', 'storefront.themes.*'], function ($view) {
+            $view->with('storefrontTheme', app(\App\Services\StorefrontTheme::class)->current());
+        });
+
         // Share pending orders count with sidebar
         \Illuminate\Support\Facades\View::composer('admin.partials.sidebar', function ($view) {
             $pendingOrdersCount = \App\Models\Order::where('status', 'pending')->count();
@@ -57,29 +61,7 @@ class AppServiceProvider extends ServiceProvider
                 return;
             }
             
-            // Map theme to route prefix
-            $themeToRoute = [
-                'v1' => 'v1.home',
-                'nurah' => 'v1.home',
-                'modern_minimal' => 'v1.home',
-                'v2' => 'velvet.home',
-                'velvet' => 'velvet.home',
-                'velvet_dark' => 'velvet.home',
-                'v3' => 'v3.home',
-                'aura_luxe' => 'v1.home',
-                'template_1' => 'v1.home',
-                'template_2' => 'v1.home',
-                'template_3' => 'v1.home',
-                'v4' => 'v4.home',
-                'ajmal' => 'v4.home',
-                'editorial_cream' => 'v4.home',
-                'v5' => 'v5.home',
-                'afnan' => 'v5.home',
-            ];
-            
-            $theme = strtolower($currentTenant->theme ?? 'template_1');
-            $routeName = $themeToRoute[$theme] ?? 'v1.home';
-            $view->with('storefrontUrl', route($routeName, ['tenant_id' => $currentTenant->id]));
+            $view->with('storefrontUrl', route('v1.home', ['tenant_id' => $currentTenant->id]));
         });
     }
 }

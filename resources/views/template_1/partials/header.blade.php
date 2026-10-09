@@ -1,6 +1,6 @@
 <header class="store-header" style="flex-direction: column; height: auto; padding-top: 10px; gap: 10px;">
     <div class="header-container">
-        <a href="{{ route('v1.home') }}" class="logo" style="color: var(--accent-color); font-weight: 800; font-size: 1.5rem; text-decoration: none; display: flex; align-items: center;">
+        <a href="{{ app(\App\Services\StorefrontTheme::class)->url('v1.home') }}" class="logo" style="color: var(--accent-color); font-weight: 800; font-size: 1.5rem; text-decoration: none; display: flex; align-items: center;">
             @if($currentTenant->logo)
                 <img src="{{ Storage::url($currentTenant->logo) }}" alt="{{ $currentTenant->name }}" style="max-height: 45px; width: auto; object-fit: contain;">
             @else
@@ -13,7 +13,8 @@
         @else
         {{-- Search Bar with autocomplete (Desktop) --}}
         <div class="search-bar hide-on-mobile" style="position: relative; flex: 1; max-width: 520px;">
-            <form id="t1-search-form" action="{{ route('v1.all-products') }}" method="GET" autocomplete="off" style="display: flex; align-items: center; width: 100%; position: relative;">
+            <form id="t1-search-form" action="{{ app(\App\Services\StorefrontTheme::class)->url('v1.all-products') }}" method="GET" autocomplete="off" style="display: flex; align-items: center; width: 100%; position: relative;">
+                @include('storefront.themes.preview_fields')
                 <i class="fa-solid fa-magnifying-glass search-icon"></i>
                 <input
                     type="text"
@@ -54,7 +55,7 @@
                         <i class="fa-solid fa-chevron-down" style="font-size: 0.7rem; margin-left: 0.3rem;"></i>
                     </a>
                     <div id="user-menu" class="d-none" style="position: absolute; top: calc(100% + 10px); right: 0; background: #fff; box-shadow: 0 4px 20px rgba(0,0,0,0.1); border-radius: 12px; min-width: 180px; z-index: 1000; overflow: hidden; border: 1px solid var(--border-color);">
-                        <a href="{{ route('account.orders') }}" style="display: block; padding: 0.85rem 1.25rem; color: var(--primary-color); text-decoration: none; font-size: 0.9rem; font-weight: 600; border-bottom: 1px solid var(--border-color);">
+                        <a href="{{ app(\App\Services\StorefrontTheme::class)->url('account.orders') }}" style="display: block; padding: 0.85rem 1.25rem; color: var(--primary-color); text-decoration: none; font-size: 0.9rem; font-weight: 600; border-bottom: 1px solid var(--border-color);">
                             <i class="fa-solid fa-box-open me-2" style="color: var(--accent-color); width: 20px;"></i> My Orders
                         </a>
                         <form action="{{ route('customer.logout') }}" method="POST" style="margin: 0;">
@@ -72,7 +73,7 @@
                 </a>
             @endif
 
-            <a href="{{ auth()->check() ? route('v3.wishlist') : 'javascript:void(0)' }}" onclick="{{ auth()->check() ? '' : 'openCustomerAuthModal()' }}" class="action-btn text-decoration-none" style="display: flex; align-items: center;">
+            <a href="{{ auth()->check() ? app(\App\Services\StorefrontTheme::class)->url('v3.wishlist') : 'javascript:void(0)' }}" onclick="{{ auth()->check() ? '' : 'openCustomerAuthModal()' }}" class="action-btn text-decoration-none" style="display: flex; align-items: center;">
                 <span style="position: relative; display: inline-flex;">
                     <i class="fa-regular fa-heart"></i>
                     @if(auth()->check())
@@ -99,10 +100,10 @@
     <div class="header-nav-container" style="background: #fff; border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); width: 100%;">
         <div class="header-container nav-items-wrapper" style="min-height: 45px; display: flex; gap: 1.5rem; flex-wrap: wrap; justify-content: center;">
             @php $headerCollections = \App\Models\Collection::where('tenant_id', $currentTenant->id ?? 2)->where('status', 1)->get(); @endphp
-            <a href="{{ route('v1.all-products') }}" class="nav-link" style="color: var(--primary-color); text-decoration: none; font-weight: 600; font-size: 0.95rem; padding: 10px 0; display: flex; align-items: center; gap: 0.5rem;">
+            <a href="{{ app(\App\Services\StorefrontTheme::class)->url('v1.all-products') }}" class="nav-link" style="color: var(--primary-color); text-decoration: none; font-weight: 600; font-size: 0.95rem; padding: 10px 0; display: flex; align-items: center; gap: 0.5rem;">
                 <i class="fa-solid fa-border-all text-muted"></i> All Products
             </a>
-            <a href="{{ route('v1.combos') }}" class="nav-link" style="color: var(--primary-color); text-decoration: none; font-weight: 600; font-size: 0.95rem; padding: 10px 0; display: flex; align-items: center; gap: 0.5rem;">
+            <a href="{{ app(\App\Services\StorefrontTheme::class)->url('v1.combos') }}" class="nav-link" style="color: var(--primary-color); text-decoration: none; font-weight: 600; font-size: 0.95rem; padding: 10px 0; display: flex; align-items: center; gap: 0.5rem;">
                 <i class="fa-solid fa-layer-group text-muted"></i> Combos
             </a>
             
@@ -112,7 +113,7 @@
                 </a>
                 <div class="dropdown-menu-custom shadow-sm" style="position: absolute; top: 100%; left: 50%; transform: translateX(-50%); background: #fff; border-radius: 8px; min-width: 200px; z-index: 1000; padding: 0.5rem 0; border: 1px solid var(--border-color); visibility: hidden; opacity: 0; transition: all 0.2s ease;">
                     @foreach($headerCollections as $col)
-                        <a href="{{ route('v1.collection', ['slug' => $col->slug]) }}" class="dropdown-item" style="display: block; padding: 0.5rem 1rem; color: var(--primary-color); text-decoration: none; font-size: 0.9rem;">{{ $col->name }}</a>
+                        <a href="{{ app(\App\Services\StorefrontTheme::class)->url('v1.collection', ['slug' => $col->slug]) }}" class="dropdown-item" style="display: block; padding: 0.5rem 1rem; color: var(--primary-color); text-decoration: none; font-size: 0.9rem;">{{ $col->name }}</a>
                     @endforeach
                 </div>
             </div>
@@ -134,7 +135,8 @@
     @endmobileapp
     <!-- Mobile Expandable Search Bar -->
     <div id="mobile-search-container" style="display: none; padding: 10px 15px; background: #fff; border-bottom: 1px solid var(--border-color); width: 100%; position: absolute; z-index: 999; top: 100%; left: 0;">
-        <form id="t1-mobile-search-form" action="{{ route('v3.all-products') }}" method="GET" autocomplete="off" style="display: flex; align-items: center; width: 100%; position: relative;">
+        <form id="t1-mobile-search-form" action="{{ app(\App\Services\StorefrontTheme::class)->url('v3.all-products') }}" method="GET" autocomplete="off" style="display: flex; align-items: center; width: 100%; position: relative;">
+                @include('storefront.themes.preview_fields')
             <i class="fa-solid fa-magnifying-glass search-icon" style="position: absolute; left: 1rem; color: #9ca3af;"></i>
             <input
                 type="text"

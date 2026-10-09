@@ -112,7 +112,7 @@
                 @endif
 
                 <input type="hidden" id="min-order-value" value="{{ $minOrderValue ?? 0 }}">
-                <a href="{{ route('v1.checkout') }}" id="checkout-btn" class="btn-checkout-lg">
+                <a href="{{ app(\App\Services\StorefrontTheme::class)->url('v1.checkout') }}" id="checkout-btn" class="btn-checkout-lg">
                     Checkout Now <i class="fa-solid fa-arrow-right ms-2"></i>
                 </a>
                 <div class="summary-trust">
@@ -133,7 +133,7 @@
         </div>
         <h2>Your bag is empty</h2>
         <p>Looks like you haven't added any luxury scents to your collection yet.</p>
-        <a href="{{ route('v1.all-products') }}" class="btn-primary" style="margin-top: 2rem;">Discover Fragrances</a>
+        <a href="{{ app(\App\Services\StorefrontTheme::class)->url('v1.all-products') }}" class="btn-primary" style="margin-top: 2rem;">Discover Fragrances</a>
     </div>
     @endif
 </div>

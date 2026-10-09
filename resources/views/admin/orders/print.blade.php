@@ -207,7 +207,13 @@
                 <span>Shipping</span>
                 <span>{{ $currentTenant->currency ?? '₹' }}{{ number_format($order->shipping_cost, 2) }}</span>
             </div>
-            <div class="total-row final">
+            @if($order->discount_amount > 0)
+                    <div class="total-row"><span>Discount</span><span>-{{ $currentTenant->currency ?? '₹' }}{{ number_format($order->discount_amount, 2) }}</span></div>
+                    @endif
+                    @if($order->tax_amount > 0)
+                    <div class="total-row"><span>{{ $order->tax_name ?? 'Tax' }}</span><span>{{ $currentTenant->currency ?? '₹' }}{{ number_format($order->tax_amount, 2) }}</span></div>
+                    @endif
+                    <div class="total-row final">
                 <span>Total</span>
                 <span>{{ $currentTenant->currency ?? '₹' }}{{ number_format($order->total_amount, 2) }}</span>
             </div>

@@ -17,33 +17,9 @@ class ThemeSettingsController extends Controller
         $tenantId = auth()->user()->tenant_id ?? session('active_tenant_id') ?? 1;
         $tenant = Tenant::findOrFail($tenantId);
 
-        // List of all supported themes in the system
-        $themes = [
-            [
-                'id' => 'template_1',
-                'name' => 'Aura Luxe',
-                'version' => 'Modern Luxury',
-                'description' => 'Modern grocery store layout with a clean premium design, responsive category sidebar, weekly combos grid, and farm-fresh typography.',
-                'preview_img' => '/Images/landing/v3-template.png',
-                'preview_route' => 'v1.home',
-            ],
-            [
-                'id' => 'template_2',
-                'name' => 'Top Menu Premium',
-                'version' => 'Top Menu Layout',
-                'description' => 'Modern grocery store layout with a horizontal category top navigation menu, no sidebars, full-width content grids, and clean fresh fonts.',
-                'preview_img' => '/Images/landing/v3-template.png',
-                'preview_route' => 'v1.home',
-            ],
-            [
-                'id' => 'template_3',
-                'name' => 'Mobile App Interface',
-                'version' => 'Compact Category Grids',
-                'description' => 'Premium, mobile-first design featuring tight 3-column product grids, glassmorphism, category-based homepage, and a beautiful app-like feel.',
-                'preview_img' => '/Images/landing/v3-template.png',
-                'preview_route' => 'v1.home',
-            ],
-        ];
+        $themes = collect(app(\App\Services\StorefrontTheme::class)->all())
+            ->map(fn ($theme, $id) => ['id' => $id, 'preview_route' => 'v1.home',
+                'preview_img' => '/images/themes/'.$id.'.svg'] + $theme)->values()->all();
 
         return view('admin.settings.theme', compact('tenant', 'themes'));
     }
@@ -56,7 +32,7 @@ class ThemeSettingsController extends Controller
         $request->validate([
             'theme' => [
                 'required',
-                Rule::in(['template_1', 'template_2', 'template_3'])
+                Rule::in(array_keys(app(\App\Services\StorefrontTheme::class)->all()))
             ]
         ]);
 

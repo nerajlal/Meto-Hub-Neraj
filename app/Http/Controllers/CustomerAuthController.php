@@ -38,6 +38,7 @@ class CustomerAuthController extends Controller
             ], 401);
         }
         Auth::guard('web')->login($customer, $request->boolean('remember'));
+        $request->session()->regenerate();
 
         // Sync session cart to DB for the newly logged in user
         \App\Http\Controllers\CartController::syncSession($customer->id);
@@ -96,6 +97,7 @@ class CustomerAuthController extends Controller
         ]);
 
         Auth::guard('web')->login($customer);
+        $request->session()->regenerate();
 
         // Sync session cart to DB for the newly registered user
         \App\Http\Controllers\CartController::syncSession($customer->id);

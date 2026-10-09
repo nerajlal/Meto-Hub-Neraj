@@ -85,7 +85,7 @@
     <ul>
         <!-- Home -->
         <li class="nav-item">
-            <a href="{{ route('v1.home') }}" class="nav-link {{ request()->routeIs('v3.home') ? 'active' : '' }}">
+            <a href="{{ app(\App\Services\StorefrontTheme::class)->url('v1.home') }}" class="nav-link {{ request()->routeIs('v1.home', 'v3.home', 'velvet.home', 'v4.home', 'v5.home') ? 'active' : '' }}">
                 <i class="fa-solid fa-house"></i>
                 <span>Home</span>
             </a>
@@ -102,7 +102,7 @@
         <!-- Wishlist -->
         <li class="nav-item">
             @if(auth()->check())
-                <a href="{{ route('v3.wishlist') }}" class="nav-link {{ request()->routeIs('v3.wishlist') ? 'active' : '' }}">
+                <a href="{{ app(\App\Services\StorefrontTheme::class)->url('v3.wishlist') }}" class="nav-link {{ request()->routeIs('v1.wishlist', 'v3.wishlist', 'velvet.wishlist') ? 'active' : '' }}">
             @else
                 <a href="javascript:void(0)" onclick="typeof openCustomerAuthModal === 'function' ? openCustomerAuthModal() : (typeof openModal === 'function' ? openModal('login-modal') : window.location.href='{{ route('login') }}')" class="nav-link">
             @endif
@@ -137,7 +137,7 @@
         <!-- You / Profile -->
         <li class="nav-item">
             @if(auth()->check())
-                <a href="{{ route('account.index') }}" class="nav-link {{ request()->routeIs('account.index') ? 'active' : '' }}">
+                <a href="{{ app(\App\Services\StorefrontTheme::class)->url('account.index') }}" class="nav-link {{ request()->routeIs('account.index') ? 'active' : '' }}">
             @else
                 <a href="javascript:void(0)" onclick="typeof openCustomerAuthModal === 'function' ? openCustomerAuthModal() : (typeof openModal === 'function' ? openModal('login-modal') : window.location.href='{{ route('login') }}')" class="nav-link">
             @endif

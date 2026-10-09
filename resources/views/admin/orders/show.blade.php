@@ -113,6 +113,12 @@
                         <span class="text-muted">Shipping</span>
                         <span class="text-dark">{{ $currentTenant->currency ?? '₹' }}{{ number_format($order->shipping_cost, 2) }}</span>
                     </div>
+                    @if($order->discount_amount > 0)
+                    <div class="d-flex justify-content-between small mb-2"><span>Discount</span><span>-{{ $currentTenant->currency ?? '₹' }}{{ number_format($order->discount_amount, 2) }}</span></div>
+                    @endif
+                    @if($order->tax_amount > 0)
+                    <div class="d-flex justify-content-between small mb-2"><span>{{ $order->tax_name ?? 'Tax' }}</span><span>{{ $currentTenant->currency ?? '₹' }}{{ number_format($order->tax_amount, 2) }}</span></div>
+                    @endif
                     <div class="d-flex justify-content-between fw-bold text-dark border-top pt-3 mb-3">
                         <span>Total</span>
                         <span>{{ $currentTenant->currency ?? '₹' }}{{ number_format($order->total_amount, 2) }}</span>

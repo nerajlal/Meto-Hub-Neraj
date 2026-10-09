@@ -22,25 +22,7 @@ class AuthController extends Controller
     {
         $tenant = \App\Models\Tenant::find($tenantId);
         if ($tenant) {
-            $themeToRoute = [
-                'v1' => 'v1.home',
-                'nurah' => 'v1.home',
-                'modern_minimal' => 'v1.home',
-                'v2' => 'velvet.home',
-                'velvet' => 'velvet.home',
-                'velvet_dark' => 'velvet.home',
-                'v3' => 'v3.home',
-                'aura_luxe' => 'v3.home',
-                'v4' => 'v4.home',
-                'ajmal' => 'v4.home',
-                'editorial_cream' => 'v4.home',
-                'v5' => 'v5.home',
-                'afnan' => 'v5.home',
-            ];
-            
-            $theme = strtolower($tenant->theme ?? 'v3');
-            $routeName = $themeToRoute[$theme] ?? 'v3.home';
-            return redirect()->route($routeName, ['tenant_id' => $tenantId]);
+            return redirect()->route('v1.home', ['tenant_id' => $tenantId]);
         }
         return redirect('/');
     }
@@ -89,7 +71,7 @@ class AuthController extends Controller
 
         $tenantId = $this->currentTenantId();
 
-        if (Auth::attempt($credentials)) {
+        if (Auth::attempt($credentials + ['tenant_id' => $tenantId])) {
             $request->session()->regenerate();
             
             // Sync session cart to DB
@@ -130,18 +112,18 @@ class AuthController extends Controller
             
             // Bypass SSL verification for local development (cURL error 77 fix)
             $driver = \Laravel\Socialite\Facades\Socialite::driver('google');
-            $driver->setHttpClient(new \GuzzleHttp\Client(['verify' => false]));
+            // Use the default HTTP client with certificate verification enabled.
             $googleUser = $driver->user();
             
             \Illuminate\Support\Facades\Log::info('Google User retrieved', ['email' => $googleUser->getEmail(), 'id' => $googleUser->getId()]);
         
-            $user = User::where('google_id', $googleUser->getId())->first();
+            $user = User::where('tenant_id', $tenantId)->where('google_id', $googleUser->getId())->first();
         
             if (!$user) {
                 \Illuminate\Support\Facades\Log::info('User by Google ID not found. Checking by Email.');
                 
                 // Check if user exists with same email, link account if so
-                $user = User::where('email', $googleUser->getEmail())->first();
+                $user = User::where('tenant_id', $tenantId)->where('email', $googleUser->getEmail())->first();
         
                 if ($user) {
                     \Illuminate\Support\Facades\Log::info('User found by email. Updating Google ID.');
@@ -181,7 +163,7 @@ class AuthController extends Controller
         } catch (\Exception $e) {
             \Illuminate\Support\Facades\Log::error('Google Login Error: ' . $e->getMessage());
             \Illuminate\Support\Facades\Log::error($e->getTraceAsString());
-            return $this->redirectToStorefrontHome($tenantId)->with('error', 'Google Login failed: ' . $e->getMessage());
+            return $this->redirectToStorefrontHome($tenantId)->with('error', 'Google login failed. Please try again.');
         }
     }
 }

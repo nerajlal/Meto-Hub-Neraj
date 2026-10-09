@@ -17,9 +17,8 @@ Route::get('/', function(Illuminate\Http\Request $request) {
     // Apply the tenant identification middleware logic manually or just forward to PageController
     $tenant = \App\Models\Tenant::where('domain', $host)->first();
     if ($tenant) {
-        session(['active_tenant_id' => $tenant->id]);
-        view()->share('currentTenant', $tenant);
-        return app()->make(\App\Http\Controllers\PageController::class)->home($request);
+        return app(\App\Http\Middleware\IdentifyStorefrontTenant::class)->handle($request,
+            fn ($request) => response(app(\App\Http\Controllers\PageController::class)->home($request)));
     }
     
     // Fallback if domain not found
@@ -106,8 +105,8 @@ Route::middleware([\App\Http\Middleware\IdentifyStorefrontTenant::class, 'auth']
 });
 
 // User Auth Routes
-Route::post('/register', [App\Http\Controllers\AuthController::class, 'register'])->name('register');
-Route::post('/login', [App\Http\Controllers\AuthController::class, 'login'])->name('login');
+Route::post('/register', [App\Http\Controllers\AuthController::class, 'register'])->middleware(\App\Http\Middleware\IdentifyStorefrontTenant::class)->name('register');
+Route::post('/login', [App\Http\Controllers\AuthController::class, 'login'])->middleware('throttle:5,1')->middleware(\App\Http\Middleware\IdentifyStorefrontTenant::class)->name('login');
 Route::post('/logout', [App\Http\Controllers\AuthController::class, 'logout'])->name('logout');
 // Google Auth
 Route::get('auth/google', [App\Http\Controllers\AuthController::class, 'redirectToGoogle'])->name('google.login');
@@ -119,7 +118,7 @@ Route::get('auth/google/callback', [App\Http\Controllers\AuthController::class, 
 Route::prefix('superadmin')->name('super_admin.')->group(function () {
     // Guest Routes
     Route::get('/login', [App\Http\Controllers\SuperAdmin\AuthController::class, 'showLogin'])->name('login');
-    Route::post('/login', [App\Http\Controllers\SuperAdmin\AuthController::class, 'login'])->name('login.submit');
+    Route::post('/login', [App\Http\Controllers\SuperAdmin\AuthController::class, 'login'])->middleware('throttle:5,1')->name('login.submit');
     Route::post('/logout', [App\Http\Controllers\SuperAdmin\AuthController::class, 'logout'])->name('logout');
 
     // Protected Routes
@@ -147,25 +146,25 @@ Route::prefix('superadmin')->name('super_admin.')->group(function () {
 
 // Centralized Admin Login Routes
 Route::get('/admin/login', [App\Http\Controllers\Admin\AuthController::class, 'showCommonLogin'])->name('admin.common.login');
-Route::post('/admin/login', [App\Http\Controllers\Admin\AuthController::class, 'commonLogin'])->name('admin.common.login.submit');
+Route::post('/admin/login', [App\Http\Controllers\Admin\AuthController::class, 'commonLogin'])->middleware('throttle:5,1')->name('admin.common.login.submit');
 
 // Password Reset Routes (OTP-based)
 Route::get('/forgot-password', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'showEmailForm'])->name('password.request');
-Route::post('/forgot-password', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'sendOtp'])->name('password.email');
+Route::post('/forgot-password', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'sendOtp'])->middleware('throttle:5,1')->name('password.email');
 Route::get('/forgot-password/verify', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'showOtpForm'])->name('password.otp');
-Route::post('/forgot-password/verify', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'verifyOtp'])->name('password.otp.verify');
+Route::post('/forgot-password/verify', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'verifyOtp'])->middleware('throttle:5,1')->name('password.otp.verify');
 Route::get('/forgot-password/reset', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'showResetForm'])->name('password.reset.form');
-Route::post('/forgot-password/reset', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'resetPassword'])->name('password.update');
+Route::post('/forgot-password/reset', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'resetPassword'])->middleware('throttle:5,1')->name('password.update');
 
 // Storefront Customer Auth Routes
-Route::post('/customer/login', [App\Http\Controllers\CustomerAuthController::class, 'login'])->name('customer.login');
-Route::post('/customer/register', [App\Http\Controllers\CustomerAuthController::class, 'register'])->name('customer.register');
+Route::post('/customer/login', [App\Http\Controllers\CustomerAuthController::class, 'login'])->middleware('throttle:5,1')->middleware(\App\Http\Middleware\IdentifyStorefrontTenant::class)->name('customer.login');
+Route::post('/customer/register', [App\Http\Controllers\CustomerAuthController::class, 'register'])->middleware(\App\Http\Middleware\IdentifyStorefrontTenant::class)->name('customer.register');
 Route::post('/customer/logout', [App\Http\Controllers\CustomerAuthController::class, 'logout'])->name('customer.logout');
 
 // Admin Authentication Routes
 Route::prefix('{tenant}')->name('admin.')->middleware(['identify_tenant'])->group(function () {
     Route::get('/login', [App\Http\Controllers\Admin\AuthController::class, 'showLogin'])->name('login');
-    Route::post('/login', [App\Http\Controllers\Admin\AuthController::class, 'login'])->name('login.submit');
+    Route::post('/login', [App\Http\Controllers\Admin\AuthController::class, 'login'])->middleware('throttle:5,1')->name('login.submit');
     Route::post('/logout', [App\Http\Controllers\Admin\AuthController::class, 'logout'])->name('logout');
 });
 
@@ -178,7 +177,7 @@ Route::get('/login', function() {
 Route::get('/admin/integrations/zoho/callback', [App\Http\Controllers\Admin\ZohoController::class, 'callback'])->name('admin.zoho.callback');
 
 // Protected Admin Panel Routes
-Route::prefix('{tenant}/admin')->name('admin.')->middleware(['identify_tenant', 'auth'])->group(function () {
+Route::prefix('{tenant}/admin')->name('admin.')->middleware(['identify_tenant', 'auth', 'tenant_role:admin'])->group(function () {
     Route::get('/', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
     Route::get('/orders', [App\Http\Controllers\Admin\OrderController::class, 'index'])->name('orders');
     Route::get('/orders/export', [App\Http\Controllers\Admin\OrderController::class, 'export'])->name('orders.export');
@@ -255,18 +254,7 @@ Route::prefix('{tenant}/admin')->name('admin.')->middleware(['identify_tenant', 
     Route::get('/carts', [App\Http\Controllers\Admin\CartController::class, 'index'])->name('carts');
     Route::get('/analytics', [App\Http\Controllers\Admin\AnalyticsController::class, 'index'])->name('analytics');
     Route::get('/analytics/export', [App\Http\Controllers\Admin\AnalyticsController::class, 'export'])->name('analytics.export');
-    Route::get('/analytics/{type}', function ($type) {
-        $titles = [
-            'sales' => ['title' => 'Total Sales', 'value' => '₹45,231.00', 'metricLabel' => 'Revenue'],
-            'orders' => ['title' => 'Total Orders', 'value' => '342', 'metricLabel' => 'Orders'],
-            'aov' => ['title' => 'Average Order Value', 'value' => '₹1,250.00', 'metricLabel' => 'Order Value'],
-            'sessions' => ['title' => 'Online Store Sessions', 'value' => '10,234', 'metricLabel' => 'Sessions'],
-        ];
-
-        $data = $titles[$type] ?? ['title' => 'Report', 'value' => '0', 'metricLabel' => 'Count'];
-
-        return view('admin.analytics.report', $data);
-    })->name('analytics.show');
+    Route::get('/analytics/{type}', [App\Http\Controllers\Admin\AnalyticsController::class, 'show'])->name('analytics.show');
 
     Route::get('/discounts', [App\Http\Controllers\Admin\DiscountController::class, 'index'])->name('discounts');
     Route::get('/discounts/create', [App\Http\Controllers\Admin\DiscountController::class, 'create'])->name('discounts.create');
@@ -345,7 +333,7 @@ Route::prefix('{tenant}/admin')->name('admin.')->middleware(['identify_tenant', 
 });
 
 // Protected Delivery Boy Routes
-Route::prefix('{tenant}/delivery')->name('delivery.')->middleware(['identify_tenant', 'auth'])->group(function () {
+Route::prefix('{tenant}/delivery')->name('delivery.')->middleware(['identify_tenant', 'auth', 'tenant_role:delivery_boy'])->group(function () {
     Route::get('/', [App\Http\Controllers\DeliveryBoy\DeliveryController::class, 'dashboard'])->name('dashboard');
     Route::get('/orders/{id}', [App\Http\Controllers\DeliveryBoy\DeliveryController::class, 'showOrder'])->name('orders.show');
     Route::post('/orders/{id}/status', [App\Http\Controllers\DeliveryBoy\DeliveryController::class, 'updateStatus'])->name('orders.update-status');
@@ -354,41 +342,13 @@ Route::prefix('{tenant}/delivery')->name('delivery.')->middleware(['identify_ten
 
 // v2 Velvet Theme Routes
 Route::prefix('v2')->name('velvet.')->middleware([\App\Http\Middleware\IdentifyStorefrontTenant::class])->group(function () {
-    Route::get('/', function() {
-        $tenantId = request('tenant_id') 
-            ?? session('active_tenant_id') 
-            ?? (auth()->check() ? auth()->user()->tenant_id : null) 
-            ?? session('demo_tenant_id') 
-            ?? 2;
-        $bestsellers = \App\Models\HomeProduct::where('tenant_id', $tenantId)
-            ->with(['product.variants', 'product.images', 'product.discounts'])
-            ->orderBy('sort_order', 'asc')
-            ->get();
-        $collections = \App\Models\Collection::where('tenant_id', $tenantId)->where('status', 1)->get();
-        $bundles = \App\Models\Bundle::where('tenant_id', $tenantId)
-            ->where('status', 'active')
-            ->where('type', 'bundle')
-            ->with(['products.variants'])
-            ->latest()
-            ->take(4)
-            ->get();
-        $sliders = \App\Models\Slider::where('tenant_id', $tenantId)->where('status', true)->orderBy('order', 'asc')->get();
-            
-        return view('template_2.home', compact('sliders', 'bestsellers', 'collections', 'bundles'));
-    })->name('home');
+    Route::get('/', [PageController::class, 'home'])->name('home');
 
     Route::get('/all-products', [App\Http\Controllers\PageController::class, 'allProducts'])->name('all-products');
 
-    Route::get('/collection/{slug}', function($slug) {
-        $tenantId = request('tenant_id') 
-            ?? session('active_tenant_id') 
-            ?? (auth()->check() ? auth()->user()->tenant_id : null) 
-            ?? session('demo_tenant_id') 
-            ?? 2;
-        $collection = \App\Models\Collection::where('tenant_id', $tenantId)->where('slug', $slug)->firstOrFail();
-        $products = $collection->products()->where('status', 'active')->with(['variants', 'images'])->paginate(12)->withQueryString();
-        $collections = \App\Models\Collection::where('tenant_id', $tenantId)->where('status', 1)->get();
-        return view('template_2.collection', compact('collection', 'products', 'collections'));
+    Route::get('/collection/{slug}', function(Illuminate\Http\Request $request, $slug) {
+        $request->query->set('slug', $slug);
+        return app(PageController::class)->collection($request);
     })->name('collection');
 
     Route::get('/combos', [App\Http\Controllers\PageController::class, 'combos'])->name('combos');

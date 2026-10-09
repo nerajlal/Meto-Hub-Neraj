@@ -82,13 +82,26 @@
             }
         }
     </style>
+    <link rel="stylesheet" href="{{ asset('css/storefront-themes.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/storefront-premium.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/storefront-products.css') }}">
+    @if($storefrontTheme['id'] !== 'template_1')
+    <style>body { --theme-tone: {{ $storefrontTheme['tone'] }}; --theme-surface: {{ $storefrontTheme['background'] }}; }</style>
+    @endif
 </head>
 
-<body>
-    @include('template_1.partials.header')
+<body class="storefront-theme {{ $storefrontTheme['id'] }}" data-storefront-theme="{{ $storefrontTheme['id'] }}">
+    @if($storefrontTheme['id'] === 'template_1')
+        @include('template_1.partials.header')
+    @else
+        @include('storefront.themes.headers.' . $storefrontTheme['layout'])
+    @endif
 
     <div class="main-wrapper">
 
+        @if($storefrontTheme['id'] === 'template_5')
+            @include('storefront.themes.departments')
+        @endif
         <main class="main-content">
             <div class="content-container">
                 @yield('content')
@@ -99,7 +112,11 @@
     @mobileapp
         <!-- No massive footer for native app -->
     @else
-        @include('template_1.partials.footer')
+        @if($storefrontTheme['id'] === 'template_1')
+            @include('template_1.partials.footer')
+        @else
+            @include('storefront.themes.footer')
+        @endif
     @endmobileapp
     @include('template_1.partials.cart_drawer')
 
@@ -160,7 +177,7 @@
 
         function refreshNCart() {
             $('#cart-drawer-body-n').html('<div class="cart-loader-n text-center py-5"><i class="fa-solid fa-spinner fa-spin fa-2x text-success"></i></div>');
-            $.get("{{ route('cart.fetch') }}", { theme: 'template_1' }, function (html) {
+            $.get("{{ app(\App\Services\StorefrontTheme::class)->url('cart.fetch') }}", { theme: 'template_1' }, function (html) {
                 $('#cart-drawer-body-n').html(html);
             });
         }
@@ -185,7 +202,7 @@
                 if (response.success) {
                     $('#cart-count').text(response.cartCount);
                     // Silently refresh cart content without spinner
-                    $.get("{{ route('cart.fetch') }}", { theme: 'template_1' }, function (html) {
+                    $.get("{{ app(\App\Services\StorefrontTheme::class)->url('cart.fetch') }}", { theme: 'template_1' }, function (html) {
                         $('#cart-drawer-body-n').html(html);
                     });
                 }
@@ -280,7 +297,7 @@
             @endif
 
             $.ajax({
-                url: "{{ route('v3.wishlist.toggle') }}",
+                url: "{{ app(\App\Services\StorefrontTheme::class)->url('v3.wishlist.toggle') }}",
                 method: "POST",
                 data: {
                     _token: "{{ csrf_token() }}",
@@ -288,9 +305,10 @@
                 },
                 success: function (response) {
                     if (response.success) {
-                        const btns = document.querySelectorAll(`button[onclick*="toggleWishlist"][onclick*="${productId}"]`);
+                        const btns = Array.from(document.querySelectorAll('button[onclick*="toggleWishlist"]')).filter(btn => new RegExp(',\\s*' + productId + '\\s*\\)').test(btn.getAttribute('onclick')));
                         btns.forEach(btn => {
                             const icon = btn.querySelector('i');
+                            btn.setAttribute('aria-pressed', response.wishlisted ? 'true' : 'false');
                             if (response.wishlisted) {
                                 icon.className = 'fa-solid fa-heart';
                                 btn.style.color = '#ef4444';
@@ -322,7 +340,6 @@
             });
         };
     </script>
-    @yield('scripts')
     @mobileapp
         <!-- No whatsapp float button in native app -->
     @else
@@ -335,9 +352,14 @@
         @endif
     @endmobileapp
 
-    @include('template_1.partials.mobile_bottom_nav')
+    @if($storefrontTheme['id'] === 'template_3')
+        @include('storefront.themes.quick_nav')
+    @else
+        @include('template_1.partials.mobile_bottom_nav')
+    @endif
     @include('template_1.partials.floating_cart_summary')
     @include('partials.customer_auth_modal')
+    @yield('scripts')
 </body>
 
 </html>

@@ -32,10 +32,16 @@ class AuthController extends Controller
             'password' => ['required'],
         ]);
 
-        if (Auth::attempt($credentials, $request->boolean('remember'))) {
+        \Log::info('Login attempt', ['email' => $credentials['email']]);
+        
+        $attempt = Auth::attempt($credentials, $request->boolean('remember'));
+        \Log::info('Login attempt result', ['attempt' => $attempt]);
+
+        if ($attempt) {
             $request->session()->regenerate();
 
             $user = Auth::user();
+            \Log::info('User authenticated', ['type' => $user->type, 'tenant' => $user->tenant_id]);
 
             if ($user->type === 'super_admin') {
                 return redirect()->route('super_admin.dashboard');
@@ -44,6 +50,7 @@ class AuthController extends Controller
             if ($user->type === 'admin' && $user->tenant_id) {
                 // Set the session active tenant ID
                 session(['active_tenant_id' => $user->tenant_id]);
+                \Log::info('Redirecting to admin dashboard', ['tenant' => $user->tenant_id]);
                 return redirect()->route('admin.dashboard', ['tenant' => $user->tenant_id]);
             }
 
@@ -53,6 +60,7 @@ class AuthController extends Controller
             }
 
             // Fallback if user doesn't have a tenant or super_admin type
+            \Log::info('Fallback hit - logging out');
             Auth::logout();
             return back()->withErrors([
                 'email' => 'This account does not have admin or delivery privileges, or is not associated with any store.',

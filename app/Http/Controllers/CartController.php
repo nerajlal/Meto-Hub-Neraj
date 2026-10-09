@@ -120,8 +120,7 @@ class CartController extends Controller
         
         $tenantId = session('active_tenant_id') ?? (auth()->check() ? auth()->user()->tenant_id : null) ?? 1;
         $tenant = \App\Models\Tenant::find($tenantId);
-        $theme = $tenant ? $tenant->theme : 'template_1';
-        $view = ($theme === 'template_2') ? 'template_2.cart' : 'template_1.cart';
+        $view = 'template_1.cart';
         
         $taxAmount = 0.00;
         $taxRate = null;
@@ -194,7 +193,7 @@ class CartController extends Controller
         $total = $cartTotalBeforeTax + $taxAmount;
         
         $minOrderValue = $tenant ? ($tenant->min_order_value ?? 0) : 0;
-        return view('v4.cart', compact('cart', 'total', 'subtotal', 'savings', 'taxAmount', 'taxRate', 'taxName', 'cartTotalBeforeTax', 'minOrderValue'));
+        return view('template_1.cart', compact('cart', 'total', 'subtotal', 'savings', 'taxAmount', 'taxRate', 'taxName', 'cartTotalBeforeTax', 'minOrderValue'));
     }
 
     /**
@@ -255,7 +254,7 @@ class CartController extends Controller
         $total = $cartTotalBeforeTax + $taxAmount;
         
         $minOrderValue = $tenant ? ($tenant->min_order_value ?? 0) : 0;
-        return view('v5.cart', compact('cart', 'total', 'subtotal', 'savings', 'taxAmount', 'taxRate', 'taxName', 'cartTotalBeforeTax', 'minOrderValue'));
+        return view('template_1.cart', compact('cart', 'total', 'subtotal', 'savings', 'taxAmount', 'taxRate', 'taxName', 'cartTotalBeforeTax', 'minOrderValue'));
     }
 
     private function calculateTotal(&$cart)
@@ -1111,14 +1110,7 @@ class CartController extends Controller
         // Determine correct checkout route based on order tenant!
         $tenantId = $order->tenant_id;
         $tenant = \App\Models\Tenant::find($tenantId);
-        $theme = $tenant ? $tenant->theme : 'template_1';
-        
-        $checkoutRoute = match(true) {
-            $theme === 'template_2' || $theme === 'v3' => 'v3.checkout',
-            $theme === 'v4' => 'v4.checkout',
-            $theme === 'v5' => 'v5.checkout',
-            default => 'v1.checkout'
-        };
+        $checkoutRoute = 'v1.checkout';
 
         return redirect()->route($checkoutRoute)->with('success', 'Order items added to cart!');
     }
@@ -1187,16 +1179,7 @@ class CartController extends Controller
         }
         $total = $cartTotalBeforeTax + $taxAmount;
 
-        $theme = $request->theme ?? 'template_1';
-        if ($theme == 'v4') {
-            $view = 'v4.partials.cart_drawer_items';
-        } elseif ($theme == 'velvet') {
-            $view = 'velvet.partials.cart_drawer_items';
-        } elseif ($theme == 'template_2') {
-            $view = 'template_2.partials.cart_drawer_items';
-        } else {
-            $view = 'template_1.partials.cart_drawer_items';
-        }
+        $view = 'template_1.partials.cart_drawer_items';
 
         $minOrderValue = $tenant ? ($tenant->min_order_value ?? 0) : 0;
         return view($view, compact('cart', 'total', 'subtotal', 'savings', 'taxAmount', 'taxRate', 'taxName', 'cartTotalBeforeTax', 'minOrderValue'))->render();

@@ -55,6 +55,8 @@ class IdentifyTenant
             view()->share('isTrialExpired', $isTrialExpired);
             view()->share('isPaidPlan', $isPaid);
             view()->share('renewsIn', $renewsIn);
+            $request->user(); // Resolve authentication before applying tenant scopes to users.
+            $request->attributes->set('resolved_tenant_id', $tenant->id);
             // Set session/config for reference in scope or controllers
             session(['active_tenant_id' => $tenant->id]);
 

@@ -88,10 +88,10 @@
             @if($total < $minOrderValue)
                 <a href="javascript:void(0)" class="n-checkout-btn" style="opacity: 0.5; cursor: not-allowed; pointer-events: none;">PROCEED TO CHECKOUT</a>
             @else
-                <a href="{{ route('v1.checkout') }}" class="n-checkout-btn">PROCEED TO CHECKOUT</a>
+                <a href="{{ app(\App\Services\StorefrontTheme::class)->url('v1.checkout') }}" class="n-checkout-btn">PROCEED TO CHECKOUT</a>
             @endif
         @else
-            <a href="{{ route('v1.checkout') }}" class="n-checkout-btn">PROCEED TO CHECKOUT</a>
+            <a href="{{ app(\App\Services\StorefrontTheme::class)->url('v1.checkout') }}" class="n-checkout-btn">PROCEED TO CHECKOUT</a>
         @endif
     </div>
 @else
@@ -99,7 +99,7 @@
         <i class="fa-solid fa-cart-shopping"></i>
         <h3>Your cart is empty</h3>
         <p>Looks like you haven't added anything to your cart yet.</p>
-        <a href="{{ route('v1.all-products') }}" class="n-shop-btn">Continue Shopping</a>
+        <a href="{{ app(\App\Services\StorefrontTheme::class)->url('v1.all-products') }}" class="n-shop-btn">Continue Shopping</a>
     </div>
 @endif
 

@@ -19,7 +19,7 @@ class BillingController extends Controller
     {
         $request->validate([
             'cycle' => 'required|in:monthly,yearly',
-            'plan_tier' => 'nullable|string'
+            'plan_tier' => 'nullable|in:sprout,blossom,tree'
         ]);
 
         $tenant = auth()->user()->tenant;
@@ -100,14 +100,22 @@ class BillingController extends Controller
 
     public function verify(Request $request)
     {
+        $request->validate([
+            'razorpay_payment_id' => 'required|string',
+            'razorpay_subscription_id' => 'required|string',
+            'razorpay_signature' => 'required|string',
+        ]);
         $tenant = auth()->user()->tenant;
-        
+        abort_unless($tenant->razorpay_subscription_id &&
+            hash_equals($tenant->razorpay_subscription_id, $request->razorpay_subscription_id), 422,
+            'This subscription does not belong to this store.');
+
         try {
             $api = new Api(env('RAZORPAY_KEY'), env('RAZORPAY_SECRET'));
 
             $attributes = array(
                 'razorpay_payment_id' => $request->razorpay_payment_id,
-                'razorpay_subscription_id' => $request->razorpay_subscription_id,
+                'razorpay_subscription_id' => $tenant->razorpay_subscription_id,
                 'razorpay_signature' => $request->razorpay_signature
             );
 

@@ -1,88 +1,220 @@
 @extends('template_3.layouts.app')
 
 @section('content')
-<div class="container" style="padding-top: 2rem; padding-bottom: 4rem;">
+<style>
+    .premium-badge {
+        background: var(--primary-color); 
+        color: #fff; 
+        padding: 0.35rem 1rem; 
+        border-radius: 4px; 
+        font-size: 0.7rem; 
+        font-weight: 800; 
+        text-transform: uppercase; 
+        letter-spacing: 0.15em;
+    }
+    .t3-premium-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: var(--primary-color);
+        letter-spacing: -0.5px;
+        line-height: 1.1;
+        margin-bottom: 0.5rem;
+    }
+    .t3-premium-type {
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        margin-bottom: 2rem;
+        display: block;
+    }
+    .t3-premium-price {
+        font-size: 2.2rem;
+        font-weight: 800;
+        color: var(--primary-color);
+    }
+    .t3-variant-btn {
+        background: #fff;
+        border: 1px solid var(--border-color);
+        color: var(--primary-color);
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 700;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    .t3-variant-btn.active {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 1px var(--primary-color);
+    }
+    .t3-add-to-cart {
+        background: var(--primary-color);
+        color: #fff;
+        border: none;
+        padding: 1rem 2rem;
+        border-radius: 8px;
+        font-weight: 800;
+        font-size: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        cursor: pointer;
+        transition: 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        flex-grow: 1;
+    }
+    .t3-add-to-cart:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    .t3-product-detail-layout {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4rem;
+        align-items: start;
+    }
+    @media (max-width: 768px) {
+        .t3-product-detail-layout {
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+        .container {
+            padding-top: 1rem !important;
+            padding-bottom: 3rem !important;
+        }
+        .t3-premium-title {
+            font-size: 1.8rem;
+        }
+        .t3-premium-price {
+            font-size: 1.8rem;
+        }
+        .product-actions {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: #fff;
+            padding: 1rem 1.25rem;
+            box-shadow: 0 -4px 25px rgba(0,0,0,0.1);
+            z-index: 999;
+            margin: 0 !important;
+            flex-direction: row !important;
+            gap: 0.75rem !important;
+            border-top: 1px solid var(--border-color);
+            padding-bottom: env(safe-area-inset-bottom, 1rem); /* for iPhone safe area */
+        }
+        .product-actions > div {
+            width: 120px !important;
+            flex-shrink: 0;
+        }
+        .t3-add-to-cart {
+            width: 100%;
+            padding: 0.85rem !important;
+            border-radius: 8px !important;
+        }
+        .main-image-container {
+            padding: 1rem !important;
+            margin-bottom: 1rem !important;
+        }
+    }
+</style>
+<div class="container" style="padding-top: 2rem; padding-bottom: 8rem;">
     <!-- Breadcrumbs -->
-    <div class="breadcrumb">
-        <a href="{{ route('v1.home') }}"><i class="fa-solid fa-house"></i> Home</a> 
-        <span>/</span> 
-        <a href="{{ route('v1.all-products') }}">Shop</a>
+    <div class="breadcrumb" style="margin-bottom: 2rem; font-size: 0.85rem; color: #94a3b8; overflow-x: auto; white-space: nowrap; padding-bottom: 0.5rem;">
+        <a href="{{ route('v1.home') }}" style="color: inherit;"><i class="fa-solid fa-house"></i> Home</a> 
+        <span style="margin: 0 0.5rem;">/</span> 
+        <a href="{{ route('v1.all-products') }}" style="color: inherit;">Shop</a>
         @if($product->collection)
-            <span>/</span> 
-            <a href="{{ route('v1.collection', ['slug' => $product->collection->slug]) }}">{{ $product->collection->name }}</a>
+            <span style="margin: 0 0.5rem;">/</span> 
+            <a href="{{ route('v1.collection', ['slug' => $product->collection->slug]) }}" style="color: inherit;">{{ $product->collection->name }}</a>
         @endif
-        <span>/</span> 
-        <span style="color: var(--text-main); font-weight: 600;">{{ $product->title }}</span>
+        <span style="margin: 0 0.5rem;">/</span> 
+        <span style="color: var(--primary-color); font-weight: 700;">{{ $product->title }}</span>
     </div>
 
-    <div class="product-detail-layout">
+    <div class="t3-product-detail-layout">
         <!-- Left: Image Gallery -->
-        <div class="product-gallery">
+        <div class="product-gallery" style="position: sticky; top: 2rem;">
             @php 
                 $isWishlisted = auth()->check() && \App\Models\Wishlist::where('user_id', auth()->id())->where('product_id', $product->id)->exists();
             @endphp
             
-            <div class="main-image-container" style="position: relative;">
-                <button class="wishlist-btn {{ $isWishlisted ? 'active' : '' }}" onclick="toggleWishlist(event, {{ $product->id }})" style="top: 1rem; right: 1rem; width: 44px; height: 44px; font-size: 1.25rem;">
+            <div class="main-image-container" style="position: relative; background: #f8fafc; border-radius: 1.5rem; overflow: hidden; padding: 2rem; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem;">
+                <button class="wishlist-btn {{ $isWishlisted ? 'active' : '' }}" onclick="toggleWishlist(event, {{ $product->id }})" style="position: absolute; top: 1.5rem; right: 1.5rem; width: 50px; height: 50px; border-radius: 50%; background: #fff; border: 1px solid var(--border-color); font-size: 1.25rem; color: {{ $isWishlisted ? '#ef4444' : 'var(--text-muted)' }}; box-shadow: 0 4px 10px rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; z-index: 10;">
                     <i class="{{ $isWishlisted ? 'fa-solid' : 'fa-regular' }} fa-heart"></i>
                 </button>
-                <img id="mainImage" class="main-image" src="{{ $product->main_image_url ?? asset('Images/default.png') }}" alt="{{ $product->title }}">
+                <img id="mainImage" class="main-image" src="{{ $product->main_image_url ?? asset('Images/default.png') }}" alt="{{ $product->title }}" style="width: 100%; height: auto; max-height: 600px; object-fit: contain; mix-blend-mode: multiply;">
             </div>
             
             @if($product->images && $product->images->count() > 1)
-            <div class="thumbnails">
-                <img src="{{ $product->main_image_url }}" class="active" onclick="changeMainImage(this, '{{ $product->main_image_url }}')">
+            <div class="thumbnails" style="display: flex; gap: 1rem; overflow-x: auto; padding-bottom: 0.5rem;">
+                <img src="{{ $product->main_image_url }}" class="active" onclick="changeMainImage(this, '{{ $product->main_image_url }}')" style="width: 80px; height: 80px; object-fit: cover; border-radius: 0.75rem; border: 2px solid var(--primary-color); cursor: pointer; padding: 0.25rem; background: #f8fafc;">
                 @foreach($product->images as $img)
-                <img src="{{ asset('storage/' . $img->path) }}" onclick="changeMainImage(this, '{{ asset('storage/' . $img->path) }}')">
+                <img src="{{ asset('storage/' . $img->path) }}" onclick="changeMainImage(this, '{{ asset('storage/' . $img->path) }}')" style="width: 80px; height: 80px; object-fit: cover; border-radius: 0.75rem; border: 2px solid transparent; cursor: pointer; padding: 0.25rem; background: #f8fafc;">
                 @endforeach
             </div>
+            <script>
+                function changeMainImage(element, src) {
+                    document.getElementById('mainImage').src = src;
+                    document.querySelectorAll('.thumbnails img').forEach(img => {
+                        img.style.borderColor = 'transparent';
+                        img.classList.remove('active');
+                    });
+                    element.style.borderColor = 'var(--primary-color)';
+                    element.classList.add('active');
+                }
+            </script>
             @endif
         </div>
 
         <!-- Right: Product Details -->
-        <div class="product-info">
+        <div class="product-info" style="padding-top: 1rem;">
             @if(!empty($product->tags) && count($product->tags) > 0)
-                <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
+                <div style="display: flex; gap: 0.5rem; margin-bottom: 1.5rem;">
                     @foreach($product->tags as $tag)
-                        <span style="background: rgba(16, 185, 129, 0.1); color: var(--accent-color); padding: 0.25rem 0.75rem; border-radius: 99px; font-size: 0.8rem; font-weight: 700;">
+                        <span class="premium-badge">
                             {{ $tag }}
                         </span>
                     @endforeach
                 </div>
             @endif
             
-            <h1>{{ $product->title }}</h1>
+            <h1 class="t3-premium-title">{{ $product->title }}</h1>
             
-            <p style="color: var(--text-muted); font-size: 1.1rem; margin-bottom: 0.5rem;">
-                {{ $product->type ?? 'Grocery' }}
-            </p>
+            <span class="t3-premium-type">
+                {{ $product->type ?? 'Product' }}
+            </span>
             
-            <div class="price-block">
-                <span class="current-price" id="t3-price-display">
+            <div class="price-block" style="display: flex; align-items: center; gap: 1rem; margin-bottom: 2.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 2rem;">
+                <span class="t3-premium-price" id="t3-price-display">
                     {{ $currentTenant->currency ?? '₹' }}{{ number_format($product->discounted_price, 2) }}
                 </span>
                 @if($product->compare_at_price > $product->discounted_price)
-                    <span class="compare-price">
+                    <span class="compare-price" style="font-size: 1.25rem; text-decoration: line-through; color: #94a3b8; font-weight: 600;">
                         {{ $currentTenant->currency ?? '₹' }}{{ number_format($product->compare_at_price, 2) }}
                     </span>
-                    <span style="background: #EF4444; color: white; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.85rem; font-weight: 700;">
-                        {{ round((($product->compare_at_price - $product->discounted_price) / $product->compare_at_price) * 100) }}% OFF
+                    <span style="background: #10B981; color: white; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">
+                        Save {{ round((($product->compare_at_price - $product->discounted_price) / $product->compare_at_price) * 100) }}%
                     </span>
                 @endif
             </div>
 
             @if($product->active_discount)
-                <div style="margin-top: -0.5rem; margin-bottom: 1.5rem; font-size: 0.85rem; color: #10b981; font-weight: 700; background: #ecfdf5; display: inline-block; padding: 4px 10px; border-radius: 6px;">
+                <div style="margin-top: -1rem; margin-bottom: 2rem; font-size: 0.85rem; color: #10b981; font-weight: 700; background: #ecfdf5; display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; border-radius: 8px;">
                     <i class="fa-solid fa-tag"></i> {{ $product->active_discount->code ?? 'DISCOUNT' }} Applied
                 </div>
             @endif
 
             @if($product->variants && $product->variants->count() > 0)
-            <div class="variant-selector">
-                <h4>Select Size / Weight</h4>
-                <div class="variant-options">
+            <div class="variant-selector" style="margin-bottom: 2.5rem;">
+                <h4 style="font-size: 0.85rem; font-weight: 800; color: var(--primary-color); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1rem;">Select Size</h4>
+                <div class="variant-options" style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
                     @foreach($product->variants as $index => $variant)
-                        <button class="variant-btn {{ $index === 0 ? 'active' : '' }}" onclick="selectVariant(this, '{{ $variant->id ?? 0 }}', '{{ $variant->size }}', {{ $variant->price ?? 0 }}, {{ $variant->stock ?? 999 }}, {{ $product->continue_selling_when_out_of_stock ? 'true' : 'false' }})">
+                        <button class="t3-variant-btn {{ $index === 0 ? 'active' : '' }}" onclick="selectVariant(this, '{{ $variant->id ?? 0 }}', '{{ $variant->size }}', {{ $variant->price ?? 0 }}, {{ $variant->stock ?? 999 }}, {{ $product->continue_selling_when_out_of_stock ? 'true' : 'false' }})">
                             {{ $variant->size }}
                         </button>
                     @endforeach
@@ -90,37 +222,40 @@
             </div>
             @endif
 
-            <div class="product-actions" id="main-product-actions" data-product-id="{{ $product->id }}">
-                <div style="display: flex; align-items: center; justify-content: space-between; border: 1px solid var(--border-color); border-radius: var(--border-radius-md); padding: 0.5rem; width: 140px; background: #FFFFFF;">
-                    <button onclick="updateMainCart(-1)" style="width: 36px; height: 36px; border-radius: 50%; background: #F1F5F9; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-main);"><i class="fa-solid fa-minus"></i></button>
-                    <span id="main-qty-value" style="font-weight: 700; font-size: 1.25rem;">0</span>
-                    <button onclick="updateMainCart(1)" style="width: 36px; height: 36px; border-radius: 50%; background: #F1F5F9; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-main);"><i class="fa-solid fa-plus"></i></button>
+            <div class="product-actions" id="main-product-actions" data-product-id="{{ $product->id }}" style="display: flex; gap: 1rem; margin-bottom: 3rem;">
+                <div style="display: flex; align-items: center; justify-content: space-between; border: 1px solid var(--border-color); border-radius: 8px; padding: 0.25rem; width: 120px; background: #f8fafc;">
+                    <button onclick="updateMainCart(-1)" style="width: 40px; height: 40px; border-radius: 6px; background: #fff; border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-muted);"><i class="fa-solid fa-minus" style="font-size: 0.75rem;"></i></button>
+                    <span id="main-qty-value" style="font-weight: 800; font-size: 1.2rem; color: var(--primary-color);">0</span>
+                    <button onclick="updateMainCart(1)" style="width: 40px; height: 40px; border-radius: 6px; background: #fff; border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-muted);"><i class="fa-solid fa-plus" style="font-size: 0.75rem;"></i></button>
                 </div>
                 
-                <button class="add-to-cart-btn" id="add-to-cart-page-btn" onclick="addOrOpenCart()">
+                <button class="t3-add-to-cart" id="add-to-cart-page-btn" onclick="addOrOpenCart()">
                     <i class="fa-solid fa-bag-shopping"></i> <span>Add to Cart</span>
                 </button>
             </div>
+
             @if(isset($product->volume_pricing) && (is_array($product->volume_pricing) ? count($product->volume_pricing) > 0 : $product->volume_pricing->count() > 0))
-            <div class="volume-deals">
-                <h4 style="margin-bottom: 1rem; font-size: 1.1rem;"><i class="fa-solid fa-boxes-stacked" style="color: var(--accent-color);"></i> Pack Deals</h4>
-                @foreach($product->volume_pricing as $deal)
-                <div class="volume-deal-item">
-                    <div>
-                        <span style="font-weight: 700; color: var(--primary-color);">Buy {{ $deal->quantity }} or more</span>
-                        <div style="font-size: 0.85rem; color: var(--text-muted);">Get special wholesale pricing</div>
+            <div class="volume-deals" style="margin-bottom: 3rem;">
+                <h4 style="font-size: 0.85rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1rem;"><i class="fa-solid fa-layer-group me-2"></i> Pack Deals</h4>
+                <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                    @foreach($product->volume_pricing as $deal)
+                    <div class="volume-deal-item" style="display: flex; align-items: center; justify-content: space-between; background: #fff; border: 1px solid var(--border-color); padding: 1.25rem; border-radius: 8px;">
+                        <div>
+                            <span style="font-weight: 800; color: var(--primary-color); display: block; margin-bottom: 0.25rem;">Buy {{ $deal->quantity }} or more</span>
+                            <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">Special wholesale pricing</div>
+                        </div>
+                        <div style="font-weight: 800; color: var(--primary-color); font-size: 1.2rem;">
+                            {{ $currentTenant->currency ?? '₹' }}{{ number_format($deal->price, 2) }} <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">/ ea</span>
+                        </div>
                     </div>
-                    <div style="font-weight: 800; color: var(--accent-color); font-size: 1.1rem;">
-                        {{ $currentTenant->currency ?? '₹' }}{{ number_format($deal->price, 2) }} / ea
-                    </div>
+                    @endforeach
                 </div>
-                @endforeach
             </div>
             @endif
             
-            <div style="background: #F8FAFC; border-radius: var(--border-radius-lg); padding: 1.5rem; margin-top: 2rem;">
-                <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem;">Product Description</h3>
-                <div style="color: var(--text-muted); line-height: 1.8;">
+            <div class="product-description-premium" style="border-top: 1px solid var(--border-color); padding-top: 2.5rem;">
+                <h3 style="font-size: 1.1rem; font-weight: 800; color: var(--primary-color); margin-bottom: 1.25rem; letter-spacing: -0.2px;">Product Details</h3>
+                <div style="color: var(--text-main); line-height: 1.8; font-size: 0.95rem;">
                     {!! $product->description !!}
                 </div>
             </div>

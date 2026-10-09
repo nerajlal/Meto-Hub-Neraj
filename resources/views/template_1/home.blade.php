@@ -5,6 +5,10 @@
 @section('meta_keywords', 'online store, buy online, premium products, fast delivery')
 
 @section('content')
+    @if($storefrontTheme['id'] !== 'template_1')
+        @include('storefront.themes.hero')
+    @endif
+    @if($storefrontTheme['id'] === 'template_1' || $sliders->isNotEmpty())
     <!-- Hero Banner Section -->
     <style>
         .hero-slider::-webkit-scrollbar {
@@ -88,16 +92,17 @@
     
 
 
+    @endif
     <!-- Shop by Category / Collections Row -->
     @if(isset($collections) && $collections->count() > 0)
     <div class="collections-horizontal-scroll" style="margin-bottom: 2rem; padding: 0 1rem;">
         <h3 style="font-size: 1.1rem; font-weight: 800; color: var(--primary-color); margin-bottom: 1rem;">Shop by Category</h3>
-        <div style="display: flex; gap: 1rem; overflow-x: auto; padding-bottom: 0.5rem; scrollbar-width: none; -ms-overflow-style: none;" class="hide-scroll">
+        <div style="display: flex; gap: 1rem; overflow-x: auto; padding-bottom: 0.5rem; scrollbar-width: none; -ms-overflow-style: none;" class="hide-scroll theme-category-list">
             <style>
                 .hide-scroll::-webkit-scrollbar { display: none; }
             </style>
             @foreach($collections as $c)
-            <a href="{{ route('v1.collection', ['slug' => $c->slug]) }}" style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem; text-decoration: none; min-width: 75px;">
+            <a href="{{ app(\App\Services\StorefrontTheme::class)->url('v1.collection', ['slug' => $c->slug]) }}" class="theme-category-link" style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem; text-decoration: none; min-width: 75px;">
                 <div style="width: 70px; height: 70px; border-radius: 50%; background: #f8fafc; border: 1.5px solid var(--border-color); overflow: hidden; display: flex; align-items: center; justify-content: center; padding: 0.2rem; transition: border-color 0.2s;" onmouseover="this.style.borderColor='var(--accent-color)'" onmouseout="this.style.borderColor='var(--border-color)'">
                     @php 
                         $catImage = $c->image ? Storage::url($c->image) : asset('Images/default.png');
@@ -133,7 +138,7 @@
             <div class="department-section" id="collection-{{ $collection->id }}" style="margin-bottom: 3rem;">
                 <div class="section-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
                     <h2 class="section-title" style="font-weight: 800; font-size: 1.6rem; color: var(--primary-color); position: relative;">{{ $collection->name }}</h2>
-                    <a href="{{ route('v1.collection', ['slug' => $collection->slug]) }}" class="view-all" style="color: var(--accent-color); text-decoration: none; font-weight: 700; font-size: 0.9rem;">View All <i class="fa-solid fa-chevron-right ms-1" style="font-size: 0.75rem;"></i></a>
+                    <a href="{{ app(\App\Services\StorefrontTheme::class)->url('v1.collection', ['slug' => $collection->slug]) }}" class="view-all" style="color: var(--accent-color); text-decoration: none; font-weight: 700; font-size: 0.9rem;">View All <i class="fa-solid fa-chevron-right ms-1" style="font-size: 0.75rem;"></i></a>
                 </div>
                 
                 <div class="product-grid grid-cols-mobile-{{ $currentTenant->mobile_grid_cols ?? 2 }}">
@@ -149,7 +154,7 @@
         <div class="department-section" style="margin-bottom: 3rem;">
             <div class="section-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
                 <h2 class="section-title" style="font-weight: 800; font-size: 1.6rem; color: var(--primary-color);">Featured Products</h2>
-                <a href="{{ route('v1.all-products') }}" class="view-all" style="color: var(--accent-color); text-decoration: none; font-weight: 700; font-size: 0.9rem;">View All <i class="fa-solid fa-chevron-right ms-1"></i></a>
+                <a href="{{ app(\App\Services\StorefrontTheme::class)->url('v1.all-products') }}" class="view-all" style="color: var(--accent-color); text-decoration: none; font-weight: 700; font-size: 0.9rem;">View All <i class="fa-solid fa-chevron-right ms-1"></i></a>
             </div>
             
             <div class="product-grid grid-cols-mobile-{{ $currentTenant->mobile_grid_cols ?? 2 }}">
@@ -171,7 +176,7 @@
         <div class="department-section" style="margin-bottom: 3rem;">
             <div class="section-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
                 <h2 class="section-title" style="font-weight: 800; font-size: 1.6rem; color: var(--primary-color);">New Arrivals</h2>
-                <a href="{{ route('v1.all-products') }}" class="view-all" style="color: var(--accent-color); text-decoration: none; font-weight: 700; font-size: 0.9rem;">View All <i class="fa-solid fa-chevron-right ms-1"></i></a>
+                <a href="{{ app(\App\Services\StorefrontTheme::class)->url('v1.all-products') }}" class="view-all" style="color: var(--accent-color); text-decoration: none; font-weight: 700; font-size: 0.9rem;">View All <i class="fa-solid fa-chevron-right ms-1"></i></a>
             </div>
             
             <div class="product-grid grid-cols-mobile-{{ $currentTenant->mobile_grid_cols ?? 2 }}">
@@ -211,7 +216,7 @@
     <div class="department-section" style="margin-bottom: 3rem;">
         <div class="section-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
             <h2 class="section-title" style="font-weight: 800; font-size: 1.6rem; color: var(--primary-color);">Weekly Featured Bundles</h2>
-            <a href="{{ route('v1.combos') }}" class="view-all" style="color: var(--accent-color); text-decoration: none; font-weight: 700; font-size: 0.9rem;">View All <i class="fa-solid fa-chevron-right ms-1"></i></a>
+            <a href="{{ app(\App\Services\StorefrontTheme::class)->url('v1.combos') }}" class="view-all" style="color: var(--accent-color); text-decoration: none; font-weight: 700; font-size: 0.9rem;">View All <i class="fa-solid fa-chevron-right ms-1"></i></a>
         </div>
         
         <div class="product-grid grid-cols-mobile-{{ $currentTenant->mobile_grid_cols ?? 2 }}">
@@ -252,7 +257,7 @@
                             <h4 style="font-size: 0.9rem; font-weight: 700; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ $reel->product->title }}</h4>
                             <span style="font-size: 0.85rem; color: var(--accent-color); font-weight: 700;">{{ $currentTenant->currency ?? '₹' }}{{ number_format($reel->product->discounted_price, 2) }}</span>
                         </div>
-                        <a href="{{ route('v3.product', ['id' => $reel->product->id]) }}" class="btn btn-sm" style="background: var(--accent-color); color: #fff; border-radius: 2rem; padding: 0.4rem 1rem; font-weight: 600; text-decoration: none; font-size: 0.8rem; white-space: nowrap;">Shop</a>
+                        <a href="{{ app(\App\Services\StorefrontTheme::class)->url('v3.product', ['id' => $reel->product->id]) }}" class="btn btn-sm" style="background: var(--accent-color); color: #fff; border-radius: 2rem; padding: 0.4rem 1rem; font-weight: 600; text-decoration: none; font-size: 0.8rem; white-space: nowrap;">Shop</a>
                     </div>
                 @elseif($reel->link_type === 'collection' && $reel->collection)
                     <div style="background: #fff; border: 1px solid var(--border-color); border-radius: 1rem; padding: 1rem; display: flex; align-items: center; gap: 1rem;">
@@ -260,7 +265,7 @@
                             <h4 style="font-size: 0.9rem; font-weight: 700; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ $reel->collection->name }}</h4>
                             <span style="font-size: 0.75rem; color: var(--text-muted);">View Collection</span>
                         </div>
-                        <a href="{{ route('v1.collection', ['slug' => $reel->collection->slug]) }}" class="btn btn-sm" style="background: var(--accent-color); color: #fff; border-radius: 2rem; padding: 0.4rem 1rem; font-weight: 600; text-decoration: none; font-size: 0.8rem; white-space: nowrap;">Explore</a>
+                        <a href="{{ app(\App\Services\StorefrontTheme::class)->url('v1.collection', ['slug' => $reel->collection->slug]) }}" class="btn btn-sm" style="background: var(--accent-color); color: #fff; border-radius: 2rem; padding: 0.4rem 1rem; font-weight: 600; text-decoration: none; font-size: 0.8rem; white-space: nowrap;">Explore</a>
                     </div>
                 @endif
                 

@@ -8,7 +8,7 @@ class PageController extends Controller
 {
     private function tenantId()
     {
-        return request('tenant_id') 
+        return request()->attributes->get('resolved_tenant_id')
             ?? session('active_tenant_id') 
             ?? (auth()->check() ? auth()->user()->tenant_id : null) 
             ?? session('demo_tenant_id') 
@@ -17,24 +17,7 @@ class PageController extends Controller
 
     private function getView($name)
     {
-        $tenantId = $this->tenantId();
-        $tenant = \App\Models\Tenant::find($tenantId);
-        $theme = $tenant ? $tenant->theme : 'template_1';
-
-        $routeName = request()->route() ? request()->route()->getName() : '';
-        if (request()->has('preview_theme')) {
-            $theme = request()->query('preview_theme');
-        } elseif (str_starts_with($routeName, 'v3.')) {
-            $theme = 'template_3';
-        } elseif (str_starts_with($routeName, 'velvet.')) {
-            $theme = 'template_2';
-        }
-        
-        if (view()->exists("{$theme}.{$name}")) {
-            return "{$theme}.{$name}";
-        }
-        
-        return "template_1.{$name}";
+        return app(\App\Services\StorefrontTheme::class)->view($name);
     }
 
     public function about()
@@ -65,24 +48,12 @@ class PageController extends Controller
 
     public function v3Home()
     {
-        $tenantId = $this->tenantId();
-        $sliders = \App\Models\Slider::where('tenant_id', $tenantId)->where('status', true)->orderBy('order', 'asc')->get();
-        $bestsellers = \App\Models\HomeProduct::where('tenant_id', $tenantId)->with(['product.variants', 'product.images'])->orderBy('sort_order', 'asc')->get();
-        $collections = \App\Models\Collection::where('tenant_id', $tenantId)->where('status', true)->get();
-        $bundles = \App\Models\Bundle::where('tenant_id', $tenantId)->where('status', 'active')->where('type', 'bundle')->with(['products.variants'])->latest()->take(4)->get();
-        $reels = \App\Models\Reel::where('tenant_id', $tenantId)->where('status', true)->orderBy('order', 'asc')->get();
-        return view($this->getView('home'), compact('sliders', 'bestsellers', 'collections', 'bundles', 'reels'));
+        return $this->home();
     }
 
     public function ajmalHome()
     {
-        $tenantId = $this->tenantId();
-        $sliders = \App\Models\Slider::where('tenant_id', $tenantId)->where('status', true)->orderBy('order', 'asc')->get();
-        // Fetching only a limited set for home page sections to improve performance
-        $products = \App\Models\Product::where('tenant_id', $tenantId)->where('status', 'active')->with(['variants', 'images'])->latest()->take(20)->get();
-        $collections = \App\Models\Collection::where('tenant_id', $tenantId)->where('status', true)->take(8)->get();
-        $bestsellers = \App\Models\HomeProduct::where('tenant_id', $tenantId)->with(['product.variants', 'product.images'])->orderBy('sort_order', 'asc')->get();
-        return view('v4.home', compact('products', 'collections', 'sliders', 'bestsellers'));
+        return $this->home();
     }
 
     public function collection(Request $request)
@@ -97,11 +68,7 @@ class PageController extends Controller
 
     public function ajmalCollection(Request $request)
     {
-        if (!$request->has('slug') && !$request->has('category') && !$request->has('gender')) {
-            $collections = \App\Models\Collection::where('tenant_id', $this->tenantId())->where('status', true)->get();
-            return view('v4.collections-index', compact('collections'));
-        }
-        return $this->handleCollection($request, 'v4.collection');
+        return $this->collection($request);
     }
 
     private function handleCollection(Request $request, $view)
@@ -128,12 +95,17 @@ class PageController extends Controller
             elseif ($gender == 'for-her') { $title = 'Perfumes For Her'; $query->whereIn('gender', ['Women', 'Female', 'Her']); }
             elseif ($gender == 'unisex') { $title = 'Unisex Collection'; $query->whereIn('gender', ['Unisex', 'All']); }
         }
+        $request->validate(['min_price' => 'nullable|numeric|min:0', 'max_price' => 'nullable|numeric|min:0']);
+
+        // Variant prices are computed from the relation; products has no starting_price column.
+        $variantPriceQuery = \App\Models\ProductVariant::selectRaw('MIN(price)')->whereColumn('product_id', 'products.id');
+
         // Price filters
         if ($request->filled('min_price')) {
-            $query->where('starting_price', '>=', $request->min_price);
+            $query->whereRaw('CAST(('.$variantPriceQuery->toSql().') AS DECIMAL(20,4)) >= ?', [$request->min_price]);
         }
         if ($request->filled('max_price')) {
-            $query->where('starting_price', '<=', $request->max_price);
+            $query->whereRaw('CAST(('.$variantPriceQuery->toSql().') AS DECIMAL(20,4)) <= ?', [$request->max_price]);
         }
 
         // Tags filter
@@ -148,9 +120,9 @@ class PageController extends Controller
         // Sorting
         $sort = $request->query('sort', 'latest');
         if ($sort === 'price_asc') {
-            $query->orderBy('starting_price', 'asc');
+            $query->orderBy($variantPriceQuery, 'asc');
         } elseif ($sort === 'price_desc') {
-            $query->orderBy('starting_price', 'desc');
+            $query->orderBy($variantPriceQuery, 'desc');
         } elseif ($sort === 'name_asc') {
             $query->orderBy('title', 'asc');
         } elseif ($sort === 'name_desc') {
@@ -210,12 +182,17 @@ class PageController extends Controller
             });
         }
 
+        $request->validate(['min_price' => 'nullable|numeric|min:0', 'max_price' => 'nullable|numeric|min:0']);
+
+        // Variant prices are computed from the relation; products has no starting_price column.
+        $variantPriceQuery = \App\Models\ProductVariant::selectRaw('MIN(price)')->whereColumn('product_id', 'products.id');
+
         // Price filters
         if ($request->filled('min_price')) {
-            $query->where('starting_price', '>=', $request->min_price);
+            $query->whereRaw('CAST(('.$variantPriceQuery->toSql().') AS DECIMAL(20,4)) >= ?', [$request->min_price]);
         }
         if ($request->filled('max_price')) {
-            $query->where('starting_price', '<=', $request->max_price);
+            $query->whereRaw('CAST(('.$variantPriceQuery->toSql().') AS DECIMAL(20,4)) <= ?', [$request->max_price]);
         }
 
         // Tags filter
@@ -230,9 +207,9 @@ class PageController extends Controller
         // Sorting
         $sort = $request->query('sort', 'latest');
         if ($sort === 'price_asc') {
-            $query->orderBy('starting_price', 'asc');
+            $query->orderBy($variantPriceQuery, 'asc');
         } elseif ($sort === 'price_desc') {
-            $query->orderBy('starting_price', 'desc');
+            $query->orderBy($variantPriceQuery, 'desc');
         } elseif ($sort === 'name_asc') {
             $query->orderBy('title', 'asc');
         } elseif ($sort === 'name_desc') {
@@ -327,12 +304,12 @@ class PageController extends Controller
 
     public function ajmalCombos()
     {
-        return $this->handleCombos('v4.combos');
+        return $this->combos();
     }
 
     public function ajmalCombo(Request $request)
     {
-        return $this->handleCombo($request, 'v4.bundle-main');
+        return $this->combo($request);
     }
 
     public function product(Request $request)
@@ -347,7 +324,7 @@ class PageController extends Controller
 
     public function ajmalProduct(Request $request)
     {
-        return $this->handleProduct($request, 'v4.product-main');
+        return $this->product($request);
     }
 
     private function handleProduct(Request $request, $view)
@@ -379,7 +356,7 @@ class PageController extends Controller
         $packBundles = $product->bundles()->where('status', 'active')->where('type', 'pack')->get();
         $poolBundles = $product->bundles()->where('status', 'active')->where('type', 'pool')->with('products')->get();
         $collections = \App\Models\Collection::where('tenant_id', $tenantId)->where('status', 1)->get();
-        return view('template_2.product-main', compact('product', 'bundle', 'packBundles', 'poolBundles', 'collections'));
+        return view($this->getView('product-main'), compact('product', 'bundle', 'packBundles', 'poolBundles', 'collections'));
     }
 
     public function shippingPolicy() { return view($this->getView('shipping-policy')); }
@@ -398,50 +375,42 @@ class PageController extends Controller
 
     public function ajmalCheckout()
     {
-        return $this->handleCheckout('Checkout.checkout', 'layouts.storefront');
+        return $this->checkout();
     }
 
     public function afnanHome()
     {
-        $tenantId = $this->tenantId();
-        $sliders = \App\Models\Slider::where('tenant_id', $tenantId)->where('status', true)->orderBy('order', 'asc')->get();
-        $products = \App\Models\Product::where('tenant_id', $tenantId)->where('status', 'active')->with(['variants', 'images'])->latest()->take(20)->get();
-        $collections = \App\Models\Collection::where('tenant_id', $tenantId)->where('status', true)->take(8)->get();
-        return view('v5.home', compact('products', 'collections', 'sliders'));
+        return $this->home();
     }
 
     public function afnanCollection(Request $request)
     {
-        if (!$request->has('slug') && !$request->has('category') && !$request->has('gender')) {
-            $collections = \App\Models\Collection::where('tenant_id', $this->tenantId())->where('status', true)->get();
-            return view('v5.collections-index', compact('collections'));
-        }
-        return $this->handleCollection($request, 'v5.collection');
+        return $this->collection($request);
     }
 
     public function afnanAllProducts(Request $request)
     {
-        return $this->handleAllProducts('v5.all-products', $request);
+        return $this->allProducts($request);
     }
 
     public function afnanProduct(Request $request)
     {
-        return $this->handleProduct($request, 'v5.product-main');
+        return $this->product($request);
     }
 
     public function afnanCombos()
     {
-        return $this->handleCombos('v5.combos');
+        return $this->combos();
     }
 
     public function afnanCombo(Request $request)
     {
-        return $this->handleCombo($request, 'v5.bundle-main');
+        return $this->combo($request);
     }
 
     public function afnanCheckout()
     {
-        return $this->handleCheckout('v5.checkout');
+        return $this->checkout();
     }
 
     private function handleCheckout($view, $layout = 'template_1.layouts.app')
@@ -571,13 +540,7 @@ class PageController extends Controller
         
         if ($minOrderValue > 0 && $total < $minOrderValue) {
             $formattedMin = '₹' . number_format($minOrderValue, 2);
-            $theme = $tenant ? $tenant->theme : 'template_1';
-            $cartRoute = match(true) {
-                $theme === 'template_2' || $theme === 'v3' => 'v3.home',
-                $theme === 'v4' => 'v4.cart',
-                $theme === 'v5' => 'v5.cart',
-                default => 'v1.home'
-            };
+            $cartRoute = 'v1.home';
             return redirect()->route($cartRoute)->with('error', "Your order total must be at least {$formattedMin} to proceed to checkout.");
         }
 

@@ -14,8 +14,8 @@ class CustomPriceController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'product_id' => 'required|exists:products,id',
+            'user_id' => ['required', \Illuminate\Validation\Rule::exists('users', 'id')->where('tenant_id', $request->attributes->get('resolved_tenant_id'))],
+            'product_id' => ['required', \Illuminate\Validation\Rule::exists('products', 'id')->where('tenant_id', $request->attributes->get('resolved_tenant_id'))],
             'price' => 'required|numeric|min:0',
         ]);
 

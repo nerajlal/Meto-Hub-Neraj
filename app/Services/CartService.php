@@ -69,7 +69,7 @@ class CartService
                 $discountVal = $item['coupon']['type'] == 'percentage' 
                     ? $item['price'] * ($item['coupon']['value'] / 100) 
                     : $item['coupon']['value'];
-                $item['line_savings'] += $discountVal * $remainingQty;
+                $item['line_savings'] += min($item['price'], max(0, $discountVal)) * $remainingQty;
             }
 
             $subtotal += $item['line_subtotal'];
@@ -100,7 +100,7 @@ class CartService
         $isMobileApp = \Illuminate\Support\Str::contains(request()->header('User-Agent'), 'GrocerySaaSApp');
         
         if ($isMobileApp) {
-            $isFirstTime = true;
+            $isFirstTime = Auth::check();
             if (\Illuminate\Support\Facades\Auth::check()) {
                 $hasOrders = \App\Models\Order::where('user_id', \Illuminate\Support\Facades\Auth::id())->exists();
                 if ($hasOrders) {
@@ -138,6 +138,9 @@ class CartService
             })
             ->where(function ($q) {
                 $q->whereNull('ends_at')->orWhere('ends_at', '>=', now());
+            })
+            ->where(function ($q) {
+                $q->whereNull('usage_limit')->orWhereColumn('uses_count', '<', 'usage_limit');
             })
             ->orderByDesc('value')
             ->first();

@@ -28,9 +28,9 @@ class GroupPricingController extends Controller
     public function addUsersToGroup(Request $request)
     {
         $request->validate([
-            'customer_group_id' => 'required|exists:customer_groups,id',
+            'customer_group_id' => ['required', \Illuminate\Validation\Rule::exists('customer_groups', 'id')->where('tenant_id', $request->attributes->get('resolved_tenant_id'))],
             'users' => 'required|array',
-            'users.*' => 'exists:users,id',
+            'users.*' => \Illuminate\Validation\Rule::exists('users', 'id')->where('tenant_id', request()->attributes->get('resolved_tenant_id')),
         ]);
 
         $group = CustomerGroup::findOrFail($request->customer_group_id);
@@ -58,8 +58,8 @@ class GroupPricingController extends Controller
     public function storeGroupPrice(Request $request)
     {
         $request->validate([
-            'customer_group_id' => 'required|exists:customer_groups,id',
-            'product_id' => 'required|exists:products,id',
+            'customer_group_id' => ['required', \Illuminate\Validation\Rule::exists('customer_groups', 'id')->where('tenant_id', $request->attributes->get('resolved_tenant_id'))],
+            'product_id' => ['required', \Illuminate\Validation\Rule::exists('products', 'id')->where('tenant_id', $request->attributes->get('resolved_tenant_id'))],
             'price' => 'required|numeric|min:0',
         ]);
 

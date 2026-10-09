@@ -276,11 +276,11 @@
 @endsection
 
 @section('content')
-<div class="product-page-container">
+<div class="product-page-container" data-product-detail="classic">
     <div class="breadcrumb" style="display: flex; align-items: center; gap: 0.75rem; font-size: 0.85rem; color: #64748b; margin-bottom: 2rem;">
-        <a href="{{ route('v1.home') }}" style="color: inherit; text-decoration: none;">Home</a>
+        <a href="{{ app(\App\Services\StorefrontTheme::class)->url('v1.home') }}" style="color: inherit; text-decoration: none;">Home</a>
         <i class="fa-solid fa-chevron-right" style="font-size: 0.65rem;"></i>
-        <a href="{{ route('v3.all-products') }}" style="color: inherit; text-decoration: none;">Shop</a>
+        <a href="{{ app(\App\Services\StorefrontTheme::class)->url('v3.all-products') }}" style="color: inherit; text-decoration: none;">Shop</a>
         <i class="fa-solid fa-chevron-right" style="font-size: 0.65rem;"></i>
         <span style="color: var(--primary-color); font-weight: 600;">{{ $product->title }}</span>
     </div>
@@ -295,11 +295,11 @@
                         $bestQty = $bestPack->products->first()->pivot->quantity;
                     @endphp
                     <div class="p-gallery-badge" style="position: absolute; top: 1.25rem; left: 1.25rem; background: #6366f1; color: #fff; padding: 0.5rem 1rem; border-radius: 0.5rem; font-weight: 800; font-size: 0.8rem; box-shadow: 0 4px 15px rgba(99, 102, 241, 0.2); z-index: 10;">
-                        <i class="fa-solid fa-tags"></i> Buy {{ $bestQty }} for {{ $currentTenant->currency ?? '{{ $currentTenant->currency ?? '₹' }}' }}{{ number_format($bestPack->total_price, 0) }}
+                        <i class="fa-solid fa-tags"></i> Buy {{ $bestQty }} for {{ $currentTenant->currency ?? '₹' }}{{ number_format($bestPack->total_price, 0) }}
                     </div>
                 @endif
                 @php 
-                    $mainImg = $product->main_image_url ?? asset('Images/default.png');
+                    $mainImg = app(\App\Services\StorefrontProduct::class)->data($product)['images']->first();
                 @endphp
                 <img src="{{ $mainImg }}" id="p-main-img" alt="{{ $product->title }}" onerror="this.src='{{ asset('Images/default.png') }}'" style="width: 100%; height: 100%; object-fit: cover;">
             </div>
@@ -323,65 +323,65 @@
         </div>
 
         <!-- Product Info Panel -->
-        <div class="product-details-panel" style="background: #fff; padding: 2.5rem; border-radius: 1.5rem; border: 1px solid var(--border-color);">
-            <p class="p-vendor-label" style="font-size: 0.75rem; font-weight: 800; color: var(--accent-color); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.5rem;">Organic & Fresh</p>
-            <h1 class="p-title" style="font-size: 2.2rem; font-weight: 800; color: var(--primary-color); margin-bottom: 1rem; line-height: 1.2;">{{ $product->title }}</h1>
+        <div class="product-details-panel" style="background: #fff; padding: 3rem; border-radius: 1.5rem; box-shadow: 0 4px 30px rgba(0,0,0,0.03);">
+            <p class="p-vendor-label" style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;"><span style="width: 20px; height: 1px; background: var(--text-muted);"></span> {{ $product->vendor ?: $product->collection?->name ?: $currentTenant->name }}</p>
+            <h1 class="p-title" style="font-size: 2.5rem; font-weight: 800; color: var(--primary-color); margin-bottom: 1.5rem; line-height: 1.1; letter-spacing: -0.5px;">{{ $product->title }}</h1>
             
-            <div class="p-price-row" style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem;">
-                <span class="p-current-price" id="p-price-display" style="font-size: 2rem; font-weight: 800; color: var(--accent-color);">{{ $currentTenant->currency ?? '{{ $currentTenant->currency ?? '₹' }}' }}{{ number_format($product->discounted_price, 2) }}</span>
+            <div class="p-price-row" style="display: flex; align-items: baseline; gap: 1rem; margin-bottom: 2rem;">
+                <span class="p-current-price" id="p-price-display" style="font-size: 2.2rem; font-weight: 800; color: var(--primary-color);">{{ $currentTenant->currency ?? '₹' }}{{ number_format($product->discounted_price, 2) }}</span>
                 @if($product->compare_at_price > $product->discounted_price)
-                    <div style="display: flex; align-items: center; gap: 0.5rem;">
-                        <span class="p-compare-at" style="font-size: 1.1rem; text-decoration: line-through; color: var(--text-muted);">{{ $currentTenant->currency ?? '{{ $currentTenant->currency ?? '₹' }}' }}{{ number_format($product->compare_at_price, 2) }}</span>
+                    <div style="display: flex; align-items: center; gap: 0.75rem;">
+                        <span class="p-compare-at" style="font-size: 1.2rem; text-decoration: line-through; color: #94a3b8; font-weight: 600;">{{ $currentTenant->currency ?? '₹' }}{{ number_format($product->compare_at_price, 2) }}</span>
                         @php $discount = round((($product->compare_at_price - $product->discounted_price) / $product->compare_at_price) * 100); @endphp
-                        <span class="p-discount-badge" style="background: #ecfdf5; color: var(--accent-color); padding: 0.2rem 0.5rem; border-radius: 9999px; font-size: 0.7rem; font-weight: 800; white-space: nowrap;">Save {{ $discount }}%</span>
+                        <span class="p-discount-badge" style="background: var(--primary-color); color: #fff; padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap;">Save {{ $discount }}%</span>
                     </div>
                 @endif
             </div>
 
-            <div class="delivery-note" style="margin-bottom: 1.5rem; color: var(--accent-color); font-weight: 700; font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem;">
-                <i class="fa-solid fa-truck-fast"></i>
-                <span>Delivered by {{ \Carbon\Carbon::now()->addDays($currentTenant->delivery_days ?? 2)->format('D, M d') }}</span>
+            <div class="delivery-note" style="margin-bottom: 2rem; color: var(--text-main); font-weight: 600; font-size: 0.95rem; display: flex; align-items: center; gap: 0.75rem; background: #f8fafc; padding: 1rem 1.25rem; border-radius: 0.75rem; border-left: 4px solid var(--accent-color);">
+                <i class="fa-solid fa-truck-fast" style="color: var(--accent-color); font-size: 1.1rem;"></i>
+                <span>Estimated delivery by <span style="font-weight: 800;">{{ \Carbon\Carbon::now()->addDays($currentTenant->delivery_days ?? 2)->format('D, M d') }}</span></span>
             </div>
 
             <!-- Variants -->
             @if($product->variants->count() > 0)
-            <div class="variant-container" style="margin-bottom: 1.5rem;">
-                <span class="p-section-label" style="display: block; font-size: 0.85rem; font-weight: 800; color: var(--primary-color); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1rem;">SELECT OPTION</span>
+            <div class="variant-container" style="margin-bottom: 2rem;">
+                <span class="p-section-label" style="display: block; font-size: 0.75rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1rem;">Select Option</span>
                 <div class="size-rect-grid" style="display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem;">
-                    @foreach($product->variants as $variant)
-                        <div class="size-rect {{ $loop->first ? 'active' : '' }}" onclick="selectVariant(this, {{ $variant->price ?? 0 }}, '{{ $variant->size }}', {{ $variant->id ?? 0 }}, {{ $variant->stock ?? 999 }}, {{ $product->continue_selling_when_out_of_stock ? 'true' : 'false' }})" style="border: 2px solid {{ $loop->first ? 'var(--accent-color)' : 'var(--border-color)' }}; border-radius: 0.75rem; padding: 0.75rem 1.25rem; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 1rem; background: #fff;">
-                            <span class="s-size" style="font-weight: 700; color: var(--primary-color);">{{ $variant->size }}</span>
-                            <span class="s-price" style="color: var(--text-muted);">{{ $currentTenant->currency ?? '{{ $currentTenant->currency ?? '₹' }}' }}{{ number_format($variant->price, 2) }}</span>
+                    @foreach($product->variants->sortBy('price') as $variant)
+                        <div class="size-rect {{ $loop->first ? 'active' : '' }}" onclick="selectVariant(this, {{ $variant->price ?? 0 }}, {{ \Illuminate\Support\Js::from($variant->size) }}, {{ $variant->id ?? 0 }}, {{ $variant->stock ?? 999 }}, {{ $product->continue_selling_when_out_of_stock ? 'true' : 'false' }})" style="border: 1px solid {{ $loop->first ? 'var(--primary-color)' : 'var(--border-color)' }}; border-radius: 8px; padding: 0.85rem 1.25rem; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: space-between; gap: 1rem; background: #fff; min-width: 140px; box-shadow: {{ $loop->first ? '0 0 0 1px var(--primary-color)' : 'none' }};">
+                            <span class="s-size" style="font-weight: 700; color: var(--primary-color); font-size: 0.95rem;">{{ $variant->size }}</span>
+                            <span class="s-price" style="color: var(--text-muted); font-weight: 600; font-size: 0.9rem;">{{ $currentTenant->currency ?? '₹' }}{{ number_format($variant->price, 2) }}</span>
                         </div>
                     @endforeach
                 </div>
-                <input type="hidden" id="selected-variant-id" name="variant_id" value="{{ $product->variants->first()->id ?? '' }}">
+                <input type="hidden" id="selected-variant-id" name="variant_id" value="{{ $product->variants->sortBy('price')->first()->id ?? '' }}">
             </div>
             @endif
 
             <!-- Special Volume / Pack Deals -->
             @if(isset($packBundles) && $packBundles->count() > 0)
-            <div class="p-volume-deals" style="margin-bottom: 2rem;">
-                <h3 class="p-section-label" style="font-size: 0.9rem; font-weight: 800; color: var(--primary-color); margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px;">Save With Bulk Pack Deals</h3>
-                <div class="deals-list" style="display: flex; flex-direction: column; gap: 0.75rem;">
+            <div class="p-volume-deals" style="margin-bottom: 2.5rem;">
+                <h3 class="p-section-label" style="font-size: 0.75rem; font-weight: 800; color: var(--text-muted); margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.1em;">Save With Bulk Pack Deals</h3>
+                <div class="deals-list" style="display: flex; flex-direction: column; gap: 1rem;">
                     @foreach($packBundles as $pb)
                         @php 
                             $pb_prod = $pb->products->first();
                             $pb_variant = $pb_prod ? $pb_prod->variants->firstWhere('id', $pb_prod->pivot->product_variant_id) : null;
                         @endphp
                         @if($pb_prod)
-                        <div class="deal-card" style="display: flex; align-items: center; justify-content: space-between; background: #f8fafc; border: 1.5px dashed var(--border-color); padding: 1rem 1.25rem; border-radius: 0.75rem;">
+                        <div class="deal-card" style="display: flex; align-items: center; justify-content: space-between; background: #fff; border: 1px solid var(--border-color); padding: 1.25rem; border-radius: 12px; transition: all 0.2s ease;">
                             <div class="deal-info">
-                                <span class="deal-title" style="font-weight: 700; color: var(--primary-color);">
+                                <span class="deal-title" style="font-weight: 800; color: var(--primary-color); display: block; margin-bottom: 0.25rem;">
                                     Pack of {{ $pb_prod->pivot->quantity }}
                                     @if($pb_variant)
-                                        ({{ $pb_variant->size }})
+                                        <span style="color: var(--text-muted); font-weight: 600;">({{ $pb_variant->size }})</span>
                                     @endif
                                 </span>
-                                <span class="deal-save" style="display: block; font-size: 0.75rem; color: #10b981; font-weight: 700;">Save {{ $currentTenant->currency ?? '{{ $currentTenant->currency ?? '₹' }}' }}{{ number_format(($pb_variant ? $pb_variant->price : $pb_prod->starting_price) * $pb_prod->pivot->quantity - $pb->total_price, 2) }} instantly</span>
+                                <span class="deal-save" style="display: inline-block; font-size: 0.75rem; color: #10b981; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">Save {{ $currentTenant->currency ?? '₹' }}{{ number_format(($pb_variant ? $pb_variant->price : $pb_prod->starting_price) * $pb_prod->pivot->quantity - $pb->total_price, 2) }} Instantly</span>
                             </div>
-                            <button onclick="addPackToCart(event, {{ $pb->id }})" class="btn-deal-add" style="background: var(--primary-color); color: #fff; border: none; padding: 0.6rem 1rem; border-radius: 0.5rem; font-weight: 700; font-size: 0.8rem; cursor: pointer; transition: 0.2s;">
-                                Add @ {{ $currentTenant->currency ?? '{{ $currentTenant->currency ?? '₹' }}' }}{{ number_format($pb->total_price, 2) }}
+                            <button onclick="addPackToCart(event, {{ $pb->id }})" class="btn-deal-add" style="background: var(--primary-color); color: #fff; border: none; padding: 0.75rem 1.25rem; border-radius: 8px; font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: 0.2s;">
+                                Add @ {{ $currentTenant->currency ?? '₹' }}{{ number_format($pb->total_price, 2) }}
                             </button>
                         </div>
                         @endif
@@ -391,29 +391,29 @@
             @endif
 
             @php
-                $initialStock = $product->variants->count() > 0 ? $product->variants->first()->stock : $product->variants->sum('stock');
+                $initialStock = $product->variants->count() > 0 ? $product->variants->sortBy('price')->first()->stock : $product->variants->sum('stock');
                 $isOut = $initialStock <= 0 && !$product->continue_selling_when_out_of_stock;
             @endphp
             <!-- Add to Cart actions row -->
-            <div class="p-actions-row" id="main-product-actions" style="display: flex; gap: 1rem; margin-bottom: 1.5rem; height: 3.5rem;">
-                <div class="qty-control" style="background: #fff; border: 2px solid var(--border-color); border-radius: 0.75rem; display: flex; flex-direction: row; align-items: center; justify-content: center; padding: 0.25rem 0.75rem; min-width: 70px; height: 100%;">
-                    <span class="page-qty" id="main-qty-value" style="font-size: 1.2rem; font-weight: 800; text-align: center; line-height: 1; margin-right: 0.75rem;">0</span>
-                    <div style="display: flex; flex-direction: column; gap: 0.4rem; align-items: center; justify-content: center;">
-                        <button onclick="updateMainCart(1)" style="border: none; background: none; padding: 0; font-size: 0.75rem; cursor: pointer; color: var(--text-muted); line-height: 1;"><i class="fa-solid fa-chevron-up"></i></button>
-                        <button onclick="updateMainCart(-1)" style="border: none; background: none; padding: 0; font-size: 0.75rem; cursor: pointer; color: var(--text-muted); line-height: 1;"><i class="fa-solid fa-chevron-down"></i></button>
+            <div class="p-actions-row" id="main-product-actions" style="display: flex; gap: 1rem; margin-bottom: 1rem; height: 3.75rem;">
+                <div class="qty-control" style="background: #f8fafc; border: 1px solid var(--border-color); border-radius: 8px; display: flex; flex-direction: row; align-items: center; justify-content: center; padding: 0.25rem 1rem; min-width: 90px; height: 100%;">
+                    <span class="page-qty" id="main-qty-value" style="font-size: 1.25rem; font-weight: 800; text-align: center; margin-right: 1rem; color: var(--primary-color);">0</span>
+                    <div style="display: flex; flex-direction: column; gap: 0.5rem; align-items: center; justify-content: center;">
+                        <button onclick="updateMainCart(1)" style="border: none; background: none; padding: 0; font-size: 0.8rem; cursor: pointer; color: var(--text-muted);"><i class="fa-solid fa-chevron-up"></i></button>
+                        <button onclick="updateMainCart(-1)" style="border: none; background: none; padding: 0; font-size: 0.8rem; cursor: pointer; color: var(--text-muted);"><i class="fa-solid fa-chevron-down"></i></button>
                     </div>
                 </div>
-                <button class="btn-add-to-cart add-to-cart-btn" id="add-to-cart-page-btn" onclick="addOrOpenCart()" {{ $isOut ? 'disabled' : '' }} style="flex-grow: 1; height: 100%; background: {{ $isOut ? '#cbd5e1' : 'var(--accent-color)' }}; color: #fff; border: none; border-radius: 0.75rem; font-weight: 800; font-size: 1rem; cursor: {{ $isOut ? 'not-allowed' : 'pointer' }}; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.5rem; white-space: nowrap;">
+                <button class="btn-add-to-cart add-to-cart-btn" id="add-to-cart-page-btn" onclick="addOrOpenCart()" {{ $isOut ? 'disabled' : '' }} style="flex-grow: 1; height: 100%; background: {{ $isOut ? '#e2e8f0' : 'var(--accent-color)' }}; color: {{ $isOut ? '#94a3b8' : '#fff' }}; border: none; border-radius: 8px; font-weight: 800; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.5px; cursor: {{ $isOut ? 'not-allowed' : 'pointer' }}; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.75rem; white-space: nowrap;">
                     @if($isOut)
                         OUT OF STOCK
                     @else
-                        ADD TO CART <span class="btn-price-display">{{ $currentTenant->currency ?? '{{ $currentTenant->currency ?? '₹' }}' }}{{ number_format($product->discounted_price, 2) }}</span>
+                        <i class="fa-solid fa-bag-shopping"></i> Add To Cart &bull; <span class="btn-price-display">{{ $currentTenant->currency ?? '₹' }}{{ number_format($product->discounted_price, 2) }}</span>
                     @endif
                 </button>
             </div>
-            <div class="secondary-actions-row" style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
-                <button id="buy-now-btn" {{ $isOut ? 'disabled' : '' }} style="flex-grow: 1; background: {{ $isOut ? '#e2e8f0' : 'var(--primary-color)' }}; color: {{ $isOut ? '#94a3b8' : '#fff' }}; border: none; padding: 1rem; border-radius: 0.75rem; font-weight: 800; font-size: 1rem; cursor: {{ $isOut ? 'not-allowed' : 'pointer' }}; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
-                    <i class="fa-solid fa-bolt"></i> BUY NOW
+            <div class="secondary-actions-row" style="display: flex; gap: 1rem; margin-bottom: 2.5rem;">
+                <button id="buy-now-btn" {{ $isOut ? 'disabled' : '' }} style="flex-grow: 1; background: {{ $isOut ? '#e2e8f0' : 'var(--primary-color)' }}; color: {{ $isOut ? '#94a3b8' : '#fff' }}; border: none; padding: 1.15rem; border-radius: 8px; font-weight: 800; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.5px; cursor: {{ $isOut ? 'not-allowed' : 'pointer' }}; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                    Buy It Now
                 </button>
                 @php
                     $isPageWishlisted = false;
@@ -423,7 +423,7 @@
                             ->exists();
                     }
                 @endphp
-                <button onclick="toggleWishlist(event, {{ $product->id }})" class="wishlist-toggle-btn" style="width: 50px; height: 50px; border-radius: 0.75rem; background: #f1f5f9; border: none; display: flex; align-items: center; justify-content: center; color: {{ $isPageWishlisted ? '#ef4444' : '#64748b' }}; cursor: pointer; transition: all 0.2s ease; font-size: 1.25rem;">
+                <button onclick="toggleWishlist(event, {{ $product->id }})" class="wishlist-toggle-btn" style="width: 58px; height: 58px; border-radius: 8px; background: #fff; border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; color: {{ $isPageWishlisted ? '#ef4444' : 'var(--text-muted)' }}; cursor: pointer; transition: all 0.2s ease; font-size: 1.25rem;">
                     <i class="{{ $isPageWishlisted ? 'fa-solid' : 'fa-regular' }} fa-heart"></i>
                 </button>
             </div>
@@ -443,11 +443,11 @@
                 <p>{!! nl2br(e($product->description)) !!}</p>
             </div>
             <div class="tab-content-minimal d-none" id="tab-shipping" style="font-size: 0.95rem; color: var(--text-muted); line-height: 1.6;">
-                <p>{!! nl2br(e($currentTenant->delivery_info ?? 'We deliver fresh groceries directly to your home within 2 hours. Free shipping applies to all orders over ' . ($currentTenant->currency ?? '₹') . '499. Orders are packed using eco-friendly, hygienically sealed bags.')) !!}</p>
+                <p>{!! nl2br(e($currentTenant->delivery_info ?? 'Contact the store for delivery information.')) !!}</p>
             </div>
             @else
             <div class="tab-content-minimal" id="tab-shipping" style="font-size: 0.95rem; color: var(--text-muted); line-height: 1.6;">
-                <p>{!! nl2br(e($currentTenant->delivery_info ?? 'We deliver fresh groceries directly to your home within 2 hours. Free shipping applies to all orders over ' . ($currentTenant->currency ?? '₹') . '499. Orders are packed using eco-friendly, hygienically sealed bags.')) !!}</p>
+                <p>{!! nl2br(e($currentTenant->delivery_info ?? 'Contact the store for delivery information.')) !!}</p>
             </div>
             @endif
         </div>
@@ -491,193 +491,5 @@
 @endsection
 
 @section('scripts')
-<script>
-    let qty = 1;
-
-    function updateImg(src, el) {
-        document.getElementById('p-main-img').src = src;
-        // Update active class on thumbnails
-        const parent = el.parentElement;
-        parent.querySelectorAll('.thumb-item').forEach(t => t.style.borderColor = 'var(--border-color)');
-        el.style.borderColor = 'var(--accent-color)';
-    }
-
-    function selectVariant(element, price, size, id, stock = 999, continueSelling = true) {
-        element.parentElement.querySelectorAll('.size-rect').forEach(card => {
-            card.style.borderColor = 'var(--border-color)';
-        });
-        element.style.borderColor = 'var(--accent-color)';
-
-        const formattedPrice = new Intl.NumberFormat('en-IN', {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-        }).format(price);
-        
-        document.getElementById('p-price-display').innerText = '{{ $currentTenant->currency ?? '{{ $currentTenant->currency ?? '₹' }}' }}' + formattedPrice;
-        
-        let isOut = stock <= 0 && !continueSelling;
-        let btn = document.getElementById('add-to-cart-page-btn');
-        let buyBtn = document.getElementById('buy-now-btn');
-        
-        if (isOut) {
-            btn.innerHTML = 'OUT OF STOCK';
-            btn.style.background = '#cbd5e1';
-            btn.style.cursor = 'not-allowed';
-            btn.disabled = true;
-            
-            buyBtn.style.background = '#e2e8f0';
-            buyBtn.style.color = '#94a3b8';
-            buyBtn.style.cursor = 'not-allowed';
-            buyBtn.disabled = true;
-        } else {
-            btn.innerHTML = 'ADD TO CART <span class="btn-price-display">{{ $currentTenant->currency ?? '{{ $currentTenant->currency ?? '₹' }}' }}' + formattedPrice + '</span>';
-            btn.style.background = 'var(--accent-color)';
-            btn.style.cursor = 'pointer';
-            btn.disabled = false;
-            
-            buyBtn.style.background = 'var(--primary-color)';
-            buyBtn.style.color = '#fff';
-            buyBtn.style.cursor = 'pointer';
-            buyBtn.disabled = false;
-        }
-        
-        document.getElementById('selected-variant-id').value = id;
-        
-        // Update UI for the newly selected variant
-        syncMainProductUI();
-    }
-
-    function getMainCartKey() {
-        const activeCard = document.querySelector('.size-rect[style*="var(--accent-color)"]') || document.querySelector('.size-rect.active');
-        const size = activeCard ? activeCard.querySelector('.s-size').innerText : '';
-        return "{{ $product->id }}" + (size ? '-' + size : '');
-    }
-
-    function syncMainProductUI() {
-        if (!window.cartItemsMap) return;
-        let key = getMainCartKey();
-        let currentQty = parseInt(window.cartItemsMap[key] || 0);
-        
-        let qtyValue = document.getElementById('main-qty-value');
-        let btn = document.getElementById('add-to-cart-page-btn');
-        if (qtyValue) {
-            qtyValue.innerText = currentQty;
-        }
-        
-        if (btn && currentQty > 0) {
-            btn.innerHTML = '<i class="fa-solid fa-check"></i> VIEW CART';
-            btn.style.background = '#10B981';
-        } else if (btn) {
-            const formattedPrice = document.getElementById('p-price-display').innerText;
-            btn.innerHTML = 'ADD TO CART <span class="btn-price-display">' + formattedPrice + '</span>';
-            btn.style.background = 'var(--accent-color)';
-        }
-    }
-
-    // Override the global syncCartUI to also sync the main product page
-    const originalSyncCartUI = window.syncCartUI;
-    window.syncCartUI = function(showToast) {
-        if (typeof originalSyncCartUI === 'function') originalSyncCartUI(showToast);
-        syncMainProductUI();
-    };
-
-    function updateMainCart(delta) {
-        if (typeof window.updateInlineCart === 'function') {
-            let key = getMainCartKey();
-            window.updateInlineCart(key, delta);
-        }
-    }
-
-    function addOrOpenCart() {
-        let key = getMainCartKey();
-        let currentQty = parseInt(window.cartItemsMap ? (window.cartItemsMap[key] || 0) : 0);
-        
-        if (currentQty > 0) {
-            // Already in cart, just open the drawer
-            if (typeof syncCartUI === 'function') {
-                syncCartUI(true);
-            }
-        } else {
-            // Add 1 to cart
-            updateMainCart(1);
-        }
-    }
-
-    // Call it initially
-    setTimeout(syncMainProductUI, 500);
-
-    function buyNow() {
-        const btn = document.getElementById('buy-now-btn');
-        const variantId = document.getElementById('selected-variant-id').value;
-        const activeCard = document.querySelector('.size-rect[style*="var(--accent-color)"]') || document.querySelector('.size-rect.active');
-        const size = activeCard ? activeCard.querySelector('.s-size').innerText : '';
-        const originalHtml = btn.innerHTML;
-
-        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing...';
-        btn.disabled = true;
-
-        $.ajax({
-            url: "{{ route('cart.add') }}",
-            method: "POST",
-            data: {
-                _token: "{{ csrf_token() }}",
-                id: "{{ $product->id }}",
-                quantity: qty,
-                size: size,
-                variant_id: variantId
-            },
-            success: function(response) {
-                if(response.success) {
-                    window.location.href = "{{ route('v3.checkout') }}";
-                } else {
-                    alert('Error: ' + response.message);
-                    btn.innerHTML = originalHtml;
-                    btn.disabled = false;
-                }
-            },
-            error: function() {
-                alert('Something went wrong. Please try again.');
-                btn.innerHTML = originalHtml;
-                btn.disabled = false;
-            }
-        });
-    }
-
-    document.getElementById('buy-now-btn').addEventListener('click', buyNow);
-
-    function addPackToCart(event, bundleId) {
-        event.preventDefault();
-        const btn = event.currentTarget;
-        const originalHtml = btn.innerHTML;
-        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
-        btn.disabled = true;
-
-        $.ajax({
-            url: "{{ route('cart.add') }}",
-            method: "POST",
-            data: {
-                _token: "{{ csrf_token() }}",
-                id: bundleId,
-                quantity: 1,
-                type: 'bundle'
-            },
-            success: function(response) {
-                if(response.success) {
-                    $('#cart-count').text(response.cartCount);
-                    btn.innerHTML = '<i class="fa-solid fa-check"></i> Added';
-                    btn.style.background = '#10B981';
-                    
-                    // Open Cart Drawer
-                    showCartToast();
-                    
-                    setTimeout(() => {
-                        btn.innerHTML = originalHtml;
-                        btn.style.background = '';
-                        btn.disabled = false;
-                    }, 2000);
-                }
-            }
-        });
-    }
-</script>
+    @include('storefront.themes.product.scripts')
 @endsection

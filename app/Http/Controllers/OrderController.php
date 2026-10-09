@@ -8,6 +8,9 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
+use App\Services\CheckoutCartService;
 use App\Http\Controllers\CartController;
 use App\Services\CartService;
 use App\Services\WhatsAppService;
@@ -39,7 +42,7 @@ class OrderController extends Controller
         $cf = $tenant ? ($tenant->checkout_fields ?? []) : [];
         
         $rules = [
-            'payment_method' => 'required',
+            'payment_method' => 'required|string|max:50',
         ];
 
         // Delivery schedule validation
@@ -85,6 +88,10 @@ class OrderController extends Controller
         $request->validate($rules);
 
         try {
+            DB::beginTransaction();
+            if (Auth::check()) {
+                \App\Models\User::whereKey(Auth::id())->lockForUpdate()->firstOrFail();
+            }
             // 2. Get Cart Data
         // Ideally we reuse CartController logic, but for now we'll fetch manually to be safe or call the helper
         // 2. Get Cart Data
@@ -104,6 +111,7 @@ class OrderController extends Controller
                         "product_id" => $item->product_id,
                         "bundle_id" => null,
                         "size" => $item->size,
+                        "variant_id" => $item->product_variant_id,
                         "type" => "product",
                         "coupon" => CartService::getActiveCoupon($item->product)
                     ];
@@ -122,32 +130,22 @@ class OrderController extends Controller
             }
         } else {
             $cart = session()->get('cart', []);
-            // Apply discounts to session cart items
-            foreach($cart as $key => &$item) {
-                if(isset($item['type']) && $item['type'] == 'product' && isset($item['product_id'])) {
-                    $product = \App\Models\Product::find($item['product_id']);
-                    if($product) {
-                        $coupon = CartService::getActiveCoupon($product);
-                        if($coupon) {
-                            $basePrice = $item['price']; // Assuming session stores original price
-                            $discountVal = $coupon->type == 'percentage' 
-                                ? $basePrice * ($coupon->value / 100) 
-                                : $coupon->value;
-                            $item['price'] = max(0, $basePrice - $discountVal);
-                        }
-                    }
-                }
-            }
         }
 
         if(empty($cart)) {
+            DB::rollBack();
             return response()->json(['success' => false, 'message' => 'Your cart is empty'], 400);
         }
+
+        $cart = app(CheckoutCartService::class)->prepare($cart);
 
         // 3. Calculate Totals
         $cartData = CartService::calculateTotal($cart);
         $subtotal = $cartData['total'];
-        $savings = $cartData['savings'];
+        $savings = min($cartData['subtotal'], $cartData['savings']);
+        if ($subtotal < ($tenant->min_order_value ?? 0)) {
+            throw ValidationException::withMessages(['cart' => 'Your cart does not meet the minimum order value.']);
+        }
         $shipping = 0; // Free shipping
         
         $tenantId = session('active_tenant_id') ?? 1;
@@ -162,14 +160,6 @@ class OrderController extends Controller
         }
         
         $total = $subtotal + $shipping + $taxAmount;
-
-        // Update item prices to effective prices for order items
-        foreach ($cart as &$item) {
-            if (isset($item['effective_price'])) {
-                $item['price'] = $item['effective_price'];
-            }
-        }
-        unset($item);
 
         // 3.5 Generate Custom Order Number
         // Format: NR-{Date 2digit}-{ProductID}-{Random 2digit 2alpha}
@@ -188,7 +178,7 @@ class OrderController extends Controller
         $orderNumber = "NR-{$dateCtx}-{$pid}-{$randomMix}";
 
         // Split name for customer_name
-        $customerName = $request->name;
+        $customerName = $request->name ?? '';
         $nameParts = explode(' ', $customerName);
         $firstName = $nameParts[0];
         $lastName = isset($nameParts[1]) ? $nameParts[1] : '';
@@ -218,7 +208,8 @@ class OrderController extends Controller
             'status' => 'pending',
             'payment_method' => $request->payment_method ?? 'cod',
             'payment_status' => 'pending',
-            'subtotal' => $subtotal,
+            'subtotal' => $cartData['subtotal'],
+            'discount_amount' => $savings,
             'shipping_cost' => $shipping,
             'total_amount' => $total,
             'tax_name' => $taxName,
@@ -282,47 +273,11 @@ class OrderController extends Controller
                 'type' => $details['type'] ?? 'product',
                 'options' => [
                     'coupon_code' => isset($details['coupon']) ? $details['coupon']->code : (isset($details['coupon_code']) ? $details['coupon_code'] : null),
-                    'saved_amount' => $details['saved_amount'] ?? 0,
+                    'saved_amount' => $details['line_savings'] ?? 0,
                     'original_price' => $details['original_price'] ?? null
                 ]
             ]);
 
-            // Update Stock
-            if (($details['type'] ?? 'product') == 'product' && !empty($details['product_id'])) {
-                // Decrement Product Variant Stock
-                if (!empty($details['size'])) {
-                    \App\Models\ProductVariant::where('product_id', $details['product_id'])
-                        ->where('size', $details['size'])
-                        ->decrement('stock', $details['quantity']);
-                } else {
-                    // Fallback: Decrement the first variant or specific logic if size is null
-                    // Assuming products always have variants in this system
-                    $variant = \App\Models\ProductVariant::where('product_id', $details['product_id'])->first();
-                    if ($variant) {
-                        $variant->decrement('stock', $details['quantity']);
-                    }
-                }
-            } elseif (($details['type'] ?? 'product') == 'bundle' && !empty($details['bundle_id'])) {
-                // Decrement Stock for each product in the bundle
-                $bundle = \App\Models\Bundle::with('products.variants')->find($details['bundle_id']);
-                if ($bundle) {
-                    // Increment Total Sales for Bundle
-                    $bundle->increment('total_sales', $details['quantity']);
-
-                    foreach ($bundle->products as $bProduct) {
-                        $qtyInBundle = $bProduct->pivot->quantity ?? 1;
-                        $totalQtyToDeduct = $details['quantity'] * $qtyInBundle;
-
-                        // Identify which variant to deduct only if we can determining it. 
-                        // For bundles, typically it's the standard size or defined in pivot? 
-                        // Current system seems to assume flexible or first variant. 
-                        // specific logic: Deduct from the first variant (base variant)
-                        if ($bProduct->variants->isNotEmpty()) {
-                            $bProduct->variants->first()->decrement('stock', $totalQtyToDeduct);
-                        }
-                    }
-                }
-            }
         }
 
         // 6. Increment Discount Usage
@@ -343,6 +298,7 @@ class OrderController extends Controller
         if(Auth::check()) {
             \App\Models\Cart::where('user_id', Auth::id())->delete();
         }
+        DB::commit();
         session()->forget('cart');
 
         // 7.1 Send Order Summary Email
@@ -357,29 +313,27 @@ class OrderController extends Controller
 
         // 8. Send WhatsApp Notification to Owner
         try {
-            $waService = new WhatsAppService();
+            $waService = app(WhatsAppService::class);
             $waService->sendOrderNotification($order);
         } catch (\Exception $e) {
             Log::error("WhatsApp Notification Failed: " . $e->getMessage());
             // We don't fail the order if notification fails
         }
 
-        } catch (\Exception $e) {
+        } catch (ValidationException $e) {
+            if (DB::transactionLevel()) DB::rollBack();
+            throw $e;
+        } catch (\Throwable $e) {
+            if (DB::transactionLevel()) DB::rollBack();
+            report($e);
             return response()->json([
                 'success' => false,
-                'message' => 'Error: ' . $e->getMessage() . ' | Line: ' . $e->getLine() . ' | File: ' . $e->getFile()
+                'message' => 'Unable to place your order. Please try again.'
             ], 500);
         }
 
         // 7. Return Success
-        $theme = $tenant ? $tenant->theme : 'template_1';
-        $homeRoute = match($theme) {
-            'template_2' => route('velvet.home'),
-            'v3' => route('v3.home'),
-            'v4' => route('v4.home'),
-            'v5' => route('v5.home'),
-            default => route('v1.home'),
-        };
+        $homeRoute = route('v1.home', ['tenant_id' => $tenantId]);
 
         $redirectUrl = Auth::check() ? route('account.orders') : $homeRoute . '?order_success=1';
 

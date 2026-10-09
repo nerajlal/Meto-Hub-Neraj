@@ -83,7 +83,7 @@
     }
 
     function updateProductCardUI(key, qty, forceHide = false) {
-        $('.product-action-wrapper[data-cart-key="' + key + '"]').each(function() {
+        $('.product-action-wrapper').filter(function() { return this.dataset.cartKey === String(key); }).each(function() {
             if (qty > 0 && !forceHide) {
                 $(this).find('.inline-add-btn').hide();
                 $(this).find('.qty-controller').css('display', 'flex');

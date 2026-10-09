@@ -3,6 +3,7 @@
 @section('title', ($title ?? 'Collection') . ' | ' . ($currentTenant->name ?? 'SaaS Store'))
 
 @section('content')
+<section data-product-catalog="classic">
 <div class="collection-header" style="margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: flex-end; gap: 1rem; flex-wrap: wrap;">
     <div style="max-width: 800px;">
         <h1 class="collection-title" style="font-size: 2.5rem; font-weight: 800; color: var(--primary-color); line-height: 1.2;">{{ $title ?? 'Groceries' }}</h1>
@@ -28,8 +29,9 @@
             <i class="fa-solid fa-basket-shopping mb-4" style="font-size: 4rem; opacity: 0.2; color: var(--accent-color);"></i>
             <h2 style="color: var(--primary-color); margin-bottom: 1rem; font-weight: 800;">No products found</h2>
             <p>We couldn't find any products in this selection. Please try another category.</p>
-            <a href="{{ route('v3.all-products') }}" class="btn-primary mt-4" style="background: var(--accent-color); color: #fff; padding: 0.75rem 2rem; border-radius: 9999px; text-decoration: none; display: inline-block; font-weight: 700; border: none; margin-top: 1.5rem;">Shop All Products</a>
+            <a href="{{ app(\App\Services\StorefrontTheme::class)->url('v3.all-products') }}" class="btn-primary mt-4" style="background: var(--accent-color); color: #fff; padding: 0.75rem 2rem; border-radius: 9999px; text-decoration: none; display: inline-block; font-weight: 700; border: none; margin-top: 1.5rem;">Shop All Products</a>
         </div>
     @endif
 </div>
+</section>
 @endsection

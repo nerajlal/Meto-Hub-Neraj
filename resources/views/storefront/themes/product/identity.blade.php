@@ -1,0 +1,1 @@
+<div class="pd-identity"><span class="sf-kicker">{{ $product->vendor ?: $product->collection?->name ?: $currentTenant->name }}</span><h1 class="p-title">{{ $product->title }}</h1>@if(!empty($product->tags))<div class="pd-tags">@foreach($product->tags as $tag)<span>{{ $tag }}</span>@endforeach</div>@endif</div>

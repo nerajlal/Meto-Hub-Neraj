@@ -20,7 +20,10 @@ class FormatCurrencyResponse
         if (method_exists($response, 'getContent') && str_contains($response->headers->get('Content-Type') ?? '', 'text/html')) {
             $tenantId = session('active_tenant_id') 
                 ?? (auth()->check() ? auth()->user()->tenant_id : null) 
-                ?? 1;
+                ?? null;
+            if (!$tenantId) {
+                return $response;
+            }
             
             $tenant = Tenant::find($tenantId);
             
