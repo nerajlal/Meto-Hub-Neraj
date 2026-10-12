@@ -1,28 +1,31 @@
 @extends('layouts.landing')
 
+@section('page_title', 'MetoHub Blog — Grocery and Ecommerce Insights')
+@section('meta_description', 'Read updates and practical insights about grocery retail, ecommerce, and running your store with MetoHub.')
+
 @section('content')
 <style>
   .blogs-container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 4rem 2rem;
+    padding: 9rem clamp(1rem, 4vw, 2rem) 4rem;
   }
   .blogs-header {
     text-align: center;
     margin-bottom: 4rem;
   }
   .blogs-header h1 {
-    font-size: 3rem;
+    font-size: clamp(2rem, 6vw, 3rem);
     margin-bottom: 1rem;
     letter-spacing: -0.02em;
   }
   .blogs-header p {
     font-size: 1.2rem;
-    color: var(--text-light);
+    color: var(--muted);
   }
   .blogs-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
     gap: 2rem;
   }
   .blog-card {
@@ -74,7 +77,7 @@
   }
   .blog-excerpt {
     font-size: 0.95rem;
-    color: var(--text-light);
+    color: var(--muted);
     margin-bottom: 1.5rem;
     line-height: 1.6;
     flex-grow: 1;
@@ -112,27 +115,32 @@
     <p>Insights, updates, and stories from the MetoHub team.</p>
   </div>
 
-  @if(count($blogs) > 0)
+  @if($feedState === 'unavailable')
+    <p role="status" style="text-align:center; padding:2rem; color:var(--muted);">Articles are temporarily unavailable. Please try again shortly.</p>
+  @elseif(count($blogs) > 0)
+    @if($feedState === 'stale')
+      <p role="status" style="margin-bottom:2rem; color:var(--muted);">Showing our latest saved articles while updates are temporarily unavailable.</p>
+    @endif
     <div class="blogs-grid">
       @foreach($blogs as $blog)
         <div class="blog-card">
           @if($blog['cover_image'])
-            <img src="{{ 'https://blog.metora.in' . $blog['cover_image'] }}" alt="{{ $blog['title'] }}" class="blog-image">
+            <img src="{{ $blog['cover_image'] }}" alt="{{ $blog['title'] }}" class="blog-image" loading="lazy" width="640" height="400">
           @else
             <div class="blog-image" style="display: flex; align-items: center; justify-content: center; background: #e2e8f0; color: #94a3b8;">
               <i class="fa-solid fa-image fa-2x"></i>
             </div>
           @endif
           <div class="blog-content">
-            <div class="blog-date">{{ \Carbon\Carbon::parse($blog['created_at'])->format('M d, Y') }}</div>
+            <div class="blog-date">{{ $blog['date_label'] }}</div>
             <h3 class="blog-title"><a href="{{ route('landing.blog.show', $blog['id']) }}">{{ $blog['title'] }}</a></h3>
-            <p class="blog-excerpt">{{ $blog['excerpt'] ?? Str::limit(strip_tags(Str::markdown($blog['content'])), 120) }}</p>
+            <p class="blog-excerpt">{{ $blog['excerpt'] }}</p>
             <div class="blog-meta">
               @if($blog['author_avatar'])
-                <img src="{{ 'https://blog.metora.in' . $blog['author_avatar'] }}" alt="{{ $blog['author_name'] }}" class="blog-avatar">
+                <img src="{{ $blog['author_avatar'] }}" alt="{{ $blog['author_name'] }}" class="blog-avatar" loading="lazy" width="32" height="32">
               @else
                 <div class="blog-avatar" style="background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.8rem;">
-                  {{ substr($blog['author_name'], 0, 1) }}
+                  {{ mb_substr($blog['author_name'], 0, 1) }}
                 </div>
               @endif
               <div class="blog-author">

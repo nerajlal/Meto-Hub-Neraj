@@ -1,9 +1,14 @@
 @extends('layouts.landing')
 
+@section('page_title', e($blog['title']).' | MetoHub Blog')
+@section('meta_description', e($blog['excerpt']))
+@section('og_type', 'article')
+@section('meta_image', e($blog['cover_image'] ?? asset('images/og-image.jpg')))
+
 @section('content')
 <style>
   .blog-hero {
-    padding: 2rem 2rem 1.5rem;
+    padding: 9rem 1rem 1.5rem;
     background: #f8fafc;
     border-bottom: 1px solid #e2e8f0;
     text-align: center;
@@ -13,7 +18,7 @@
     margin: 0 auto;
   }
   .blog-title {
-    font-size: 2.75rem;
+    font-size: clamp(1.75rem, 5vw, 2.75rem);
     font-weight: 800;
     color: var(--dark);
     line-height: 1.2;
@@ -38,10 +43,10 @@
   .blog-layout {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 4rem 2rem;
+    padding: 3rem clamp(1rem, 4vw, 2rem);
     display: grid;
-    grid-template-columns: 1fr 350px;
-    gap: 4rem;
+    grid-template-columns: minmax(0, 1fr) 300px;
+    gap: 2rem;
   }
   
   @media (max-width: 992px) {
@@ -52,6 +57,7 @@
 
   .blog-main {
     min-width: 0;
+    overflow-wrap: anywhere;
   }
   
   .blog-cover {
@@ -116,6 +122,10 @@
     margin: 2rem 0;
     font-size: 1.25rem;
   }
+
+  .blog-content img { max-width: 100%; height: auto; }
+  .blog-content pre { overflow-x: auto; max-width: 100%; }
+  .blog-content table { display: block; overflow-x: auto; max-width: 100%; }
 
   /* Sidebar Styles */
   .blog-sidebar {
@@ -257,7 +267,7 @@
   .bottom-articles {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 2rem 2rem 6rem;
+    padding: 2rem clamp(1rem, 4vw, 2rem) 4rem;
   }
   .bottom-articles h3 {
     font-size: 1.75rem;
@@ -270,7 +280,7 @@
   }
   .bottom-articles-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
     gap: 2rem;
   }
   .bottom-article-card {
@@ -327,10 +337,13 @@
   </div>
 </div>
 
+@if($feedState === 'stale')
+<p role="status" style="text-align:center; padding:1rem;">Showing the latest saved article while updates are temporarily unavailable.</p>
+@endif
 <div class="blog-layout">
   <div class="blog-main">
     @if($blog['cover_image'])
-      <img src="{{ 'https://blog.metora.in' . $blog['cover_image'] }}" alt="{{ $blog['title'] }}" class="blog-cover">
+      <img src="{{ $blog['cover_image'] }}" alt="{{ $blog['title'] }}" class="blog-cover">
       @if($blog['image_credits'])
         <div class="image-credits">
           Image credits: {{ $blog['image_credits'] }}
@@ -346,7 +359,7 @@
       @if(isset($blog['sections']) && count($blog['sections']) > 0)
         @foreach($blog['sections'] as $section)
           @if(!empty($section['image_path']))
-            <img src="{{ 'https://blog.metora.in' . $section['image_path'] }}" alt="Section image" style="width: 100%; border-radius: 12px; margin: 2rem 0; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+            <img src="{{ $section['image_path'] }}" alt="Section image" style="width: 100%; border-radius: 12px; margin: 2rem 0; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
           @endif
           @if(!empty($section['text_content']))
             <div style="margin-bottom: 1.5rem;">{!! $section['text_content'] !!}</div>
@@ -359,25 +372,25 @@
   <aside class="blog-sidebar">
     <div class="sidebar-widget author-card">
       @if($blog['author_avatar'])
-        <img src="{{ 'https://blog.metora.in' . $blog['author_avatar'] }}" alt="{{ $blog['author_name'] }}" class="author-avatar">
+        <img src="{{ $blog['author_avatar'] }}" alt="{{ $blog['author_name'] }}" class="author-avatar">
       @else
         <div class="author-avatar" style="background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 2.5rem;">
-          {{ substr($blog['author_name'], 0, 1) }}
+          {{ mb_substr($blog['author_name'], 0, 1) }}
         </div>
       @endif
       <h3 class="author-name">{{ $blog['author_name'] }}</h3>
       <div class="author-title" style="margin-bottom: 0.5rem;">{{ $blog['author_title'] ?? 'Author' }}</div>
       <div style="display:flex; justify-content:center; gap: 1rem; color: var(--muted); font-size: 0.85rem; margin-bottom: 1.5rem; font-weight: 500;">
-        <span><i class="fa-regular fa-calendar"></i> {{ \Carbon\Carbon::parse($blog['created_at'])->format('M d, Y') }}</span>
-        <span><i class="fa-regular fa-clock"></i> 5 min read</span>
+        <span><i class="fa-regular fa-calendar"></i> {{ $blog['date_label'] }}</span>
+        <span><i class="fa-regular fa-clock"></i> {{ $blog['reading_minutes'] }} min read</span>
       </div>
       <p style="font-size: 0.95rem; color: var(--muted); margin-bottom: 1.5rem;">
         Sharing insights on grocery technology, eCommerce trends, and retail management.
       </p>
       <div class="share-buttons">
-        <a href="#" class="share-btn share-tw"><i class="fa-brands fa-x-twitter"></i></a>
-        <a href="#" class="share-btn share-fb"><i class="fa-brands fa-facebook-f"></i></a>
-        <a href="#" class="share-btn share-in"><i class="fa-brands fa-linkedin-in"></i></a>
+        <a href="https://twitter.com/intent/tweet?url={{ urlencode(url()->current()) }}&amp;text={{ urlencode($blog['title']) }}" aria-label="Share on X" target="_blank" rel="noopener noreferrer" class="share-btn share-tw"><i class="fa-brands fa-x-twitter"></i></a>
+        <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(url()->current()) }}" aria-label="Share on Facebook" target="_blank" rel="noopener noreferrer" class="share-btn share-fb"><i class="fa-brands fa-facebook-f"></i></a>
+        <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ urlencode(url()->current()) }}" aria-label="Share on LinkedIn" target="_blank" rel="noopener noreferrer" class="share-btn share-in"><i class="fa-brands fa-linkedin-in"></i></a>
       </div>
     </div>
 
@@ -385,7 +398,7 @@
     
     <div class="sidebar-widget" style="background: var(--primary); color: white; text-align: center;">
       <h3 style="color: white; font-size: 1.5rem; margin-bottom: 1rem; font-weight: 700;">Start selling online today</h3>
-      <p style="color: rgba(255,255,255,0.9); margin-bottom: 1.5rem; font-size: 0.95rem;">Join thousands of grocery stores upgrading to MetoHub.</p>
+      <p style="color: rgba(255,255,255,0.9); margin-bottom: 1.5rem; font-size: 0.95rem;">Build your grocery storefront with MetoHub.</p>
       <a href="/#pricing" class="btn btn-white" style="width: 100%;">Start Free Trial</a>
     </div>
   </aside>
@@ -398,7 +411,7 @@
     @foreach($recentBlogs as $recent)
     <div class="bottom-article-card">
       @if($recent['cover_image'])
-        <img src="{{ 'https://blog.metora.in' . $recent['cover_image'] }}" class="bottom-article-img" alt="Blog cover">
+        <img src="{{ $recent['cover_image'] }}" class="bottom-article-img" alt="Blog cover">
       @else
          <div class="bottom-article-img" style="display:flex; align-items:center; justify-content:center; color:#94a3b8;">
            <i class="fa-solid fa-image fa-2x"></i>
@@ -406,7 +419,7 @@
       @endif
       <div class="bottom-article-content">
         <h4><a href="{{ route('landing.blog.show', $recent['id']) }}">{{ Str::limit($recent['title'], 60) }}</a></h4>
-        <div class="bottom-article-date">{{ \Carbon\Carbon::parse($recent['created_at'])->format('M d, Y') }}</div>
+        <div class="bottom-article-date">{{ $recent['date_label'] }}</div>
       </div>
     </div>
     @endforeach

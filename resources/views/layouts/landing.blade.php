@@ -4,9 +4,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MetoHub — The Ultimate Ecommerce Website Builder</title>
+  <title>@yield('page_title', 'MetoHub — The Ultimate Ecommerce Website Builder')</title>
   <meta name="description"
-    content="MetoHub is the SaaS platform businesses use to build, price, promote, and run their own online stores — pricing engine, promotions, themes, analytics, and payments in one place.">
+    content="@yield('meta_description', 'MetoHub is the SaaS platform businesses use to build, price, promote, and run their own online stores — pricing engine, promotions, themes, analytics, and payments in one place.')">
   <meta name="keywords"
     content="ecommerce builder, saas for online stores, create website, online shop platform, delivery software, POS integration">
   <link rel="icon"
@@ -15,20 +15,20 @@
   <link rel="canonical" href="{{ url()->current() }}">
 
   <!-- Open Graph / Facebook -->
-  <meta property="og:type" content="website">
+  <meta property="og:type" content="@yield('og_type', 'website')">
   <meta property="og:url" content="{{ url()->current() }}">
-  <meta property="og:title" content="MetoHub — Start Your Online Business">
+  <meta property="og:title" content="@yield('page_title', 'MetoHub — Start Your Online Business')">
   <meta property="og:description"
-    content="MetoHub is the SaaS platform businesses use to build, price, promote, and run their own online stores.">
-  <meta property="og:image" content="{{ asset('images/og-image.jpg') }}">
+    content="@yield('meta_description', 'MetoHub is the SaaS platform businesses use to build, price, promote, and run their own online stores.')">
+  <meta property="og:image" content="@yield('meta_image', asset('images/og-image.jpg'))">
 
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:url" content="{{ url()->current() }}">
-  <meta property="twitter:title" content="MetoHub — Start Your Online Business">
+  <meta property="twitter:title" content="@yield('page_title', 'MetoHub — Start Your Online Business')">
   <meta property="twitter:description"
-    content="MetoHub is the SaaS platform businesses use to build, price, promote, and run their own online stores.">
-  <meta property="twitter:image" content="{{ asset('images/og-image.jpg') }}">
+    content="@yield('meta_description', 'MetoHub is the SaaS platform businesses use to build, price, promote, and run their own online stores.')">
+  <meta property="twitter:image" content="@yield('meta_image', asset('images/og-image.jpg'))">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link

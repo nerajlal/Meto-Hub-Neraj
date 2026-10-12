@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Http;
 
 class LandingController extends Controller
 {
@@ -102,32 +101,24 @@ class LandingController extends Controller
             return response()->json(['success' => true, 'message' => 'Request processed (Mail logged).']);
         }
     }
-    public function blogs()
+    public function blogs(\App\Services\BlogFeed $feed)
     {
-        $response = Http::withHeaders([
-            'x-api-key' => 'pk_PoMKZr02REsoX0vAHXeSjuPn1akS4E3F'
-        ])->get('https://blog.metora.in/api/v1/projects/blogs');
-
-        $blogs = $response->successful() ? $response->json('blogs') : [];
-
-        return view('landing.blogs.index', compact('blogs'));
+        $result = $feed->load();
+        return response()->view('landing.blogs.index', [
+            'blogs' => $result['blogs'], 'feedState' => $result['state'],
+        ], $result['state'] === 'unavailable' ? 503 : 200);
     }
 
-    public function blogShow($id)
+    public function blogShow($id, \App\Services\BlogFeed $feed)
     {
-        $response = Http::withHeaders([
-            'x-api-key' => 'pk_PoMKZr02REsoX0vAHXeSjuPn1akS4E3F'
-        ])->get('https://blog.metora.in/api/v1/projects/blogs');
-
-        $blogs = $response->successful() ? $response->json('blogs') : [];
-        $blog = collect($blogs)->firstWhere('id', (int) $id);
-
-        if (!$blog) {
-            abort(404);
+        abort_unless(ctype_digit((string) $id) && (int) $id > 0, 404);
+        $result = $feed->load();
+        if ($result['state'] === 'unavailable') {
+            return response()->view('landing.blogs.index', ['blogs' => [], 'feedState' => 'unavailable'], 503);
         }
-
-        $recentBlogs = collect($blogs)->where('id', '!=', (int) $id)->take(3);
-
-        return view('landing.blogs.show', compact('blog', 'recentBlogs'));
+        $blog = collect($result['blogs'])->firstWhere('id', (int) $id);
+        abort_unless($blog, 404);
+        $recentBlogs = collect($result['blogs'])->where('id', '!=', (int) $id)->take(3);
+        return view('landing.blogs.show', ['blog' => $blog, 'recentBlogs' => $recentBlogs, 'feedState' => $result['state']]);
     }
 }

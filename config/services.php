@@ -38,6 +38,12 @@ return [
     'razorpay' => ['key' => env('RAZORPAY_KEY'), 'secret' => env('RAZORPAY_SECRET')],
     'whatsapp' => ['phone_number_id' => env('WHATSAPP_PHONE_NUMBER_ID'), 'access_token' => env('WHATSAPP_ACCESS_TOKEN'), 'owner_number' => env('WHATSAPP_OWNER_NUMBER')],
 
+    'blog' => [
+        'endpoint' => env('BLOG_API_ENDPOINT', 'https://blog.metora.in/api/v1/projects/blogs'),
+        'key' => env('BLOG_API_KEY'),
+        'asset_url' => env('BLOG_ASSET_URL', 'https://blog.metora.in'),
+    ],
+
     'google' => [
         'client_id' => env('GOOGLE_CLIENT_ID'),
         'client_secret' => env('GOOGLE_CLIENT_SECRET'),
