@@ -17,6 +17,8 @@ class AuthorizeTenantRole
             abort_unless($user->type === $role && (int) $user->tenant_id === (int) $tenantId, 403);
         }
 
+        abort_if($user->email_verification_required && ! $user->email_verified_at, 403, 'Verify your email address before accessing your store.');
+
         return $next($request);
     }
 }

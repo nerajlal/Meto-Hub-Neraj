@@ -28,7 +28,7 @@ class BillingController extends Controller
         $isYearly = $cycle === 'yearly';
 
         try {
-            $api = new Api(env('RAZORPAY_KEY'), env('RAZORPAY_SECRET'));
+            $api = new Api(config('services.razorpay.key'), config('services.razorpay.secret'));
             if ($tier === 'blossom') {
                 $basePlanName = 'Grocery Blossom';
                 $baseAmount = 4999;
@@ -91,7 +91,7 @@ class BillingController extends Controller
             return response()->json([
                 'success' => true,
                 'subscription_id' => $subscription->id,
-                'key' => env('RAZORPAY_KEY')
+                'key' => config('services.razorpay.key')
             ]);
         } catch (\Throwable $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
@@ -111,7 +111,7 @@ class BillingController extends Controller
             'This subscription does not belong to this store.');
 
         try {
-            $api = new Api(env('RAZORPAY_KEY'), env('RAZORPAY_SECRET'));
+            $api = new Api(config('services.razorpay.key'), config('services.razorpay.secret'));
 
             $attributes = array(
                 'razorpay_payment_id' => $request->razorpay_payment_id,

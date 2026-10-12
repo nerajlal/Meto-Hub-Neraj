@@ -8,13 +8,17 @@ MetoHub is a multi-tenant SaaS e-commerce platform designed specifically for gro
 - **Dynamic Theming Engine**: Storefronts can switch between distinct UI templates (e.g., Template 1, Template 2, Template 3) seamlessly.
 - **Unified Authentication System**: Dual-guard authentication separating Super Admins, Store Admins, and Storefront Customers, with cross-guard login modals for a seamless user experience.
 - **Cart & Checkout**: Advanced cart management with session-to-database syncing upon login.
-- **Third-Party Integrations**: Built-in support for Zoho and DartPOS sync.
+- **Third-Party Integrations**: DartPOS sync support.
 
 ## Tech Stack
 
 - **Backend**: Laravel 12.x, PHP 8.2+
 - **Frontend**: Blade Templating, Vanilla CSS, jQuery, AJAX
 - **Database**: MySQL 
+
+## Production deployment
+
+See [production-deployment.md](docs/production-deployment.md) for the beta domain, mail configuration, preflight checks, and later domain migration.
 
 ## Getting Started
 

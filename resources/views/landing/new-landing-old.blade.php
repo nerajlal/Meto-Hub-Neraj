@@ -988,9 +988,8 @@
               <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
               <line x1="12" y1="22.08" x2="12" y2="12"></line>
             </svg></div>
-          <h3>Zoho Integration</h3>
-          <p>Seamlessly connect your storefront to Zoho. Automatically sync your inventory, customer records, and daily
-            sales.</p>
+          <h3>Inventory management</h3>
+          <p>Manage products, stock, customer records, and daily orders from your store dashboard.</p>
         </div>
 
         <div class="feature">
@@ -1378,15 +1377,22 @@
 
             <div class="saas-form-grid">
               <div class="saas-form-group" style="grid-column: 1 / -1;">
-                <label for="saas_plan">Plan Selection (Optional)</label>
+                <label for="saas_plan">Plan preference</label>
                 <select id="saas_plan">
-                  <option value="sprout">Sprout — $9/month (20 products)</option>
-                  <option value="maison">Maison — $19/month (100 products)</option>
-                  <option value="heritage">Heritage — $49/month (Unlimited)</option>
-                  <option value="not_sure">Not sure yet</option>
+                  <option value="sprout">Sprout</option>
+                  <option value="blossom">Blossom</option>
+                  <option value="tree">Tree</option>
                 </select>
               </div>
-              <input type="hidden" id="saas_theme" value="aura_luxe" />
+              <p class="saas-hint">Your trial starts on Sprout. Activate your preferred paid plan from Billing after verification.</p>
+              <div class="saas-form-group" style="grid-column: 1 / -1;">
+                <label for="saas_theme">Store theme</label>
+                <select id="saas_theme">
+                  @foreach(config('storefront_themes') as $themeId => $themeConfig)
+                    <option value="{{ $themeId }}">{{ $themeConfig['name'] }}</option>
+                  @endforeach
+                </select>
+              </div>
             </div>
           </div>
 
@@ -1418,7 +1424,7 @@
           </div>
 
           <h2>Check your inbox</h2>
-          <p class="saas-verify-desc">We've sent a verification link to <strong id="verifyEmailDisplay">your
+          <p class="saas-verify-desc">Verify your account using the link emailed to <strong id="verifyEmailDisplay">your
               email</strong>. Please click the link to verify your email and continue setting up your store.</p>
 
           <div class="saas-verify-meta">
@@ -1426,29 +1432,9 @@
             <button id="resendBtn" class="saas-resend-btn" onclick="handleResendCode()">Resend link</button>
             <p id="resendCountdown" class="saas-countdown-label"></p>
           </div>
-
-          <!-- Simulation Tool to Help User Verify Frontend Flow -->
-          <div class="saas-simulation-box">
-            <span class="sim-badge">SaaS Simulation Tool</span>
-            <p>Click below to simulate clicking the verification link in your email.</p>
-            <button onclick="simulateVerificationSuccess()" class="saas-simulate-btn">Simulate Email Verification Link
-              Click ✓</button>
-          </div>
+          <p id="verificationStatus" role="status" aria-live="polite"></p>
         </div>
       </div>
-
-      <!-- STAGE 4: Success / Welcome Screen -->
-      <div id="saasStageSuccess" class="saas-stage">
-        <div class="saas-success-container">
-          <div class="saas-success-icon-check">✓</div>
-          <h2>Account Verified!</h2>
-          <p>Your email has been verified successfully. Welcome to MetoHub! Let's get started setting up your
-            customized
-            grocery store.</p>
-          <button onclick="closeSaaSModal()" class="saas-success-finish-btn">Go to your SaaS dashboard →</button>
-        </div>
-      </div>
-
     </div>
   </div>
 
@@ -2157,51 +2143,6 @@
       font-weight: 500;
     }
 
-    /* Simulation Styling */
-    .saas-simulation-box {
-      background: rgba(201, 168, 76, 0.08);
-      border: 1px dashed var(--gold);
-      border-radius: 10px;
-      padding: 20px;
-      margin-top: 30px;
-    }
-
-    .sim-badge {
-      background: var(--gold);
-      color: var(--white);
-      font-size: 10px;
-      font-weight: 700;
-      padding: 2px 8px;
-      border-radius: 4px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      display: inline-block;
-      margin-bottom: 8px;
-    }
-
-    .saas-simulation-box p {
-      font-size: 13px;
-      color: var(--gray-800);
-      margin-bottom: 12px;
-    }
-
-    .saas-simulate-btn {
-      background: var(--gold-dark);
-      color: var(--white);
-      font-family: inherit;
-      font-weight: 700;
-      font-size: 13px;
-      border: none;
-      border-radius: 6px;
-      padding: 10px 16px;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-
-    .saas-simulate-btn:hover {
-      background: #6B510F;
-    }
-
     /* Success Screen */
     .saas-success-icon-check {
       width: 64px;
@@ -2527,15 +2468,11 @@
           nextBtn.disabled = false;
           nextBtn.textContent = originalText;
 
-          if (status === 200 && body.success) {
+          if (status >= 200 && status < 300 && body.success) {
             // Success! Show Step 2: Email verification
             document.getElementById('verifyEmailDisplay').textContent = email;
 
-            // Store the dynamic verification URL on the simulator button!
-            const simBtn = document.querySelector('.saas-simulate-btn');
-            if (simBtn && body.verify_url) {
-              simBtn.setAttribute('onclick', `window.location.href="${body.verify_url}"`);
-            }
+            document.getElementById('verificationStatus').textContent = body.message;
 
             showSaasStage('saasStageVerify');
             startResendCountdown();
@@ -2593,13 +2530,24 @@
       }, 1000);
     }
 
-    function handleResendCode() {
-      alert('A new verification email has been sent successfully!');
-      startResendCountdown();
-    }
-
-    function simulateVerificationSuccess() {
-      showSaasStage('saasStageSuccess');
+    async function handleResendCode() {
+      const button = document.getElementById('resendBtn');
+      const status = document.getElementById('verificationStatus');
+      button.disabled = true;
+      try {
+        const response = await fetch('{{ route("saas.verification.resend") }}', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+          body: JSON.stringify({ email: document.getElementById('verifyEmailDisplay').textContent.trim() })
+        });
+        const body = await response.json();
+        status.textContent = body.message || 'Unable to send the email. Please try again later.';
+        if (response.ok) startResendCountdown();
+        else button.disabled = false;
+      } catch (error) {
+        status.textContent = 'Unable to send the email. Please try again later.';
+        button.disabled = false;
+      }
     }
   </script>
 

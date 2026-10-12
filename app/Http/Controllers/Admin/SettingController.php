@@ -29,7 +29,7 @@ class SettingController extends Controller
         $tenant = Tenant::findOrFail($tenantId);
 
         $request->validate([
-            'domain' => 'nullable|string|max:255|unique:tenants,domain,' . $tenantId,
+            'domain' => 'nullable|string|max:255|unique:tenants,domain,'.$tenantId,
         ]);
 
         $tenant->update([
@@ -60,33 +60,19 @@ class SettingController extends Controller
 
         $request->validate([
             'cod_enabled' => 'nullable|boolean',
-            'stripe_enabled' => 'nullable|boolean',
-            'stripe_key' => 'nullable|required_if:stripe_enabled,1|string|max:255',
-            'stripe_secret' => 'nullable|required_if:stripe_enabled,1|string|max:255',
-            'razorpay_enabled' => 'nullable|boolean',
-            'razorpay_key' => 'nullable|required_if:razorpay_enabled,1|string|max:255',
-            'razorpay_secret' => 'nullable|required_if:razorpay_enabled,1|string|max:255',
-            'phonepe_enabled' => 'nullable|boolean',
-            'phonepe_merchant_id' => 'nullable|required_if:phonepe_enabled,1|string|max:255',
-            'phonepe_salt_key' => 'nullable|required_if:phonepe_enabled,1|string|max:255',
-            'phonepe_salt_index' => 'nullable|required_if:phonepe_enabled,1|string|max:255',
+            'stripe_enabled' => 'nullable|in:0',
+            'razorpay_enabled' => 'nullable|in:0',
+            'phonepe_enabled' => 'nullable|in:0',
         ]);
 
         $paymentSetting->update([
-            'cod_enabled' => $request->has('cod_enabled'),
-            'stripe_enabled' => $request->has('stripe_enabled'),
-            'stripe_key' => $request->stripe_key,
-            'stripe_secret' => $request->stripe_secret,
-            'razorpay_enabled' => $request->has('razorpay_enabled'),
-            'razorpay_key' => $request->razorpay_key,
-            'razorpay_secret' => $request->razorpay_secret,
-            'phonepe_enabled' => $request->has('phonepe_enabled'),
-            'phonepe_merchant_id' => $request->phonepe_merchant_id,
-            'phonepe_salt_key' => $request->phonepe_salt_key,
-            'phonepe_salt_index' => $request->phonepe_salt_index,
+            'cod_enabled' => $request->boolean('cod_enabled'),
+            'stripe_enabled' => false,
+            'razorpay_enabled' => false,
+            'phonepe_enabled' => false,
         ]);
 
-        return redirect()->back()->with('success', 'Payment gateway settings updated successfully.');
+        return redirect()->back()->with('success', 'Payment settings updated successfully.');
     }
 
     /**
@@ -192,9 +178,9 @@ class SettingController extends Controller
     {
         $tenantId = auth()->user()->tenant_id ?? session('active_tenant_id') ?? 1;
         $tenant = Tenant::findOrFail($tenantId);
-        
+
         $fields = $tenant->checkout_fields ?? [];
-        
+
         return view('admin.settings.checkout_fields', compact('tenant', 'fields'));
     }
 
@@ -207,7 +193,7 @@ class SettingController extends Controller
         $tenant = Tenant::findOrFail($tenantId);
 
         $fieldsData = $request->input('fields', []);
-        
+
         // Ensure standard structure
         $checkoutFields = [
             // Standard Fields
@@ -240,7 +226,7 @@ class SettingController extends Controller
                 'required' => false,
             ],
             'pay_online' => [
-                'enabled' => isset($fieldsData['pay_online']['enabled']),
+                'enabled' => false,
                 'required' => false,
             ],
             'address' => [
@@ -259,7 +245,7 @@ class SettingController extends Controller
                 'enabled' => isset($fieldsData['pincode']['enabled']),
                 'required' => isset($fieldsData['pincode']['required']),
             ],
-            
+
             // Custom Extended Fields
             'company_name' => [
                 'enabled' => isset($fieldsData['company_name']['enabled']),
@@ -280,7 +266,7 @@ class SettingController extends Controller
             'order_notes' => [
                 'enabled' => isset($fieldsData['order_notes']['enabled']),
                 'required' => isset($fieldsData['order_notes']['required']),
-            ]
+            ],
         ];
 
         $tenant->update(['checkout_fields' => $checkoutFields]);

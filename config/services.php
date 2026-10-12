@@ -35,6 +35,9 @@ return [
         ],
     ],
 
+    'razorpay' => ['key' => env('RAZORPAY_KEY'), 'secret' => env('RAZORPAY_SECRET')],
+    'whatsapp' => ['phone_number_id' => env('WHATSAPP_PHONE_NUMBER_ID'), 'access_token' => env('WHATSAPP_ACCESS_TOKEN'), 'owner_number' => env('WHATSAPP_OWNER_NUMBER')],
+
     'google' => [
         'client_id' => env('GOOGLE_CLIENT_ID'),
         'client_secret' => env('GOOGLE_CLIENT_SECRET'),

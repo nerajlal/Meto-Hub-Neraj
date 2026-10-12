@@ -37,12 +37,12 @@ class OrderController extends Controller
         }
 
         // 1. Validate Input
-        $tenantId = session('active_tenant_id') ?? 1;
-        $tenant = \App\Models\Tenant::find($tenantId);
+        $tenantId = $request->attributes->get('resolved_tenant_id') ?? session('active_tenant_id');
+        $tenant = \App\Models\Tenant::findOrFail($tenantId);
         $cf = $tenant ? ($tenant->checkout_fields ?? []) : [];
         
         $rules = [
-            'payment_method' => 'required|string|max:50',
+            'payment_method' => ['required', 'string', \Illuminate\Validation\Rule::in(app(\App\Services\CheckoutPaymentPolicy::class)->availableMethods($tenant))],
         ];
 
         // Delivery schedule validation

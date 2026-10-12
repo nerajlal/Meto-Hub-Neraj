@@ -69,7 +69,10 @@ class StorefrontThemesTest extends TestCase
                     'price' => 100, 'name' => 'Rice', 'image' => '/Images/default.png'],
             ]]);
             foreach (['/v1', '/v1/all-products', '/v1/collections?slug=pantry', '/v1/product?id='.$product->id, '/v1/checkout', '/v1/combos'] as $url) {
-                $this->get($url)->assertOk()->assertSee('data-storefront-theme="'.$id.'"', false);
+                $response = $this->get($url)->assertOk()->assertSee('data-storefront-theme="'.$id.'"', false);
+                if ($url === '/v1/checkout') {
+                    $response->assertSee('value="cod"', false)->assertDontSee('value="online"', false);
+                }
             }
         }
     }

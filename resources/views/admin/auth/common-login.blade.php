@@ -184,6 +184,9 @@
                 <p>Access your centralized merchant dashboard</p>
             </div>
 
+            @if(session('success'))
+                <p role="status" style="margin-bottom: 20px; color: var(--primary);">{{ session('success') }}</p>
+            @endif
             <form method="POST" action="{{ route('admin.common.login.submit') }}">
                 @csrf
 
@@ -228,6 +231,17 @@
                     Continue with Google
                 </a>
             </form>
+            <details style="margin-top: 24px;">
+                <summary>Need a new email verification link?</summary>
+                <form method="POST" action="{{ route('saas.verification.resend') }}" style="margin-top: 16px;">
+                    @csrf
+                    <div class="form-group">
+                        <label for="verificationEmail">Account email</label>
+                        <input id="verificationEmail" name="email" type="email" value="{{ old('email') }}" required>
+                    </div>
+                    <button type="submit" class="btn-login">Resend verification link</button>
+                </form>
+            </details>
         </div>
     </section>
 @endsection

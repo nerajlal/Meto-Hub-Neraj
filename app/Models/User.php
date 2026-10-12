@@ -10,7 +10,7 @@ use Illuminate\Notifications\Notifiable;
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, \App\Models\Traits\BelongsToTenant;
+    use \App\Models\Traits\BelongsToTenant, HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -36,6 +36,8 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'email_verification_token_hash',
+        'email_verification_expires_at',
     ];
 
     /**
@@ -47,6 +49,8 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
+            'email_verification_expires_at' => 'datetime',
+            'email_verification_required' => 'boolean',
             'password' => 'hashed',
         ];
     }

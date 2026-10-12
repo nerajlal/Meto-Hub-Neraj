@@ -3,13 +3,14 @@
 use App\Http\Controllers\PageController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function(Illuminate\Http\Request $request) {
+Route::get('/', function (Illuminate\Http\Request $request) {
     $host = $request->getHost();
     // If it's a known main domain, show the SaaS landing page
     if (in_array($host, ['localhost', '127.0.0.1', 'metohub.com', 'www.metohub.com'])) {
         if ($request->has('demo_tenant')) {
             session(['demo_tenant_id' => $request->demo_tenant]);
         }
+
         return view('landing.new-landing1');
     }
 
@@ -20,18 +21,19 @@ Route::get('/', function(Illuminate\Http\Request $request) {
         return app(\App\Http\Middleware\IdentifyStorefrontTenant::class)->handle($request,
             fn ($request) => response(app(\App\Http\Controllers\PageController::class)->home($request)));
     }
-    
+
     // Fallback if domain not found
     return view('landing.new-landing1');
 })->name('landing');
 
 // Demo routes to set tenant
-Route::get('/demo/{tenantId}', function($tenantId) {
+Route::get('/demo/{tenantId}', function ($tenantId) {
     session(['demo_tenant_id' => $tenantId]);
+
     return redirect()->route('landing');
 })->name('demo.set-tenant');
 
-Route::get('/home1', function() {
+Route::get('/home1', function () {
     return view('landing.vespr-landing');
 })->name('landing.vespr');
 
@@ -106,7 +108,7 @@ Route::middleware([\App\Http\Middleware\IdentifyStorefrontTenant::class, 'auth']
 
 // User Auth Routes
 Route::post('/register', [App\Http\Controllers\AuthController::class, 'register'])->middleware(\App\Http\Middleware\IdentifyStorefrontTenant::class)->name('register');
-Route::post('/login', [App\Http\Controllers\AuthController::class, 'login'])->middleware('throttle:5,1')->middleware(\App\Http\Middleware\IdentifyStorefrontTenant::class)->name('login');
+Route::post('/login', [App\Http\Controllers\AuthController::class, 'login'])->middleware('throttle:5,1')->middleware(\App\Http\Middleware\IdentifyStorefrontTenant::class)->name('login.submit');
 Route::post('/logout', [App\Http\Controllers\AuthController::class, 'logout'])->name('logout');
 // Google Auth
 Route::get('auth/google', [App\Http\Controllers\AuthController::class, 'redirectToGoogle'])->name('google.login');
@@ -169,12 +171,9 @@ Route::prefix('{tenant}')->name('admin.')->middleware(['identify_tenant'])->grou
 });
 
 // Fallback for auth middleware if 'login' route is missing
-Route::get('/login', function() {
+Route::get('/login', function () {
     return redirect()->route('admin.common.login');
 })->name('login');
-
-// Global Zoho Callback (Zoho doesn't know tenant URL prefix initially)
-Route::get('/admin/integrations/zoho/callback', [App\Http\Controllers\Admin\ZohoController::class, 'callback'])->name('admin.zoho.callback');
 
 // Protected Admin Panel Routes
 Route::prefix('{tenant}/admin')->name('admin.')->middleware(['identify_tenant', 'auth', 'tenant_role:admin'])->group(function () {
@@ -224,14 +223,11 @@ Route::prefix('{tenant}/admin')->name('admin.')->middleware(['identify_tenant', 
     Route::put('/products/{id}', [App\Http\Controllers\Admin\ProductController::class, 'update'])->name('products.update');
     Route::delete('/products/{id}', [App\Http\Controllers\Admin\ProductController::class, 'destroy'])->name('products.destroy');
 
-    // Zoho Integration Routes
-    Route::get('/integrations/zoho/connect', [App\Http\Controllers\Admin\ZohoController::class, 'connect'])->name('zoho.connect');
-    Route::post('/products/zoho-sync', [App\Http\Controllers\Admin\ZohoController::class, 'syncProducts'])->name('zoho.sync');
-
     // DartPOS Integration Route (Stub for now)
     Route::post('/products/dartpos-sync', function () {
         // Trigger the artisan command in the background or synchronous for MVP
         \Illuminate\Support\Facades\Artisan::call('dartpos:sync-products');
+
         return redirect()->back()->with('success', 'DartPOS sync started successfully.');
     })->name('dartpos.sync');
 
@@ -311,7 +307,7 @@ Route::prefix('{tenant}/admin')->name('admin.')->middleware(['identify_tenant', 
     Route::post('/settings/delivery-partners/{id}/default', [App\Http\Controllers\Admin\DeliveryPartnerController::class, 'setDefault'])->name('settings.delivery-partners.default');
 
     Route::resource('/settings/delivery-partners', App\Http\Controllers\Admin\DeliveryPartnerController::class, [
-        'names' => 'settings.delivery-partners'
+        'names' => 'settings.delivery-partners',
     ])->except(['show', 'create', 'edit']);
 
     Route::get('/settings/theme', [App\Http\Controllers\Admin\ThemeSettingsController::class, 'index'])->name('settings.theme');
@@ -339,15 +335,15 @@ Route::prefix('{tenant}/delivery')->name('delivery.')->middleware(['identify_ten
     Route::post('/orders/{id}/status', [App\Http\Controllers\DeliveryBoy\DeliveryController::class, 'updateStatus'])->name('orders.update-status');
 });
 
-
 // v2 Velvet Theme Routes
 Route::prefix('v2')->name('velvet.')->middleware([\App\Http\Middleware\IdentifyStorefrontTenant::class])->group(function () {
     Route::get('/', [PageController::class, 'home'])->name('home');
 
     Route::get('/all-products', [App\Http\Controllers\PageController::class, 'allProducts'])->name('all-products');
 
-    Route::get('/collection/{slug}', function(Illuminate\Http\Request $request, $slug) {
+    Route::get('/collection/{slug}', function (Illuminate\Http\Request $request, $slug) {
         $request->query->set('slug', $slug);
+
         return app(PageController::class)->collection($request);
     })->name('collection');
 
@@ -409,11 +405,11 @@ Route::prefix('v5')->name('v5.')->middleware([\App\Http\Middleware\IdentifyStore
     Route::get('/checkout', [PageController::class, 'afnanCheckout'])->name('checkout');
 });
 
-
 // Storefront Routes
 
 // SaaS Onboarding Routes
 Route::prefix('saas')->group(function () {
-    Route::post('/register', [App\Http\Controllers\SaaS\RegisterController::class, 'register'])->name('saas.register');
-    Route::get('/verify/{id}/{token}', [App\Http\Controllers\SaaS\RegisterController::class, 'verify'])->name('saas.verify');
+    Route::post('/register', [App\Http\Controllers\SaaS\RegisterController::class, 'register'])->middleware('throttle:5,1')->name('saas.register');
+    Route::get('/verify/{id}/{token}', [App\Http\Controllers\SaaS\RegisterController::class, 'verify'])->middleware(['signed:relative', 'throttle:10,1'])->name('saas.verify');
+    Route::post('/verification/resend', [App\Http\Controllers\SaaS\RegisterController::class, 'resend'])->middleware('throttle:3,1')->name('saas.verification.resend');
 });

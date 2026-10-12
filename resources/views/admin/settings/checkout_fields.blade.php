@@ -254,23 +254,10 @@
                                     <tr>
                                         <td class="ps-4 fw-semibold"><i
                                                 class="fa-solid fa-shield-check text-muted me-2"></i> Pay Online</td>
-                                        <td class="text-muted small">Allow online payments (requires configured payment gateway).</td>
+                                        <td class="text-muted small">Online checkout will be available after payment processing is integrated and verified.</td>
                                         <td class="text-center">
-                                            @php
-                                                $paymentConfigured = isset($tenant->settings['razorpay_enabled']) && $tenant->settings['razorpay_enabled'] && !empty($tenant->settings['razorpay_key']);
-                                            @endphp
-                                            @if($paymentConfigured)
-                                            <div class="form-check form-switch d-inline-block">
-                                                <input class="form-check-input" type="checkbox" role="switch"
-                                                    name="fields[pay_online][enabled]" value="1" {{ !isset($fields['pay_online']) || (isset($fields['pay_online']['enabled']) && $fields['pay_online']['enabled']) ? 'checked' : '' }}>
-                                            </div>
-                                            @else
-                                            <div class="form-check form-switch d-inline-block">
-                                                <input class="form-check-input" type="checkbox" role="switch" disabled>
-                                            </div>
-                                            <br>
-                                            <a href="{{ route('admin.settings.storefront') }}" class="small text-danger text-decoration-none">Configure Gateway</a>
-                                            @endif
+                                            <input type="hidden" name="fields[pay_online][enabled]" value="0">
+                                            <span class="small text-muted">Unavailable</span>
                                         </td>
                                         <td class="text-center text-muted small">
                                             <em>N/A</em>

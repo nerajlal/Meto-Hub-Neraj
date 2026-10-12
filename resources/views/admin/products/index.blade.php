@@ -7,19 +7,6 @@
     <h1 class="h3 fw-bold text-primary mb-0">Products</h1>
     <div class="d-flex flex-wrap gap-2">
         {{-- 
-        @if(isset($zohoConnected) && $zohoConnected)
-            <form action="{{ route('admin.zoho.sync', request()->route('tenant') ?? 1) }}" method="POST" class="d-inline">
-                @csrf
-                <button type="submit" class="btn btn-white border shadow-sm fw-medium text-primary">
-                    <i class="fas fa-sync-alt me-1"></i> Sync from Zoho
-                </button>
-            </form>
-        @else
-            <a href="{{ route('admin.zoho.connect', request()->route('tenant') ?? 1) }}" class="btn btn-white border shadow-sm fw-medium text-primary">
-                <i class="fas fa-plug me-1"></i> Connect Zoho
-            </a>
-        @endif
-
         <form action="{{ route('admin.dartpos.sync', request()->route('tenant') ?? 1) }}" method="POST" class="d-inline">
             @csrf
             <button type="submit" class="btn btn-white border shadow-sm fw-medium text-primary">

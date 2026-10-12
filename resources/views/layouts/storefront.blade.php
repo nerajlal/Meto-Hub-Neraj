@@ -326,7 +326,7 @@
                 <p class="modal-subtitle">Log in to your VESPR account to continue.</p>
             </div>
             
-            <form action="{{ route('login') }}" method="POST" class="modal-form">
+            <form action="{{ route('login.submit') }}" method="POST" class="modal-form">
                 @csrf
                 <div class="form-group-modal" style="margin-bottom: 1.5rem;">
                     <label style="display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--primary-color);">Email Address</label>

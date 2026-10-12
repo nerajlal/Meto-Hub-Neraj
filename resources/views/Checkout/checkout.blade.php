@@ -288,16 +288,12 @@
                     </h2>
                     <div class="payment-selection-grid" style="display: grid; grid-template-columns: 1fr; gap: 1rem;">
                         @php
-                            $codEnabled = !isset($cf['cash_on_delivery']) || (isset($cf['cash_on_delivery']['enabled']) && $cf['cash_on_delivery']['enabled']);
+                            $codEnabled = in_array('cod', app(\App\Services\CheckoutPaymentPolicy::class)->availableMethods($currentTenant), true);
+                            $defaultToOnline = false;
                         @endphp
-                        
-                        @php
-                            $onlineEnabled = !isset($cf['pay_online']) || (isset($cf['pay_online']['enabled']) && $cf['pay_online']['enabled']);
-                            // If online is disabled, force COD to be active. If COD is disabled, force online.
-                            // If both are enabled, default to COD.
-                            $defaultToOnline = !$codEnabled && $onlineEnabled;
-                        @endphp
-                        
+                        @unless($codEnabled)
+                            <p role="status">Ordering is temporarily unavailable. Please contact the store.</p>
+                        @endunless
                         @if($codEnabled)
                         <label class="pay-option {{ !$defaultToOnline ? 'active' : '' }}" style="display: flex; align-items: center; gap: 1.5rem; padding: 1.5rem; border: 2px solid {{ !$defaultToOnline ? 'var(--accent-color)' : 'var(--border-color)' }}; border-radius: 1rem; cursor: pointer; {{ !$defaultToOnline ? 'background: var(--section-bg);' : '' }} transition: 0.2s;">
                             <input type="radio" name="payment_method" value="cod" {{ !$defaultToOnline ? 'checked' : '' }} style="accent-color: var(--accent-color); transform: scale(1.25);">
@@ -309,20 +305,11 @@
                         </label>
                         @endif
 
-                        @if($onlineEnabled)
-                        <label class="pay-option {{ $defaultToOnline ? 'active' : '' }}" style="display: flex; align-items: center; gap: 1.5rem; padding: 1.5rem; border: 2px solid {{ $defaultToOnline ? 'var(--accent-color)' : 'var(--border-color)' }}; border-radius: 1rem; cursor: pointer; {{ $defaultToOnline ? 'background: var(--section-bg);' : '' }} transition: 0.2s;">
-                            <input type="radio" name="payment_method" value="online" {{ $defaultToOnline ? 'checked' : '' }} style="accent-color: var(--accent-color); transform: scale(1.25);">
-                            <div class="pay-content" style="flex-grow: 1;">
-                                <span class="pay-title" style="display: block; font-weight: 700; color: var(--primary-color); font-size: 1.1rem; margin-bottom: 0.25rem;">Pay Online Securely</span>
-                                <span class="pay-desc" style="font-size: 0.85rem; color: var(--text-muted);">Pay instantly via Card, NetBanking, or UPI apps.</span>
-                            </div>
-                            <i class="fa-solid fa-shield-check" style="font-size: 1.5rem; color: {{ $defaultToOnline ? 'var(--accent-color)' : 'var(--text-muted)' }};"></i>
-                        </label>
-                        @endif
+
                     </div>
                 </div>
 
-                <button type="submit" class="btn-complete-order" style="width: 100%; background: var(--accent-color); color: #fff; border: none; padding: 1.25rem; border-radius: 9999px; font-weight: 800; font-size: 1.2rem; cursor: pointer; transition: 0.2s;">
+                <button type="submit" @disabled(!$codEnabled) class="btn-complete-order" style="width: 100%; background: var(--accent-color); color: #fff; border: none; padding: 1.25rem; border-radius: 9999px; font-weight: 800; font-size: 1.2rem; cursor: pointer; transition: 0.2s;">
                     Complete Order • {{ $currentTenant->currency ?? '₹' }}{{ number_format($total, 2) }}
                 </button>
             </form>

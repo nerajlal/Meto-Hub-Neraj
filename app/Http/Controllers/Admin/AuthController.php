@@ -22,6 +22,7 @@ class AuthController extends Controller
             }
             Auth::logout();
         }
+
         return view('admin.auth.common-login');
     }
 
@@ -33,11 +34,21 @@ class AuthController extends Controller
         ]);
 
         \Log::info('Login attempt', ['email' => $credentials['email']]);
-        
+
         $attempt = Auth::attempt($credentials, $request->boolean('remember'));
         \Log::info('Login attempt result', ['attempt' => $attempt]);
 
         if ($attempt) {
+            if (Auth::user()->email_verification_required && ! Auth::user()->email_verified_at) {
+                Auth::logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+
+                return redirect()->route('admin.common.login')->withErrors([
+                    'email' => 'Verify your email address before signing in. You can request a new link below.',
+                ])->withInput($request->only('email'));
+            }
+
             $request->session()->regenerate();
 
             $user = Auth::user();
@@ -51,17 +62,20 @@ class AuthController extends Controller
                 // Set the session active tenant ID
                 session(['active_tenant_id' => $user->tenant_id]);
                 \Log::info('Redirecting to admin dashboard', ['tenant' => $user->tenant_id]);
+
                 return redirect()->route('admin.dashboard', ['tenant' => $user->tenant_id]);
             }
 
             if ($user->type === 'delivery_boy' && $user->tenant_id) {
                 session(['active_tenant_id' => $user->tenant_id]);
+
                 return redirect()->route('delivery.dashboard', ['tenant' => $user->tenant_id]);
             }
 
             // Fallback if user doesn't have a tenant or super_admin type
             \Log::info('Fallback hit - logging out');
             Auth::logout();
+
             return back()->withErrors([
                 'email' => 'This account does not have admin or delivery privileges, or is not associated with any store.',
             ])->onlyInput('email');
@@ -84,6 +98,7 @@ class AuthController extends Controller
             }
             Auth::logout();
         }
+
         return view('admin.auth.login');
     }
 
@@ -96,27 +111,40 @@ class AuthController extends Controller
         ]);
 
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
+            if (Auth::user()->email_verification_required && ! Auth::user()->email_verified_at) {
+                Auth::logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+
+                return redirect()->route('admin.common.login')->withErrors([
+                    'email' => 'Verify your email address before signing in. You can request a new link below.',
+                ])->withInput($request->only('email'));
+            }
+
             $request->session()->regenerate();
 
             if (Auth::user()->type === 'super_admin') {
                 return redirect()->route('super_admin.dashboard');
             }
-            
+
             if (Auth::user()->type === 'delivery_boy') {
                 // Enforce strict tenant boundary checks
                 $resolvedTenantId = session('active_tenant_id') ?? $tenant;
                 if (Auth::user()->tenant_id != $resolvedTenantId) {
                     Auth::logout();
+
                     return back()->withErrors([
                         'email' => 'This account does not have access to this store.',
                     ])->onlyInput('email');
                 }
                 session(['active_tenant_id' => Auth::user()->tenant_id]);
+
                 return redirect()->route('delivery.dashboard', ['tenant' => Auth::user()->tenant_id]);
             }
-            
+
             if (Auth::user()->type !== 'admin') {
                 Auth::logout();
+
                 return back()->withErrors([
                     'email' => 'This account does not have access to this store.',
                 ])->onlyInput('email');
@@ -126,6 +154,7 @@ class AuthController extends Controller
             $resolvedTenantId = session('active_tenant_id') ?? $tenant;
             if (Auth::user()->tenant_id != $resolvedTenantId) {
                 Auth::logout();
+
                 return back()->withErrors([
                     'email' => 'This account does not have access to this store.',
                 ])->onlyInput('email');

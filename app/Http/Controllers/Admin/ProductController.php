@@ -76,10 +76,8 @@ class ProductController extends Controller
         $types = Product::distinct()->whereNotNull('type')->pluck('type');
         $vendors = Product::distinct()->whereNotNull('vendor')->pluck('vendor');
 
-        $tenantId = session('active_tenant_id') ?? request()->route('tenant') ?? 1;
-        $zohoConnected = \App\Models\TenantZohoToken::where('tenant_id', $tenantId)->exists();
 
-        return view('admin.products.index', compact('products', 'total', 'active', 'draft', 'archived', 'types', 'vendors', 'zohoConnected'));
+        return view('admin.products.index', compact('products', 'total', 'active', 'draft', 'archived', 'types', 'vendors'));
     }
 
     public function create()

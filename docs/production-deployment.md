@@ -1,0 +1,51 @@
+# MetoHub production deployment
+
+Current canonical domain: `https://betametohub.metora.in`.
+Future canonical domain: `https://metohub.cloud`.
+Sender: `info@metora.in`.
+
+## Configure the server
+
+Use `.env.production.example` as a reference, preserving the existing production `.env`, database credentials, and `APP_KEY`. Never regenerate the key on an existing installation. Fill in the SMTP hostname, username, and password for the provider hosting `info@metora.in`; keep secrets on the server. Authorize this sender and configure the provider's SPF/DKIM records and your DMARC policy. Use SMTP port 587 with STARTTLS or port 465 with `MAIL_SCHEME=smtps`.
+
+Serve only the project's `public` directory. Deny dotfiles and PHP execution inside `public/storage`. Keep `storage` and `bootstrap/cache` writable by PHP, without making the whole project world-writable. Enforce HTTPS at the hosting layer. When a reverse proxy terminates HTTPS, configure only the actual trusted proxy addresses; confirm generated links and redirects remain HTTPS.
+
+The public upload disk is currently rooted directly at `public/storage`. Preserve that directory and its existing files during releases. Do not replace it with `storage:link` without deliberately migrating uploads and changing the disk root. Back up these files along with the database.
+
+## Release and validate
+
+Back up the database, uploads, and protected environment configuration first. Keep the prior release available for rollback. Run from the project directory on the server:
+
+```sh
+composer install --no-dev --prefer-dist --optimize-autoloader
+php artisan down --retry=60
+php artisan optimize:clear
+php artisan migrate --force
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+php artisan app:preflight
+php artisan up
+```
+
+If preflight fails, correct the reported settings before opening the application. It checks configuration, database/migrations, runtime permissions, and upload mapping; it does not send email or prove external provider availability. Current storefronts load public CSS/JS directly; if a release introduces Vite assets, build them with `npm ci` and `npm run build` before deployment.
+
+Register a new merchant using a mailbox you control. Confirm the email arrives from `info@metora.in`, its link uses the beta domain, it verifies once, and password login works afterward. Test resend and expired links. With mail unavailable, signup must explain the delivery failure and block merchant access until verification.
+
+Check all six themes on mobile and desktop: catalog, variant selection, product images, cart totals, checkout, and admin settings. Place a real controlled cash-on-delivery order and confirm stock, order summary, and merchant notification. Online storefront checkout is intentionally unavailable until gateway creation, verified payment callbacks, retries, and refunds are implemented and tested. Platform Razorpay subscriptions are separate; configure their credentials and complete provider sandbox/live validation before accepting subscription payments.
+
+## Operations
+
+Schedule encrypted daily database and upload backups to storage outside the web server, with documented retention and a monitored success/failure result. Use a protected MySQL option file for backup credentials rather than putting passwords in shell command arguments. Periodically restore a backup to an isolated database and upload directory, and confirm merchant login, products, and orders there. Do not run recovery rehearsals against the live database.
+
+Monitor `/up` externally, plus disk capacity, application errors, failed notifications, and database availability. `/up` proves Laravel boots, not that every dependency works. Run preflight during deployment and monitor real checkout/email failures separately. Set up the hosting provider's log alerts. If background jobs are enabled, supervise `php artisan queue:work --tries=3 --timeout=60` and restart workers after each release using `php artisan queue:restart`. Verification emails are currently sent synchronously, with a 15-second SMTP timeout.
+
+Perform a representative concurrent browsing/cart/checkout load test on a staging copy of the production host. Measure response times and database contention before choosing capacity. A passing local test suite alone is not proof of production capacity or recoverability.
+
+## Move to metohub.cloud
+
+Provision DNS and TLS for the new domain first. Change `APP_URL` to `https://metohub.cloud`, `MAIL_EHLO_DOMAIN` to `metohub.cloud`, and Google callback settings if enabled. Update registered provider callbacks and permitted origins. Rebuild configuration and route caches, restart workers, and rerun preflight and the end-to-end checks above. Keep the sender `info@metora.in` if the mailbox provider still authorizes it.
+
+Keep the beta host available temporarily with HTTPS redirects that preserve request paths and query parameters. Verification signatures are relative, so preserving the signed path/query and the existing `APP_KEY` lets unexpired links continue working across the redirect. Host-only session cookies mean users may need to log in again on the new domain.
+
+The retired Zoho integration has no application routes, controller, model, UI, or active configuration. Its historical migration/table is retained so existing deployments can migrate safely; it does not enable the integration.
