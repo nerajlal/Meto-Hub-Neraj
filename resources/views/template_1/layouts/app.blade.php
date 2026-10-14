@@ -85,7 +85,8 @@
     <link rel="stylesheet" href="{{ asset('css/storefront-themes.css') }}">
     <link rel="stylesheet" href="{{ asset('css/storefront-premium.css') }}">
     <link rel="stylesheet" href="{{ asset('css/storefront-products.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/storefront-mobile-grid.css') }}">
+    @yield('styles')
+    <link rel="stylesheet" href="{{ asset('css/storefront-mobile-grid.css') . '?v=' . filemtime(public_path('css/storefront-mobile-grid.css')) }}">
     @if($storefrontTheme['id'] !== 'template_1')
     <style>body { --theme-tone: {{ $storefrontTheme['tone'] }}; --theme-surface: {{ $storefrontTheme['background'] }}; }</style>
     @endif

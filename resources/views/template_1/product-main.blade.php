@@ -303,6 +303,7 @@
                 @endphp
                 <img src="{{ $mainImg }}" id="p-main-img" alt="{{ $product->title }}" onerror="this.src='{{ asset('Images/default.png') }}'" style="width: 100%; height: 100%; object-fit: cover;">
             </div>
+            @if($product->images->count() > 1)
             <div class="thumb-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;">
                 @foreach($product->images->take(4) as $img)
                     @php 
@@ -320,6 +321,7 @@
                     </div>
                 @endforeach
             </div>
+            @endif
         </div>
 
         <!-- Product Info Panel -->

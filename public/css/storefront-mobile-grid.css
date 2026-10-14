@@ -51,19 +51,72 @@
     .storefront-theme .product-grid .inline-add-btn {
         min-height: 44px !important;
     }
-    /* Classic keeps its round add button, with a separate row for controls. */
+    /* Classic titles take their natural height; metadata and controls share a row. */
+    .storefront-theme.template_1 .product-grid .product-card {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-rows: auto auto auto minmax(44px, 1fr);
+        column-gap: .35rem;
+        row-gap: .25rem;
+        padding: .5rem;
+    }
+    .storefront-theme.template_1 .product-grid .card-img,
+    .storefront-theme.template_1 .product-grid .classic-card-prices,
+    .storefront-theme.template_1 .product-grid .p-name {
+        grid-column: 1 / -1;
+    }
+    .storefront-theme.template_1 .product-grid .card-img {
+        margin-bottom: .25rem;
+    }
+    .storefront-theme.template_1 .product-grid .card-info {
+        display: contents !important;
+    }
+    .storefront-theme.template_1 .product-grid .p-name {
+        height: auto !important;
+        min-height: 0;
+        -webkit-line-clamp: 2;
+        font-size: .8rem !important;
+        line-height: 1.35 !important;
+        margin: 0 !important;
+    }
     .storefront-theme.template_1 .product-grid .product-action-wrapper {
         position: static !important;
+        grid-column: 2;
+        grid-row: 4;
+        align-self: center;
         display: flex;
         justify-content: flex-end;
-        margin: auto .4rem .4rem !important;
+        width: 44px;
+        margin: 0 !important;
+    }
+    .storefront-theme.template_1 .product-grid .product-action-wrapper:has(.qty-controller[style*="flex"]) {
+        width: 76px;
     }
     .storefront-theme.template_1 .product-grid .inline-add-btn {
         width: 44px !important;
         height: 44px !important;
     }
     .storefront-theme.template_1 .product-grid .p-meta {
+        grid-column: 1;
+        grid-row: 4;
+        align-self: center;
+        min-width: 0;
         padding-right: 0 !important;
+    }
+    .storefront-theme.template_1 .grid-cols-mobile-3 .product-card {
+        grid-template-rows: auto auto auto auto minmax(44px, 1fr);
+        padding: .35rem;
+    }
+    .storefront-theme.template_1 .grid-cols-mobile-3 .p-name {
+        font-size: .7rem !important;
+    }
+    .storefront-theme.template_1 .grid-cols-mobile-3 .p-meta {
+        grid-column: 1 / -1;
+    }
+    .storefront-theme.template_1 .grid-cols-mobile-3 .product-action-wrapper {
+        grid-column: 1 / -1;
+        grid-row: 5;
+        justify-self: end;
     }
     /* Corner Store uses its horizontal composition when one card fills the row. */
     .storefront-theme.template_5 .product-grid.grid-cols-mobile-2 .sf-product,
@@ -126,5 +179,70 @@
     .storefront-theme .grid-cols-mobile-3 .sf-option-link {
         font-size: .65rem;
         overflow-wrap: anywhere;
+    }
+}
+
+@media (max-width: 768px) {
+    .storefront-theme.template_1 .product-page-container .product-core-grid {
+        gap: 1rem !important;
+    }
+    .storefront-theme.template_1 .product-page-container .product-details-panel {
+        padding: 1rem !important;
+        margin: 0 !important;
+    }
+    .storefront-theme.template_1 .product-page-container .p-vendor-label {
+        margin-bottom: .4rem !important;
+    }
+    .storefront-theme.template_1 .product-page-container .p-title {
+        font-size: 1.5rem !important;
+        line-height: 1.2 !important;
+        margin-bottom: .5rem !important;
+    }
+    .storefront-theme.template_1 .product-page-container .p-price-row {
+        padding: 0 !important;
+        margin-bottom: .85rem !important;
+        background: transparent !important;
+        border: 0 !important;
+    }
+    .storefront-theme.template_1 .product-page-container .p-current-price {
+        font-size: 1.75rem !important;
+    }
+    .storefront-theme.template_1 .product-page-container .delivery-note {
+        padding: .7rem .8rem !important;
+        margin-bottom: 1rem !important;
+    }
+    .storefront-theme.template_1 .product-page-container .variant-container,
+    .storefront-theme.template_1 .product-page-container .size-rect-grid {
+        margin-bottom: .85rem !important;
+    }
+    .storefront-theme.template_1 .product-page-container .size-rect-grid {
+        gap: .5rem !important;
+    }
+    .storefront-theme.template_1 .product-page-container .p-section-label {
+        margin-bottom: .5rem !important;
+    }
+    .storefront-theme.template_1 .product-page-container .p-actions-row {
+        flex-direction: row !important;
+        align-items: stretch;
+        gap: .65rem !important;
+        min-height: 48px;
+        margin-bottom: .65rem !important;
+    }
+    .storefront-theme.template_1 .product-page-container .p-actions-row .qty-control {
+        flex: 0 0 76px;
+        width: 76px !important;
+        min-width: 0 !important;
+    }
+    .storefront-theme.template_1 .product-page-container .p-actions-row .btn-add-to-cart {
+        flex: 1 1 0;
+        width: auto !important;
+        min-height: 48px;
+        font-size: .75rem !important;
+    }
+    .storefront-theme.template_1 .product-gallery .main-image-display:only-child {
+        margin-bottom: 0 !important;
+    }
+    .storefront-theme.template_1 .product-page-container .secondary-actions-row {
+        margin-bottom: 1.25rem !important;
     }
 }

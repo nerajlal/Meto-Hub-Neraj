@@ -13,6 +13,18 @@ class MobileProductGridTest extends TestCase
 {
     use RefreshDatabase;
 
+    public function test_classic_only_shows_thumbnail_selector_when_multiple_images_exist(): void
+    {
+        $tenant = Tenant::create(['name' => 'Classic Store', 'theme' => 'template_1']);
+        $product = Product::create(['tenant_id' => $tenant->id, 'title' => 'T-shirt', 'status' => 'active']);
+        $product->variants()->create(['size' => 'M', 'price' => 350, 'stock' => 10]);
+        $product->images()->create(['path' => 'https://example.com/front.jpg', 'order' => 1]);
+        $url = '/store/classic-store/product?id='.$product->id;
+        $this->get($url)->assertOk()->assertDontSee('class="thumb-grid"', false);
+        $product->images()->create(['path' => 'https://example.com/back.jpg', 'order' => 2]);
+        $this->get($url)->assertOk()->assertSee('class="thumb-grid"', false);
+    }
+
     public function test_saved_mobile_density_reaches_all_themes_home_catalog_and_related_products(): void
     {
         $tenant = Tenant::create(['name' => 'Mobile Store', 'theme' => 'template_1']);
@@ -35,6 +47,11 @@ class MobileProductGridTest extends TestCase
                     $this->get('/store/mobile-store'.$page)->assertOk()
                         ->assertSee('grid-cols-mobile-'.$columns, false)
                         ->assertSee('css/storefront-mobile-grid.css', false);
+                    if ($theme === 'template_1' && str_starts_with($page, '/product')) {
+                        $this->get('/store/mobile-store'.$page)->assertOk()
+                            ->assertSee('@media (max-width: 480px)', false)
+                            ->assertSee('application/ld+json', false);
+                    }
                 }
             }
         }
