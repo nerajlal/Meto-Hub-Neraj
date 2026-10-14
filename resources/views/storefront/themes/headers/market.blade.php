@@ -6,10 +6,16 @@
 <script>
 (() => {
     const header = document.querySelector('.sf-header-market');
-    const updateHeight = () => document.body.style.setProperty('--market-header-height', Math.ceil(header.getBoundingClientRect().height) + 'px');
+    const topRow = header.querySelector('.sf-header-row');
+    const updateHeight = () => {
+        document.body.style.setProperty('--market-header-height', Math.ceil(header.getBoundingClientRect().height) + 'px');
+        document.body.style.setProperty('--market-top-row-height', Math.ceil(topRow.getBoundingClientRect().height) + 'px');
+    };
     updateHeight();
     if (typeof ResizeObserver !== 'undefined') {
-        new ResizeObserver(() => requestAnimationFrame(updateHeight)).observe(header);
+        const observer = new ResizeObserver(() => requestAnimationFrame(updateHeight));
+        observer.observe(header);
+        observer.observe(topRow);
     }
     window.addEventListener('resize', updateHeight);
 })();
