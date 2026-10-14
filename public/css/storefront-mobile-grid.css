@@ -1,5 +1,6 @@
 /* Loaded after theme styles so the merchant's mobile density wins consistently. */
 .classic-mobile-search { display: none; }
+.classic-mobile-cart { display: none; }
 /* Badge colors come from the merchant's branding in every theme. */
 .storefront-theme .sf-product-tag {
     display: inline-block;
@@ -31,7 +32,7 @@
     .storefront-theme.template_1 .store-header > .header-container {
         min-height: 60px;
         padding: 8px 16px;
-        gap: .75rem;
+        gap: .5rem;
     }
     .storefront-theme.template_1 .store-header .logo {
         min-width: 0;
@@ -45,7 +46,7 @@
     }
     .storefront-theme.template_1 .store-header .logo {
         flex: 0 1 auto;
-        max-width: 104px;
+        max-width: 84px;
         max-height: 44px;
         overflow: hidden;
         line-height: 1.2;
@@ -87,6 +88,37 @@
         color: var(--primary-color);
         font-size: 18px;
         cursor: pointer;
+    }
+    .storefront-theme.template_1 .classic-mobile-cart {
+        display: grid;
+        place-items: center;
+        position: relative;
+        flex: 0 0 44px;
+        width: 44px;
+        height: 44px;
+        padding: 0;
+        border: 0;
+        background: transparent;
+        color: var(--primary-color);
+        font-size: 21px;
+        cursor: pointer;
+    }
+    .storefront-theme.template_1 .classic-mobile-cart-count {
+        position: absolute;
+        top: 0;
+        right: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 18px;
+        height: 18px;
+        padding: 0 4px;
+        border-radius: 12px;
+        background: var(--store-badge-bg);
+        color: var(--store-badge-fg);
+        font-size: 10px;
+        font-weight: 700;
+        line-height: 1;
     }
     .storefront-theme .product-grid.grid-cols-mobile-1 {
         grid-template-columns: minmax(0, 1fr) !important;

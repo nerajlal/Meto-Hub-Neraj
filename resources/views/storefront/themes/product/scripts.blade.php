@@ -77,7 +77,7 @@
             window.cartTotalCount = result.cartCount;
             window.cartTotalValue = result.cartTotal;
             window.cartImages = result.cartImages || [];
-            document.querySelectorAll('#cart-count').forEach(element => element.textContent = result.cartCount);
+            document.querySelectorAll('[data-cart-count], #cart-count').forEach(element => element.textContent = result.cartCount);
             if (checkout) {location.href = {{ \Illuminate\Support\Js::from(app(\App\Services\StorefrontTheme::class)->url('v1.checkout')) }};return;}
             if (typeof syncCartUI === 'function') syncCartUI(true);
             if (typeof refreshNCart === 'function') refreshNCart();

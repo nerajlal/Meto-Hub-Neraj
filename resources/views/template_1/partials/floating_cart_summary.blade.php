@@ -65,6 +65,7 @@
     }
 
     function syncCartUI(showFloatingCart = false) {
+        $('[data-cart-count], #cart-count').text(window.cartTotalCount);
         // Sync Floating Cart logic
         if (window.cartTotalCount > 0 && showFloatingCart) {
             renderCartImages();
@@ -131,7 +132,7 @@
                     window.cartTotalCount = response.cartCount;
                     window.cartTotalValue = response.cartTotal;
                     window.cartImages = response.cartImages || [];
-                    $('#cart-count').text(response.cartCount);
+                    $('[data-cart-count], #cart-count').text(response.cartCount);
                     updateProductCardUI(key, 0); // Hide qty selector
                     syncCartUI(true); // show floating cart
                     refreshNCart(); // update side drawer if open
@@ -157,7 +158,7 @@
                         window.cartTotalCount = response.cartCount;
                         window.cartTotalValue = response.cartTotal;
                         window.cartImages = response.cartImages || [];
-                        $('#cart-count').text(response.cartCount);
+                        $('[data-cart-count], #cart-count').text(response.cartCount);
                         updateProductCardUI(key, newQty); // Show qty selector
                         syncCartUI(true); // show floating cart
                         refreshNCart();
@@ -183,7 +184,7 @@
                         window.cartTotalCount = response.cartCount;
                         window.cartTotalValue = response.cartTotal;
                         window.cartImages = response.cartImages || [];
-                        $('#cart-count').text(response.cartCount);
+                        $('[data-cart-count], #cart-count').text(response.cartCount);
                         updateProductCardUI(key, newQty); // Update qty selector value
                         syncCartUI(true); // show floating cart
                         refreshNCart();

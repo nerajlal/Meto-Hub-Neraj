@@ -13,6 +13,18 @@ class MobileProductGridTest extends TestCase
 {
     use RefreshDatabase;
 
+    public function test_mobile_cart_button_shows_existing_cart_quantity_and_opens_drawer(): void
+    {
+        $tenant = Tenant::create(['name' => 'Cart Store', 'theme' => 'template_1']);
+        $product = Product::create(['tenant_id' => $tenant->id, 'title' => 'Rice', 'status' => 'active']);
+        $product->variants()->create(['size' => '1kg', 'price' => 100, 'stock' => 10]);
+        $this->withSession(['active_tenant_id' => $tenant->id, 'cart' => [
+            'rice' => ['product_id' => $product->id, 'type' => 'product', 'size' => '1kg', 'quantity' => 3, 'price' => 100],
+        ]])->get('/store/cart-store')->assertOk()
+            ->assertSee('class="classic-mobile-cart" onclick="toggleNCart(true)"', false)
+            ->assertSee('data-cart-count aria-live="polite">3</span>', false);
+    }
+
     public function test_classic_mobile_search_preserves_store_context_and_filters_catalog(): void
     {
         $tenant = Tenant::create(['name' => 'Search Store', 'theme' => 'template_1']);

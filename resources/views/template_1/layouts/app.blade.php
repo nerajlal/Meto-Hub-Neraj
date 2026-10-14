@@ -206,7 +206,7 @@
                 quantity: newQty
             }, function (response) {
                 if (response.success) {
-                    $('#cart-count').text(response.cartCount);
+                    $('[data-cart-count], #cart-count').text(response.cartCount);
                     // Silently refresh cart content without spinner
                     $.get("{{ app(\App\Services\StorefrontTheme::class)->url('cart.fetch') }}", { theme: 'template_1' }, function (html) {
                         $('#cart-drawer-body-n').html(html);
@@ -230,7 +230,7 @@
                 id: key
             }, function (response) {
                 if (response.success) {
-                    $('#cart-count').text(response.cartCount);
+                    $('[data-cart-count], #cart-count').text(response.cartCount);
                     refreshNCart();
                 }
             });
@@ -272,7 +272,7 @@
                 success: function (response) {
                     btn.removeClass('processing');
                     if (response.success) {
-                        $('#cart-count').text(response.cartCount);
+                        $('[data-cart-count], #cart-count').text(response.cartCount);
                         btn.html('<i class="fa-solid fa-check"></i>');
                         btn.css('background-color', '#10B981');
 

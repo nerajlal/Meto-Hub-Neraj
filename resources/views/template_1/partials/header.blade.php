@@ -49,6 +49,11 @@
             <button type="submit" aria-label="Search products"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i></button>
         </form>
 
+        <button type="button" class="classic-mobile-cart" onclick="toggleNCart(true)" aria-label="View basket">
+            <i class="fa-solid fa-cart-shopping" aria-hidden="true"></i>
+            <span class="classic-mobile-cart-count" data-cart-count aria-live="polite">{{ \App\Services\CartService::getCount() }}</span>
+        </button>
+
         <div class="header-actions hide-on-mobile" style="display: flex; align-items: center; gap: 0.5rem;">
             @if(auth()->check())
                 <div class="user-dropdown" style="position: relative;">
