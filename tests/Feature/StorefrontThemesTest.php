@@ -55,14 +55,15 @@ class StorefrontThemesTest extends TestCase
             ->assertDontSee('class="theme-department-sidebar"', false);
     }
 
-    public function test_settings_lists_twelve_themes_with_correct_preview_urls(): void
+    public function test_settings_lists_fifteen_themes_with_correct_preview_urls(): void
     {
         $tenant = $this->store();
         $admin = User::factory()->create(['tenant_id' => $tenant->id, 'type' => 'admin']);
         $response = $this->actingAs($admin)->get("/{$tenant->id}/admin/settings/theme")->assertOk();
-        $response->assertViewHas('themes', fn ($themes) => count($themes) === 12);
+        $response->assertViewHas('themes', fn ($themes) => count($themes) === 15);
         foreach (app(StorefrontTheme::class)->all() as $id => $theme) {
             $response->assertSee($theme['name'])->assertSee('preview_theme='.$id);
+            $this->assertFileExists(public_path('images/themes/'.$id.'.svg'));
         }
     }
 
@@ -75,7 +76,7 @@ class StorefrontThemesTest extends TestCase
             $this->assertEquals($id, $tenant->fresh()->theme);
         }
         $this->postJson("/{$tenant->id}/admin/settings/theme", ['theme' => 'unknown'])->assertUnprocessable();
-        $this->assertEquals('template_12', $tenant->fresh()->theme);
+        $this->assertEquals('template_15', $tenant->fresh()->theme);
     }
 
     public function test_every_theme_renders_home_catalog_product_and_checkout(): void
@@ -128,7 +129,7 @@ class StorefrontThemesTest extends TestCase
         \App\Models\Slider::create(['tenant_id' => $tenant->id, 'title' => 'Merchant special',
             'image_desktop' => 'https://example.com/merchant-desktop.png',
             'image_mobile' => 'https://example.com/merchant-mobile.png', 'status' => true, 'order' => 1]);
-        foreach (['template_2' => 'market', 'template_3' => 'quick', 'template_4' => 'pantry', 'template_5' => 'corner', 'template_6' => 'pop', 'template_7' => 'atelier', 'template_8' => 'vista', 'template_9' => 'noir', 'template_10' => 'terra', 'template_11' => 'mono', 'template_12' => 'bloom'] as $theme => $style) {
+        foreach (['template_2' => 'market', 'template_3' => 'quick', 'template_4' => 'pantry', 'template_5' => 'corner', 'template_6' => 'pop', 'template_7' => 'atelier', 'template_8' => 'vista', 'template_9' => 'noir', 'template_10' => 'terra', 'template_11' => 'mono', 'template_12' => 'bloom', 'template_13' => 'maison', 'template_14' => 'journal', 'template_15' => 'riviera'] as $theme => $style) {
             $response = $this->get('/v1?tenant_id='.$tenant->id.'&preview=1&preview_theme='.$theme)->assertOk();
             $response->assertSee('data-theme-header="'.$style.'"', false)
                 ->assertSee('data-theme-home="'.$style.'"', false)

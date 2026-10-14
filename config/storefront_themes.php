@@ -71,4 +71,19 @@ return [
         'description' => 'A soft boutique with arched photography, centered welcome typography and rounded product selection panels.',
         'tone' => '#84516a', 'background' => '#fff4f7', 'layout' => 'bloom',
     ],
+    'template_13' => [
+        'name' => 'Maison Luxe', 'version' => 'Premium collection',
+        'description' => 'A cinematic luxury storefront with an immersive welcome, portrait product photography and a gallery-led product page.',
+        'tone' => '#72613d', 'background' => '#f5f1e7', 'layout' => 'maison',
+    ],
+    'template_14' => [
+        'name' => 'Gallery Journal', 'version' => 'Premium collection',
+        'description' => 'A magazine-inspired storefront with an editorial cover, horizontal product cards and a structured story-and-selection product page.',
+        'tone' => '#993e36', 'background' => '#faf8f3', 'layout' => 'journal',
+    ],
+    'template_15' => [
+        'name' => 'Riviera Club', 'version' => 'Premium collection',
+        'description' => 'A coastal boutique with a framed welcome, crisp image tiles, compact shopping panels and a relaxed split product page.',
+        'tone' => '#16716e', 'background' => '#eff8f6', 'layout' => 'riviera',
+    ],
 ];

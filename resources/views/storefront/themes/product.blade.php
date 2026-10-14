@@ -9,7 +9,15 @@
 @endphp
 <article class="pd-page pd-{{ $storefrontTheme['layout'] }}" data-product-detail="{{ $storefrontTheme['layout'] }}">
     <nav class="pd-breadcrumb" aria-label="Breadcrumb"><a href="{{ app(\App\Services\StorefrontTheme::class)->url('v1.home') }}">Home</a><span>/</span><a href="{{ app(\App\Services\StorefrontTheme::class)->url('v1.all-products') }}">Shop</a>@if($product->collection)<span>/</span><a href="{{ app(\App\Services\StorefrontTheme::class)->url('v1.collection', ['slug' => $product->collection->slug]) }}">{{ $product->collection->name }}</a>@endif</nav>
-    @if($storefrontTheme['id'] === 'template_10')
+    @if($storefrontTheme['id'] === 'template_13')
+        <div class="pd-maison-layout">@include('storefront.themes.product.gallery')<div class="pd-new-summary">@include('storefront.themes.product.identity') @include('storefront.themes.product.purchase')</div></div>
+        <div class="pd-maison-story">@include('storefront.themes.product.information')</div>
+    @elseif($storefrontTheme['id'] === 'template_14')
+        <div class="pd-journal-heading">@include('storefront.themes.product.identity')</div>
+        <div class="pd-journal-layout">@include('storefront.themes.product.gallery')<div class="pd-journal-story">@include('storefront.themes.product.information')</div><div class="pd-new-summary">@include('storefront.themes.product.purchase')</div></div>
+    @elseif($storefrontTheme['id'] === 'template_15')
+        <div class="pd-riviera-layout"><div class="pd-new-summary">@include('storefront.themes.product.identity') @include('storefront.themes.product.purchase') @include('storefront.themes.product.information')</div>@include('storefront.themes.product.gallery')</div>
+    @elseif($storefrontTheme['id'] === 'template_10')
         <div class="pd-terra-layout">@include('storefront.themes.product.gallery')<div class="pd-new-summary">@include('storefront.themes.product.identity') @include('storefront.themes.product.purchase') @include('storefront.themes.product.information')</div></div>
     @elseif($storefrontTheme['id'] === 'template_11')
         <div class="pd-mono-heading">@include('storefront.themes.product.identity')</div>
