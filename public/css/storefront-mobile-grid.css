@@ -12,6 +12,71 @@
     color: var(--store-badge-fg);
     overflow-wrap: anywhere;
 }
+
+@media (max-width: 768px) {
+    .storefront-theme.template_2 {
+        padding-top: var(--market-header-height, 190px);
+        scroll-padding-top: var(--market-header-height, 190px);
+    }
+    .storefront-theme.template_2 .sf-header-market {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        z-index: 1000;
+    }
+    .storefront-theme.template_2:has(.pd-market) {
+        --market-purchase-bar-height: calc(53px + 1.3rem + env(safe-area-inset-bottom, 0px));
+        padding-bottom: var(--market-purchase-bar-height);
+    }
+    .storefront-theme.template_2 #main-product-actions {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 1100;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        align-items: stretch;
+        width: auto;
+        height: var(--market-purchase-bar-height);
+        gap: .65rem;
+        margin: 0;
+        padding: .65rem 1rem calc(.65rem + env(safe-area-inset-bottom, 0px));
+        background: #fff;
+        border-top: 1px solid var(--premium-line);
+        box-shadow: 0 -4px 20px rgba(15, 23, 42, .08);
+        box-sizing: border-box;
+    }
+    .storefront-theme.template_2 #main-product-actions .qty-control {
+        flex: 0 0 96px;
+        width: 96px;
+        height: 52px;
+        gap: .25rem;
+        box-sizing: border-box;
+    }
+    .storefront-theme.template_2 #main-product-actions .qty-control button {
+        flex: 0 0 28px;
+        width: 28px;
+        min-height: 44px;
+        padding: 0;
+    }
+    .storefront-theme.template_2 #main-product-actions .btn-add-to-cart {
+        height: 52px;
+        min-height: 52px;
+    }
+    .storefront-theme.template_2:has(.pd-market) #floating-cart-summary {
+        bottom: calc(var(--market-purchase-bar-height) + .75rem) !important;
+    }
+    .storefront-theme.template_2:has(.pd-market) .whatsapp-float-btn {
+        bottom: calc(var(--market-purchase-bar-height) + 5.5rem) !important;
+        width: 48px !important;
+        height: 48px !important;
+        font-size: 24px !important;
+    }
+}
 .storefront-theme .sf-stock-label {
     background: var(--store-stock-bg);
     color: var(--store-stock-fg);
