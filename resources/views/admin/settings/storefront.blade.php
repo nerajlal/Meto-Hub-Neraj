@@ -32,6 +32,36 @@
         <div class="row">
             <!-- Left Side: About & Contact -->
             <div class="col-lg-8">
+                @php
+                    $heroDefaults = app(\App\Services\StorefrontTheme::class)->hero($tenant);
+                @endphp
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header py-3"><h5 class="m-0 fw-bold">Homepage Hero Text</h5></div>
+                    <div class="card-body">
+                        <p class="text-muted small">Personalize the welcome text for your store. This text follows your store across all themes. Leave a field blank to use the selected theme’s default. Manage hero images in your banner settings.</p>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold" for="hero_eyebrow">Small heading</label>
+                            <input class="form-control @error('hero_eyebrow') is-invalid @enderror" id="hero_eyebrow" name="hero_eyebrow" maxlength="120" value="{{ old('hero_eyebrow', $tenant->hero_eyebrow) }}" placeholder="{{ $heroDefaults['eyebrow'] }}">
+                            @error('hero_eyebrow')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold" for="hero_heading">Main headline</label>
+                            <textarea class="form-control @error('hero_heading') is-invalid @enderror" id="hero_heading" name="hero_heading" maxlength="200" rows="2" placeholder="{{ $heroDefaults['heading'] }}">{{ old('hero_heading', $tenant->hero_heading) }}</textarea>
+                            @error('hero_heading')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold" for="hero_description">Description</label>
+                            <textarea class="form-control @error('hero_description') is-invalid @enderror" id="hero_description" name="hero_description" maxlength="1000" rows="3" placeholder="{{ $heroDefaults['description'] }}">{{ old('hero_description', $tenant->hero_description) }}</textarea>
+                            @error('hero_description')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                        </div>
+                        <div>
+                            <label class="form-label fw-semibold" for="hero_button_label">Button text</label>
+                            <input class="form-control @error('hero_button_label') is-invalid @enderror" id="hero_button_label" name="hero_button_label" maxlength="60" value="{{ old('hero_button_label', $tenant->hero_button_label) }}" placeholder="{{ $heroDefaults['button_label'] }}">
+                            @error('hero_button_label')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                            <div class="form-text">The button opens your store’s product catalog.</div>
+                        </div>
+                    </div>
+                </div>
                 <!-- Storefront Branding & Customization -->
                 <div class="card mb-4 shadow-sm">
                     <div class="card-header py-3 d-flex align-items-center justify-content-between">

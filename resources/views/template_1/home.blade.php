@@ -5,6 +5,15 @@
 @section('meta_keywords', 'online store, buy online, premium products, fast delivery')
 
 @section('content')
+    @if($currentTenant->hero_eyebrow || $currentTenant->hero_heading || $currentTenant->hero_description || $currentTenant->hero_button_label)
+        @php
+            $hero = app(\App\Services\StorefrontTheme::class)->hero($currentTenant, 'template_1');
+        @endphp
+        <section class="sf-classic-custom-hero">
+            <span>{{ $hero['eyebrow'] }}</span><h1>{{ $hero['heading'] }}</h1><p>{{ $hero['description'] }}</p>
+            <a href="{{ app(\App\Services\StorefrontTheme::class)->url('v1.all-products') }}">{{ $hero['button_label'] }} →</a>
+        </section>
+    @endif
     @if($storefrontTheme['id'] !== 'template_1')
         @include('storefront.themes.hero')
     @endif

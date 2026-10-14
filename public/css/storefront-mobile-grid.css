@@ -822,3 +822,17 @@ body.storefront-theme.template_4 {
         font-size: 24px !important;
     }
 }
+/* Merchant hero copy stays readable without changing each theme's composition. */
+.storefront-theme .sf-home h1,.storefront-theme .sf-home p,.sf-classic-custom-hero h1,.sf-classic-custom-hero p {white-space:pre-line;overflow-wrap:anywhere;}
+.storefront-theme .sf-home .sf-kicker {overflow-wrap:anywhere;}
+.sf-classic-custom-hero {padding:2rem;margin-bottom:1.5rem;background:var(--bg-light);border-radius:1rem;}
+.sf-classic-custom-hero>span {font-size:.75rem;letter-spacing:.08em;color:var(--primary-color);}
+.sf-classic-custom-hero h1 {font-size:clamp(1.8rem,4vw,3rem);line-height:1.15;margin:1rem 0;}
+.sf-classic-custom-hero p {margin-bottom:1.5rem;line-height:1.6;}
+.sf-classic-custom-hero a {display:inline-block;max-width:100%;padding:.8rem 1.2rem;border-radius:.5rem;background:var(--primary-color);color:var(--store-stock-fg);overflow-wrap:anywhere;}
+@media(max-width:768px){.sf-classic-custom-hero{padding:1.25rem;}}
+.storefront-theme .sf-home .sf-primary-button {max-width:100%;overflow-wrap:anywhere;}
+.storefront-theme .sf-quick-greeting {flex-wrap:wrap;}
+.storefront-theme .sf-quick-greeting>div {flex:1 1 220px;min-width:0;}
+.storefront-theme .sf-quick-greeting>a {white-space:normal;overflow-wrap:anywhere;max-width:100%;}
+.storefront-theme .sf-corner-welcome>div {min-width:0;}

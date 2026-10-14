@@ -17,6 +17,21 @@ class StorefrontTheme
         return $luminance > .179 ? '#000000' : '#ffffff';
     }
 
+    public function hero(Tenant $tenant, ?string $theme = null): array
+    {
+        $id = $this->normalize($theme ?? $tenant->theme);
+        $defaults = config('storefront_hero.'.$id, []);
+        $defaults += ['eyebrow' => $tenant->name.' / THE COLLECTION', 'heading' => 'Welcome to '.$tenant->name.'.',
+            'description' => 'Explore the latest collections from '.$tenant->name.'.', 'button_label' => 'Explore the collection'];
+        $content = [];
+        foreach ($defaults as $key => $value) {
+            $custom = trim((string) $tenant->getAttribute('hero_'.$key));
+            $content[$key] = $custom !== '' ? $custom : str_replace('{store}', $tenant->name, $value);
+        }
+
+        return $content;
+    }
+
     public function all(): array
     {
         return config('storefront_themes');

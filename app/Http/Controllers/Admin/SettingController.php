@@ -104,6 +104,10 @@ class SettingController extends Controller
 
         $request->validate([
             'store_name' => 'required|string|max:191',
+            'hero_eyebrow' => 'nullable|string|max:120',
+            'hero_heading' => 'nullable|string|max:200',
+            'hero_description' => 'nullable|string|max:1000',
+            'hero_button_label' => 'nullable|string|max:60',
             'about_title' => 'required|string|max:255',
             'about_text' => 'nullable|string',
             'contact_email' => 'nullable|email|max:255',
@@ -149,6 +153,13 @@ class SettingController extends Controller
             'delivery_info' => $request->delivery_info,
             'min_order_value' => $request->min_order_value ?? 0,
         ];
+
+        foreach (['hero_eyebrow', 'hero_heading', 'hero_description', 'hero_button_label'] as $field) {
+            if ($request->exists($field)) {
+                $value = trim((string) $request->input($field));
+                $updateData[$field] = $value !== '' ? $value : null;
+            }
+        }
 
         if ($request->has('remove_logo') && $request->remove_logo == '1') {
             if ($tenant->logo) {
