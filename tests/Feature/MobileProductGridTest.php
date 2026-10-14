@@ -13,6 +13,21 @@ class MobileProductGridTest extends TestCase
 {
     use RefreshDatabase;
 
+    public function test_classic_mobile_search_preserves_store_context_and_filters_catalog(): void
+    {
+        $tenant = Tenant::create(['name' => 'Search Store', 'theme' => 'template_1']);
+        foreach (['Organic Rice', 'Red Lentils'] as $title) {
+            $product = Product::create(['tenant_id' => $tenant->id, 'title' => $title, 'status' => 'active']);
+            $product->variants()->create(['size' => '1kg', 'price' => 100, 'stock' => 10]);
+        }
+        $this->get('/store/search-store')->assertOk()
+            ->assertSee('id="t1-mobile-search-form"', false)
+            ->assertSee('placeholder="Search products"', false)
+            ->assertSee('name="store" value="search-store"', false);
+        $this->get('/store/search-store/all-products?store=search-store&q=Organic')->assertOk()
+            ->assertViewHas('products', fn ($products) => $products->pluck('title')->all() === ['Organic Rice']);
+    }
+
     public function test_classic_only_shows_thumbnail_selector_when_multiple_images_exist(): void
     {
         $tenant = Tenant::create(['name' => 'Classic Store', 'theme' => 'template_1']);

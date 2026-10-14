@@ -1,4 +1,5 @@
 /* Loaded after theme styles so the merchant's mobile density wins consistently. */
+.classic-mobile-search { display: none; }
 @media (min-width: 769px) {
     .storefront-theme .sf-card-quick-body:has(.qty-controller[style*="flex"]) {
         flex-wrap: wrap;
@@ -27,20 +28,50 @@
         max-width: 180px;
         object-fit: contain;
     }
-    .storefront-theme.template_1 .store-header > .header-container > .mobile-search-toggle {
-        display: inline-flex !important;
+    .storefront-theme.template_1 .store-header .logo {
+        flex: 0 1 auto;
+        max-width: 104px;
+        max-height: 44px;
+        overflow: hidden;
+        line-height: 1.2;
+    }
+    .storefront-theme.template_1 .classic-mobile-search {
+        display: flex;
         align-items: center;
-        justify-content: center;
+        flex: 1 1 0;
+        min-width: 0;
+        height: 44px;
+        border: 1px solid var(--border-color);
+        border-radius: 10px;
+        background: #f8fafc;
+    }
+    .storefront-theme.template_1 .classic-mobile-search input {
+        flex: 1 1 0;
+        min-width: 0;
+        width: 100%;
+        height: 42px;
+        padding: 0 .65rem;
+        background: transparent;
+        color: var(--primary-color);
+        border: 0;
+        outline: none;
+        font-size: 16px;
+    }
+    .storefront-theme.template_1 .classic-mobile-search:focus-within {
+        outline: 2px solid var(--accent-color);
+        outline-offset: 2px;
+    }
+    .storefront-theme.template_1 .classic-mobile-search button {
         flex: 0 0 44px;
         width: 44px;
-        height: 44px;
-        padding: 0;
-        margin-left: auto;
-        font-size: 21px !important;
-        line-height: 1;
-    }
-    .storefront-theme.template_1 .store-header > .header-container > .mobile-search-toggle i {
-        font-size: 21px;
+        height: 42px;
+        display: grid;
+        place-items: center;
+        background: transparent;
+        border: 0;
+        color: var(--primary-color);
+        font-size: 18px;
+        cursor: pointer;
     }
     .storefront-theme .product-grid.grid-cols-mobile-1 {
         grid-template-columns: minmax(0, 1fr) !important;
@@ -313,7 +344,7 @@
     }
     .storefront-theme.template_1:has(.product-page-container) {
         --classic-purchase-bar-height: calc(53px + 1.3rem + env(safe-area-inset-bottom, 0px));
-        padding-bottom: calc(var(--classic-purchase-bar-height) + 1rem);
+        padding-bottom: var(--classic-purchase-bar-height);
     }
     .storefront-theme.template_1 #main-product-actions {
         position: fixed;

@@ -42,9 +42,12 @@
             </div>
         </div>
 
-        <button type="button" class="mobile-search-toggle show-on-mobile" aria-label="Search products" style="background: none; border: none; font-size: 1.25rem; color: var(--primary-color); cursor: pointer; display: none;">
-            <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
-        </button>
+        <form id="t1-mobile-search-form" class="classic-mobile-search" action="{{ app(\App\Services\StorefrontTheme::class)->url('v1.all-products') }}" method="GET" role="search">
+            @include('storefront.themes.preview_fields')
+            <input type="search" name="q" id="t1-mobile-search-input" value="{{ request('q') }}"
+                placeholder="Search products" aria-label="Search products" enterkeyhint="search">
+            <button type="submit" aria-label="Search products"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i></button>
+        </form>
 
         <div class="header-actions hide-on-mobile" style="display: flex; align-items: center; gap: 0.5rem;">
             @if(auth()->check())
@@ -133,26 +136,6 @@
         </div>
     </div>
     @endmobileapp
-    <!-- Mobile Expandable Search Bar -->
-    <div id="mobile-search-container" style="display: none; padding: 10px 15px; background: #fff; border-bottom: 1px solid var(--border-color); width: 100%; position: absolute; z-index: 999; top: 100%; left: 0;">
-        <form id="t1-mobile-search-form" action="{{ app(\App\Services\StorefrontTheme::class)->url('v3.all-products') }}" method="GET" autocomplete="off" style="display: flex; align-items: center; width: 100%; position: relative;">
-                @include('storefront.themes.preview_fields')
-            <i class="fa-solid fa-magnifying-glass search-icon" style="position: absolute; left: 1rem; color: #9ca3af;"></i>
-            <input
-                type="text"
-                name="q"
-                id="t1-mobile-search-input"
-                class="search-input"
-                placeholder="Search for products..."
-                value="{{ request('q') }}"
-                autocomplete="off"
-                style="width: 100%; padding: 0.75rem 1rem 0.75rem 2.5rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.95rem; outline: none;"
-            >
-            <button type="button" class="mobile-search-toggle" style="position: absolute; right: 0.75rem; border: none; background: none; color: #9ca3af; font-size: 1.25rem; padding: 0.25rem;">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-        </form>
-    </div>
 </header>
 
 <style>
@@ -231,23 +214,6 @@
 </style>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Toggle mobile search
-    const mobileSearchToggles = document.querySelectorAll('.mobile-search-toggle');
-    const mobileSearchContainer = document.getElementById('mobile-search-container');
-    const mobileSearchInput = document.getElementById('t1-mobile-search-input');
-    
-    mobileSearchToggles.forEach(toggle => {
-        toggle.addEventListener('click', function() {
-            if (mobileSearchContainer.style.display === 'none') {
-                mobileSearchContainer.style.display = 'block';
-                mobileSearchInput.focus();
-            } else {
-                mobileSearchContainer.style.display = 'none';
-            }
-        });
-    });
-});
 
 (function () {
     const HISTORY_KEY = 't1_search_history';
