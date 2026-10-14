@@ -82,8 +82,16 @@ class SettingController extends Controller
     {
         $tenantId = auth()->user()->tenant_id ?? session('active_tenant_id') ?? 1;
         $tenant = Tenant::findOrFail($tenantId);
+        $registeredContact = \App\Models\User::withoutGlobalScopes()->where('tenant_id', $tenant->id)
+            ->where('type', 'admin')->oldest('id')->first();
+        $contactDefaults = [
+            'name' => $registeredContact?->name,
+            'email' => $tenant->contact_email ?? $registeredContact?->email,
+            'phone' => $tenant->contact_phone ?? $registeredContact?->phone,
+            'whatsapp' => $tenant->whatsapp_number ?? preg_replace('/\D/', '', $registeredContact?->phone ?? ''),
+        ];
 
-        return view('admin.settings.storefront', compact('tenant'));
+        return view('admin.settings.storefront', compact('tenant', 'contactDefaults'));
     }
 
     /**
@@ -95,6 +103,7 @@ class SettingController extends Controller
         $tenant = Tenant::findOrFail($tenantId);
 
         $request->validate([
+            'store_name' => 'required|string|max:191',
             'about_title' => 'required|string|max:255',
             'about_text' => 'nullable|string',
             'contact_email' => 'nullable|email|max:255',
@@ -119,6 +128,7 @@ class SettingController extends Controller
         ]);
 
         $updateData = [
+            'name' => $request->input('store_name'),
             'about_title' => $request->about_title,
             'about_text' => $request->about_text,
             'contact_email' => $request->contact_email,
@@ -166,9 +176,13 @@ class SettingController extends Controller
             $updateData['favicon'] = $request->file('favicon')->store('favicons', 'public');
         }
 
-        $tenant->update($updateData);
+        \Illuminate\Support\Facades\DB::transaction(function () use ($tenant, $updateData) {
+            $tenant->update($updateData);
+            \App\Models\User::withoutGlobalScopes()->where('tenant_id', $tenant->id)->where('type', 'admin')
+                ->update(['site_name' => $tenant->name]);
+        });
 
-        return redirect()->back()->with('success', 'Storefront pages settings updated successfully.');
+        return redirect()->back()->with('success', 'Storefront settings updated successfully.');
     }
 
     /**

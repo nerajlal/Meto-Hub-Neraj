@@ -46,6 +46,9 @@ class LaunchReadinessTest extends TestCase
         $this->assertNull($user->email_verified_at);
         $this->assertSame('sprout', $user->tenant->plan);
         $this->assertSame('template_6', $user->tenant->theme);
+        $this->assertSame('merchant@example.com', $user->tenant->contact_email);
+        $this->assertSame('+91 1234567890', $user->tenant->contact_phone);
+        $this->assertSame('911234567890', $user->tenant->whatsapp_number);
         $url = $this->verificationUrl();
         $this->assertStringStartsWith('https://betametohub.metora.in/', $url);
         $this->get($url)->assertRedirect(route('admin.common.login'));

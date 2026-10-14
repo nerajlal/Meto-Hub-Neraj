@@ -32,10 +32,21 @@
                     <div class="card-header py-3 d-flex align-items-center justify-content-between">
                         <div class="d-flex align-items-center">
                             <i class="fa-solid fa-palette me-2 text-primary"></i>
-                            <h5 class="m-0 fw-bold">Storefront Branding & Colors</h5>
+                            <h5 class="m-0 fw-bold">Store Name, Branding & Colors</h5>
                         </div>
                     </div>
                     <div class="card-body">
+                        <div class="mb-4">
+                            <label for="store_name" class="form-label fw-semibold">Store Name <span class="text-danger">*</span></label>
+                            <input type="text" name="store_name" id="store_name"
+                                class="form-control @error('store_name') is-invalid @enderror"
+                                value="{{ old('store_name', $tenant->name) }}" maxlength="191" required
+                                aria-describedby="store_name_help">
+                            <div id="store_name_help" class="form-text">This name appears on your storefront. Renaming your store keeps your existing public link.</div>
+                            @error('store_name')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
                         <!-- Store Logo -->
                         <div class="mb-4">
                             <label class="form-label fw-semibold mb-2">Store Logo (Square format recommended)</label>
@@ -227,23 +238,27 @@
                         <h5 class="m-0 fw-bold">Contact Page Details</h5>
                     </div>
                     <div class="card-body">
+                        @if($contactDefaults['name'])
+                            <p class="small mb-3"><span class="text-muted">Registered contact:</span> <strong>{{ $contactDefaults['name'] }}</strong></p>
+                        @endif
+                        <p class="small text-muted mb-3">Your registration email and mobile number are used as defaults. You can enter different support details below.</p>
                         <div class="mb-3">
                             <label for="contact_email" class="form-label fw-semibold">Support Email Address</label>
-                            <input type="email" class="form-control @error('contact_email') is-invalid @enderror" id="contact_email" name="contact_email" value="{{ old('contact_email', $tenant->contact_email) }}" placeholder="e.g. support@yourstore.com">
+                            <input type="email" class="form-control @error('contact_email') is-invalid @enderror" id="contact_email" name="contact_email" value="{{ old('contact_email', $contactDefaults['email']) }}" placeholder="e.g. support@yourstore.com">
                             @error('contact_email')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="mb-3">
                             <label for="contact_phone" class="form-label fw-semibold">Support Phone Number</label>
-                            <input type="text" class="form-control @error('contact_phone') is-invalid @enderror" id="contact_phone" name="contact_phone" value="{{ old('contact_phone', $tenant->contact_phone) }}" placeholder="e.g. +91 98765 43210">
+                            <input type="text" class="form-control @error('contact_phone') is-invalid @enderror" id="contact_phone" name="contact_phone" value="{{ old('contact_phone', $contactDefaults['phone']) }}" placeholder="e.g. +91 98765 43210">
                             @error('contact_phone')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="mb-3">
                             <label for="whatsapp_number" class="form-label fw-semibold">WhatsApp Number</label>
-                            <input type="text" class="form-control @error('whatsapp_number') is-invalid @enderror" id="whatsapp_number" name="whatsapp_number" value="{{ old('whatsapp_number', $tenant->whatsapp_number) }}" placeholder="e.g. 919876543210 (without +)">
+                            <input type="text" class="form-control @error('whatsapp_number') is-invalid @enderror" id="whatsapp_number" name="whatsapp_number" value="{{ old('whatsapp_number', $contactDefaults['whatsapp']) }}" placeholder="e.g. 919876543210 (without +)">
                             @error('whatsapp_number')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
