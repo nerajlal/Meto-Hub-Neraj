@@ -10,11 +10,11 @@
             }
         @endphp
         <img src="{{ $imagePath }}" alt="{{ $bundle->title }}" onerror="this.src='{{ asset('Images/default.png') }}'" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;">
-        <div class="social-proof-tag" style="position: absolute; bottom: 10px; left: 10px; background: rgba(255, 255, 255, 0.9); padding: 4px 8px; border-radius: 20px; font-size: 0.65rem; font-weight: 700; color: #059669; display: flex; align-items: center; gap: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); white-space: nowrap; max-width: 90%; overflow: hidden; text-overflow: ellipsis;">
+        <div class="social-proof-tag" style="position: absolute; bottom: 10px; left: 10px; background: var(--store-badge-bg); padding: 4px 8px; border-radius: 20px; font-size: 0.65rem; font-weight: 700; color: var(--store-badge-fg); display: flex; align-items: center; gap: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); white-space: nowrap; max-width: 90%; overflow: hidden; text-overflow: ellipsis;">
             <i class="fa-solid fa-basket-shopping"></i>
             <span>{{ rand(20, 60) }} bought</span>
         </div>
-        <div class="bundle-badge-container" style="position: absolute; top: 10px; right: 10px; background: var(--accent-color); color: #fff; padding: 4px 8px; border-radius: 4px; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; z-index: 10;">
+        <div class="bundle-badge-container" style="position: absolute; top: 10px; right: 10px; background: var(--store-badge-bg); color: var(--store-badge-fg); padding: 4px 8px; border-radius: 4px; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; z-index: 10;">
             <i class="{{ $bundle->type == 'pack' ? 'fa-solid fa-layer-group' : 'fa-solid fa-boxes-stacked' }} me-1"></i><span>{{ $bundle->type == 'pack' ? 'BUNDLE' : 'COMBO' }}</span>
         </div>
     </a>

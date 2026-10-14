@@ -6,6 +6,17 @@ use App\Models\Tenant;
 
 class StorefrontTheme
 {
+    public function contrastText(string $color): string
+    {
+        if (!preg_match('/^#[0-9a-f]{6}$/i', $color)) return '#ffffff';
+        $channels = array_map(function ($offset) use ($color) {
+            $value = hexdec(substr($color, $offset, 2)) / 255;
+            return $value <= .04045 ? $value / 12.92 : (($value + .055) / 1.055) ** 2.4;
+        }, [1, 3, 5]);
+        $luminance = .2126 * $channels[0] + .7152 * $channels[1] + .0722 * $channels[2];
+        return $luminance > .179 ? '#000000' : '#ffffff';
+    }
+
     public function all(): array
     {
         return config('storefront_themes');

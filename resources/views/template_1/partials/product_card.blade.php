@@ -22,7 +22,7 @@
         <img src="{{ $imagePath }}" alt="{{ $product->title }}" onerror="this.src='{{ asset('Images/default.png') }}'" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; {{ $isOut ? 'opacity: 0.6; filter: grayscale(100%);' : '' }}">
         
         @if($isOut)
-        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.7); color: #fff; padding: 6px 12px; border-radius: 4px; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; z-index: 10; white-space: nowrap;">
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--store-stock-bg); color: var(--store-stock-fg); padding: 6px 12px; border-radius: 4px; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; z-index: 10; white-space: nowrap;">
             Out of Stock
         </div>
         @endif
@@ -34,15 +34,15 @@
 
         <!-- Dynamic Tag -->
         @if(!empty($product->tags) && is_array($product->tags) && count($product->tags) > 0)
-        <div class="social-proof-tag" style="position: absolute; bottom: 10px; left: 10px; background: rgba(255, 255, 255, 0.9); padding: 4px 8px; border-radius: 20px; font-size: 0.65rem; font-weight: 700; color: #059669; display: flex; align-items: center; gap: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); white-space: nowrap; max-width: 90%; overflow: hidden; text-overflow: ellipsis;">
-            <i class="fa-solid fa-tag" style="color: #10b981;"></i>
+        <div class="social-proof-tag" style="position: absolute; bottom: 10px; left: 10px; background: var(--store-badge-bg); padding: 4px 8px; border-radius: 20px; font-size: 0.65rem; font-weight: 700; color: var(--store-badge-fg); display: flex; align-items: center; gap: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); white-space: nowrap; max-width: 90%; overflow: hidden; text-overflow: ellipsis;">
+            <i class="fa-solid fa-tag" style="color: inherit;"></i>
             <span>{{ last($product->tags) }}</span>
         </div>
         @endif
 
         <!-- Pack Offer indicator badge -->
         @if($product->bundles->where('type', 'pack')->isNotEmpty())
-            <div style="position: absolute; top: 10px; left: 10px; background: #6366f1; color: #fff; padding: 4px 8px; border-radius: 4px; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3); white-space: nowrap;">
+            <div style="position: absolute; top: 10px; left: 10px; background: var(--store-badge-bg); color: var(--store-badge-fg); padding: 4px 8px; border-radius: 4px; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12); white-space: nowrap;">
                 <i class="fa-solid fa-boxes-stacked me-1"></i><span class="hide-text-mobile">Pack Deal</span>
             </div>
         @endif

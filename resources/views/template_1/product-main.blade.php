@@ -294,7 +294,7 @@
                         $bestPack = $packBundles->sortBy('total_price')->first(); 
                         $bestQty = $bestPack->products->first()->pivot->quantity;
                     @endphp
-                    <div class="p-gallery-badge" style="position: absolute; top: 1.25rem; left: 1.25rem; background: #6366f1; color: #fff; padding: 0.5rem 1rem; border-radius: 0.5rem; font-weight: 800; font-size: 0.8rem; box-shadow: 0 4px 15px rgba(99, 102, 241, 0.2); z-index: 10;">
+                    <div class="p-gallery-badge" style="position: absolute; top: 1.25rem; left: 1.25rem; background: var(--store-badge-bg); color: var(--store-badge-fg); padding: 0.5rem 1rem; border-radius: 0.5rem; font-weight: 800; font-size: 0.8rem; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12); z-index: 10;">
                         <i class="fa-solid fa-tags"></i> Buy {{ $bestQty }} for {{ $currentTenant->currency ?? '₹' }}{{ number_format($bestPack->total_price, 0) }}
                     </div>
                 @endif
@@ -380,7 +380,7 @@
                                         <span style="color: var(--text-muted); font-weight: 600;">({{ $pb_variant->size }})</span>
                                     @endif
                                 </span>
-                                <span class="deal-save" style="display: inline-block; font-size: 0.75rem; color: #10b981; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">Save {{ $currentTenant->currency ?? '₹' }}{{ number_format(($pb_variant ? $pb_variant->price : $pb_prod->starting_price) * $pb_prod->pivot->quantity - $pb->total_price, 2) }} Instantly</span>
+                                <span class="deal-save" style="display: inline-block; font-size: 0.75rem; color: var(--primary-color); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">Save {{ $currentTenant->currency ?? '₹' }}{{ number_format(($pb_variant ? $pb_variant->price : $pb_prod->starting_price) * $pb_prod->pivot->quantity - $pb->total_price, 2) }} Instantly</span>
                             </div>
                             <button onclick="addPackToCart(event, {{ $pb->id }})" class="btn-deal-add" style="background: var(--primary-color); color: #fff; border: none; padding: 0.75rem 1.25rem; border-radius: 8px; font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: 0.2s;">
                                 Add @ {{ $currentTenant->currency ?? '₹' }}{{ number_format($pb->total_price, 2) }}

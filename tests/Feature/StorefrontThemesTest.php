@@ -14,6 +14,26 @@ class StorefrontThemesTest extends TestCase
 {
     use RefreshDatabase;
 
+    public function test_product_tags_use_admin_branding_with_readable_text_in_every_theme(): void
+    {
+        $tenant = $this->store();
+        $product = $this->catalog($tenant);
+        $product->update(['tags' => ['New']]);
+        foreach (['#183e32' => '#ffffff', '#ffe600' => '#000000'] as $color => $foreground) {
+            $tenant->update(['primary_color' => $color, 'dark_color' => $color]);
+            foreach (array_keys(config('storefront_themes')) as $theme) {
+                $tenant->update(['theme' => $theme]);
+                $this->get('/store/'.$tenant->slug.'/all-products')->assertOk()
+                    ->assertSee('New')
+                    ->assertSee('--store-badge-bg: var(--accent-color);', false)
+                    ->assertSee('--store-badge-fg: '.$foreground.';', false)
+                    ->assertSee('--store-stock-fg: '.$foreground.';', false);
+            }
+        }
+        $this->assertSame('#000000', app(StorefrontTheme::class)->contrastText('#ffffff'));
+        $this->assertSame('#ffffff', app(StorefrontTheme::class)->contrastText('#000000'));
+    }
+
     private function store(): Tenant
     {
         return Tenant::create(['name' => 'Neighbourhood Grocer', 'theme' => 'template_1']);

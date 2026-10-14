@@ -1,5 +1,20 @@
 /* Loaded after theme styles so the merchant's mobile density wins consistently. */
 .classic-mobile-search { display: none; }
+/* Badge colors come from the merchant's branding in every theme. */
+.storefront-theme .sf-product-tag {
+    display: inline-block;
+    align-self: flex-start;
+    max-width: 100%;
+    padding: .2rem .45rem;
+    border-radius: 4px;
+    background: var(--store-badge-bg);
+    color: var(--store-badge-fg);
+    overflow-wrap: anywhere;
+}
+.storefront-theme .sf-stock-label {
+    background: var(--store-stock-bg);
+    color: var(--store-stock-fg);
+}
 @media (min-width: 769px) {
     .storefront-theme .sf-card-quick-body:has(.qty-controller[style*="flex"]) {
         flex-wrap: wrap;
