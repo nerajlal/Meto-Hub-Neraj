@@ -28,7 +28,12 @@
         <div class="sf-card-visual">@include('storefront.themes.cards.image')</div>
         <div class="sf-card-pantry-caption">@include('storefront.themes.cards.info') @include('storefront.themes.cards.actions')</div>
     @elseif($storefrontTheme['id'] === 'template_5')
-        <div class="sf-card-visual">@include('storefront.themes.cards.image')</div>
+        <div class="sf-card-visual">
+            @include('storefront.themes.cards.image')
+            @if(!empty($product->tags))
+                <div class="sf-corner-card-tags"><span class="sf-product-tag">{{ last($product->tags) }}</span></div>
+            @endif
+        </div>
         <div class="sf-card-corner-body">@include('storefront.themes.cards.info') @include('storefront.themes.cards.actions')</div>
     @else
         <div class="sf-card-studio-label"><span>{{ $product->collection?->name ?: $currentTenant->name }}</span><a href="{{ $productUrl }}" aria-label="View {{ $product->title }}">↗</a></div>
