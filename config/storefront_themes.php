@@ -56,4 +56,19 @@ return [
         'description' => 'A refined dark gallery with dramatic typography, wide photography and a focused product selection layout.',
         'tone' => '#c9aa72', 'background' => '#181c20', 'layout' => 'noir',
     ],
+    'template_10' => [
+        'name' => 'Terra Boutique', 'version' => 'Signature collection',
+        'description' => 'An earthy boutique with a reversed welcome composition, inset product imagery and warm framed purchase panels.',
+        'tone' => '#865441', 'background' => '#f2e9de', 'layout' => 'terra',
+    ],
+    'template_11' => [
+        'name' => 'Monochrome Edit', 'version' => 'Signature collection',
+        'description' => 'A crisp black and white storefront with typographic product rows, square controls and a structured product presentation.',
+        'tone' => '#202020', 'background' => '#f7f7f5', 'layout' => 'mono',
+    ],
+    'template_12' => [
+        'name' => 'Bloom Avenue', 'version' => 'Signature collection',
+        'description' => 'A soft boutique with arched photography, centered welcome typography and rounded product selection panels.',
+        'tone' => '#84516a', 'background' => '#fff4f7', 'layout' => 'bloom',
+    ],
 ];

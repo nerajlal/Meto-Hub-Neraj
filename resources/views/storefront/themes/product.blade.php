@@ -9,7 +9,16 @@
 @endphp
 <article class="pd-page pd-{{ $storefrontTheme['layout'] }}" data-product-detail="{{ $storefrontTheme['layout'] }}">
     <nav class="pd-breadcrumb" aria-label="Breadcrumb"><a href="{{ app(\App\Services\StorefrontTheme::class)->url('v1.home') }}">Home</a><span>/</span><a href="{{ app(\App\Services\StorefrontTheme::class)->url('v1.all-products') }}">Shop</a>@if($product->collection)<span>/</span><a href="{{ app(\App\Services\StorefrontTheme::class)->url('v1.collection', ['slug' => $product->collection->slug]) }}">{{ $product->collection->name }}</a>@endif</nav>
-    @if($storefrontTheme['id'] === 'template_7')
+    @if($storefrontTheme['id'] === 'template_10')
+        <div class="pd-terra-layout">@include('storefront.themes.product.gallery')<div class="pd-new-summary">@include('storefront.themes.product.identity') @include('storefront.themes.product.purchase') @include('storefront.themes.product.information')</div></div>
+    @elseif($storefrontTheme['id'] === 'template_11')
+        <div class="pd-mono-heading">@include('storefront.themes.product.identity')</div>
+        <div class="pd-mono-layout">@include('storefront.themes.product.gallery')<div class="pd-new-summary">@include('storefront.themes.product.purchase')</div></div>
+        @include('storefront.themes.product.information')
+    @elseif($storefrontTheme['id'] === 'template_12')
+        <div class="pd-bloom-layout"><div class="pd-new-summary">@include('storefront.themes.product.identity') @include('storefront.themes.product.purchase')</div>@include('storefront.themes.product.gallery')</div>
+        @include('storefront.themes.product.information')
+    @elseif($storefrontTheme['id'] === 'template_7')
         <div class="pd-atelier-layout"><div class="pd-new-summary">@include('storefront.themes.product.identity') @include('storefront.themes.product.purchase')</div>@include('storefront.themes.product.gallery')</div>
         @include('storefront.themes.product.information')
     @elseif($storefrontTheme['id'] === 'template_8')

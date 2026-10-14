@@ -2,9 +2,9 @@
 @section('title', $currentTenant->name . ' | Your Online Store')
 @section('content')
 <div class="sf-home sf-home-{{ $storefrontTheme['layout'] }}" data-theme-home="{{ $storefrontTheme['layout'] }}">
-    @if(in_array($storefrontTheme['id'], ['template_7', 'template_8', 'template_9']))
+    @if(in_array($storefrontTheme['id'], ['template_7', 'template_8', 'template_9', 'template_10', 'template_11', 'template_12']))
         <section class="sf-new-hero sf-hero-{{ $storefrontTheme['layout'] }}">
-            <div class="sf-new-hero-copy"><span class="sf-kicker">{{ $currentTenant->name }} / THE COLLECTION</span><h1>{{ ['template_7'=>'Find your everyday inspiration.', 'template_8'=>'Your next favourite is here.', 'template_9'=>'A collection worth discovering.'][$storefrontTheme['id']] }}</h1><p>Explore the latest collections from {{ $currentTenant->name }}.</p><a class="sf-primary-button" href="{{ app(\App\Services\StorefrontTheme::class)->url('v1.all-products') }}">Explore the collection →</a></div>
+            <div class="sf-new-hero-copy"><span class="sf-kicker">{{ $currentTenant->name }} / THE COLLECTION</span><h1>{{ ['template_7'=>'Find your everyday inspiration.', 'template_8'=>'Your next favourite is here.', 'template_9'=>'A collection worth discovering.','template_10'=>'Rooted in everyday beauty.','template_11'=>'Simply. Well chosen.','template_12'=>'Make room for something lovely.'][$storefrontTheme['id']] }}</h1><p>Explore the latest collections from {{ $currentTenant->name }}.</p><a class="sf-primary-button" href="{{ app(\App\Services\StorefrontTheme::class)->url('v1.all-products') }}">Explore the collection →</a></div>
             <div class="sf-new-hero-media">@if($sliders->isNotEmpty())@include('storefront.themes.components.banner')@elseif($collections->first()?->image)<img src="{{ Storage::url($collections->first()->image) }}" alt="{{ $collections->first()->name }}">@else<div class="sf-new-monogram" aria-hidden="true">{{ mb_substr($currentTenant->name, 0, 1) }}</div>@endif</div>
         </section>
         @include('storefront.themes.components.categories')
