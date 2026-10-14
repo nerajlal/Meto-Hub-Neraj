@@ -17,7 +17,12 @@
         @include('storefront.themes.cards.info')
         <div class="sf-card-market-footer">@include('storefront.themes.cards.actions')</div>
     @elseif($storefrontTheme['id'] === 'template_3')
-        <div class="sf-card-visual">@include('storefront.themes.cards.image')</div>
+        <div class="sf-card-visual">
+            @include('storefront.themes.cards.image')
+            @if(!empty($product->tags))
+                <div class="sf-quick-card-tags"><span class="sf-product-tag">{{ last($product->tags) }}</span></div>
+            @endif
+        </div>
         <div class="sf-card-quick-body">@include('storefront.themes.cards.info') @include('storefront.themes.cards.actions')</div>
     @elseif($storefrontTheme['id'] === 'template_4')
         <div class="sf-card-visual">@include('storefront.themes.cards.image')</div>
