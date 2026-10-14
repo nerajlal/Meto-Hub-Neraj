@@ -1,6 +1,24 @@
 /* Loaded after theme styles so the merchant's mobile density wins consistently. */
 .classic-mobile-search { display: none; }
 .classic-mobile-cart { display: none; }
+.storefront-theme.template_6 .sf-studio-title-row {
+    display: flex;
+    align-items: baseline;
+    gap: .4rem;
+    min-width: 0;
+}
+.storefront-theme.template_6 .sf-studio-title-row .sf-product-name {
+    flex: 1;
+    min-width: 0;
+    min-height: 0;
+    margin: 0 !important;
+}
+.storefront-theme.template_6 .sf-studio-title-row .sf-product-size {
+    max-width: 40%;
+    margin: 0;
+    text-align: right;
+    overflow-wrap: anywhere;
+}
 .storefront-theme.template_6 .sf-header-pop {
     padding-top: var(--studio-top-row-height, 100px);
 }

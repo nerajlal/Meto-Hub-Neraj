@@ -1,7 +1,7 @@
 <div class="card-info sf-product-info">
     <span class="sf-product-category">{{ $product->collection?->name ?: $product->vendor ?: 'In store' }}</span>
-    @if(in_array($storefrontTheme['id'], ['template_2', 'template_3', 'template_4', 'template_5']))
-        <div class="{{ ['template_2' => 'sf-market-title-row', 'template_3' => 'sf-quick-title-row', 'template_4' => 'sf-pantry-title-row', 'template_5' => 'sf-corner-title-row'][$storefrontTheme['id']] }}">
+    @if(in_array($storefrontTheme['id'], ['template_2', 'template_3', 'template_4', 'template_5', 'template_6']))
+        <div class="{{ ['template_2' => 'sf-market-title-row', 'template_3' => 'sf-quick-title-row', 'template_4' => 'sf-pantry-title-row', 'template_5' => 'sf-corner-title-row', 'template_6' => 'sf-studio-title-row'][$storefrontTheme['id']] }}">
             <a class="sf-product-name p-name" href="{{ $productUrl }}">{{ $product->title }}</a>
             <span class="sf-product-size">{{ ($selected['size'] ?? '') ?: '1 unit' }}</span>
         </div>
