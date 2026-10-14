@@ -297,7 +297,7 @@
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                             <div class="form-text mt-2 small text-muted">
-                                Select how product cards should align when viewed on mobile screens.
+                                Applies to product grids in all six themes on screens up to 768px wide, including catalogs and related products. Choose 1 for large cards, 2 for a balanced layout, or 3 for compact browsing. Desktop layouts keep their theme design.
                             </div>
                         </div>
                     </div>

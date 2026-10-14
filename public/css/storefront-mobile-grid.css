@@ -1,0 +1,130 @@
+/* Loaded after theme styles so the merchant's mobile density wins consistently. */
+@media (min-width: 769px) {
+    .storefront-theme .sf-card-quick-body:has(.qty-controller[style*="flex"]) {
+        flex-wrap: wrap;
+    }
+    .storefront-theme .sf-card-quick-body:has(.qty-controller[style*="flex"]) .sf-product-info {
+        flex-basis: 100%;
+    }
+}
+@media (max-width: 768px) {
+    .storefront-theme .product-grid.grid-cols-mobile-1 {
+        grid-template-columns: minmax(0, 1fr) !important;
+    }
+    .storefront-theme .product-grid.grid-cols-mobile-2 {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+    .storefront-theme .product-grid.grid-cols-mobile-3 {
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+        gap: .5rem !important;
+    }
+    .storefront-theme .product-grid > * {
+        min-width: 0;
+    }
+    .storefront-theme .product-grid .product-card {
+        min-width: 0;
+        max-width: 100%;
+    }
+    .storefront-theme .product-grid .sf-product-name,
+    .storefront-theme .product-grid .p-name,
+    .storefront-theme .product-grid .sf-product-price {
+        overflow-wrap: anywhere;
+    }
+    .storefront-theme .product-grid .product-action-wrapper {
+        max-width: 100%;
+        min-width: 0;
+    }
+    .storefront-theme .product-grid .qty-controller {
+        width: 100% !important;
+        max-width: 110px;
+        min-height: 44px;
+        height: auto !important;
+        padding: 2px !important;
+        gap: 0 !important;
+        box-sizing: border-box;
+    }
+    .storefront-theme .product-grid .qty-controller button {
+        flex: 0 0 24px;
+        width: 24px !important;
+        min-height: 36px;
+    }
+    .storefront-theme .product-grid .inline-add-btn {
+        min-height: 44px !important;
+    }
+    /* Classic keeps its round add button, with a separate row for controls. */
+    .storefront-theme.template_1 .product-grid .product-action-wrapper {
+        position: static !important;
+        display: flex;
+        justify-content: flex-end;
+        margin: auto .4rem .4rem !important;
+    }
+    .storefront-theme.template_1 .product-grid .inline-add-btn {
+        width: 44px !important;
+        height: 44px !important;
+    }
+    .storefront-theme.template_1 .product-grid .p-meta {
+        padding-right: 0 !important;
+    }
+    /* Corner Store uses its horizontal composition when one card fills the row. */
+    .storefront-theme.template_5 .product-grid.grid-cols-mobile-2 .sf-product,
+    .storefront-theme.template_5 .product-grid.grid-cols-mobile-3 .sf-product {
+        grid-template-columns: minmax(0, 1fr) !important;
+        min-height: 0;
+    }
+    .storefront-theme.template_5 .product-grid.grid-cols-mobile-2 .sf-product-image,
+    .storefront-theme.template_5 .product-grid.grid-cols-mobile-3 .sf-product-image {
+        aspect-ratio: 1;
+        height: auto;
+        min-height: 0;
+    }
+    .storefront-theme.template_5 .product-grid.grid-cols-mobile-2 .sf-card-corner-body,
+    .storefront-theme.template_5 .product-grid.grid-cols-mobile-3 .sf-card-corner-body {
+        padding: .5rem;
+        gap: .5rem;
+    }
+    .storefront-theme .grid-cols-mobile-3 .sf-card-market-footer,
+    .storefront-theme .grid-cols-mobile-3 .sf-card-quick-body {
+        padding: .4rem;
+    }
+    .storefront-theme .grid-cols-mobile-3 .sf-card-quick-body,
+    .storefront-theme .grid-cols-mobile-3 .sf-card-pantry-caption {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .storefront-theme.template_3 .grid-cols-mobile-3 .sf-product-info {
+        flex-basis: auto;
+        width: 100%;
+    }
+    .storefront-theme.template_4 .grid-cols-mobile-3 .product-action-wrapper {
+        margin-left: 0 !important;
+    }
+    .storefront-theme .grid-cols-mobile-3 .sf-product-info {
+        padding: .5rem .4rem !important;
+    }
+    .storefront-theme .grid-cols-mobile-3 .sf-product-name {
+        font-size: .75rem !important;
+        line-height: 1.4 !important;
+    }
+    .storefront-theme .grid-cols-mobile-3 .sf-product-price {
+        font-size: .75rem !important;
+        flex-wrap: wrap;
+    }
+    .storefront-theme .grid-cols-mobile-3 .sf-add-label {
+        font-size: .65rem;
+        white-space: normal;
+    }
+    .storefront-theme .grid-cols-mobile-3 .sf-product-wishlist {
+        width: 28px;
+        height: 28px;
+        right: .25rem;
+        top: .25rem;
+    }
+    .storefront-theme .grid-cols-mobile-3 .sf-card-studio-label {
+        gap: .25rem;
+        overflow-wrap: anywhere;
+    }
+    .storefront-theme .grid-cols-mobile-3 .sf-option-link {
+        font-size: .65rem;
+        overflow-wrap: anywhere;
+    }
+}
