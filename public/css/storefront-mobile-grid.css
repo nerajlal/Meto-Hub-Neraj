@@ -1,6 +1,37 @@
 /* Loaded after theme styles so the merchant's mobile density wins consistently. */
 .classic-mobile-search { display: none; }
 .classic-mobile-cart { display: none; }
+@media (max-width: 768px) {
+    body.storefront-theme.template_5 {
+        padding-top: var(--corner-header-height, 180px);
+        scroll-padding-top: var(--corner-header-height, 180px);
+    }
+    .storefront-theme.template_5 .sf-header-corner {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        z-index: 1000;
+    }
+}
+@media (min-width: 769px) {
+    .storefront-theme.template_5 .sf-header-corner {
+        padding-top: var(--corner-top-row-height, 90px);
+    }
+    body.storefront-theme.template_5 {
+        scroll-padding-top: var(--corner-top-row-height, 90px);
+    }
+    .storefront-theme.template_5 .sf-header-corner > .sf-header-row {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        background: inherit;
+        border-bottom: 1px solid var(--premium-line);
+    }
+}
 @media (min-width: 769px) {
     .storefront-theme.template_2 .sf-header-market {
         padding-top: var(--market-top-row-height, 90px);
