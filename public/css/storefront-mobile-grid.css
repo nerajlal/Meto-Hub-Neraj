@@ -1,6 +1,23 @@
 /* Loaded after theme styles so the merchant's mobile density wins consistently. */
 .classic-mobile-search { display: none; }
 .classic-mobile-cart { display: none; }
+@media (min-width: 769px) {
+    .storefront-theme.template_3 .sf-header-quick {
+        padding-top: var(--quick-top-row-height, 90px);
+    }
+    body.storefront-theme.template_3 {
+        scroll-padding-top: var(--quick-top-row-height, 90px);
+    }
+    .storefront-theme.template_3 .sf-header-quick > .sf-header-row {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        background: inherit;
+        border-bottom: 1px solid var(--premium-line);
+    }
+}
 .storefront-theme.template_4 .sf-header-pantry {
     padding-top: var(--pantry-logo-height, 84px);
 }

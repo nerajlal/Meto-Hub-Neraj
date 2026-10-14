@@ -6,10 +6,16 @@
 <script>
 (() => {
     const header = document.querySelector('.sf-header-quick');
-    const updateHeight = () => document.body.style.setProperty('--quick-header-height', Math.ceil(header.getBoundingClientRect().height) + 'px');
+    const topRow = header.querySelector('.sf-header-row');
+    const updateHeight = () => {
+        document.body.style.setProperty('--quick-header-height', Math.ceil(header.getBoundingClientRect().height) + 'px');
+        document.body.style.setProperty('--quick-top-row-height', Math.ceil(topRow.getBoundingClientRect().height) + 'px');
+    };
     updateHeight();
     if (typeof ResizeObserver !== 'undefined') {
-        new ResizeObserver(() => requestAnimationFrame(updateHeight)).observe(header);
+        const observer = new ResizeObserver(() => requestAnimationFrame(updateHeight));
+        observer.observe(header);
+        observer.observe(topRow);
     }
     window.addEventListener('resize', updateHeight);
 })();
