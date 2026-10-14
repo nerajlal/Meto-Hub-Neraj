@@ -8,10 +8,15 @@
     <div class="mb-4 mb-md-5 position-relative overflow-hidden p-3 p-md-4 rounded-4" style="background: linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%); border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
         <div class="position-absolute rounded-circle" style="width: 250px; height: 250px; background: rgba(255, 255, 255, 0.15); filter: blur(80px); top: -100px; right: -50px; pointer-events: none;"></div>
         
-        <div class="position-relative z-1">
+        <div class="position-relative z-1 d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
+            <div>
             <span class="badge mb-2 px-3 py-1.5 rounded-pill uppercase tracking-wider text-white-50" style="background: rgba(255,255,255,0.08); font-size: 10px; font-weight: 600; letter-spacing: 1.2px; border: 1px solid rgba(255,255,255,0.12);">SYSTEM SETTINGS</span>
             <h1 class="h2 text-white mb-2 fw-bold" style="font-family: 'Playfair Display', Georgia, serif; letter-spacing: -0.5px;">Storefront Pages Settings</h1>
             <p class="text-white-50 small mb-0" style="max-width: 600px; line-height: 1.6;">Manage the content for your About Us, Contact, Shipping, Return Policies, and Terms of Service pages.</p>
+            </div>
+            <button type="submit" form="storefront-settings-form" class="btn btn-light fw-semibold px-4 py-2 flex-shrink-0 align-self-start align-self-md-center">
+                <i class="fa-solid fa-cloud-arrow-up me-2" aria-hidden="true"></i>Save Changes
+            </button>
         </div>
     </div>
 
@@ -22,7 +27,7 @@
         </div>
     @endif
 
-    <form action="{{ route('admin.settings.storefront.update') }}" method="POST" enctype="multipart/form-data">
+    <form id="storefront-settings-form" action="{{ route('admin.settings.storefront.update') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <div class="row">
             <!-- Left Side: About & Contact -->
