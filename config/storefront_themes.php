@@ -41,4 +41,19 @@ return [
         'eyebrow' => 'THE STOREFRONT EDIT', 'headline' => 'Everyday, considered.',
         'intro' => 'Explore our collections and find the pieces that belong in your everyday.',
     ],
+    'template_7' => [
+        'name' => 'Atelier Edit', 'version' => 'Signature collection',
+        'description' => 'Warm editorial design with framed photography, a journal-style welcome and a reversed product detail layout.',
+        'tone' => '#8d3e36', 'background' => '#fbf4ee', 'layout' => 'atelier',
+    ],
+    'template_8' => [
+        'name' => 'Vista Shop', 'version' => 'Signature collection',
+        'description' => 'A bright contemporary shop with a panoramic welcome, rounded cards and an organised product purchase panel.',
+        'tone' => '#235aa6', 'background' => '#eff5ff', 'layout' => 'vista',
+    ],
+    'template_9' => [
+        'name' => 'Noir Collection', 'version' => 'Signature collection',
+        'description' => 'A refined dark gallery with dramatic typography, wide photography and a focused product selection layout.',
+        'tone' => '#c9aa72', 'background' => '#181c20', 'layout' => 'noir',
+    ],
 ];
