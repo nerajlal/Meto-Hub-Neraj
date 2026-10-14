@@ -272,4 +272,37 @@
     .storefront-theme.template_1 .product-page-container .secondary-actions-row {
         margin-bottom: 1.25rem !important;
     }
+    /* Keep the existing, live variant/cart controls visible while scrolling. */
+    .storefront-theme.template_1 .product-page-container {
+        animation: none;
+        transform: none;
+    }
+    .storefront-theme.template_1:has(.product-page-container) {
+        --classic-purchase-bar-height: calc(53px + 1.3rem + env(safe-area-inset-bottom, 0px));
+        padding-bottom: calc(var(--classic-purchase-bar-height) + 1rem);
+    }
+    .storefront-theme.template_1 #main-product-actions {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 1100;
+        width: auto;
+        height: var(--classic-purchase-bar-height) !important;
+        margin: 0 !important;
+        padding: .65rem 1rem calc(.65rem + env(safe-area-inset-bottom, 0px)) !important;
+        background: #fff;
+        border-top: 1px solid var(--border-color);
+        box-shadow: 0 -4px 20px rgba(15, 23, 42, .08);
+        box-sizing: border-box;
+    }
+    .storefront-theme.template_1:has(.product-page-container) #floating-cart-summary {
+        bottom: calc(var(--classic-purchase-bar-height) + .75rem) !important;
+    }
+    .storefront-theme.template_1:has(.product-page-container) .whatsapp-float-btn {
+        bottom: calc(var(--classic-purchase-bar-height) + 5.5rem) !important;
+        width: 48px !important;
+        height: 48px !important;
+        font-size: 24px !important;
+    }
 }
