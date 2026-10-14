@@ -50,6 +50,18 @@
     justify-self: end;
 }
 @media (max-width: 768px) {
+    body.storefront-theme.template_3 {
+        padding-top: var(--quick-header-height, 210px);
+        scroll-padding-top: var(--quick-header-height, 210px);
+    }
+    .storefront-theme.template_3 .sf-header-quick {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        z-index: 1000;
+    }
     .storefront-theme.template_3 .sf-product .sf-card-quick-body {
         padding: .65rem;
     }
