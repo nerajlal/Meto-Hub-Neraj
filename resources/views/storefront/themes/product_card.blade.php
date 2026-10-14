@@ -8,10 +8,12 @@
 @endphp
 <article class="product-card sf-product sf-product-{{ $storefrontTheme['layout'] }}" data-product-id="{{ $product->id }}" data-card-style="{{ $storefrontTheme['layout'] }}">
     @if($storefrontTheme['id'] === 'template_2')
-        @if(!empty($product->tags))
-            <div class="sf-market-card-tags"><span class="sf-product-tag">{{ last($product->tags) }}</span></div>
-        @endif
-        <div class="sf-card-visual">@include('storefront.themes.cards.image')</div>
+        <div class="sf-card-visual">
+            @include('storefront.themes.cards.image')
+            @if(!empty($product->tags))
+                <div class="sf-market-card-tags"><span class="sf-product-tag">{{ last($product->tags) }}</span></div>
+            @endif
+        </div>
         @include('storefront.themes.cards.info')
         <div class="sf-card-market-footer">@include('storefront.themes.cards.actions')</div>
     @elseif($storefrontTheme['id'] === 'template_3')

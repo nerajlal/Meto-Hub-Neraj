@@ -14,7 +14,12 @@
 }
 
 .storefront-theme.template_2 .sf-market-card-tags {
-    padding: .5rem .75rem 0;
+    position: absolute;
+    top: .65rem;
+    left: .65rem;
+    max-width: calc(100% - 4rem);
+    z-index: 2;
+    pointer-events: none;
 }
 .storefront-theme.template_2 .sf-market-title-row {
     display: flex;
