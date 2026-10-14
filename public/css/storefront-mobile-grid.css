@@ -13,6 +13,28 @@
     overflow-wrap: anywhere;
 }
 
+.storefront-theme.template_2 .sf-market-card-tags {
+    padding: .5rem .75rem 0;
+}
+.storefront-theme.template_2 .sf-market-title-row {
+    display: flex;
+    align-items: baseline;
+    gap: .4rem;
+    min-width: 0;
+}
+.storefront-theme.template_2 .sf-market-title-row .sf-product-name {
+    flex: 1;
+    min-width: 0;
+    min-height: 0;
+}
+.storefront-theme.template_2 .sf-market-title-row .sf-product-size {
+    flex: 0 1 auto;
+    max-width: 40%;
+    margin: 0;
+    text-align: right;
+    overflow-wrap: anywhere;
+}
+
 @media (max-width: 768px) {
     body.storefront-theme.template_2 {
         padding-top: var(--market-header-height, 190px);
