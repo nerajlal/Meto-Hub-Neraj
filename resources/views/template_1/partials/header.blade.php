@@ -42,8 +42,8 @@
             </div>
         </div>
 
-        <button class="mobile-search-toggle show-on-mobile" style="background: none; border: none; font-size: 1.25rem; color: var(--primary-color); cursor: pointer; display: none;">
-            <i class="fa-solid fa-magnifying-glass"></i>
+        <button type="button" class="mobile-search-toggle show-on-mobile" aria-label="Search products" style="background: none; border: none; font-size: 1.25rem; color: var(--primary-color); cursor: pointer; display: none;">
+            <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
         </button>
 
         <div class="header-actions hide-on-mobile" style="display: flex; align-items: center; gap: 0.5rem;">

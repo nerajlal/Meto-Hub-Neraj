@@ -8,6 +8,40 @@
     }
 }
 @media (max-width: 768px) {
+    .storefront-theme.template_1 .store-header {
+        padding-top: 0 !important;
+        gap: 0 !important;
+    }
+    .storefront-theme.template_1 .store-header > .header-container {
+        min-height: 60px;
+        padding: 8px 16px;
+        gap: .75rem;
+    }
+    .storefront-theme.template_1 .store-header .logo {
+        min-width: 0;
+        max-width: calc(100% - 56px);
+        font-size: 1.1rem !important;
+    }
+    .storefront-theme.template_1 .store-header .logo img {
+        max-height: 40px !important;
+        max-width: 180px;
+        object-fit: contain;
+    }
+    .storefront-theme.template_1 .store-header > .header-container > .mobile-search-toggle {
+        display: inline-flex !important;
+        align-items: center;
+        justify-content: center;
+        flex: 0 0 44px;
+        width: 44px;
+        height: 44px;
+        padding: 0;
+        margin-left: auto;
+        font-size: 21px !important;
+        line-height: 1;
+    }
+    .storefront-theme.template_1 .store-header > .header-container > .mobile-search-toggle i {
+        font-size: 21px;
+    }
     .storefront-theme .product-grid.grid-cols-mobile-1 {
         grid-template-columns: minmax(0, 1fr) !important;
     }
