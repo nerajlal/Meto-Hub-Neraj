@@ -55,3 +55,7 @@ The retired Zoho integration has no application routes, controller, model, UI, o
 Set `BLOG_API_ENDPOINT=https://blog.metora.in/api/v1/projects/blogs`, `BLOG_ASSET_URL=https://blog.metora.in`, and the MetoHub project's `BLOG_API_KEY` in the production server environment. The key belongs only in `.env`; do not put it into Blade or browser JavaScript. Rebuild configuration with `php artisan config:cache` after changing these values.
 
 The API currently returns the MetoHub project with an empty `blogs` array. Publish articles associated with that project in the blog platform before expecting cards to appear. An empty successful response is shown as no published articles; an unavailable feed returns a temporary-unavailability message and HTTP 503 if no saved feed exists. Successful responses cache for five minutes, with the last successful feed retained for up to a day during outages. Article bodies and section HTML pass through an allowlist renderer before display.
+
+## Public store links
+
+Storefront publication links use `/store/{store-slug}`, for example `/store/fresh-grocery`. Catalog, product, and checkout routes keep the same store slug. Run the tenant-slug migration during deployment to populate existing stores; new stores receive slugs automatically. Slugs remain stable when business names change, and duplicate names receive unique suffixes. The admin header and theme/domain settings show the public link. Existing `/v1?tenant_id=9` links still work.

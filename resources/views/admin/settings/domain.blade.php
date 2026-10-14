@@ -29,6 +29,12 @@
         </div>
     @endif
 
+    <div class="card border-0 rounded-4 shadow-sm p-4 mb-4">
+        <h2 class="h5 fw-bold">Your public store link</h2>
+        <p class="text-muted small">Share this link with customers. Your store name in the link stays the same when you rename your business.</p>
+        <a href="{{ $tenant->storefrontUrl() }}" target="_blank" rel="noopener" style="overflow-wrap:anywhere;">{{ $tenant->storefrontUrl() }}</a>
+    </div>
+
     <div class="row g-4">
         <!-- Input Settings Form -->
         <div class="col-lg-7 col-12">

@@ -104,7 +104,7 @@
 
     // Call on load (syncs product cards but DOES NOT show floating cart)
     $(document).ready(function() {
-        $.get("{{ route('cart.state') }}", function(response) {
+        $.get("{{ app(\App\Services\StorefrontTheme::class)->url('cart.state') }}", function(response) {
             if (response.success) {
                 window.cartItemsMap = response.cartItemsMap || {};
                 window.cartTotalCount = response.cartCount;
@@ -122,7 +122,7 @@
         
         if (newQty <= 0) {
             // Remove item
-            $.post("{{ route('cart.remove') }}", {
+            $.post("{{ app(\App\Services\StorefrontTheme::class)->url('cart.remove') }}", {
                 _token: $('meta[name="csrf-token"]').attr('content'),
                 id: key
             }, function(response) {
@@ -151,7 +151,7 @@
                     type: isBundle ? 'bundle' : 'product'
                 };
                 
-                $.post("{{ route('cart.add') }}", reqData, function(response) {
+                $.post("{{ app(\App\Services\StorefrontTheme::class)->url('cart.add') }}", reqData, function(response) {
                     if (response.success) {
                         window.cartItemsMap = response.cartItemsMap || {};
                         window.cartTotalCount = response.cartCount;
@@ -173,7 +173,7 @@
                 });
             } else {
                 // Update
-                $.post("{{ route('cart.update') }}", {
+                $.post("{{ app(\App\Services\StorefrontTheme::class)->url('cart.update') }}", {
                     _token: $('meta[name="csrf-token"]').attr('content'),
                     id: key,
                     quantity: newQty

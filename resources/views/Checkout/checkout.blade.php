@@ -132,7 +132,7 @@
     <div class="checkout-main-grid">
         <!-- Checkout forms -->
         <div class="checkout-forms-panel">
-            <form action="{{ route('order.place') }}" method="POST" id="main-checkout-form">
+            <form action="{{ app(\App\Services\StorefrontTheme::class)->url('order.place') }}" method="POST" id="main-checkout-form">
                 @csrf
                 
                 <!-- Contact Details -->

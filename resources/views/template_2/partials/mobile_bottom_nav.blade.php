@@ -137,7 +137,7 @@
         <!-- You / Profile -->
         <li class="nav-item">
             @if(auth()->check())
-                <a href="{{ route('account.index') }}" class="nav-link {{ request()->routeIs('account.index') ? 'active' : '' }}">
+                <a href="{{ app(\App\Services\StorefrontTheme::class)->url('account.index') }}" class="nav-link {{ request()->routeIs('account.index') ? 'active' : '' }}">
             @else
                 <a href="javascript:void(0)" onclick="typeof openCustomerAuthModal === 'function' ? openCustomerAuthModal() : (typeof openModal === 'function' ? openModal('login-modal') : window.location.href='{{ route('login') }}')" class="nav-link">
             @endif

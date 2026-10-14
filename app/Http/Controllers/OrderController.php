@@ -333,9 +333,7 @@ class OrderController extends Controller
         }
 
         // 7. Return Success
-        $homeRoute = route('v1.home', ['tenant_id' => $tenantId]);
-
-        $redirectUrl = Auth::check() ? route('account.orders') : $homeRoute . '?order_success=1';
+        $redirectUrl = Auth::check() ? app(\App\Services\StorefrontTheme::class)->url('account.orders') : app(\App\Services\StorefrontTheme::class)->url('v1.home', ['order_success' => 1]);
 
         return response()->json([
             'success' => true,

@@ -70,7 +70,7 @@
         if (pending) return;
         pending = true;message('');syncMainProductUI();
         try {
-            const response = await fetch({{ \Illuminate\Support\Js::from(route('cart.add')) }}, {method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json','X-CSRF-TOKEN':csrf},body:JSON.stringify(data)});
+            const response = await fetch({{ \Illuminate\Support\Js::from(app(\App\Services\StorefrontTheme::class)->url('cart.add')) }}, {method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json','X-CSRF-TOKEN':csrf},body:JSON.stringify(data)});
             const result = await response.json();
             if (!response.ok || !result.success) throw new Error(result.message || 'Unable to update your basket. Please try again.');
             window.cartItemsMap = result.cartItemsMap || {};

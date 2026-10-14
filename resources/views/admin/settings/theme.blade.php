@@ -4,7 +4,7 @@
 <div class="theme-settings">
     <div class="theme-settings-heading">
         <div><span class="theme-settings-kicker">MAKE IT YOUR STORE</span><h1>Find your storefront’s style.</h1><p>{{ count($themes) }} designs. The same familiar shopping experience. Preview a theme on your own store before making it live.</p></div>
-        <a href="{{ route('v1.home', ['tenant_id' => $tenant->id]) }}" target="_blank" rel="noopener" class="btn btn-outline-dark">Visit your store <i class="fas fa-arrow-up-right-from-square ms-2" aria-hidden="true"></i></a>
+        <a href="{{ $tenant->storefrontUrl() }}" target="_blank" rel="noopener" class="btn btn-outline-dark">Visit your store <i class="fas fa-arrow-up-right-from-square ms-2" aria-hidden="true"></i></a>
     </div>
     @if(session('success'))
         <div class="alert alert-success" role="status">{{ session('success') }}</div>
@@ -17,7 +17,7 @@
         @foreach($themes as $theme)
             @php
                 $isActive = app(\App\Services\StorefrontTheme::class)->normalize($tenant->theme) === $theme['id'];
-                $previewUrl = route('v1.home', ['tenant_id' => $tenant->id, 'preview' => 1, 'preview_theme' => $theme['id']]);
+                $previewUrl = $tenant->storefrontUrl(['preview' => 1, 'preview_theme' => $theme['id']]);
             @endphp
             <article class="theme-choice-card {{ $isActive ? 'is-active' : '' }}" style="--choice-tone: {{ $theme['tone'] }}; --choice-bg: {{ $theme['background'] }};">
                 <div class="theme-choice-art">

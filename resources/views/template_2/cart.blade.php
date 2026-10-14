@@ -186,7 +186,7 @@
         if (newQty === currentQty) return;
 
         $.ajax({
-            url: "{{ route('cart.update') }}",
+            url: "{{ app(\App\Services\StorefrontTheme::class)->url('cart.update') }}",
             method: "POST",
             data: {
                 _token: "{{ csrf_token() }}",
@@ -226,7 +226,7 @@
         if (!confirm('Remove this item from your bag?')) return;
 
         $.ajax({
-            url: "{{ route('cart.remove') }}",
+            url: "{{ app(\App\Services\StorefrontTheme::class)->url('cart.remove') }}",
             method: "POST",
             data: {
                 _token: "{{ csrf_token() }}",

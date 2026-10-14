@@ -22,7 +22,7 @@ class AuthController extends Controller
     {
         $tenant = \App\Models\Tenant::find($tenantId);
         if ($tenant) {
-            return redirect()->route('v1.home', ['tenant_id' => $tenantId]);
+            return redirect()->to($tenant->storefrontUrl());
         }
         return redirect('/');
     }

@@ -75,7 +75,7 @@ Route::middleware([\App\Http\Middleware\IdentifyStorefrontTenant::class])->group
 });
 
 // v1 Nurah Theme Routes
-Route::prefix('v1')->name('v1.')->middleware([\App\Http\Middleware\IdentifyStorefrontTenant::class])->group(function () {
+$storefrontRoutes = function () {
     Route::get('/', [PageController::class, 'home'])->name('home');
     Route::get('/collections', [PageController::class, 'collection'])->name('collection');
     Route::get('/products', [PageController::class, 'collection'])->name('products');
@@ -94,7 +94,9 @@ Route::prefix('v1')->name('v1.')->middleware([\App\Http\Middleware\IdentifyStore
     Route::get('/shipping-policy', [PageController::class, 'shippingPolicy'])->name('shipping-policy');
     Route::get('/return-policy', [PageController::class, 'returnPolicy'])->name('return-policy');
     Route::get('/terms-of-service', [PageController::class, 'termsOfService'])->name('terms-of-service');
-});
+};
+Route::prefix('v1')->name('v1.')->middleware([\App\Http\Middleware\IdentifyStorefrontTenant::class])->group($storefrontRoutes);
+Route::prefix('store/{store_slug}')->name('storefront.')->middleware([\App\Http\Middleware\IdentifyStorefrontTenant::class])->group($storefrontRoutes);
 
 // Account Routes
 Route::middleware([\App\Http\Middleware\IdentifyStorefrontTenant::class, 'auth'])->group(function () {

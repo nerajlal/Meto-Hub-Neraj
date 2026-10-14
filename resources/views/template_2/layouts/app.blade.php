@@ -131,7 +131,7 @@
 
         function refreshNCart() {
             $('#cart-drawer-body-n').html('<div class="cart-loader-n text-center py-5"><i class="fa-solid fa-spinner fa-spin fa-2x text-success"></i></div>');
-            $.get("{{ route('cart.fetch') }}", { theme: 'template_2' }, function(html) {
+            $.get("{{ app(\App\Services\StorefrontTheme::class)->url('cart.fetch') }}", { theme: 'template_2' }, function(html) {
                 $('#cart-drawer-body-n').html(html);
             });
         }
@@ -148,7 +148,7 @@
             $qtySpan.text(newQty);
             $buttons.prop('disabled', true).css('opacity', '0.4');
 
-            $.post("{{ route('cart.update') }}", {
+            $.post("{{ app(\App\Services\StorefrontTheme::class)->url('cart.update') }}", {
                 _token: "{{ csrf_token() }}",
                 id: key,
                 quantity: newQty
@@ -156,7 +156,7 @@
                 if(response.success) {
                     $('#cart-count').text(response.cartCount);
                     // Silently refresh cart content without spinner
-                    $.get("{{ route('cart.fetch') }}", { theme: 'template_2' }, function(html) {
+                    $.get("{{ app(\App\Services\StorefrontTheme::class)->url('cart.fetch') }}", { theme: 'template_2' }, function(html) {
                         $('#cart-drawer-body-n').html(html);
                     });
                 }
@@ -173,7 +173,7 @@
         }
 
         window.removeNCartItem = function(key) {
-            $.post("{{ route('cart.remove') }}", {
+            $.post("{{ app(\App\Services\StorefrontTheme::class)->url('cart.remove') }}", {
                 _token: "{{ csrf_token() }}",
                 id: key
             }, function(response) {
@@ -208,7 +208,7 @@
             btn.addClass('processing');
             
             $.ajax({
-                url: "{{ route('cart.add') }}",
+                url: "{{ app(\App\Services\StorefrontTheme::class)->url('cart.add') }}",
                 method: "POST",
                 data: {
                     _token: "{{ csrf_token() }}",

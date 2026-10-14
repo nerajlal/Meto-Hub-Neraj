@@ -61,7 +61,7 @@ class AppServiceProvider extends ServiceProvider
                 return;
             }
             
-            $view->with('storefrontUrl', route('v1.home', ['tenant_id' => $currentTenant->id]));
+            $view->with('storefrontUrl', $currentTenant->storefrontUrl());
         });
     }
 }

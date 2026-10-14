@@ -130,7 +130,7 @@
         
         submitBtn.prop('disabled', true).css('opacity', '0.7');
         
-        const url = type === 'login' ? '{{ route("customer.login") }}' : '{{ route("customer.register") }}';
+        const url = type === 'login' ? '{{ app(\App\Services\StorefrontTheme::class)->url("customer.login") }}' : '{{ app(\App\Services\StorefrontTheme::class)->url("customer.register") }}';
 
         $.ajax({
             url: url,

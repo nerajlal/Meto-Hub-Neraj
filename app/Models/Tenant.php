@@ -6,6 +6,23 @@ use Illuminate\Database\Eloquent\Model;
 
 class Tenant extends Model
 {
+    protected static function booted(): void
+    {
+        static::creating(function (Tenant $tenant) {
+            $base = rtrim(\Illuminate\Support\Str::limit(\Illuminate\Support\Str::slug($tenant->name), 120, ''), '-') ?: 'store';
+            $slug = $base;
+            while (static::where('slug', $slug)->exists()) {
+                $slug = $base.'-'.\Illuminate\Support\Str::lower(\Illuminate\Support\Str::random(6));
+            }
+            $tenant->slug = $slug;
+        });
+    }
+
+    public function storefrontUrl(array $parameters = []): string
+    {
+        return route('storefront.home', ['store_slug' => $this->slug] + $parameters);
+    }
+
     protected $fillable = [
         'name',
         'plan',
@@ -51,8 +68,9 @@ class Tenant extends Model
             'EUR' => '€',
             'GBP' => '£',
             'AUD' => 'A$',
-            'CAD' => 'C$'
+            'CAD' => 'C$',
         ];
+
         return $symbols[$value] ?? $value;
     }
 

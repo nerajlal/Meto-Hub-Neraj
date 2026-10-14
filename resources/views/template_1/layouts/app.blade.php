@@ -194,7 +194,7 @@
             $qtySpan.text(newQty);
             $buttons.prop('disabled', true).css('opacity', '0.4');
 
-            $.post("{{ route('cart.update') }}", {
+            $.post("{{ app(\App\Services\StorefrontTheme::class)->url('cart.update') }}", {
                 _token: "{{ csrf_token() }}",
                 id: key,
                 quantity: newQty
@@ -219,7 +219,7 @@
         }
 
         window.removeNCartItem = function (key) {
-            $.post("{{ route('cart.remove') }}", {
+            $.post("{{ app(\App\Services\StorefrontTheme::class)->url('cart.remove') }}", {
                 _token: "{{ csrf_token() }}",
                 id: key
             }, function (response) {
@@ -254,7 +254,7 @@
             btn.addClass('processing');
 
             $.ajax({
-                url: "{{ route('cart.add') }}",
+                url: "{{ app(\App\Services\StorefrontTheme::class)->url('cart.add') }}",
                 method: "POST",
                 data: {
                     _token: "{{ csrf_token() }}",

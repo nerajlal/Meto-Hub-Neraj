@@ -605,7 +605,7 @@
         btn.disabled = true;
 
         $.ajax({
-            url: "{{ route('cart.add') }}",
+            url: "{{ app(\App\Services\StorefrontTheme::class)->url('cart.add') }}",
             method: "POST",
             data: {
                 _token: "{{ csrf_token() }}",
@@ -641,7 +641,7 @@
         btn.disabled = true;
 
         $.ajax({
-            url: "{{ route('cart.add') }}",
+            url: "{{ app(\App\Services\StorefrontTheme::class)->url('cart.add') }}",
             method: "POST",
             data: {
                 _token: "{{ csrf_token() }}",

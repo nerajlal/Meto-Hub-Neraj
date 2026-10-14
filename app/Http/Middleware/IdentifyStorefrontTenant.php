@@ -12,7 +12,15 @@ class IdentifyStorefrontTenant
     public function handle(Request $request, Closure $next): Response
     {
         $hostTenant = Tenant::where('domain', $request->getHost())->first();
+        $slug = $request->route('store_slug') ?? $request->query('store');
+        $slugTenant = null;
+        if ($slug !== null) {
+            abort_unless(is_string($slug) && preg_match('/^[a-z0-9]+(?:-[a-z0-9]+)*$/', $slug), 404);
+            $slugTenant = Tenant::where('slug', $slug)->firstOrFail();
+            abort_if($hostTenant && $hostTenant->id !== $slugTenant->id, 404);
+        }
         $tenantId = $hostTenant?->id
+            ?? $slugTenant?->id
             ?? $request->query('tenant_id')
             ?? $request->query('tenant')
             ?? session('active_tenant_id')
@@ -20,7 +28,7 @@ class IdentifyStorefrontTenant
             ?? session('demo_tenant_id')
             ?? 2;
         abort_unless(filter_var($tenantId, FILTER_VALIDATE_INT) && (int) $tenantId > 0, 404);
-        $tenant = $hostTenant ?? Tenant::findOrFail($tenantId);
+        $tenant = $hostTenant ?? $slugTenant ?? Tenant::findOrFail($tenantId);
 
         $user = $request->user();
         if ($user && $user->type !== 'super_admin') {
@@ -30,6 +38,10 @@ class IdentifyStorefrontTenant
             session()->forget('cart');
         }
         $request->attributes->set('resolved_tenant_id', $tenant->id);
+        $request->attributes->set('resolved_storefront_tenant', $tenant);
+        if ($request->route('store_slug') !== null) {
+            $request->route()->forgetParameter('store_slug');
+        }
         session(['active_tenant_id' => $tenant->id]);
         view()->share('currentTenant', $tenant);
 

@@ -75,7 +75,7 @@
                     Default Shipping Address
                 </h2>
 
-                <form action="{{ route('account.address.update') }}" method="POST">
+                <form action="{{ app(\App\Services\StorefrontTheme::class)->url('account.address.update') }}" method="POST">
                     @csrf
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
                         <div style="grid-column: span 2;">
