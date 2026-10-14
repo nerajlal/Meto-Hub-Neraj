@@ -400,9 +400,9 @@
             <div class="p-actions-row" id="main-product-actions" style="display: flex; gap: 1rem; margin-bottom: 1rem; height: 3.75rem;">
                 <div class="qty-control" style="background: #f8fafc; border: 1px solid var(--border-color); border-radius: 8px; display: flex; flex-direction: row; align-items: center; justify-content: center; padding: 0.25rem 1rem; min-width: 90px; height: 100%;">
                     <span class="page-qty" id="main-qty-value" style="font-size: 1.25rem; font-weight: 800; text-align: center; margin-right: 1rem; color: var(--primary-color);">0</span>
-                    <div style="display: flex; flex-direction: column; gap: 0.5rem; align-items: center; justify-content: center;">
-                        <button onclick="updateMainCart(1)" style="border: none; background: none; padding: 0; font-size: 0.8rem; cursor: pointer; color: var(--text-muted);"><i class="fa-solid fa-chevron-up"></i></button>
-                        <button onclick="updateMainCart(-1)" style="border: none; background: none; padding: 0; font-size: 0.8rem; cursor: pointer; color: var(--text-muted);"><i class="fa-solid fa-chevron-down"></i></button>
+                    <div class="classic-qty-stepper" style="display: flex; flex-direction: column; gap: 0.5rem; align-items: center; justify-content: center;">
+                        <button type="button" aria-label="Increase quantity" onclick="updateMainCart(1)" style="border: none; background: none; padding: 0; font-size: 0.8rem; cursor: pointer; color: var(--text-muted);"><i class="fa-solid fa-chevron-up" aria-hidden="true"></i></button>
+                        <button type="button" aria-label="Decrease quantity" onclick="updateMainCart(-1)" style="border: none; background: none; padding: 0; font-size: 0.8rem; cursor: pointer; color: var(--text-muted);"><i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>
                     </div>
                 </div>
                 <button class="btn-add-to-cart add-to-cart-btn" id="add-to-cart-page-btn" onclick="addOrOpenCart()" {{ $isOut ? 'disabled' : '' }} style="flex-grow: 1; height: 100%; background: {{ $isOut ? '#e2e8f0' : 'var(--accent-color)' }}; color: {{ $isOut ? '#94a3b8' : '#fff' }}; border: none; border-radius: 8px; font-weight: 800; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.5px; cursor: {{ $isOut ? 'not-allowed' : 'pointer' }}; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.75rem; white-space: nowrap;">

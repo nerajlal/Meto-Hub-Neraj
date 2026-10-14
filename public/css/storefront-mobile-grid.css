@@ -225,18 +225,45 @@
         flex-direction: row !important;
         align-items: stretch;
         gap: .65rem !important;
-        min-height: 48px;
+        height: 52px !important;
+        min-height: 52px;
         margin-bottom: .65rem !important;
     }
     .storefront-theme.template_1 .product-page-container .p-actions-row .qty-control {
         flex: 0 0 76px;
         width: 76px !important;
         min-width: 0 !important;
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr) 24px;
+        align-items: center;
+        height: 52px !important;
+        padding: 1px 6px !important;
+        box-sizing: border-box;
+    }
+    .storefront-theme.template_1 .product-page-container .p-actions-row .page-qty {
+        margin: 0 !important;
+        text-align: center;
+    }
+    .storefront-theme.template_1 .product-page-container .classic-qty-stepper {
+        display: grid !important;
+        grid-template-rows: repeat(2, 24px);
+        gap: 0 !important;
+    }
+    .storefront-theme.template_1 .product-page-container .classic-qty-stepper button {
+        display: grid;
+        place-items: center;
+        width: 24px !important;
+        height: 24px !important;
+        min-height: 0;
+        padding: 0 !important;
+        font-size: .7rem !important;
+        line-height: 1 !important;
     }
     .storefront-theme.template_1 .product-page-container .p-actions-row .btn-add-to-cart {
         flex: 1 1 0;
         width: auto !important;
-        min-height: 48px;
+        height: 52px !important;
+        min-height: 52px;
         font-size: .75rem !important;
     }
     .storefront-theme.template_1 .product-gallery .main-image-display:only-child {
