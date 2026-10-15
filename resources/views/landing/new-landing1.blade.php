@@ -605,7 +605,7 @@
                 <div class="v2-badge">
                     <i class="fa-solid fa-sparkles"></i> MetoHub v2.0 is Here
                 </div>
-                <h1>Build your dream store <span class="text-gradient">for just ₹99.</span></h1>
+                <h1>Build your dream store <span class="text-gradient">for just ₹{{ number_format(config('saas.plans.base.monthly_price')) }}.</span></h1>
                 <p>Experience the most advanced eCommerce website builder. Design breathtaking storefronts, manage
                     inventory, and scale globally without writing a single line of code.</p>
 
@@ -617,7 +617,7 @@
                         <i class="fa-solid fa-play"></i> Watch Demo
                     </a>
                 </div>
-                <p style="margin-top: 20px; font-size: 1.15rem; color: var(--v2-dark); font-weight: 600;">Start your online store instantly, at just <span style="color: var(--v2-primary); font-size: 1.3rem;">₹99</span> 😮</p>
+                <p style="margin-top: 20px; font-size: 1.15rem; color: var(--v2-dark); font-weight: 600;">Start your online store instantly, at just <span style="color: var(--v2-primary); font-size: 1.3rem;">₹{{ number_format(config('saas.plans.base.monthly_price')) }}</span> 😮</p>
             </div>
 
             <div class="hero-v2-visual">
@@ -625,7 +625,7 @@
                     <div class="float-icon"><i class="fa-solid fa-cart-shopping"></i></div>
                     <div class="float-text">
                         <strong>New Sale!</strong>
-                        <small>₹299.00 via Stripe</small>
+                        <small>₹299.00 · cash on delivery</small>
                     </div>
                 </div>
 
@@ -703,7 +703,7 @@
                 <div class="simple-icon" style="color:#EC4899; background:rgba(236,72,153,0.1);"><i
                         class="fa-solid fa-chart-pie"></i></div>
                 <h3>Advanced Analytics</h3>
-                <p>Track customer journeys, monitor cart abandonment, and optimize your pricing strategy with real-time
+                <p>Review store orders, customer activity, and product performance with
                     insights.</p>
             </div>
 
@@ -711,14 +711,14 @@
                 <div class="simple-icon" style="color:#3B82F6; background:rgba(59,130,246,0.1);"><i
                         class="fa-solid fa-credit-card"></i></div>
                 <h3>Global Payments</h3>
-                <p>Accept cards, Apple Pay, and crypto seamlessly with our secure integrated payment gateways.</p>
+                <p>Offer cash-on-delivery checkout to your customers. Pay for your MetoHub software subscription through Razorpay.</p>
             </div>
 
             <div class="simple-feature">
                 <div class="simple-icon" style="color:#8B5CF6; background:rgba(139,92,246,0.1);"><i
                         class="fa-solid fa-boxes-stacked"></i></div>
                 <h3>Inventory Management</h3>
-                <p>Track stock levels, set up automated reorders, and manage multiple warehouses from a single dashboard.
+                <p>Track product variants and stock levels, and manage your store inventory from a single dashboard.
                 </p>
             </div>
         </div>
@@ -735,7 +735,7 @@
             <!-- Base Plan -->
             <div class="pricing-card">
                 <div class="plan-name">Base Plan</div>
-                <div class="plan-price">₹99<span>/month</span></div>
+                <div class="plan-price">₹{{ number_format(config('saas.plans.base.monthly_price')) }}<span>/month</span></div>
                 <p class="plan-desc">Everything you need to get your store up and running quickly.</p>
                 <ul class="plan-features">
                     <li><i class="fa-solid fa-check-circle"></i> Online Store</li>
@@ -752,13 +752,13 @@
             <div class="pricing-card popular">
                 <div class="popular-badge">Most Popular</div>
                 <div class="plan-name">Pro Plan</div>
-                <div class="plan-price">₹249<span>/month</span></div>
+                <div class="plan-price">₹{{ number_format(config('saas.plans.pro.monthly_price')) }}<span>/month</span></div>
                 <p class="plan-desc">For growing businesses that need advanced features and scale.</p>
                 <ul class="plan-features">
                     <li><i class="fa-solid fa-check-circle" style="color: var(--v2-primary);"></i> <strong>Everything in Base, plus:</strong></li>
                     <li><i class="fa-solid fa-check-circle"></i> Custom Domain Support</li>
                     <li><i class="fa-solid fa-check-circle"></i> Advanced Analytics & Reports</li>
-                    <li><i class="fa-solid fa-check-circle"></i> Abandoned Cart Recovery</li>
+
                     <li><i class="fa-solid fa-check-circle"></i> No watermark in footer</li>
                 </ul>
                 <a href="#" class="plan-btn plan-btn-primary">Start 7-Day Free Trial</a>
@@ -767,12 +767,12 @@
             <!-- Advanced Plan -->
             <div class="pricing-card">
                 <div class="plan-name">Enterprise</div>
-                <div class="plan-price">₹749<span>/month</span></div>
+                <div class="plan-price">₹{{ number_format(config('saas.plans.enterprise.monthly_price')) }}<span>/month</span></div>
                 <p class="plan-desc">Maximum performance and dedicated support for large scale operations.</p>
                 <ul class="plan-features">
                     <li><i class="fa-solid fa-check-circle" style="color: var(--v2-primary);"></i> <strong>Everything in Pro, plus:</strong></li>
-                    <li><i class="fa-solid fa-check-circle"></i> Multi-Warehouse Inventory</li>
-                    <li><i class="fa-solid fa-check-circle"></i> Custom Integrations (API)</li>
+
+
                     <li><i class="fa-solid fa-check-circle"></i> Dedicated Account Manager</li>
                 </ul>
                 <a href="#" class="plan-btn plan-btn-outline">Start 7-Day Free Trial</a>

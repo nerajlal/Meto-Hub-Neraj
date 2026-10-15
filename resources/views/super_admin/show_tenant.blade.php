@@ -19,7 +19,7 @@
         <div class="row g-4">
             <div class="col-12 col-md-3 border-end">
                 <div class="text-uppercase small fw-bold text-muted mb-1">Domain</div>
-                <div class="fw-bold text-primary">{{ $tenant->domain }}</div>
+                <div class="fw-bold text-primary">{{ $tenant->domain ?: $tenant->slug }}</div>
                 <div class="text-muted extra-small mt-1">Created: {{ $tenant->created_at->format('M d, Y') }}</div>
             </div>
             <div class="col-12 col-md-3 border-end">
@@ -33,15 +33,17 @@
             </div>
             <div class="col-12 col-md-3 border-end">
                 <div class="text-uppercase small fw-bold text-muted mb-1">Current Plan</div>
-                <span class="badge bg-success bg-opacity-10 text-success text-capitalize px-2 py-1 rounded fw-bold">{{ $tenant->plan ?? 'sprout' }}</span>
+                <span class="badge bg-success bg-opacity-10 text-success text-capitalize px-2 py-1 rounded fw-bold">{{ $billing['plan_name'] }}</span>
             </div>
             <div class="col-12 col-md-3">
                 <div class="text-uppercase small fw-bold text-muted mb-1">Active Theme</div>
-                <span class="badge bg-secondary bg-opacity-10 text-secondary text-capitalize px-2 py-1 rounded fw-bold">{{ str_replace('_', ' ', $tenant->theme ?? 'aura_luxe') }}</span>
+                <span class="badge bg-secondary bg-opacity-10 text-secondary text-capitalize px-2 py-1 rounded fw-bold">{{ $billing['theme_name'] }}</span>
             </div>
         </div>
     </div>
 </div>
+
+@include('super_admin.partials.tenant_billing')
 
 <!-- Store Operational Metrics -->
 <div class="row g-3 mb-4">

@@ -9,37 +9,57 @@ use Illuminate\Support\Facades\Hash;
 
 class DashboardController extends Controller
 {
-    public function index()
+    public function index(\App\Services\SuperAdminStoreOverview $overview)
     {
-        $tenants = \App\Models\Tenant::with('admin')->get();
-        
-        $totalStores = \App\Models\Tenant::count();
-        $totalOrders = \App\Models\Order::count();
-        $totalRevenue = \App\Models\Order::where('status', '!=', 'cancelled')->sum('total_amount');
-        $totalCustomers = \App\Models\User::where('type', 'user')->count();
-        
-        $recentOrders = \App\Models\Order::with('tenant')->latest()->take(5)->get();
-        
-        $planBreakdown = [
-            'sprout' => \App\Models\Tenant::where('plan', 'sprout')->count(),
-            'maison' => \App\Models\Tenant::where('plan', 'maison')->count(),
-            'heritage' => \App\Models\Tenant::where('plan', 'heritage')->count(),
-        ];
+        $counts = $overview->counts();
+        $totalStores = $counts['total'];
+        $totalOrders = \App\Models\Order::withoutGlobalScopes()->count();
+        $totalCustomers = User::withoutGlobalScopes()->where('type', 'user')->count();
+        $recentOrders = \App\Models\Order::withoutGlobalScopes()->with('tenant')->latest()->take(5)->get();
+        $tenants = $overview->query()->latest()->orderByDesc('id')->take(8)->get();
+        $planBreakdown = \App\Models\Tenant::selectRaw('plan, COUNT(*) as store_count')->groupBy('plan')->pluck('store_count', 'plan');
+        $salesByCurrency = \App\Models\Order::withoutGlobalScopes()->join('tenants', 'tenants.id', '=', 'orders.tenant_id')
+            ->where('orders.status', '!=', 'cancelled')->selectRaw('tenants.currency, SUM(orders.total_amount) as amount')
+            ->groupBy('tenants.currency')->get();
 
-        return view('super_admin.dashboard', compact(
-            'tenants', 
-            'totalStores', 
-            'totalOrders', 
-            'totalRevenue', 
-            'totalCustomers', 
-            'recentOrders', 
-            'planBreakdown'
-        ));
+        $subscriptionCollections = \App\Models\SubscriptionPayment::where('status', 'captured')->selectRaw('currency, SUM(amount) as captured, SUM(amount_refunded) as refunded')->groupBy('currency')->get();
+        $outstandingInvoices = \App\Models\SubscriptionInvoice::whereIn('status', ['issued', 'partially_paid'])->selectRaw('currency, SUM(amount_due) as due')->groupBy('currency')->get();
+
+        return view('super_admin.dashboard', compact('counts', 'totalStores', 'totalOrders', 'totalCustomers', 'recentOrders', 'tenants', 'planBreakdown', 'salesByCurrency', 'overview', 'subscriptionCollections', 'outstandingInvoices'));
+    }
+
+    private function storeFilters(Request $request): array
+    {
+        return $request->validate([
+            'q' => 'nullable|string|max:200',
+            'status' => ['nullable', \Illuminate\Validation\Rule::in(array_keys(\App\Services\SuperAdminStoreOverview::STATUSES))],
+            'plan' => 'nullable|string|max:50', 'trial_ending' => 'nullable|in:1',
+        ]);
+    }
+
+    public function subscriptions(Request $request, \App\Services\SuperAdminStoreOverview $overview)
+    {
+        $filters = $this->storeFilters($request);
+        $tenants = $overview->filter($overview->query(), $filters)->latest()->orderByDesc('id')->paginate(15)->withQueryString();
+        $counts = $overview->counts();
+        $planOptions = \App\Models\Tenant::select('plan')->distinct()->orderBy('plan')->pluck('plan')->filter();
+
+        return view('super_admin.subscriptions', compact('tenants', 'counts', 'filters', 'planOptions', 'overview'));
+    }
+
+    public function refreshBilling($id, \App\Services\SubscriptionBilling $billing)
+    {
+        $tenant = \App\Models\Tenant::findOrFail($id);
+        $subscription = $billing->local($tenant);
+        abort_unless($subscription, 404, 'No subscription recorded.');
+        try { $billing->reconcile($subscription); }
+        catch (\Throwable $e) { return back()->withErrors(['billing' => 'Provider synchronization could not be completed. Check gateway configuration or retry later.']); }
+        return back()->with('success', 'Store subscription, invoices and payment history refreshed.');
     }
 
     public function createTenant()
     {
-        return view('super_admin.create_tenant');
+        return view('super_admin.create_tenant', ['plans' => config('saas.plans'), 'themes' => app(\App\Services\StorefrontTheme::class)->all()]);
     }
 
     public function storeTenant(Request $request)
@@ -49,8 +69,8 @@ class DashboardController extends Controller
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:8',
             'site_name' => 'required|string|max:255',
-            'plan' => 'required|string|max:50',
-            'theme' => 'required|string|max:50',
+            'plan' => ['required', \Illuminate\Validation\Rule::in(array_keys(config('saas.plans')))],
+            'theme' => ['required', \Illuminate\Validation\Rule::in(array_keys(config('storefront_themes')))],
         ]);
 
         // Create Tenant with Plan and Theme
@@ -76,10 +96,14 @@ class DashboardController extends Controller
         return redirect()->route('super_admin.dashboard')->with('success', 'Tenant Admin and store catalog created successfully.');
     }
 
-    public function tenants()
+    public function tenants(Request $request, \App\Services\SuperAdminStoreOverview $overview)
     {
-        $tenants = \App\Models\Tenant::with('admin')->paginate(15);
-        return view('super_admin.tenants', compact('tenants'));
+        $filters = $this->storeFilters($request);
+        $tenants = $overview->filter($overview->query(), $filters)->latest()->orderByDesc('id')->paginate(15)->withQueryString();
+        $counts = $overview->counts();
+        $planOptions = \App\Models\Tenant::select('plan')->distinct()->orderBy('plan')->pluck('plan')->filter();
+
+        return view('super_admin.tenants', compact('tenants', 'counts', 'filters', 'planOptions', 'overview'));
     }
 
     public function orders()
@@ -96,33 +120,10 @@ class DashboardController extends Controller
 
     public function plans()
     {
-        $plans = [
-            [
-                'id' => 'sprout',
-                'name' => 'Sprout (Starter)',
-                'price' => 9.00,
-                'billing' => 'month',
-                'limit' => 'Up to 50 Products',
-                'features' => ['Standard Checkout', 'Aura Luxe & Modern Minimal Themes', 'Basic Analytics', 'WhatsApp Support']
-            ],
-            [
-                'id' => 'maison',
-                'name' => 'Maison (Professional)',
-                'price' => 29.00,
-                'billing' => 'month',
-                'limit' => 'Up to 250 Products',
-                'features' => ['Custom Domain Routing', 'All Themes Enabled', 'Advanced Inventory Tracker', 'Priority Email Support']
-            ],
-            [
-                'id' => 'heritage',
-                'name' => 'Heritage (Enterprise)',
-                'price' => 99.00,
-                'billing' => 'month',
-                'limit' => 'Unlimited Products',
-                'features' => ['Dedicated Account Manager', 'Custom CSS Styling', 'Automated Daily Backups', '24/7 Phone & SLA Support']
-            ]
-        ];
-        return view('super_admin.plans', compact('plans'));
+        $plans = config('saas.plans');
+        $planBreakdown = \App\Models\Tenant::selectRaw('plan, COUNT(*) as store_count')->groupBy('plan')->pluck('store_count', 'plan');
+
+        return view('super_admin.plans', compact('plans', 'planBreakdown'));
     }
 
     public function status()
@@ -150,7 +151,11 @@ class DashboardController extends Controller
 
     public function showTenant($id)
     {
-        $tenant = \App\Models\Tenant::with('admin')->findOrFail($id);
+        $overview = app(\App\Services\SuperAdminStoreOverview::class);
+        $tenant = $overview->query()->findOrFail($id);
+        $billing = $overview->describe($tenant);
+        $subscription = app(\App\Services\SubscriptionBilling::class)->local($tenant);
+        $payments = \App\Models\SubscriptionPayment::whereHas('subscription', fn ($q) => $q->where('tenant_id', $tenant->id))->latest('attempted_at')->take(30)->get();
 
         $totalProducts = \App\Models\Product::withoutGlobalScopes()->where('tenant_id', $id)->count();
         $totalOrders = \App\Models\Order::withoutGlobalScopes()->where('tenant_id', $id)->count();
@@ -160,7 +165,7 @@ class DashboardController extends Controller
             ->where('status', '!=', 'cancelled')
             ->sum('total_amount');
             
-        $totalCustomers = \App\Models\User::where('tenant_id', $id)
+        $totalCustomers = \App\Models\User::withoutGlobalScopes()->where('tenant_id', $id)
             ->where('type', 'user')
             ->count();
 
@@ -188,7 +193,10 @@ class DashboardController extends Controller
             'totalSales',
             'totalCustomers',
             'recentOrders',
-            'lowStockItems'
+            'lowStockItems',
+            'billing',
+            'subscription',
+            'payments'
         ));
     }
 }

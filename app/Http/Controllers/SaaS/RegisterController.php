@@ -20,12 +20,12 @@ class RegisterController extends Controller
             'name' => 'required|string|max:255', 'business' => 'required|string|max:255',
             'country' => 'required|string|max:255', 'email' => 'required|email|unique:users,email',
             'whatsapp' => 'required|string|max:30', 'password' => 'required|string|min:8',
-            'plan' => 'nullable|in:sprout,blossom,tree',
+            'plan' => 'nullable|in:base,pro,enterprise,sprout,blossom,tree',
             'theme' => ['required', 'string', Rule::in(array_keys(config('storefront_themes')))],
         ]);
         $user = DB::transaction(function () use ($validated) {
             $tenant = Tenant::create([
-                'name' => $validated['business'], 'plan' => 'sprout', 'theme' => $validated['theme'],
+                'name' => $validated['business'], 'plan' => 'base', 'theme' => $validated['theme'],
                 'contact_email' => $validated['email'], 'contact_phone' => $validated['whatsapp'],
                 'whatsapp_number' => preg_replace('/\D/', '', $validated['whatsapp']),
             ]);

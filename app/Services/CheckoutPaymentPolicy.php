@@ -9,6 +9,8 @@ class CheckoutPaymentPolicy
 {
     public function availableMethods(Tenant $tenant): array
     {
+        $access = app(PlanAccess::class);
+        if (!$access->inTrial($tenant) && !$access->hasPaidAccess($tenant)) return [];
         $settings = TenantPaymentSetting::withoutGlobalScopes()->where('tenant_id', $tenant->id)->first();
         $fields = $tenant->checkout_fields ?? [];
         $cod = ($settings?->cod_enabled ?? true) && ($fields['cash_on_delivery']['enabled'] ?? true);

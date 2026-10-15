@@ -10,6 +10,7 @@
     <div class="sf-footer-contact">
         @if($currentTenant->contact_phone)<a href="tel:{{ preg_replace('/[^+0-9]/', '', $currentTenant->contact_phone) }}">{{ $currentTenant->contact_phone }}</a>@endif
         @if($currentTenant->contact_email)<a href="mailto:{{ $currentTenant->contact_email }}">{{ $currentTenant->contact_email }}</a>@endif
+        @unless(app(\App\Services\PlanAccess::class)->allows($currentTenant, 'remove_branding'))<a href="{{ route('landing') }}">Powered by MetoHub</a>@endunless
         <span>© {{ now()->year }} {{ $currentTenant->name }}</span>
     </div>
 </footer>

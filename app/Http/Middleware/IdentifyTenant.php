@@ -31,23 +31,13 @@ class IdentifyTenant
 
             // Calculate trial remaining days (7 day trial)
             // Calculate trial remaining days accurately by exact date and time
-            $isPaid = $tenant->subscription_status === 'active';
-            $trialEndsAt = $tenant->created_at->copy()->addDays(7);
-            
+            $access = app(\App\Services\PlanAccess::class);
+            $isPaid = $access->hasPaidAccess($tenant);
+            $trialEndsAt = $tenant->created_at->copy()->addDays(config('saas.trial_days', 7));
             $isTrialExpired = !$isPaid && now()->greaterThanOrEqualTo($trialEndsAt);
-            $daysRemaining = 0;
-            $renewsIn = 0;
-            
-            if (!$isPaid && !$isTrialExpired) {
-                // ceil() ensures that 6.1 days remaining shows as 7 days, and 0.5 days shows as 1 day.
-                $daysRemaining = (int) ceil(now()->floatDiffInDays($trialEndsAt));
-            } else if ($isPaid) {
-                // Calculate roughly when the next billing cycle is based on updated_at
-                $daysSincePayment = now()->diffInDays($tenant->updated_at);
-                $renewsIn = max(0, 30 - ($daysSincePayment % 30));
-                // Ensure it doesn't say 0 if it just renewed
-                if ($renewsIn === 0) $renewsIn = 30;
-            }
+            $daysRemaining = !$isPaid && !$isTrialExpired ? (int) ceil(now()->diffInSeconds($trialEndsAt) / 86400) : 0;
+            $record = $tenant->subscriptions()->where('gateway_id', $tenant->razorpay_subscription_id)->first();
+            $renewsIn = !$record?->cancel_at_cycle_end && $record?->next_charge_at?->isFuture() ? (int) ceil(now()->diffInSeconds($record->next_charge_at) / 86400) : null;
 
             // Share resolved tenant globally with all views
             view()->share('currentTenant', $tenant);

@@ -15,6 +15,9 @@
         body { font-family: 'Inter', sans-serif; background-color: #f1f2f3; }
         .sidebar-item:hover { background-color: #f6f6f7; color: #202223; }
         .sidebar-item.active { background-color: #edeeef; color: #000; font-weight: 600; border-left: 3px solid #000; }
+        .sa-store-table th,.sa-store-table td { padding:1rem; }
+        .sa-store-table { min-width:900px; }
+        .sa-reference { overflow-wrap:anywhere; }
         .card { box-shadow: 0 0 5px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.1); border: none; }
         
         .wrapper { display: flex; height: 100vh; overflow: hidden; }
@@ -56,6 +59,7 @@
                         </div>
                     @endif
                     
+                    @if($errors->any())<div class="alert alert-danger" role="alert"><ul class="mb-0">@foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul></div>@endif
                     @yield('content')
 
                     <div class="mt-5 pt-4 border-top text-center small text-muted">

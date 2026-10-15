@@ -118,6 +118,8 @@ Route::get('auth/google/callback', [App\Http\Controllers\AuthController::class, 
 
 // Centralized Admin Login Routes
 
+Route::post('/billing/razorpay/webhook', App\Http\Controllers\BillingWebhookController::class)->middleware('throttle:120,1')->name('billing.webhook');
+
 // Super Admin Routes
 Route::prefix('superadmin')->name('super_admin.')->group(function () {
     // Guest Routes
@@ -128,7 +130,9 @@ Route::prefix('superadmin')->name('super_admin.')->group(function () {
     // Protected Routes
     Route::middleware([\App\Http\Middleware\SuperAdminMiddleware::class])->group(function () {
         Route::get('/', [App\Http\Controllers\SuperAdmin\DashboardController::class, 'index'])->name('dashboard');
+        Route::get('/subscriptions', [App\Http\Controllers\SuperAdmin\DashboardController::class, 'subscriptions'])->name('subscriptions');
         Route::get('/tenants', [App\Http\Controllers\SuperAdmin\DashboardController::class, 'tenants'])->name('tenants');
+        Route::post('/tenants/{id}/billing/refresh', [App\Http\Controllers\SuperAdmin\DashboardController::class, 'refreshBilling'])->middleware('throttle:10,1')->name('tenants.billing.refresh');
         Route::get('/tenants/{id}', [App\Http\Controllers\SuperAdmin\DashboardController::class, 'showTenant'])->name('tenants.show');
         Route::get('/create-tenant', [App\Http\Controllers\SuperAdmin\DashboardController::class, 'createTenant'])->name('create_tenant');
         Route::post('/create-tenant', [App\Http\Controllers\SuperAdmin\DashboardController::class, 'storeTenant'])->name('store_tenant');
@@ -178,7 +182,7 @@ Route::get('/login', function () {
 })->name('login');
 
 // Protected Admin Panel Routes
-Route::prefix('{tenant}/admin')->name('admin.')->middleware(['identify_tenant', 'auth', 'tenant_role:admin'])->group(function () {
+Route::prefix('{tenant}/admin')->name('admin.')->middleware(['identify_tenant', 'auth', 'tenant_role:admin', \App\Http\Middleware\EnforceSubscription::class])->group(function () {
     Route::get('/', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
     Route::get('/orders', [App\Http\Controllers\Admin\OrderController::class, 'index'])->name('orders');
     Route::get('/orders/export', [App\Http\Controllers\Admin\OrderController::class, 'export'])->name('orders.export');
@@ -225,13 +229,7 @@ Route::prefix('{tenant}/admin')->name('admin.')->middleware(['identify_tenant', 
     Route::put('/products/{id}', [App\Http\Controllers\Admin\ProductController::class, 'update'])->name('products.update');
     Route::delete('/products/{id}', [App\Http\Controllers\Admin\ProductController::class, 'destroy'])->name('products.destroy');
 
-    // DartPOS Integration Route (Stub for now)
-    Route::post('/products/dartpos-sync', function () {
-        // Trigger the artisan command in the background or synchronous for MVP
-        \Illuminate\Support\Facades\Artisan::call('dartpos:sync-products');
-
-        return redirect()->back()->with('success', 'DartPOS sync started successfully.');
-    })->name('dartpos.sync');
+    Route::post('/products/dartpos-sync', fn () => abort(503, 'DartPOS synchronization is not available.'))->name('dartpos.sync');
 
     Route::view('/reviews', 'admin.reviews.index')->name('reviews');
 
@@ -248,6 +246,9 @@ Route::prefix('{tenant}/admin')->name('admin.')->middleware(['identify_tenant', 
     Route::get('/billing', [App\Http\Controllers\Admin\BillingController::class, 'index'])->name('billing');
     Route::post('/billing/subscribe', [App\Http\Controllers\Admin\BillingController::class, 'subscribe'])->name('billing.subscribe');
     Route::post('/billing/verify', [App\Http\Controllers\Admin\BillingController::class, 'verify'])->name('billing.verify');
+    Route::post('/billing/refresh', [App\Http\Controllers\Admin\BillingController::class, 'refresh'])->middleware('throttle:10,1')->name('billing.refresh');
+    Route::post('/billing/cancel', [App\Http\Controllers\Admin\BillingController::class, 'cancel'])->middleware('throttle:5,1')->name('billing.cancel');
+    Route::get('/billing/receipts/{payment}', [App\Http\Controllers\Admin\BillingController::class, 'receipt'])->name('billing.receipt');
 
     Route::get('/carts', [App\Http\Controllers\Admin\CartController::class, 'index'])->name('carts');
     Route::get('/analytics', [App\Http\Controllers\Admin\AnalyticsController::class, 'index'])->name('analytics');

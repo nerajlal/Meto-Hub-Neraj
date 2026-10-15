@@ -32,7 +32,7 @@ If preflight fails, correct the reported settings before opening the application
 
 Register a new merchant using a mailbox you control. Confirm the email arrives from `info@metora.in`, its link uses the beta domain, it verifies once, and password login works afterward. Test resend and expired links. With mail unavailable, signup must explain the delivery failure and block merchant access until verification.
 
-Check all six themes on mobile and desktop: catalog, variant selection, product images, cart totals, checkout, and admin settings. Place a real controlled cash-on-delivery order and confirm stock, order summary, and merchant notification. Online storefront checkout is intentionally unavailable until gateway creation, verified payment callbacks, retries, and refunds are implemented and tested. Platform Razorpay subscriptions are separate; configure their credentials and complete provider sandbox/live validation before accepting subscription payments.
+Check all fifteen themes on mobile and desktop: catalog, variant selection, product images, cart totals, checkout, and admin settings. Place a real controlled cash-on-delivery order and confirm stock, order summary, and merchant notification. Online storefront checkout is intentionally unavailable until gateway creation, verified payment callbacks, retries, and refunds are implemented and tested. Platform Razorpay subscriptions are separate; configure their credentials and complete provider sandbox/live validation before accepting subscription payments.
 
 ## Operations
 
@@ -59,3 +59,7 @@ The API currently returns the MetoHub project with an empty `blogs` array. Publi
 ## Public store links
 
 Storefront publication links use `/store/{store-slug}`, for example `/store/fresh-grocery`. Catalog, product, and checkout routes keep the same store slug. Run the tenant-slug migration during deployment to populate existing stores; new stores receive slugs automatically. Slugs remain stable when business names change, and duplicate names receive unique suffixes. The admin header and theme/domain settings show the public link. Existing `/v1?tenant_id=9` links still work.
+
+## Subscription lifecycle activation
+
+Follow [billing-operations.md](billing-operations.md) for signed webhooks, historical subscription reconciliation, scheduler setup, cancellation and production payment validation. The release adds subscription, payment, invoice and checkout-reservation tables; run all new migrations before enabling the updated billing pages.

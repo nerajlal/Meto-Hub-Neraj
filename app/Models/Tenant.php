@@ -78,6 +78,11 @@ class Tenant extends Model
         return $symbols[$value] ?? $value;
     }
 
+    public function subscriptions()
+    {
+        return $this->hasMany(StoreSubscription::class);
+    }
+
     public function admin()
     {
         return $this->hasOne(User::class, 'tenant_id')->where('type', 'admin');

@@ -44,6 +44,9 @@ class ProductionPreflight extends Command
             $check(false, 'Preflight supports SMTP, Resend, or Postmark; configure and validate a supported delivery provider.');
         }
 
+        $check((bool) config('services.razorpay.key') && (bool) config('services.razorpay.secret'), 'Configure Razorpay subscription credentials before charging for plans.');
+        $check((bool) config('services.razorpay.webhook_secret'), 'RAZORPAY_WEBHOOK_SECRET is missing; configure signed subscription webhooks.');
+
         try {
             DB::connection()->getPdo();
             $migrator = app('migrator');

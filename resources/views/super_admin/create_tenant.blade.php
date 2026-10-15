@@ -41,18 +41,13 @@
                         <div class="col-md-6">
                             <label for="plan" class="form-label fw-medium small text-secondary">Subscription Plan <span class="text-danger">*</span></label>
                             <select class="form-select" id="plan" name="plan" required>
-                                <option value="sprout">Sprout — $9/mo</option>
-                                <option value="maison" selected>Maison — $19/mo</option>
-                                <option value="heritage">Heritage — $49/mo</option>
+                                @foreach($plans as $id => $plan)<option value="{{ $id }}" @selected(old('plan', 'base') === $id)>{{ $plan['name'] }} — INR {{ number_format($plan['monthly_price']) }}/month</option>@endforeach
                             </select>
                         </div>
                         <div class="col-md-6">
                             <label for="theme" class="form-label fw-medium small text-secondary">Storefront Theme <span class="text-danger">*</span></label>
                             <select class="form-select" id="theme" name="theme" required>
-                                <option value="aura_luxe">Aura Luxe (v3)</option>
-                                <option value="velvet_dark">Velvet Dark (v2)</option>
-                                <option value="editorial_cream">Editorial Cream (v4)</option>
-                                <option value="modern_minimal">Modern Minimal (v1)</option>
+                                @foreach($themes as $id => $theme)<option value="{{ $id }}" @selected(old('theme', 'template_1') === $id)>{{ $theme['name'] }}</option>@endforeach
                             </select>
                         </div>
                     </div>

@@ -35,7 +35,7 @@ return [
         ],
     ],
 
-    'razorpay' => ['key' => env('RAZORPAY_KEY'), 'secret' => env('RAZORPAY_SECRET')],
+    'razorpay' => ['key' => env('RAZORPAY_KEY'), 'secret' => env('RAZORPAY_SECRET'), 'webhook_secret' => env('RAZORPAY_WEBHOOK_SECRET')],
     'whatsapp' => ['phone_number_id' => env('WHATSAPP_PHONE_NUMBER_ID'), 'access_token' => env('WHATSAPP_ACCESS_TOKEN'), 'owner_number' => env('WHATSAPP_OWNER_NUMBER')],
 
     'blog' => [

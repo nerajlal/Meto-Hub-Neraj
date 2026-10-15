@@ -1,52 +1,8 @@
 @extends('super_admin.layouts.app')
-
-@section('title', 'SaaS Pricing Plans')
-
+@section('title', 'SaaS Plans')
 @section('content')
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <div>
-        <h1 class="h3 fw-bold text-dark mb-1">SaaS Plan Pricing & Tiers</h1>
-        <p class="text-muted small">Manage subscription pricing tiers, feature lists, and store limits for all tenants.</p>
-    </div>
-</div>
-
-<div class="row g-4">
-    @foreach($plans as $plan)
-    <div class="col-12 col-lg-4">
-        <div class="card h-100 border shadow-sm rounded-3 overflow-hidden">
-            <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
-                <h5 class="mb-0 text-dark fw-bold">{{ $plan['name'] }}</h5>
-                <span class="badge bg-success bg-opacity-10 text-success fw-bold text-uppercase small" style="font-size: 10px;">active</span>
-            </div>
-            <div class="card-body vstack gap-4">
-                <div class="d-flex align-items-baseline">
-                    <h2 class="fw-bold text-dark mb-0">{{ $currentTenant->currency ?? '₹' }}{{ number_format($plan['price'] * 85, 0) }}</h2>
-                    <span class="text-muted small ms-2">/ {{ $plan['billing'] }}</span>
-                </div>
-
-                <div>
-                    <h6 class="text-dark fw-bold mb-2">Store Allocation:</h6>
-                    <span class="badge bg-light text-secondary border px-2 py-1 rounded fw-semibold">{{ $plan['limit'] }}</span>
-                </div>
-
-                <div>
-                    <h6 class="text-dark fw-bold mb-2">Features Included:</h6>
-                    <ul class="list-unstyled mb-0 vstack gap-2 small text-muted">
-                        @foreach($plan['features'] as $feature)
-                        <li>
-                            <i class="fas fa-check-circle text-success me-2"></i> {{ $feature }}
-                        </li>
-                        @endforeach
-                    </ul>
-                </div>
-            </div>
-            <div class="card-footer bg-light border-top py-3 text-center">
-                <button class="btn btn-sm btn-outline-primary rounded-3 w-100" disabled>
-                    <i class="fas fa-cog me-1"></i> Configure Plan (SaaS Stripe API Integrated)
-                </button>
-            </div>
-        </div>
-    </div>
-    @endforeach
-</div>
+<div class="mb-4"><h1 class="h3 fw-bold text-dark">SaaS Subscription Plans</h1><p class="text-muted">Reference pricing used by the platform’s subscription checkout. Prices are in INR.</p></div>
+<div class="row g-4">@foreach($plans as $id => $plan)<div class="col-md-4"><div class="card border p-4 h-100"><h2 class="h4 fw-bold text-dark">{{ $plan['name'] }}</h2><p class="fs-3 text-dark mt-3">₹{{ number_format($plan['monthly_price']) }}<small class="fs-6 text-muted"> / month</small></p><p>₹{{ number_format($plan['monthly_price'] * config('saas.annual_months')) }} / year</p><p class="small text-muted">Annual billing includes one month free.</p><p class="small text-muted">{{ $plan['description'] }}</p><ul class="small ps-3">@foreach($plan['features'] as $feature)<li class="mb-2">{{ $feature }}</li>@endforeach</ul><a class="mt-auto" href="{{ route('super_admin.tenants', ['plan' => $id]) }}">{{ $planBreakdown[$id] ?? 0 }} stores on this plan →</a></div></div>@endforeach</div>
+<div class="card border p-4 mt-4"><h2 class="h5 fw-bold text-dark">Legacy plan assignments</h2>@forelse($planBreakdown->except(array_keys($plans)) as $id => $count)<a class="d-block py-2" href="{{ route('super_admin.tenants', ['plan' => $id]) }}">{{ ucfirst($id ?: 'Unassigned') }} · {{ $count }} stores · historical billing amount not recorded</a>@empty<p class="mb-0 text-muted">No legacy plan assignments.</p>@endforelse</div>
+<p class="small text-muted mt-3">Current offers match the public homepage and merchant billing. Existing gateway subscriptions retain their original terms until explicitly changed.</p>
 @endsection

@@ -31,6 +31,8 @@
             </li>
 
 
+            <li><a href="{{ route('super_admin.subscriptions') }}" class="sidebar-item {{ request()->routeIs('super_admin.subscriptions') ? 'active' : '' }} d-flex align-items-center gap-3 px-3 py-2 rounded text-decoration-none text-secondary small"><i class="fas fa-credit-card" style="width:20px;"></i><span>Subscriptions & Trials</span></a></li>
+            <li><a href="{{ route('super_admin.plans') }}" class="sidebar-item {{ request()->routeIs('super_admin.plans') ? 'active' : '' }} d-flex align-items-center gap-3 px-3 py-2 rounded text-decoration-none text-secondary small"><i class="fas fa-layer-group" style="width:20px;"></i><span>SaaS Plans</span></a></li>
             <!-- Platform Data -->
             <li class="px-3 pt-3 pb-1 text-uppercase fw-bold text-muted" style="font-size: 0.7rem; letter-spacing: 0.05em;">
                 Platform Data

@@ -55,11 +55,11 @@
       </div>
       <div class="feature-card"><span class="f-icon"><i class="fa-solid fa-credit-card"></i></span>
         <h3>Payment Gateways</h3>
-        <p>Connect Stripe, PayPal, Razorpay, and more in a few clicks.</p>
+        <p>Offer cash-on-delivery checkout. MetoHub software subscription billing is handled through Razorpay.</p>
       </div>
       <div class="feature-card"><span class="f-icon"><i class="fa-solid fa-globe"></i></span>
         <h3>Custom Domains</h3>
-        <p>Point your own domain to your store with automatic SSL.</p>
+        <p>Connect your custom domain on Pro or Enterprise. Configure DNS and HTTPS with your hosting provider.</p>
       </div>
       <!-- <div class="feature-card"><span class="f-icon"><i class="fa-solid fa-mobile-screen-button"></i></span><h3>Responsive Themes</h3><p>Every theme looks sharp on desktop, tablet, and mobile out of the box.</p></div> -->
       <!-- <div class="feature-card"><span class="f-icon"><i class="fa-solid fa-user-lock"></i></span>

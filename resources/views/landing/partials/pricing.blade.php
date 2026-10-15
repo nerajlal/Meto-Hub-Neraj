@@ -372,119 +372,24 @@
       <button class="toggle-btn toggle-active" id="btn-monthly"><span class="toggle-text">Monthly</span></button>
       <button class="toggle-btn" id="btn-yearly">
         <span class="toggle-text">Yearly</span>
-        <span class="save-badge">Save 2 Months</span>
+        <span class="save-badge">1 Month Free</span>
       </button>
     </div>
   </div>
 
   <div class="pricing-grid" id="pricingGrid">
     
-    <!-- Web App Only Plan -->
-    <div class="pricing-card">
-      <div class="card-top">
-        <div class="card-icon icon-starter"><i class="fa-solid fa-store"></i></div>
-        <div>
-          <h3>Web App Only</h3>
-          <p>Perfect for small grocery stores</p>
-        </div>
-      </div>
-      <div class="price-show-monthly">
-        <div class="price-monthly">₹2,999 <span>/mo</span></div>
-        <p class="billing-info">billed monthly</p>
-        <a class="save-prompt" onclick="document.getElementById('btn-yearly').click()">Switch to yearly and save ₹5,998</a>
-      </div>
-      <div class="price-show-yearly">
-        <div class="price-strikethrough">₹2,999/mo billed monthly</div>
-        <div class="price-monthly">₹2,499 <span>/mo</span></div>
-        <p class="billing-info">billed ₹29,990 /yr</p>
-        <div class="save-badge-inline">↑ Save ₹5,998/yr</div>
-      </div>
-
+    @foreach(config('saas.plans') as $id => $plan)
+    <div class="pricing-card {{ $id === 'pro' ? 'featured' : '' }}">
+      @if($id === 'pro')<div class="featured-badge">MOST POPULAR</div>@endif
+      <div class="card-top"><div><h3>{{ $plan['name'] }}</h3><p>{{ $plan['description'] }}</p></div></div>
+      <div class="price-show-monthly"><div class="price-monthly">₹{{ number_format($plan['monthly_price']) }} <span>/mo</span></div><p class="billing-info">billed monthly</p></div>
+      <div class="price-show-yearly"><div class="price-monthly">₹{{ number_format($plan['monthly_price'] * config('saas.annual_months')) }} <span>/yr</span></div><p class="billing-info">One month free · billed annually</p></div>
       <div class="divider"><span>What's Included</span></div>
-      
-      <ul class="feature-list">
-        <li><i class="fa-solid fa-circle-check"></i> 1 storefront</li>
-        <li><i class="fa-solid fa-circle-check"></i> Standard themes</li>
-        <li><i class="fa-solid fa-circle-check"></i> Basic pricing rules</li>
-        <li><i class="fa-solid fa-circle-check"></i> Email support</li>
-        <li><i class="fa-solid fa-circle-check"></i> Online Payment Gateway & COD</li>
-        <li><i class="fa-solid fa-circle-check"></i> Basic Delivery Area Setup</li>
-      </ul>
-
-      <a href="javascript:void(0)" class="btn-pricing btn-outline-green pricing-btn-trigger" data-plan="starter">Choose Starter</a>
+      <ul class="feature-list">@foreach($plan['features'] as $feature)<li><i class="fa-solid fa-circle-check"></i>{{ $feature }}</li>@endforeach</ul>
+      <a href="javascript:void(0)" class="btn-pricing {{ $id === 'pro' ? 'btn-solid-green' : 'btn-outline-green' }} pricing-btn-trigger" data-plan="{{ $id }}">Choose {{ $plan['name'] }}</a>
     </div>
-
-    <!-- Web + Mobile Plan -->
-    <div class="pricing-card featured">
-      <div class="featured-badge">MOST POPULAR <i class="fa-solid fa-star"></i></div>
-      <div class="card-top">
-        <div class="card-icon icon-business"><i class="fa-solid fa-mobile-screen-button"></i></div>
-        <div>
-          <h3>Web App + Mobile App</h3>
-          <p>Grow with Web and App</p>
-        </div>
-      </div>
-      <div class="price-show-monthly">
-        <div class="price-monthly">₹4,999 <span>/mo</span></div>
-        <p class="billing-info">billed monthly</p>
-        <a class="save-prompt" onclick="document.getElementById('btn-yearly').click()">Switch to yearly and save ₹9,998</a>
-      </div>
-      <div class="price-show-yearly">
-        <div class="price-strikethrough">₹4,999/mo billed monthly</div>
-        <div class="price-monthly">₹4,166 <span>/mo</span></div>
-        <p class="billing-info">billed ₹49,990 /yr</p>
-        <div class="save-badge-inline">↑ Save ₹9,998/yr</div>
-      </div>
-
-      <div class="divider"><span>Everything in Starter, Plus</span></div>
-      
-      <ul class="feature-list">
-        <li><i class="fa-solid fa-circle-check"></i> Unlimited products</li>
-        <li><i class="fa-solid fa-circle-check"></i> Full pricing engine</li>
-        <li><i class="fa-solid fa-circle-check"></i> Promotions & bundles</li>
-        <li><i class="fa-solid fa-circle-check"></i> Advanced analytics</li>
-        <li><i class="fa-solid fa-circle-check"></i> Priority support</li>
-        <li><i class="fa-solid fa-circle-check"></i> B2B Registration & Approval</li>
-      </ul>
-
-      <a href="javascript:void(0)" class="btn-pricing btn-solid-green pricing-btn-trigger" data-plan="business">Choose Business</a>
-      <div class="best-value-badge"><i class="fa-solid fa-star"></i> Best Value for Serious Businesses</div>
-    </div>
-
-    <!-- Everything Plan -->
-    <div class="pricing-card">
-      <div class="card-top">
-        <div class="card-icon icon-pro"><i class="fa-solid fa-building"></i></div>
-        <div>
-          <h3>Everything</h3>
-          <p>Web + Mobile + Delivery App</p>
-        </div>
-      </div>
-      <div class="price-show-monthly">
-        <div class="price-monthly">₹7,999 <span>/mo</span></div>
-        <p class="billing-info">billed monthly</p>
-        <a class="save-prompt" onclick="document.getElementById('btn-yearly').click()">Switch to yearly and save ₹15,998</a>
-      </div>
-      <div class="price-show-yearly">
-        <div class="price-strikethrough">₹7,999/mo billed monthly</div>
-        <div class="price-monthly">₹6,666 <span>/mo</span></div>
-        <p class="billing-info">billed ₹79,990 /yr</p>
-        <div class="save-badge-inline">↑ Save ₹15,998/yr</div>
-      </div>
-
-      <div class="divider"><span>Everything in Business, Plus</span></div>
-      
-      <ul class="feature-list pro">
-        <li><i class="fa-solid fa-circle-check"></i> Multi-store management</li>
-        <li><i class="fa-solid fa-circle-check"></i> Regional pricing</li>
-        <li><i class="fa-solid fa-circle-check"></i> Dedicated account manager</li>
-        <li><i class="fa-solid fa-circle-check"></i> Custom integrations</li>
-        <li><i class="fa-solid fa-circle-check"></i> Multiple Warehouses</li>
-        <li><i class="fa-solid fa-circle-check"></i> Delivery Fleet Management</li>
-      </ul>
-
-      <a href="javascript:void(0)" class="btn-pricing btn-outline-purple pricing-btn-trigger" data-plan="pro">Choose Pro</a>
-    </div>
+    @endforeach
 
   </div>
 
@@ -555,7 +460,7 @@
     <div class="faq-item">
       <button class="faq-question" aria-expanded="false">What payment gateways are supported? <span class="faq-toggle">+</span></button>
       <div class="faq-answer">
-        <p>Stripe, PayPal, Razorpay, Google Pay, Apple Pay, and major card networks are supported out of the box.</p>
+        <p>Storefront checkout currently supports cash on delivery. MetoHub software subscriptions use Razorpay. Online customer payments and seller settlements are not yet enabled.</p>
       </div>
     </div>
     <div class="faq-item">

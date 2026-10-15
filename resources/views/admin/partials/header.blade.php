@@ -30,7 +30,7 @@
             @endif
         @elseif(isset($isPaidPlan) && $isPaidPlan)
             <span class="badge rounded-pill fw-medium d-flex align-items-center gap-1" style="background-color: rgba(255,255,255,0.15); color: #fff; font-size: 11px; padding: 5px 10px;">
-                <i class="fas fa-sync-alt"></i> Renews in {{ $renewsIn ?? 30 }} days
+                @if(isset($renewsIn))<i class="fas fa-sync-alt"></i> Renews in {{ $renewsIn }} days @else Paid access · renewal date unavailable @endif
             </span>
         @endif
 

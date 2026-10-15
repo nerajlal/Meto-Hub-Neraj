@@ -1,0 +1,9 @@
+<form method="GET" action="{{ url()->current() }}" class="card border p-3 mb-3">
+    <div class="row g-3 align-items-end">
+        <div class="col-12 col-md-4"><label for="store-search" class="form-label small fw-semibold">Find a store or owner</label><input type="search" id="store-search" name="q" class="form-control" value="{{ $filters['q'] ?? '' }}" maxlength="200" placeholder="Store, slug, domain, name or email"></div>
+        <div class="col-6 col-md-3"><label for="subscription-status" class="form-label small fw-semibold">Subscription status</label><select id="subscription-status" name="status" class="form-select"><option value="">All statuses</option>@foreach(\App\Services\SuperAdminStoreOverview::STATUSES as $value => $label)<option value="{{ $value }}" @selected(($filters['status'] ?? '') === $value)>{{ $label }}</option>@endforeach</select></div>
+        <div class="col-6 col-md-2"><label for="store-plan" class="form-label small fw-semibold">Plan</label><select name="plan" id="store-plan" class="form-select"><option value="">All plans</option>@foreach($planOptions as $plan)<option value="{{ $plan }}" @selected(($filters['plan'] ?? '') === $plan)>{{ config('saas.plans.'.$plan.'.name', ucfirst($plan)) }}</option>@endforeach</select></div>
+        <div class="col-12 col-md-3 d-flex flex-wrap gap-2"><button class="btn btn-primary" type="submit">Apply filters</button><a class="btn btn-outline-secondary" href="{{ url()->current() }}">Reset</a></div>
+        <div class="col-12"><div class="form-check"><input type="checkbox" class="form-check-input" id="trial-ending" name="trial_ending" value="1" @checked(($filters['trial_ending'] ?? '') === '1')><label class="form-check-label small" for="trial-ending">Unpaid stores whose trial ends in the next 48 hours</label></div></div>
+    </div>
+</form>

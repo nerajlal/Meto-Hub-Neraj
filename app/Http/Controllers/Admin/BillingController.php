@@ -3,132 +3,107 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\SubscriptionPayment;
+use App\Services\SubscriptionBilling;
 use Illuminate\Http\Request;
-use Razorpay\Api\Api;
-use App\Models\Tenant;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rule;
+use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 class BillingController extends Controller
 {
-    public function index()
+    public function index(SubscriptionBilling $billing)
     {
-        $tenant = auth()->user()->tenant;
-        return view('admin.billing.index', compact('tenant'));
+        $tenant = \App\Models\Tenant::findOrFail(auth()->user()->tenant_id);
+        $subscription = $billing->local($tenant);
+        $payments = SubscriptionPayment::whereHas('subscription', fn ($q) => $q->where('tenant_id', $tenant->id))->latest('attempted_at')->paginate(10);
+
+        return view('admin.billing.index', compact('tenant', 'subscription', 'payments'));
     }
 
-    public function subscribe(Request $request)
+    public function subscribe(Request $request, SubscriptionBilling $billing)
     {
-        $request->validate([
-            'cycle' => 'required|in:monthly,yearly',
-            'plan_tier' => 'nullable|in:sprout,blossom,tree'
-        ]);
-
-        $tenant = auth()->user()->tenant;
-        $tier = $request->input('plan_tier', $tenant->plan ?? 'sprout');
-        $cycle = $request->input('cycle');
-        $isYearly = $cycle === 'yearly';
-
+        $request->validate(['cycle' => 'required|in:monthly,yearly', 'plan_tier' => ['nullable', Rule::in(array_keys(config('saas.plans')))]]);
+        $tenant = \App\Models\Tenant::findOrFail(auth()->user()->tenant_id);
+        $tier = $request->input('plan_tier') ?: $tenant->plan;
+        abort_unless(isset(config('saas.plans')[$tier]), 422, 'Choose a current subscription plan.');
         try {
-            $api = new Api(config('services.razorpay.key'), config('services.razorpay.secret'));
-            if ($tier === 'blossom') {
-                $basePlanName = 'Grocery Blossom';
-                $baseAmount = 4999;
-            } elseif ($tier === 'tree') {
-                $basePlanName = 'Grocery Tree';
-                $baseAmount = 7999;
-            } else {
-                $basePlanName = 'Grocery Sprout';
-                $baseAmount = 2999;
-            }
-            
-            $planName = $isYearly ? $basePlanName . ' Yearly' : $basePlanName;
-            
-            // Yearly gives 2 months free (10 months cost)
-            $planAmount = $isYearly ? ($baseAmount * 10) : $baseAmount;
-            $planPaise = $planAmount * 100;
-            
-            // Fetch existing plans
-            $plans = $api->plan->all();
-            $planId = null;
-            
-            foreach($plans['items'] as $plan) {
-                if($plan['item']['name'] == $planName) {
-                    $planId = $plan['id'];
-                    break;
-                }
-            }
-            
-            // Create plan if it doesn't exist
-            if(!$planId) {
-                $newPlan = $api->plan->create([
-                    'period' => $isYearly ? 'yearly' : 'monthly',
-                    'interval' => 1,
-                    'item' => [
-                        'name' => $planName,
-                        'description' => $planName . ' Plan',
-                        'amount' => $planPaise,
-                        'currency' => 'INR'
-                    ]
-                ]);
-                $planId = $newPlan->id;
-            }
+            $subscription = $billing->start($tenant, $tier, $request->cycle);
 
-            $subscription  = $api->subscription->create(array(
-                'plan_id'         => $planId,
-                'customer_notify' => 1,
-                'total_count'     => $isYearly ? 10 : 120, // For yearly or continuous
-                'notes'           => array(
-                    'tenant_id' => $tenant->id
-                )
-            ));
-
-            $tenant->razorpay_subscription_id = $subscription->id;
-            $tenant->subscription_status = 'pending';
-            if ($tenant->plan !== $tier) {
-                $tenant->plan = $tier;
-            }
-            $tenant->save();
-
-            return response()->json([
-                'success' => true,
-                'subscription_id' => $subscription->id,
-                'key' => config('services.razorpay.key')
-            ]);
+            return response()->json(['success' => true, 'subscription_id' => $subscription->gateway_id, 'key' => config('services.razorpay.key')]);
+        } catch (HttpExceptionInterface $e) {
+            throw $e;
         } catch (\Throwable $e) {
-            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+            Log::warning('Subscription checkout requires reconciliation.', ['tenant_id' => $tenant->id, 'exception' => get_class($e)]);
+
+            return response()->json(['success' => false, 'message' => 'Unable to confirm checkout with the payment provider. Refresh Billing status before retrying.'], 503);
         }
     }
 
-    public function verify(Request $request)
+    public function verify(Request $request, SubscriptionBilling $billing)
     {
-        $request->validate([
-            'razorpay_payment_id' => 'required|string',
-            'razorpay_subscription_id' => 'required|string',
-            'razorpay_signature' => 'required|string',
-        ]);
-        $tenant = auth()->user()->tenant;
-        abort_unless($tenant->razorpay_subscription_id &&
-            hash_equals($tenant->razorpay_subscription_id, $request->razorpay_subscription_id), 422,
-            'This subscription does not belong to this store.');
-
+        $request->validate(['razorpay_payment_id' => 'required|string|max:191', 'razorpay_subscription_id' => 'required|string|max:191', 'razorpay_signature' => 'required|string|max:256']);
+        $tenant = \App\Models\Tenant::findOrFail(auth()->user()->tenant_id);
+        abort_unless($tenant->razorpay_subscription_id && hash_equals($tenant->razorpay_subscription_id, $request->razorpay_subscription_id), 422, 'This subscription does not belong to this store.');
+        $expected = hash_hmac('sha256', $request->razorpay_payment_id.'|'.$tenant->razorpay_subscription_id, (string) config('services.razorpay.secret'));
+        abort_unless(config('services.razorpay.secret') && hash_equals($expected, $request->razorpay_signature), 422, 'Payment verification failed.');
         try {
-            $api = new Api(config('services.razorpay.key'), config('services.razorpay.secret'));
+            $local = $billing->local($tenant);
+            $local = $billing->sync($local);
+            // Signature proves checkout association, not payment capture or a paid billing period.
+            $payment = $billing->array($billing->api()->payment->fetch($request->razorpay_payment_id));
+            abort_unless(($payment['id'] ?? '') === $request->razorpay_payment_id, 502, 'Payment reference mismatch.');
+            if (! empty($payment['invoice_id'])) {
+                $invoice = $billing->array($billing->api()->invoice->fetch($payment['invoice_id']));
+                abort_unless(($invoice['subscription_id'] ?? '') === $local->gateway_id, 422, 'Payment ownership mismatch.');
+                $billing->invoice($local, $invoice);
+            }
+            $billing->payment($local, $payment);
 
-            $attributes = array(
-                'razorpay_payment_id' => $request->razorpay_payment_id,
-                'razorpay_subscription_id' => $tenant->razorpay_subscription_id,
-                'razorpay_signature' => $request->razorpay_signature
-            );
-
-            $api->utility->verifyPaymentSignature($attributes);
-
-            // Verification successful
-            $tenant->subscription_status = 'active';
-            // Extract plan if possible or assume from previous context
-            $tenant->save();
-
-            return response()->json(['success' => true, 'message' => 'Subscription activated successfully!']);
+            return response()->json(['success' => true, 'status' => $local->status, 'message' => 'Payment details verified. Billing reflects the provider’s current subscription status.']);
+        } catch (HttpExceptionInterface $e) {
+            throw $e;
         } catch (\Throwable $e) {
-            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+            Log::warning('Subscription verification could not synchronize.', ['tenant_id' => $tenant->id, 'exception' => get_class($e)]);
+
+            return response()->json(['success' => false, 'message' => 'Payment confirmation is awaiting provider synchronization. Do not pay again; refresh Billing shortly.'], 503);
         }
+    }
+
+    public function refresh(SubscriptionBilling $billing)
+    {
+        $local = $billing->local(\App\Models\Tenant::findOrFail(auth()->user()->tenant_id));
+        abort_unless($local, 404, 'No subscription is recorded.');
+        try {
+            $billing->reconcile($local);
+        } catch (HttpExceptionInterface $e) {
+            throw $e;
+        } catch (\Throwable $e) {
+            return back()->withErrors(['billing' => 'Provider synchronization failed. Please retry later.']);
+        }
+
+        return back()->with('success', 'Subscription, invoices and payment records refreshed.');
+    }
+
+    public function cancel(SubscriptionBilling $billing)
+    {
+        $local = $billing->local(\App\Models\Tenant::findOrFail(auth()->user()->tenant_id));
+        abort_unless($local, 404);
+        try {
+            $billing->cancel($local);
+        } catch (HttpExceptionInterface $e) {
+            throw $e;
+        } catch (\Throwable $e) {
+            return back()->withErrors(['billing' => 'Cancellation could not be confirmed. Refresh status before retrying.']);
+        }
+
+        return back()->with('success', 'Cancellation recorded. Any remaining verified paid period remains available.');
+    }
+
+    public function receipt(SubscriptionPayment $payment)
+    {
+        abort_unless($payment->subscription->tenant_id === auth()->user()->tenant_id && $payment->status === 'captured', 404);
+
+        return view('admin.billing.receipt', ['payment' => $payment, 'tenant' => auth()->user()->tenant]);
     }
 }

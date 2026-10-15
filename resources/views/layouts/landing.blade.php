@@ -2419,12 +2419,10 @@
               <div class="saas-form-group" style="grid-column: 1 / -1;">
                 <label for="saas_plan">Plan preference</label>
                 <select id="saas_plan">
-                  <option value="sprout">Sprout</option>
-                  <option value="blossom">Blossom</option>
-                  <option value="tree">Tree</option>
+                  @foreach(config('saas.plans') as $id => $plan)<option value="{{ $id }}">{{ $plan['name'] }}</option>@endforeach
                 </select>
               </div>
-              <p class="saas-hint">Your trial starts on Sprout. Activate your preferred paid plan from Billing after verification.</p>
+              <p class="saas-hint">Your trial starts on Base. Activate your preferred paid plan from Billing after verification.</p>
               <div class="saas-form-group" style="grid-column: 1 / -1;">
                 <label for="saas_theme">Store theme</label>
                 <select id="saas_theme">

@@ -44,7 +44,7 @@ class LaunchReadinessTest extends TestCase
         $user = User::withoutGlobalScopes()->firstOrFail();
         $this->assertTrue($user->email_verification_required);
         $this->assertNull($user->email_verified_at);
-        $this->assertSame('sprout', $user->tenant->plan);
+        $this->assertSame('base', $user->tenant->plan);
         $this->assertSame('template_6', $user->tenant->theme);
         $this->assertSame('merchant@example.com', $user->tenant->contact_email);
         $this->assertSame('+91 1234567890', $user->tenant->contact_phone);
@@ -165,8 +165,8 @@ class LaunchReadinessTest extends TestCase
         foreach (array_keys(config('storefront_themes')) as $theme) {
             $response->assertSee('value="'.$theme.'"', false);
         }
-        $response->assertSee('value="sprout"', false)->assertDontSee('Simulate Email Verification Link')
-            ->assertDontSee('value="base"', false);
+        $response->assertSee('value="base"', false)->assertDontSee('Simulate Email Verification Link')
+            ->assertDontSee('value="sprout"', false);
     }
 
     public function test_route_names_are_unique_for_production_caching(): void
