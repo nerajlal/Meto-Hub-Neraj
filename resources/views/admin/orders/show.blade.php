@@ -17,12 +17,14 @@
             </div>
             <p class="text-muted small mt-1 mb-0 ms-4 ps-1">{{ $order->created_at->format('F d, Y at h:i a') }} from Online Store</p>
         </div>
-        <div class="d-flex gap-2">
-            <a href="{{ route('admin.orders.print', $order->id) }}" target="_blank" class="btn btn-white border shadow-sm btn-sm">Print</a>
+        <div class="d-flex flex-wrap gap-2">
+            <a href="{{ route('admin.orders.print', $order->id) }}" target="_blank" class="btn btn-white border shadow-sm btn-sm">Shipping Label</a>
+            <a href="{{ route('admin.orders.print', ['id' => $order->id, 'document' => 'invoice']) }}" target="_blank" class="btn btn-white border shadow-sm btn-sm">Invoice / Save PDF</a>
             <button onclick="advanceAction()" id="fulfillBtn" class="btn btn-warning text-white shadow-sm btn-sm fw-medium">Mark as Processing</button>
         </div>
     </div>
 
+    @if(session('success'))<div class="alert alert-success" role="status">{{ session('success') }}</div>@endif
     <div class="row g-4">
         <!-- Main Content -->
         <div class="col-12 col-lg-8">
@@ -105,6 +107,15 @@
                     <span class="badge bg-{{ $order->payment_status == 'paid' ? 'success' : 'warning' }} bg-opacity-10 text-{{ $order->payment_status == 'paid' ? 'success' : 'warning' }} text-uppercase">{{ $order->payment_status }}</span>
                 </div>
                 <div class="card-body p-3">
+                    @if($order->payment_status !== 'paid' && $order->status !== 'cancelled')
+                        <form method="POST" action="{{ route('admin.orders.mark-paid', $order->id) }}" class="mb-3" onsubmit="return confirm('Confirm you have received the full payment? This only records payment; it does not charge the customer.')">
+                            @csrf
+                            <button class="btn btn-outline-success btn-sm" type="submit">Mark as paid</button>
+                            <p class="text-muted small mt-2 mb-0">Record only after receiving payment. This does not charge the customer.</p>
+                        </form>
+                    @elseif($order->payment_recorded_at)
+                        <p class="small text-muted">Payment recorded {{ $order->payment_recorded_at->format('d M Y, H:i') }} by staff #{{ $order->payment_recorded_by }}.</p>
+                    @endif
                     <div class="d-flex justify-content-between small mb-2">
                         <span class="text-muted">Subtotal</span>
                         <span class="text-dark">{{ $currentTenant->currency ?? '₹' }}{{ number_format($order->subtotal, 2) }}</span>
@@ -423,6 +434,9 @@
         } else if(orderStatus === 'shipped') {
              btn.innerHTML = 'Mark as Delivered';
              btn.className = 'btn btn-primary text-white shadow-sm btn-sm fw-medium';
+        } else if(orderStatus === 'cancelled') {
+             btn.innerHTML = 'Cancelled';
+             btn.disabled = true;
         } else if(orderStatus === 'delivered') {
              btn.innerHTML = 'Completed';
              btn.className = 'btn btn-light text-muted border shadow-sm btn-sm fw-medium disabled';

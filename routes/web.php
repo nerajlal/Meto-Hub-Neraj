@@ -213,6 +213,7 @@ Route::prefix('{tenant}/admin')->name('admin.')->middleware(['identify_tenant', 
     Route::post('/orders', [App\Http\Controllers\Admin\OrderController::class, 'store'])->name('orders.store');
     Route::get('/orders/{id}', [App\Http\Controllers\Admin\OrderController::class, 'show'])->name('orders.show');
     Route::get('/orders/{id}/print', [App\Http\Controllers\Admin\OrderController::class, 'print'])->name('orders.print');
+    Route::post('/orders/{id}/mark-paid', [App\Http\Controllers\Admin\OrderController::class, 'markPaid'])->name('orders.mark-paid');
     Route::post('/orders/{id}/update-status', [App\Http\Controllers\Admin\OrderController::class, 'updateStatus'])->name('orders.update-status');
     Route::post('/orders/{id}/assign-delivery', [App\Http\Controllers\Admin\OrderController::class, 'assignDelivery'])->name('orders.assign-delivery');
 

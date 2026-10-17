@@ -43,6 +43,7 @@ class Order extends Model
         'billing_address' => 'array',
         'custom_checkout_data' => 'array',
         'placed_at' => 'datetime',
+        'payment_recorded_at' => 'datetime',
         'delivery_date' => 'date',
     ];
 

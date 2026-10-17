@@ -71,30 +71,17 @@ class OrderController extends Controller
     public function updateStatus(Request $request, $id)
     {
         $order = Order::findOrFail($id);
-        $status = $request->input('status');
-        $trackingId = $request->input('tracking_id');
-
-        if ($status) {
-            $order->status = $status;
-            
-            // If status is shipped, we might want to save tracking ID
-            // Assuming we have a way to store tracking ID, for now let's just save it in notes or a dedicated column if it existed.
-            // checking migration, we don't seem to have tracking_number. 
-            // I'll append it to notes for now to avoid migration overhead unless critical, 
-            // OR I can add a tracking_number column. For "fully functional" usually means DB too.
-            // But let's check order schema first. I'll stick to updating status for now and maybe notes.
-            
-            if ($status == 'shipped') {
-                 if ($trackingId) {
-                     $order->tracking_number = $trackingId;
-                 }
-                 if ($request->has('delivery_partner_id')) {
-                     $order->delivery_partner_id = $request->input('delivery_partner_id');
-                 }
-            }
-            
-            $order->save();
+        $validated = $request->validate([
+            'status' => 'required|in:pending,processing,shipped,delivered,cancelled',
+            'tracking_id' => 'nullable|string|max:255',
+            'delivery_partner_id' => ['nullable', \Illuminate\Validation\Rule::exists('delivery_partners', 'id')->where('tenant_id', $order->tenant_id)],
+        ]);
+        $order->status = $validated['status'];
+        if ($validated['status'] === 'shipped') {
+            $order->tracking_number = $validated['tracking_id'] ?? $order->tracking_number;
+            $order->delivery_partner_id = $validated['delivery_partner_id'] ?? $order->delivery_partner_id;
         }
+        $order->save();
 
         return response()->json(['success' => true, 'message' => 'Order status updated successfully']);
     }
@@ -116,10 +103,28 @@ class OrderController extends Controller
         return redirect()->back()->with('success', 'Order assigned to ' . $deliveryBoy->name . ' successfully.');
     }
 
-    public function print($id)
+    public function markPaid(Request $request, $id)
     {
-        $order = Order::with(['items.product', 'items.bundle.products.variants', 'user'])->findOrFail($id);
-        return view('admin.orders.print', compact('order'));
+        \Illuminate\Support\Facades\DB::transaction(function () use ($request, $id) {
+            $order = Order::whereKey($id)->lockForUpdate()->firstOrFail();
+            abort_if($order->status === 'cancelled', 422, 'Cancelled orders cannot be marked as paid.');
+            if ($order->payment_status !== 'paid') {
+                $order->payment_status = 'paid';
+                $order->payment_recorded_at = now();
+                $order->payment_recorded_by = $request->user()->id;
+                $order->save();
+            }
+        });
+        return back()->with('success', 'Payment recorded. No money was charged or transferred.');
+    }
+
+    public function print(Request $request, $id)
+    {
+        $order = Order::with(['items', 'tenant'])->findOrFail($id);
+        $document = $request->query('document', 'label');
+        abort_unless(in_array($document, ['label', 'invoice'], true), 404);
+        return response()->view('admin.orders.print', compact('order', 'document'))
+            ->header('Cache-Control', 'private, no-store');
     }
 
     public function create()
