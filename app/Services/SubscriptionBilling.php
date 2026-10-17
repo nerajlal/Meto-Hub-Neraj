@@ -100,6 +100,10 @@ class SubscriptionBilling
 
     public function reconcile(StoreSubscription $subscription): StoreSubscription
     {
+        if (app()->environment(['local', 'testing']) && $subscription->is_demo) {
+            return $subscription;
+        }
+
         if ($subscription->gateway_id) {
             return $this->sync($subscription);
         }
