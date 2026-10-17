@@ -25,7 +25,7 @@ Route::get('/', function (Illuminate\Http\Request $request) {
             session(['demo_tenant_id' => $request->demo_tenant]);
         }
 
-        return view('landing.new-landing1');
+        return app(\App\Http\Controllers\LandingController::class)->homepage();
     }
 
     // Otherwise, assume it's a custom domain and dispatch to the tenant storefront
@@ -37,7 +37,7 @@ Route::get('/', function (Illuminate\Http\Request $request) {
     }
 
     // Fallback if domain not found
-    return view('landing.new-landing1');
+    return app(\App\Http\Controllers\LandingController::class)->homepage();
 })->name('landing');
 
 // Demo routes to set tenant

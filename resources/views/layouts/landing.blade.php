@@ -2033,7 +2033,7 @@
       "name": "MetoHub",
       "applicationCategory": "BusinessApplication",
       "operatingSystem": "Web",
-      "description": "MetoHub is the SaaS platform grocery businesses use to build, price, promote, and run their own online stores.",
+      "description": "MetoHub helps independent businesses create and manage their own online stores.",
       "url": "{{ url()->current() }}",
       "publisher": {
         "@@type": "Organization",
@@ -2062,7 +2062,11 @@
 
       <nav class="main-nav" id="mainNav" aria-label="Primary">
         <!-- <a href="{{ route('landing.old') }}">Home</a> -->
+        @if(request()->routeIs('landing'))
+        <a href="#demos">Explore stores</a><a href="#how-it-works">How it works</a>
+        @else
         <a href="{{ route('landing.about') }}">About Us</a>
+        @endif
         <!-- <a href="{{ route('landing.features') }}">Features</a> -->
         <!-- <a href="{{ route('landing.solutions') }}">Solutions</a> -->
         <a href="{{ route('landing') }}#pricing">Pricing</a>
@@ -2086,6 +2090,9 @@
   <main class="page-content">
     @yield('content')
   </main>
+  @hasSection('footer')
+    @yield('footer')
+  @else
   <footer class="site-footer" id="contact">
     <div class="footer-top">
       <div class="footer-brand">
@@ -2138,6 +2145,7 @@
       </div>
     </div>
   </footer>
+  @endif
 
   <script>
     (function () {
@@ -3245,7 +3253,8 @@
       }
 
       triggerButtons.forEach(btn => {
-        btn.addEventListener('click', () => {
+        btn.addEventListener('click', (event) => {
+          event.preventDefault();
           const plan = btn.getAttribute('data-plan');
           if (planSelector && plan) {
             planSelector.value = plan;

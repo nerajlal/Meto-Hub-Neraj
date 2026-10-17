@@ -7,6 +7,19 @@ use Illuminate\Support\Facades\Mail;
 
 class LandingController extends Controller
 {
+    public function homepage()
+    {
+        $profiles = config('demo_storefronts', []);
+        $tenants = \App\Models\Tenant::whereIn('slug', array_keys($profiles))->get()->keyBy('slug');
+        $products = \App\Models\Product::withoutGlobalScopes()->whereIn('tenant_id', $tenants->pluck('id'))
+            ->where('status', 'active')->with(['images', 'variants'])->orderBy('id')->get()->groupBy('tenant_id');
+        $demos = collect($profiles)->map(function ($profile, $slug) use ($tenants, $products) {
+            $tenant = $tenants->get($slug);
+            return $tenant ? $profile + ['tenant' => $tenant, 'products' => $products->get($tenant->id, collect())->unique('collection_id')->take(3)] : null;
+        })->filter();
+        return view('landing.new-landing1', compact('demos'));
+    }
+
     public function index()
     {
         return view('landing.new-landing');
