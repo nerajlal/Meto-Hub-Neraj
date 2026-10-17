@@ -44,6 +44,18 @@ class ProductionPreflight extends Command
             $check(false, 'Preflight supports SMTP, Resend, or Postmark; configure and validate a supported delivery provider.');
         }
 
+        $notificationQueue = config('order_notifications.queue_connection');
+        $notificationDriver = config('queue.connections.'.$notificationQueue.'.driver');
+        $check(in_array($notificationDriver, ['database', 'redis', 'sqs', 'beanstalkd'], true), 'Owner notifications require a persistent background queue connection.');
+        if ($notificationDriver === 'database' || $notificationDriver === 'redis' || $notificationDriver === 'beanstalkd') {
+            $check((int) config('queue.connections.'.$notificationQueue.'.retry_after') > 240, 'Notification queue retry_after must exceed the 240-second job timeout (use 300).');
+        }
+        $pushPublic = config('order_notifications.vapid.public_key');
+        $pushPrivate = config('order_notifications.vapid.private_key');
+        if ($pushPublic || $pushPrivate) {
+            $check((bool) $pushPublic && (bool) $pushPrivate, 'Web Push needs both public and private VAPID keys.');
+        }
+
         $check((bool) config('services.razorpay.key') && (bool) config('services.razorpay.secret'), 'Configure Razorpay subscription credentials before charging for plans.');
         $check((bool) config('services.razorpay.webhook_secret'), 'RAZORPAY_WEBHOOK_SECRET is missing; configure signed subscription webhooks.');
 

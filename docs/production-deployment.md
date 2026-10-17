@@ -71,3 +71,7 @@ Follow [search-readiness.md](search-readiness.md) for merchant SEO settings, ind
 ## Merchant integrations
 
 Follow [store-integrations.md](store-integrations.md) for GA4, GTM, Search Console and Meta Pixel setup. Run the integration-table migration and deploy the updated `.htaccess` so shared store homepage trailing slashes reach Laravel. GTM requires verified custom-domain ownership and host-only sessions. Provider IDs belong in each merchant's Integrations settings, not the platform `.env`.
+
+## Store owner notifications
+
+Follow [order-notifications.md](order-notifications.md) for owner order emails, unread bell history and browser/device Web Push. This release requires `composer install` from the updated lock file, the 17 October notification migration, server VAPID keys, a real mail provider, the scheduler and a worker listening on `order-notifications`. Store owners opt in separately on each device. Review [the dependency audit](dependency-audit-2026-10-17.md) before declaring the overall release production-cleared.

@@ -247,6 +247,7 @@ class OrderController extends Controller
                     'type' => 'product',
                 ]);
             }
+            app(\App\Services\MerchantOrderNotifications::class)->record($order);
         });
 
         $tenant = request()->route('tenant');

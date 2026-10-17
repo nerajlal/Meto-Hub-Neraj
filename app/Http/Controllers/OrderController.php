@@ -298,6 +298,7 @@ class OrderController extends Controller
         if(Auth::check()) {
             \App\Models\Cart::where('user_id', Auth::id())->delete();
         }
+        app(\App\Services\MerchantOrderNotifications::class)->record($order);
         DB::commit();
         session()->forget('cart');
 

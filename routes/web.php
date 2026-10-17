@@ -3,6 +3,14 @@
 use App\Http\Controllers\PageController;
 use Illuminate\Support\Facades\Route;
 
+Route::get('/merchant-manifest/{tenant}.webmanifest', function (int $tenant) {
+    $store = App\Models\Tenant::findOrFail($tenant);
+    return response()->json(['id'=>'/merchant-admin-'.$store->id,'name'=>$store->name.' · MetoHub Admin','short_name'=>'MetoHub Admin',
+        'start_url'=>'/'.$store->id.'/admin/notifications','scope'=>'/'.$store->id.'/admin/','display'=>'standalone','background_color'=>'#ffffff','theme_color'=>'#7c3aed',
+        'icons'=>[['src'=>'/merchant-icon-192.png','sizes'=>'192x192','type'=>'image/png'],['src'=>'/merchant-icon-512.png','sizes'=>'512x512','type'=>'image/png']],
+    ], 200, ['Content-Type'=>'application/manifest+json','X-Robots-Tag'=>'noindex']);
+})->whereNumber('tenant');
+
 Route::get('/robots.txt', [App\Http\Controllers\SearchController::class, 'robots']);
 Route::get('/sitemap-platform.xml', [App\Http\Controllers\SearchController::class, 'platform']);
 Route::get('/sitemap.xml', [App\Http\Controllers\SearchController::class, 'index']);
@@ -190,6 +198,15 @@ Route::get('/login', function () {
 // Protected Admin Panel Routes
 Route::prefix('{tenant}/admin')->name('admin.')->middleware(['identify_tenant', 'auth', 'tenant_role:admin', \App\Http\Middleware\EnforceSubscription::class])->group(function () {
     Route::get('/', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/notifications', [App\Http\Controllers\Admin\OrderNotificationController::class, 'index'])->name('notifications.index');
+    Route::get('/notifications/feed', [App\Http\Controllers\Admin\OrderNotificationController::class, 'feed'])->middleware('throttle:60,1')->name('notifications.feed');
+    Route::post('/notifications/read-all', [App\Http\Controllers\Admin\OrderNotificationController::class, 'readAll'])->name('notifications.read-all');
+    Route::post('/notifications/{id}/read', [App\Http\Controllers\Admin\OrderNotificationController::class, 'read'])->whereNumber('id')->name('notifications.read');
+    Route::get('/notifications/{id}/open', [App\Http\Controllers\Admin\OrderNotificationController::class, 'open'])->whereNumber('id')->name('notifications.open');
+    Route::post('/notifications/subscribe', [App\Http\Controllers\Admin\OrderNotificationController::class, 'subscribe'])->middleware('throttle:10,1')->name('notifications.subscribe');
+    Route::post('/notifications/device-status', [App\Http\Controllers\Admin\OrderNotificationController::class, 'deviceStatus'])->name('notifications.device-status');
+    Route::post('/notifications/unsubscribe', [App\Http\Controllers\Admin\OrderNotificationController::class, 'unsubscribe'])->name('notifications.unsubscribe');
+    Route::delete('/notifications/devices/{id}', [App\Http\Controllers\Admin\OrderNotificationController::class, 'removeDevice'])->whereNumber('id')->name('notifications.device.remove');
     Route::get('/orders', [App\Http\Controllers\Admin\OrderController::class, 'index'])->name('orders');
     Route::get('/orders/export', [App\Http\Controllers\Admin\OrderController::class, 'export'])->name('orders.export');
     Route::get('/orders/create', [App\Http\Controllers\Admin\OrderController::class, 'create'])->name('orders.create');

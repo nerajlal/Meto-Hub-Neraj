@@ -12,7 +12,7 @@ class EnforceSubscription
     {
         $tenant = \App\Models\Tenant::findOrFail($request->user()->tenant_id);
         $access = app(PlanAccess::class);
-        if ($request->routeIs('admin.billing*')) {
+        if ($request->routeIs('admin.billing*', 'admin.notifications.*')) {
             return $next($request);
         }
         if (! $request->isMethodSafe() && ! $access->inTrial($tenant) && ! $access->hasPaidAccess($tenant)) {

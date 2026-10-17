@@ -1,0 +1,8 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>New store order</title></head>
+<body style="margin:0;background:#f3f5f4;font:16px/1.6 Arial,sans-serif;color:#172d23"><div style="max-width:600px;margin:24px auto;background:white;padding:28px;border-radius:12px;overflow-wrap:anywhere">
+<h1 style="font-size:24px">New order for {{ $storeName }}</h1><p>Order <strong>#{{ $order->order_number }}</strong> is ready for you to review.</p>
+<p>Total: <strong>{{ $currency }} {{ number_format($order->total_amount,2) }}</strong><br>Payment: {{ strtoupper($order->payment_method) }} · {{ ucfirst($order->payment_status) }}</p>
+<table style="width:100%;border-collapse:collapse;table-layout:fixed"><thead><tr><th align="left">Item</th><th align="right">Quantity</th><th align="right">Total</th></tr></thead><tbody>@foreach($order->items as $item)<tr><td style="padding:10px 0;border-bottom:1px solid #ddd">{{ $item->name }}@if($item->size) ({{ $item->size }})@endif</td><td align="right">{{ $item->quantity }}</td><td align="right">{{ number_format($item->total,2) }}</td></tr>@endforeach</tbody></table>
+<p>Customer: {{ $order->customer_name }}@if($order->customer_phone)<br>Phone: {{ $order->customer_phone }}@endif</p>
+<p><a href="{{ $orderUrl }}" style="display:inline-block;padding:12px 20px;background:#183e30;color:white;border-radius:8px;text-decoration:none">View order in your admin</a></p><p style="font-size:13px;color:#63736b">Sign in to view customer and delivery details. An unpaid COD order is not a collected payment.</p>
+</div></body></html>

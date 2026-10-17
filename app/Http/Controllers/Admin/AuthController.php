@@ -63,7 +63,7 @@ class AuthController extends Controller
                 session(['active_tenant_id' => $user->tenant_id]);
                 \Log::info('Redirecting to admin dashboard', ['tenant' => $user->tenant_id]);
 
-                return redirect()->route('admin.dashboard', ['tenant' => $user->tenant_id]);
+                return $this->merchantIntendedRedirect($request, $user);
             }
 
             if ($user->type === 'delivery_boy' && $user->tenant_id) {
@@ -160,12 +160,31 @@ class AuthController extends Controller
                 ])->onlyInput('email');
             }
 
-            return redirect()->intended(route('admin.dashboard', ['tenant' => $tenant]));
+            return $this->merchantIntendedRedirect($request, Auth::user());
         }
 
         return back()->withErrors([
             'email' => 'The provided credentials do not match our records.',
         ])->onlyInput('email');
+    }
+
+    private function merchantIntendedRedirect(Request $request, \App\Models\User $user)
+    {
+        $intended = $request->session()->pull('url.intended');
+        if (is_string($intended)) {
+            $parts = parse_url($intended);
+            $sameHost = ! isset($parts['host']) || (strtolower($parts['host']) === strtolower($request->getHost())
+                && ($parts['port'] ?? (($parts['scheme'] ?? 'http') === 'https' ? 443 : 80)) === $request->getPort());
+            $safeScheme = ! isset($parts['scheme']) || in_array($parts['scheme'], ['http', 'https'], true);
+            if ($parts !== false && $sameHost && $safeScheme && ! isset($parts['user']) && ! isset($parts['pass'])
+                && preg_match('#^/'.(int) $user->tenant_id.'/admin(?:/|$)#', $parts['path'] ?? '')
+                && ! preg_match('#(?:^|/)\.{1,2}(?:/|$)#', rawurldecode($parts['path'] ?? ''))
+                && ! str_contains(rawurldecode($parts['path'] ?? ''), chr(92))) {
+                return redirect()->to($intended);
+            }
+        }
+
+        return redirect()->route('admin.dashboard', ['tenant' => $user->tenant_id]);
     }
 
     public function logout(Request $request, $tenant = null)

@@ -27,7 +27,12 @@
         </div>
     @endif
 
-    <a class="btn btn-outline-primary mb-4" href="{{ route('admin.settings.seo') }}">Search Readiness &amp; SEO settings</a>
+    <div class="d-flex flex-wrap gap-2 mb-4">
+        <a class="btn btn-outline-primary" href="{{ route('admin.settings.seo') }}">Search Readiness &amp; SEO settings</a>
+        <a class="btn btn-outline-primary" href="{{ route('admin.notifications.index') }}">
+            <i class="fa-solid fa-bell me-2" aria-hidden="true"></i>Enable Order Notifications
+        </a>
+    </div>
     <form id="storefront-settings-form" action="{{ route('admin.settings.storefront.update') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <div class="row">
