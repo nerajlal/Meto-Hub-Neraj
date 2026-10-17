@@ -14,7 +14,7 @@ class SettingController extends Controller
      */
     public function domainIndex()
     {
-        $tenantId = auth()->user()->tenant_id ?? session('active_tenant_id') ?? 1;
+        $tenantId = request()->attributes->get('resolved_tenant_id') ?? auth()->user()->tenant_id ?? session('active_tenant_id') ?? 1;
         $tenant = Tenant::findOrFail($tenantId);
 
         return view('admin.settings.domain', compact('tenant'));
@@ -25,16 +25,29 @@ class SettingController extends Controller
      */
     public function domainUpdate(Request $request)
     {
-        $tenantId = auth()->user()->tenant_id ?? session('active_tenant_id') ?? 1;
+        $tenantId = request()->attributes->get('resolved_tenant_id') ?? auth()->user()->tenant_id ?? session('active_tenant_id') ?? 1;
         $tenant = Tenant::findOrFail($tenantId);
 
         $request->validate([
-            'domain' => 'nullable|string|max:255|unique:tenants,domain,'.$tenantId,
+            'domain' => ['nullable', 'string', 'max:255', 'unique:tenants,domain,'.$tenantId, function ($attribute, $value, $fail) use ($tenant) {
+                if (!$value) return;
+                $candidate = clone $tenant;
+                $candidate->domain = $value;
+                try { app(\App\Services\IntegrationDomainVerification::class)->domain($candidate); }
+                catch (\Illuminate\Validation\ValidationException $e) { $fail('Use a valid custom hostname different from the MetoHub platform domain.'); }
+            }],
         ]);
 
-        $tenant->update([
-            'domain' => $request->domain,
-        ]);
+        $domain = $request->domain ? strtolower(trim($request->domain)) : null;
+        \Illuminate\Support\Facades\DB::transaction(function () use ($tenant, $domain) {
+            $changed = $tenant->domain !== $domain;
+            $tenant->update(['domain' => $domain]);
+            if ($changed) {
+                \App\Models\StoreIntegration::where('tenant_id', $tenant->id)->update([
+                    'verified_domain' => null, 'domain_token' => null, 'domain_verified_at' => null,
+                ]);
+            }
+        });
 
         return redirect()->back()->with('success', 'Domain settings updated successfully.');
     }

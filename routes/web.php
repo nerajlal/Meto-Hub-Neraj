@@ -3,6 +3,12 @@
 use App\Http\Controllers\PageController;
 use Illuminate\Support\Facades\Route;
 
+Route::get('/robots.txt', [App\Http\Controllers\SearchController::class, 'robots']);
+Route::get('/sitemap-platform.xml', [App\Http\Controllers\SearchController::class, 'platform']);
+Route::get('/sitemap.xml', [App\Http\Controllers\SearchController::class, 'index']);
+Route::get('/store/{store_slug}/sitemap.xml', [App\Http\Controllers\SearchController::class, 'index']);
+Route::get('/store/{store_slug}/sitemap/{type}/{page}.xml', [App\Http\Controllers\SearchController::class, 'part'])->whereIn('type', ['pages','products','collections'])->whereNumber('page');
+
 Route::get('/', function (Illuminate\Http\Request $request) {
     $host = $request->getHost();
     // If it's a known main domain, show the SaaS landing page
@@ -16,7 +22,7 @@ Route::get('/', function (Illuminate\Http\Request $request) {
 
     // Otherwise, assume it's a custom domain and dispatch to the tenant storefront
     // Apply the tenant identification middleware logic manually or just forward to PageController
-    $tenant = \App\Models\Tenant::where('domain', $host)->first();
+    $tenant = app(\App\Services\IntegrationDomainVerification::class)->isPlatformHost($host) ? null : \App\Models\Tenant::where('domain', $host)->first();
     if ($tenant) {
         return app(\App\Http\Middleware\IdentifyStorefrontTenant::class)->handle($request,
             fn ($request) => response(app(\App\Http\Controllers\PageController::class)->home($request)));
@@ -65,7 +71,7 @@ Route::get('/blogs/{id}', [App\Http\Controllers\LandingController::class, 'blogS
 Route::post('/demo-request', [App\Http\Controllers\LandingController::class, 'handleDemoRequest'])->name('demo.request');
 
 // Shared Actions (Global)
-Route::middleware([\App\Http\Middleware\IdentifyStorefrontTenant::class])->group(function () {
+Route::middleware([\App\Http\Middleware\IdentifyStorefrontTenant::class, \App\Http\Middleware\TrackStorefrontCart::class])->group(function () {
     Route::post('/cart/add', [App\Http\Controllers\CartController::class, 'add'])->name('cart.add');
     Route::post('/cart/update', [App\Http\Controllers\CartController::class, 'update'])->name('cart.update');
     Route::post('/cart/remove', [App\Http\Controllers\CartController::class, 'remove'])->name('cart.remove');
@@ -324,6 +330,14 @@ Route::prefix('{tenant}/admin')->name('admin.')->middleware(['identify_tenant', 
 
     Route::get('/settings/payment', [App\Http\Controllers\Admin\SettingController::class, 'paymentIndex'])->name('settings.payment');
     Route::post('/settings/payment', [App\Http\Controllers\Admin\SettingController::class, 'paymentUpdate'])->name('settings.payment.update');
+
+    Route::get('/settings/integrations', [App\Http\Controllers\Admin\IntegrationSettingsController::class, 'index'])->name('settings.integrations');
+    Route::post('/settings/integrations', [App\Http\Controllers\Admin\IntegrationSettingsController::class, 'update'])->name('settings.integrations.update');
+    Route::post('/settings/integrations/domain/challenge', [App\Http\Controllers\Admin\IntegrationSettingsController::class, 'challenge'])->middleware('throttle:5,1')->name('settings.integrations.domain.challenge');
+    Route::post('/settings/integrations/domain/verify', [App\Http\Controllers\Admin\IntegrationSettingsController::class, 'verify'])->middleware('throttle:5,1')->name('settings.integrations.domain.verify');
+
+    Route::get('/settings/seo', [App\Http\Controllers\Admin\SeoSettingsController::class, 'index'])->name('settings.seo');
+    Route::post('/settings/seo', [App\Http\Controllers\Admin\SeoSettingsController::class, 'update'])->name('settings.seo.update');
 
     Route::get('/settings/storefront', [App\Http\Controllers\Admin\SettingController::class, 'storefrontIndex'])->name('settings.storefront');
     Route::post('/settings/storefront', [App\Http\Controllers\Admin\SettingController::class, 'storefrontUpdate'])->name('settings.storefront.update');

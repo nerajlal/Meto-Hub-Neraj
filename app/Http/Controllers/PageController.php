@@ -78,7 +78,7 @@ class PageController extends Controller
         $query = \App\Models\Product::where('tenant_id', $tenantId)->where('status', 'active')->with(['variants', 'images']);
         $collection = null;
         if ($request->has('slug')) {
-            $collection = \App\Models\Collection::where('tenant_id', $tenantId)->where('slug', $request->query('slug'))->first();
+            $collection = \App\Models\Collection::where('tenant_id', $tenantId)->where('slug', $request->query('slug'))->where('status', true)->firstOrFail();
             if ($collection) { $title = $collection->name; $query->where('collection_id', $collection->id); }
         } elseif ($request->has('category')) {
             $category = $request->query('category');

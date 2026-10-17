@@ -74,6 +74,9 @@ class CollectionController extends Controller
     public function store(Request $request)
     {
         $request->validate([
+            'seo_title' => 'nullable|string|max:120',
+            'seo_description' => 'nullable|string|max:320',
+            'seo_image' => 'nullable|url:http,https|max:2048',
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
@@ -93,7 +96,7 @@ class CollectionController extends Controller
             $imagePath = $request->file('image')->store('collections', 'public');
         }
 
-        Collection::create([
+        Collection::create($request->only(['seo_title', 'seo_description', 'seo_image']) + [
             'name' => $request->name,
             'slug' => $slug,
             'description' => $request->description,
@@ -130,6 +133,9 @@ class CollectionController extends Controller
         $collection = Collection::findOrFail($id);
 
         $request->validate([
+            'seo_title' => 'nullable|string|max:120',
+            'seo_description' => 'nullable|string|max:320',
+            'seo_image' => 'nullable|url:http,https|max:2048',
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
@@ -156,7 +162,7 @@ class CollectionController extends Controller
             $imagePath = $request->file('image')->store('collections', 'public');
         }
 
-        $collection->update([
+        $collection->update($request->only(['seo_title', 'seo_description', 'seo_image']) + [
             'name' => $request->name,
             'slug' => $slug,
             'description' => $request->description,

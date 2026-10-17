@@ -73,12 +73,13 @@
             const response = await fetch({{ \Illuminate\Support\Js::from(app(\App\Services\StorefrontTheme::class)->url('cart.add')) }}, {method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json','X-CSRF-TOKEN':csrf},body:JSON.stringify(data)});
             const result = await response.json();
             if (!response.ok || !result.success) throw new Error(result.message || 'Unable to update your basket. Please try again.');
+            window.MetoHubTracking?.consume(result.tracking);
             window.cartItemsMap = result.cartItemsMap || {};
             window.cartTotalCount = result.cartCount;
             window.cartTotalValue = result.cartTotal;
             window.cartImages = result.cartImages || [];
             document.querySelectorAll('[data-cart-count], #cart-count').forEach(element => element.textContent = result.cartCount);
-            if (checkout) {location.href = {{ \Illuminate\Support\Js::from(app(\App\Services\StorefrontTheme::class)->url('v1.checkout')) }};return;}
+            if (checkout) {window.MetoHubTracking?.beginCheckout();location.href = {{ \Illuminate\Support\Js::from(app(\App\Services\StorefrontTheme::class)->url('v1.checkout')) }};return;}
             if (typeof syncCartUI === 'function') syncCartUI(true);
             if (typeof refreshNCart === 'function') refreshNCart();
             message('Added to your basket.');
@@ -99,7 +100,7 @@
     };
     window.buyNow = () => {
         if (!selected?.available || pending) return;
-        if (Number(window.cartItemsMap?.[cartKey()] || 0) > 0) {location.href = {{ \Illuminate\Support\Js::from(app(\App\Services\StorefrontTheme::class)->url('v1.checkout')) }};return;}
+        if (Number(window.cartItemsMap?.[cartKey()] || 0) > 0) {window.MetoHubTracking?.beginCheckout();location.href = {{ \Illuminate\Support\Js::from(app(\App\Services\StorefrontTheme::class)->url('v1.checkout')) }};return;}
         submitCart({id:productId,quantity:1,variant_id:selected.id,size:selected.size,type:'product'}, true);
     };
     document.getElementById('buy-now-btn').onclick = buyNow;

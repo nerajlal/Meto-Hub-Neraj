@@ -93,6 +93,9 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $request->validate([
+            'seo_title' => 'nullable|string|max:120',
+            'seo_description' => 'nullable|string|max:320',
+            'seo_image' => 'nullable|url:http,https|max:2048',
             'title' => 'required|string|max:255',
             'status' => 'required|in:active,draft',
             'min_order_qty' => 'nullable|integer|min:1',
@@ -102,7 +105,7 @@ class ProductController extends Controller
         ]);
 
         $data = $request->only([
-            'title', 'description', 'status', 'type', 'vendor', 
+            'seo_title', 'seo_description', 'seo_image', 'title', 'description', 'status', 'type', 'vendor',
             'collection_id', 'gender', 'olfactory_family', 
             'intensity', 'oil_concentration', 'notes_top', 'notes_heart', 'notes_base',
             'min_order_qty', 'max_order_qty', 'continue_selling_when_out_of_stock'
@@ -216,6 +219,9 @@ class ProductController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
+            'seo_title' => 'nullable|string|max:120',
+            'seo_description' => 'nullable|string|max:320',
+            'seo_image' => 'nullable|url:http,https|max:2048',
              'media.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
              'min_order_qty' => 'nullable|integer|min:1',
              'max_order_qty' => 'nullable|integer|min:1|gte:min_order_qty',
@@ -233,7 +239,7 @@ class ProductController extends Controller
         }
         
         $data = $request->only([
-            'title', 'description', 'status', 'type', 'vendor', 
+            'seo_title', 'seo_description', 'seo_image', 'title', 'description', 'status', 'type', 'vendor',
             'collection_id', 'gender', 'olfactory_family', 
             'intensity', 'oil_concentration', 'notes_top', 'notes_heart', 'notes_base',
             'min_order_qty', 'max_order_qty', 'continue_selling_when_out_of_stock'

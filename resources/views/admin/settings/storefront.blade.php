@@ -27,6 +27,7 @@
         </div>
     @endif
 
+    <a class="btn btn-outline-primary mb-4" href="{{ route('admin.settings.seo') }}">Search Readiness &amp; SEO settings</a>
     <form id="storefront-settings-form" action="{{ route('admin.settings.storefront.update') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <div class="row">

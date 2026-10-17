@@ -75,7 +75,8 @@
             <a href="{{ route('admin.collections') }}" class="btn btn-white border shadow-sm text-secondary fw-medium hover-bg-light">Discard</a>
             <button type="submit" class="btn btn-primary shadow-sm fw-medium">Save Changes</button>
         </div>
-    </form>
+    <div class="card my-4"><div class="card-body">@include('admin.settings.partials.seo-fields', ['entity'=>$collection])</div></div>
+</form>
     
     <script>
         function previewImage(input) {

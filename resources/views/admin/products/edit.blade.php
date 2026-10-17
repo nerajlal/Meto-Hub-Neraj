@@ -572,7 +572,8 @@
             <button type="submit" class="btn btn-primary shadow-sm">Save</button>
         </div>
         </div> <!-- Close row g-4 -->
-    </form>
+    <div class="card my-4"><div class="card-body">@include('admin.settings.partials.seo-fields', ['entity'=>$product])</div></div>
+</form>
     
     <form id="delete-product-form" action="{{ route('admin.products.destroy', $product->id) }}" method="POST" style="display: none;">
         @csrf

@@ -11,7 +11,7 @@ class IdentifyStorefrontTenant
 {
     public function handle(Request $request, Closure $next): Response
     {
-        $hostTenant = Tenant::where('domain', $request->getHost())->first();
+        $hostTenant = app(\App\Services\IntegrationDomainVerification::class)->isPlatformHost($request->getHost()) ? null : Tenant::where('domain', $request->getHost())->first();
         if ($hostTenant) abort_unless(app(\App\Services\PlanAccess::class)->allows($hostTenant, 'custom_domain'), 403, 'This store’s custom domain is not available on its current plan.');
         $slug = $request->route('store_slug') ?? $request->query('store');
         $slugTenant = null;

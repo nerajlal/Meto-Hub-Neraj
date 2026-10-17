@@ -335,9 +335,15 @@ class OrderController extends Controller
         // 7. Return Success
         $redirectUrl = Auth::check() ? app(\App\Services\StorefrontTheme::class)->url('account.orders') : app(\App\Services\StorefrontTheme::class)->url('v1.home', ['order_success' => 1]);
 
+        $tracking = null;
+        try {
+            $tracking = ['tenant' => (string) $order->tenant_id, 'events' => [app(\App\Services\StorefrontTracking::class)->order($order, \App\Models\Tenant::findOrFail($order->tenant_id))]];
+        } catch (\Throwable $e) { report($e); }
+
         return response()->json([
             'success' => true,
             'order_id' => $order->order_number,
+            'tracking' => $tracking,
             'redirect_url' => $redirectUrl
         ]);
     }

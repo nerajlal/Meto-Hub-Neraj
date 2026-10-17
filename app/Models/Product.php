@@ -11,6 +11,7 @@ class Product extends Model
     use HasFactory, \App\Models\Traits\BelongsToTenant;
 
     protected $fillable = [
+        'seo_title', 'seo_description', 'seo_image',
         'title',
         'slug',
         'description',

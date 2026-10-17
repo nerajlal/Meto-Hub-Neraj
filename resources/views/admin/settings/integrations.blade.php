@@ -1,0 +1,40 @@
+@extends('layouts.admin')
+@section('title', 'Integrations')
+@section('content')
+<div class="container-fluid py-4">
+ <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4"><div><h1 class="h3">Integrations</h1><p class="text-muted mb-0">Connect your store's analytics, search and advertising tools.</p></div><button form="integrations-form" class="btn btn-primary" type="submit">Save Changes</button></div>
+ @if(session('success'))<div class="alert alert-success">{{ session('success') }}</div>@endif
+ @if($errors->any())<div class="alert alert-danger" role="alert">@foreach($errors->all() as $error)<div>{{ $error }}</div>@endforeach</div>@endif
+ <div class="alert alert-info">Use your own provider accounts. Saving an ID configures the integration; it does not prove provider verification or event delivery. Tracking starts only after visitor consent.</div>
+ <form id="integrations-form" method="POST" action="{{ route('admin.settings.integrations.update') }}">@csrf
+ <div class="card mb-4"><div class="card-body"><h2 class="h5">Installation method</h2><label for="mode" class="form-label">Manage tracking through</label><select class="form-select" name="mode" id="mode"><option value="direct" @selected(old('mode',$settings->mode ?? 'direct')==='direct')>Direct integrations (recommended)</option><option value="gtm" @selected(old('mode',$settings->mode)==='gtm')>Google Tag Manager</option></select><p class="small text-muted mt-2 mb-0">Direct mode loads GA4 and Meta separately. Tag Manager mode loads only your GTM container, so the direct tags are paused to prevent duplicate tracking. Search Console verification works independently.</p></div></div>
+ <div class="row g-4">
+ @foreach([
+ ['ga4','Google Analytics 4','ga4_id','Measurement ID','G-XXXXXXXXXX','Track page views, product views and confirmed basket changes. Disable enhanced measurement of forms in GA4; MetoHub sends curated events without customer contact fields.','https://analytics.google.com/','Open Analytics'],
+ ['gtm','Google Tag Manager','gtm_id','Web container ID','GTM-XXXXXXX','Create and publish your tags in GTM. Available only on your verified custom domain with host-only sessions. The container loads only when both analytics and advertising consent are granted.','https://tagmanager.google.com/','Open Tag Manager'],
+ ['gsc','Google Search Console','gsc_token','HTML verification token','Token from the content attribute','Add a URL-prefix property for your store URL, choose HTML tag, copy only its content value here, save, then click Verify in Search Console. Do not paste the full meta tag.','https://search.google.com/search-console','Open Search Console'],
+ ['meta','Meta Pixel / Ads','meta_pixel_id','Pixel / dataset ID','123456789012345','Measure PageView, ViewContent and successful AddToCart events. This does not create ads or budgets. COD orders are not reported as paid Purchase conversions.','https://business.facebook.com/events_manager2/','Open Events Manager']
+ ] as [$provider,$name,$field,$label,$placeholder,$help,$link,$linkText])
+ <div class="col-lg-6"><section class="card h-100"><div class="card-body">
+  <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3"><h2 class="h5 mb-0">{{ $name }}</h2>@php($enabled = (bool) $settings->getAttribute($provider.'_enabled'))<span class="badge {{ $enabled ? 'bg-primary' : 'bg-secondary' }}">{{ $enabled ? 'Configured' : 'Disabled' }}</span></div>
+  <input type="hidden" name="{{ $provider }}_enabled" value="0"><div class="form-check mb-3"><input class="form-check-input" id="{{ $provider }}_enabled" name="{{ $provider }}_enabled" type="checkbox" value="1" @checked(old($provider.'_enabled',$enabled))><label class="form-check-label" for="{{ $provider }}_enabled">Enable {{ $name }}</label></div>
+  <label class="form-label" for="{{ $field }}">{{ $label }}</label><input class="form-control" id="{{ $field }}" name="{{ $field }}" maxlength="200" autocomplete="off" placeholder="{{ $placeholder }}" value="{{ old($field,$settings->getAttribute($field)) }}">
+  <p class="small text-muted mt-3">{{ $help }}</p>
+  @if($provider==='gtm')<div class="alert {{ $gtmEligible ? 'alert-success' : 'alert-warning' }} small">{{ $gtmEligible ? 'Custom domain eligible. GTM runs only on that domain, never on shared store links or checkout.' : 'Waiting for an eligible verified custom domain. You can save a container ID now; it will stay paused until the domain checks pass.' }}</div>@endif
+  @if($provider==='gsc')<div class="small mb-3" style="overflow-wrap:anywhere">URL-prefix property: <strong>{{ rtrim($seo->url($tenant), '/') . '/' }}</strong><br>Sitemap: <a href="{{ $seo->url($tenant,'sitemap.xml') }}" target="_blank" rel="noopener">{{ $seo->url($tenant,'sitemap.xml') }}</a></div><p class="small text-muted">For a custom domain, verify that domain's property separately. Domain properties require DNS verification with Google. Use the exact URL-prefix shown above, including its trailing slash. The token appears only on that store homepage.</p>@endif
+  <a href="{{ $link }}" target="_blank" rel="noopener noreferrer" class="btn btn-outline-primary btn-sm">{{ $linkText }} ↗</a>
+ </div></section></div>
+ @endforeach
+ </div>
+ <div class="mt-4"><button class="btn btn-primary" type="submit">Save Changes</button><a class="btn btn-link" href="{{ route('admin.settings.seo') }}">Search Readiness</a></div>
+ </form>
+ <section class="card mt-4"><div class="card-body"><h2 class="h5">Custom domain ownership for Tag Manager</h2><p class="text-muted small">GTM containers can execute custom code. Ownership verification keeps that code off the platform's shared store origin. Connect your domain in Domain Connection first. Verification expires after 30 days; repeat the check to renew it.</p>
+ @if($settings->verified_domain && $settings->domain_token)
+ <dl class="row small mb-3"><dt class="col-sm-3">DNS record type</dt><dd class="col-sm-9">TXT</dd><dt class="col-sm-3">Full record name</dt><dd class="col-sm-9" style="overflow-wrap:anywhere">_metohub-verification.{{ $settings->verified_domain }}</dd><dt class="col-sm-3">Value</dt><dd class="col-sm-9" style="overflow-wrap:anywhere">metohub={{ $settings->domain_token }}</dd><dt class="col-sm-3">Last verified</dt><dd class="col-sm-9">{{ $settings->domain_verified_at?->format('d M Y H:i').' ' }}{{ $settings->domain_verified_at ? '(recheck within 30 days)' : 'Not verified' }}</dd></dl>
+ @endif
+ <div class="d-flex flex-wrap gap-2"><form method="POST" action="{{ route('admin.settings.integrations.domain.challenge') }}">@csrf<button class="btn btn-outline-primary" type="submit">Get DNS record</button></form><form method="POST" action="{{ route('admin.settings.integrations.domain.verify') }}">@csrf<button class="btn btn-outline-primary" type="submit">Verify DNS ownership</button></form></div>
+ @if(config('session.domain'))<p class="text-danger small mt-3 mb-0">GTM is paused because sessions use a shared cookie domain. The platform operator must configure host-only sessions before enabling merchant containers.</p>@endif
+ </div></section>
+ <section class="card mt-4"><div class="card-body"><h2 class="h5">Test your connection</h2><ol class="mb-0"><li>Save your settings and open your public store in a fresh browser session.</li><li>Accept the relevant privacy choices. Rejected categories load no provider script.</li><li>Use GA4 Realtime/DebugView, GTM preview or Meta Test Events to inspect page, product and cart events. GTM needs published tags and ecommerce triggers configured in your container.</li><li>For Search Console, click Verify in Google's dashboard after saving the token. This page does not claim that Google has verified your property.</li></ol><p class="small text-muted mt-3 mb-0">No API secrets or ad account passwords are needed here. Preview themes and account/auth pages do not load tracking. Order placement and paid revenue are separate; server conversion APIs are not enabled.</p></div></section>
+</div>
+@endsection

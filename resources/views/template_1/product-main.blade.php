@@ -6,28 +6,7 @@
 @section('og_image', $product->main_image_url ?? asset('Images/default.png'))
 
 @section('styles')
-<script type="application/ld+json">
-{
-  "@@context": "https://schema.org/",
-  "@@type": "Product",
-  "name": "{{ $product->title }}",
-  "image": [
-    "{{ $product->main_image_url ?? asset('Images/default.png') }}"
-  ],
-  "description": "{{ strip_tags($product->description) }}",
-  "brand": {
-    "@@type": "Brand",
-    "name": "{{ $currentTenant->name ?? 'SaaS Store' }}"
-  },
-  "offers": {
-    "@@type": "Offer",
-    "url": "{{ url()->current() }}",
-    "priceCurrency": "INR",
-    "price": "{{ $product->discounted_price }}",
-    "availability": "https://schema.org/InStock"
-  }
-}
-</script>
+
 <style>
     .product-page-container {
         animation: fadeIn 0.4s ease-out;

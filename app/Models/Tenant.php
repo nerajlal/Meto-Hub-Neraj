@@ -24,6 +24,7 @@ class Tenant extends Model
     }
 
     protected $fillable = [
+        'seo_title', 'seo_description', 'seo_image', 'search_indexable',
         'name',
         'plan',
         'theme',
@@ -60,6 +61,7 @@ class Tenant extends Model
     ];
 
     protected $casts = [
+        'search_indexable' => 'boolean',
         'settings' => 'array',
         'checkout_fields' => 'array',
     ];

@@ -14,6 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->validateCsrfTokens(except: ['billing/razorpay/webhook']);
         $middleware->web(append: [
             \App\Http\Middleware\FormatCurrencyResponse::class,
+            \App\Http\Middleware\SearchIndexing::class,
         ]);
         $middleware->alias([
             'super_admin' => \App\Http\Middleware\SuperAdminMiddleware::class,

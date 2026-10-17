@@ -143,6 +143,12 @@
                  </a>
              </li>
              <li>
+                  <a href="{{ route('admin.settings.integrations') }}" class="sidebar-item {{ request()->routeIs('admin.settings.integrations*') ? 'active' : '' }}"><i class="fa-solid fa-plug"></i><span>Integrations</span></a>
+             </li>
+             <li>
+                  <a href="{{ route('admin.settings.seo') }}" class="sidebar-item {{ request()->routeIs('admin.settings.seo*') ? 'active' : '' }}"><i class="fa-solid fa-magnifying-glass"></i><span>Search Readiness</span></a>
+             </li>
+             <li>
                   <a href="{{ route('admin.settings.storefront') }}" class="sidebar-item {{ request()->routeIs('admin.settings.storefront*') ? 'active' : '' }}">
                      <i class="fa-solid fa-file-lines"></i>
                      <span>Storefront Pages</span>

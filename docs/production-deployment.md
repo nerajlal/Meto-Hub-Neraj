@@ -63,3 +63,11 @@ Storefront publication links use `/store/{store-slug}`, for example `/store/fres
 ## Subscription lifecycle activation
 
 Follow [billing-operations.md](billing-operations.md) for signed webhooks, historical subscription reconciliation, scheduler setup, cancellation and production payment validation. The release adds subscription, payment, invoice and checkout-reservation tables; run all new migrations before enabling the updated billing pages.
+
+## Search readiness
+
+Follow [search-readiness.md](search-readiness.md) for merchant SEO settings, indexing controls and sitemap verification. Run the 16 October search-settings migration. Remove the obsolete static `public/robots.txt` on upload-based deployments so Laravel's dynamic host-aware endpoint can serve the correct sitemap. Set `SEARCH_INDEXABLE=false` on staging; use the intended public setting on production and rebuild configuration cache.
+
+## Merchant integrations
+
+Follow [store-integrations.md](store-integrations.md) for GA4, GTM, Search Console and Meta Pixel setup. Run the integration-table migration and deploy the updated `.htaccess` so shared store homepage trailing slashes reach Laravel. GTM requires verified custom-domain ownership and host-only sessions. Provider IDs belong in each merchant's Integrations settings, not the platform `.env`.

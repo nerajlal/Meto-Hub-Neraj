@@ -4,13 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', ($currentTenant->name ?? 'SaaS Store') . ' - Home')</title>
+    @include('storefront.seo.head')
+    @include('storefront.integrations.head')
     <link rel="icon" href="{{ isset($currentTenant) && $currentTenant->favicon ? Storage::url($currentTenant->favicon) : 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>S</text></svg>' }}">
-    <meta name="description"
-        content="@yield('meta_description', 'Shop premium products online at ' . ($currentTenant->name ?? 'our store') . '. Fast home delivery guaranteed.')">
-    <meta name="keywords"
-        content="@yield('meta_keywords', 'online store, premium products, online shopping')">
-    <link rel="canonical" href="{{ url()->current() }}">
 
     <!-- CSS and Fonts -->
     <link rel="stylesheet" href="{{ asset('css/storefront.css') }}">
@@ -368,6 +364,7 @@
     @endif
     @include('template_1.partials.floating_cart_summary')
     @include('partials.customer_auth_modal')
+    @include('storefront.integrations.runtime')
     @yield('scripts')
 </body>
 

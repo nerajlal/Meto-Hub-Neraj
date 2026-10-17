@@ -537,6 +537,7 @@
                 data: $(this).serialize(),
                 success: function(response) {
                     if(response.success) {
+                        window.MetoHubTracking?.consume(response.tracking);
                         localStorage.removeItem('checkout_form_data');
                         window.location.href = response.redirect_url;
                     } else {

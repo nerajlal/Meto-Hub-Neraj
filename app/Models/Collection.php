@@ -10,6 +10,7 @@ class Collection extends Model
     use HasFactory, \App\Models\Traits\BelongsToTenant;
 
     protected $fillable = [
+        'seo_title', 'seo_description', 'seo_image',
         'name',
         'slug',
         'description',
