@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'policies' => ['updated_at' => '2026-10-18', 'refund_days' => 7],
     'seo' => ['google_site_verification' => env('PLATFORM_GOOGLE_SITE_VERIFICATION')],
     'contact' => [
         'email' => 'metohub@metora.in',

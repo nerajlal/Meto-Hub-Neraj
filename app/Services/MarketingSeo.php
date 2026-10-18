@@ -10,6 +10,7 @@ class MarketingSeo
     {
         return [
             '/' => ['Online Store Builder for Instagram Sellers | MetoHub', 'Create a branded online store for your Instagram business with themes, product variants and order management. Plans from ₹'.config('saas.plans.base.monthly_price').'/month. Try free for '.config('saas.trial_days').' days.'],
+            '/admin/login' => ['Merchant Login | MetoHub', 'Sign in to your MetoHub merchant dashboard to manage your store, products and orders.'],
             '/features' => ['Online Store Features for Small Brands | MetoHub', 'Explore storefront themes, products, collections, discounts and order tools for your small business with MetoHub.'],
             '/pricing' => ['Online Store Pricing & Free Trial | MetoHub', 'Compare Base, Pro and Enterprise. Plans start at ₹'.config('saas.plans.base.monthly_price').'/month with a '.config('saas.trial_days').'-day free trial. Connect your own domain on Pro.'],
             '/themes' => ['Online Store Themes for Your Brand | MetoHub', 'Explore customizable storefront themes for clothing, jewelry, grocery, gadgets and more. Build a store that feels like your brand.'],
@@ -78,7 +79,7 @@ class MarketingSeo
         }
 
         return compact('title', 'description', 'image', 'url', 'schema') + [
-            'robots' => config('search.indexable') && ! $request->has('preview') && ! $request->has('get_started')
+            'robots' => config('search.indexable') && ! $request->is('admin', 'admin/*', 'superadmin', 'superadmin/*', 'saas/*') && ! $request->has('preview') && ! $request->has('get_started')
                 ? 'index, follow, max-image-preview:large' : 'noindex, nofollow',
             'type' => ($overrides['type'] ?? '') === 'article' ? 'article' : 'website',
         ];

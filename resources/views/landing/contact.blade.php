@@ -257,35 +257,18 @@
 
       <!-- Right Side Form -->
       <div class="contact-form-card">
-        <form>
-          <div class="form-group">
-            <label>Full Name</label>
-            <input type="text" class="form-control" placeholder="John Doe" required>
-          </div>
-          
-          <div class="form-group">
-            <label>Work Email</label>
-            <input type="email" class="form-control" placeholder="john@company.com" required>
-          </div>
-          
-          <div class="form-group">
-            <label>Subject</label>
-            <select class="form-control">
-              <option>General Inquiry</option>
-              <option>Sales & Pricing</option>
-              <option>Technical Support</option>
-              <option>Partnerships</option>
-            </select>
-          </div>
-          
-          <div class="form-group">
-            <label>Message</label>
-            <textarea class="form-control" placeholder="How can we help you scale your business?"></textarea>
-          </div>
-          
-          <button type="button" class="submit-btn">
-            Send Message <i class="fa-solid fa-paper-plane"></i>
-          </button>
+        @if(session('contact_sent'))<p role="status" class="contact-form-success">{{ session('contact_sent') }}</p>@endif
+        @if($errors->any())<div role="alert" class="contact-form-errors"><p>Please check your message:</p><ul>@foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul></div>@endif
+        <form method="POST" action="{{ route('landing.contact.submit') }}">
+          @csrf
+          <div class="contact-honeypot" aria-hidden="true"><label for="contact_website">Leave this field empty</label><input id="contact_website" name="website" type="text" tabindex="-1" autocomplete="off"></div>
+          <div class="form-group"><label for="contact_name">Full Name</label><input id="contact_name" name="name" type="text" class="form-control" autocomplete="name" maxlength="100" value="{{ old('name') }}" required></div>
+          <div class="form-group"><label for="contact_email">Email</label><input id="contact_email" name="email" type="email" class="form-control" autocomplete="email" maxlength="254" value="{{ old('email') }}" required></div>
+          <div class="form-group"><label for="contact_subject">Subject</label><select id="contact_subject" name="subject" class="form-control">@foreach(['General Inquiry','Sales & Pricing','Technical Support','Partnerships'] as $subject)<option value="{{ $subject }}" @selected(old('subject') === $subject)>{{ $subject }}</option>@endforeach</select></div>
+          <div class="form-group"><label for="contact_message">Message</label><textarea id="contact_message" name="message" class="form-control" maxlength="5000" placeholder="Tell us about your store or question." required>{{ old('message') }}</textarea></div>
+          <label class="contact-consent" for="contact_consent"><input id="contact_consent" type="checkbox" name="consent" value="1" @checked(old('consent')) required><span>I have read the <a href="{{ route('landing.privacy') }}">Privacy Policy</a> and agree to being contacted about this enquiry.</span></label>
+          <p class="contact-form-note">Please don’t include passwords, card details or other sensitive information.</p>
+          <button type="submit" class="submit-btn">Send Message <i class="fa-solid fa-paper-plane" aria-hidden="true"></i></button>
         </form>
       </div>
     </div>

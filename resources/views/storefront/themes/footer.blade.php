@@ -6,6 +6,7 @@
         <a href="{{ app(\App\Services\StorefrontTheme::class)->url('v1.shipping-policy') }}">Delivery</a>
         <a href="{{ app(\App\Services\StorefrontTheme::class)->url('v1.return-policy') }}">Returns</a>
         <a href="{{ app(\App\Services\StorefrontTheme::class)->url('v1.terms-of-service') }}">Terms</a>
+        <a href="{{ rtrim(config('app.url'), '/') }}/privacy-policy">Platform privacy</a>
     </div>
     <div class="sf-footer-contact">
         @if($currentTenant->contact_phone)<a href="tel:{{ preg_replace('/[^+0-9]/', '', $currentTenant->contact_phone) }}">{{ $currentTenant->contact_phone }}</a>@endif

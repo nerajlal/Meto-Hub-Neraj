@@ -6,7 +6,7 @@
     <div class="legal-hero-inner">
       <span class="eyebrow fade-up">Legal Information</span>
       <h1 class="fade-up" style="animation-delay: 0.1s;">Privacy Policy</h1>
-      <p class="fade-up" style="animation-delay: 0.2s;">Last updated: {{ now()->format('F j, Y') }}</p>
+      <p class="fade-up" style="animation-delay: 0.2s;">Last updated: {{ \Carbon\Carbon::parse(config('marketing.policies.updated_at'))->format('F j, Y') }}</p>
     </div>
   </section>
 

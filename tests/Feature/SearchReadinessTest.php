@@ -141,4 +141,17 @@ class SearchReadinessTest extends TestCase
         $this->get('https://shop.example.com/store/'.$other->slug.'/sitemap.xml')->assertNotFound();
         $this->get('https://shop.example.com/store/'.$tenant->slug.'/product?id='.$product->id)->assertOk()->assertSee('rel="canonical" href="https://shop.example.com/store/'.$tenant->slug.'/product?id='.$product->id.'"', false);
     }
+    public function test_store_titles_escape_once_and_production_canonicals_use_the_configured_host(): void
+    {
+        config(['app.url' => 'https://metohub.cloud']);
+        $tenant = Tenant::create(['name' => 'Thread & Form', 'theme' => 'template_7']);
+        $html = $this->get($tenant->storefrontUrl())->assertOk()->getContent();
+        preg_match('/<title>(.*?)<\/title>/s', $html, $title);
+        $this->assertSame('Thread & Form', html_entity_decode($title[1], ENT_QUOTES, 'UTF-8'));
+        $this->assertStringNotContainsString('&amp;amp;', $title[1]);
+        $this->assertStringContainsString('rel="canonical" href="https://metohub.cloud/store/', $html);
+        $this->assertStringContainsString('property="og:url" content="https://metohub.cloud/store/', $html);
+        $this->assertStringNotContainsString('rel="canonical" href="http://localhost', $html);
+    }
+
 }

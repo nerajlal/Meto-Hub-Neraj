@@ -40,6 +40,7 @@
                     <li><a href="{{ app(\App\Services\StorefrontTheme::class)->url('v1.contact') }}">Contact Support</a></li>
                     <li><a href="{{ app(\App\Services\StorefrontTheme::class)->url('v1.shipping-policy') }}">Shipping Policy</a></li>
                     <li><a href="{{ app(\App\Services\StorefrontTheme::class)->url('v1.return-policy') }}">Return Policy</a></li>
+                    <li><a href="{{ rtrim(config('app.url'), '/') }}/privacy-policy">Platform privacy</a></li>
                 </ul>
             </div>
 

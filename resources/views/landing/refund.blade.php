@@ -6,7 +6,7 @@
     <div class="legal-hero-inner">
       <span class="eyebrow fade-up">Legal Information</span>
       <h1 class="fade-up" style="animation-delay: 0.1s;">Refund & Cancellation Policy</h1>
-      <p class="fade-up" style="animation-delay: 0.2s;">Last updated: {{ now()->format('F j, Y') }}</p>
+      <p class="fade-up" style="animation-delay: 0.2s;">Last updated: {{ \Carbon\Carbon::parse(config('marketing.policies.updated_at'))->format('F j, Y') }}</p>
     </div>
   </section>
 
@@ -15,25 +15,21 @@
     <div class="legal-container fade-up" style="animation-delay: 0.3s;">
        <div class="legal-card">
         
-        <h3>1. Subscription Cancellations</h3>
-        <p>
-          You may cancel your subscription to MetoHub at any time through your account settings or by contacting our support team. Upon cancellation, your subscription will remain active until the end of your current billing cycle, after which it will not be renewed.
-        </p>
-        
-        <h3>2. Refunds</h3>
-        <p>
-          We offer a 14-day money-back guarantee for all new subscriptions. If you are not satisfied with our platform within the first 14 days of your initial purchase, you may request a full refund. After the 14-day period, payments are non-refundable, and we do not provide refunds or credits for any partial-month subscription periods.
-        </p>
-        
-        <h3>3. Data Retention Upon Cancellation</h3>
-        <p>
-          When you cancel your subscription, your online store and associated data will remain intact for a grace period of 30 days following the end of your billing cycle. After this period, your data may be permanently deleted from our servers. We encourage you to export necessary records before terminating your account.
-        </p>
+        <h3>1. Your free trial</h3>
+        <p>Your MetoHub store starts with a {{ config('saas.trial_days') }}-day free trial. No credit card is required to create the trial store. Creating a trial does not create a paid subscription or authorize a payment. When the trial ends, choose and pay for a subscription from Billing to continue using paid store-management features.</p>
 
-        <h3>4. Contact Us</h3>
-        <p>
-          If you have any questions or need to request a refund, please contact us at <a href="mailto:{{ config('marketing.contact.email') }}">{{ config('marketing.contact.email') }}</a>.
-        </p>
+        <h3>2. Seven-day refund window</h3>
+        <p>You may request a full refund within {{ config('marketing.policies.refund_days') }} days of your first paid MetoHub subscription purchase. This refund window starts with the paid purchase, separately from the free trial. Email <a href="mailto:{{ config('marketing.contact.email') }}">{{ config('marketing.contact.email') }}</a> from your account email address and include the payment reference and store name. Do not send passwords or card details.</p>
+        <p>After this window, payments are non-refundable and partial billing periods are not refunded, except where applicable law requires otherwise. A refund request is not an automatic cancellation or an instant bank credit. We will confirm the outcome of your request; the payment provider handles any approved return of funds.</p>
+
+        <h3>3. Cancelling a subscription</h3>
+        <p>Use Cancel subscription in your dashboard’s Billing page and confirm the request. Any remaining verified paid period remains available. Check the cancellation status in Billing. If the provider cannot confirm cancellation, contact us for assistance. Cancellation stops future renewal when confirmed; it does not itself request a refund.</p>
+
+        <h3>4. Account data</h3>
+        <p>Cancelling a subscription is separate from deleting your account. Contact us to request access to your records or deletion of account data. We do not promise automatic deletion a fixed number of days after cancellation.</p>
+
+        <h3>5. Store purchases and contact</h3>
+        <p>This policy covers MetoHub platform subscriptions. Purchases made from an independently operated store are governed by that seller’s policies. For subscription refund or cancellation assistance, contact <a href="mailto:{{ config('marketing.contact.email') }}">{{ config('marketing.contact.email') }}</a> or <a href="tel:{{ config('marketing.contact.phone_uri') }}">{{ config('marketing.contact.phone') }}</a>.</p>
 
        </div>
     </div>

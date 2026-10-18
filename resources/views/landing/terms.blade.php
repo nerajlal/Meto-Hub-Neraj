@@ -6,7 +6,7 @@
     <div class="legal-hero-inner">
       <span class="eyebrow fade-up">Legal Information</span>
       <h1 class="fade-up" style="animation-delay: 0.1s;">Terms of Service</h1>
-      <p class="fade-up" style="animation-delay: 0.2s;">Last updated: {{ now()->format('F j, Y') }}</p>
+      <p class="fade-up" style="animation-delay: 0.2s;">Last updated: {{ \Carbon\Carbon::parse(config('marketing.policies.updated_at'))->format('F j, Y') }}</p>
     </div>
   </section>
 
@@ -27,7 +27,7 @@
         
         <h3>3. Subscriptions & Payments</h3>
         <p>
-          Some aspects of the Service are billed on a subscription basis. You will be billed in advance on a recurring, periodic basis (e.g., monthly or annually). Upgrades or downgrades in plan level will result in a prorated charge or credit.
+          MetoHub offers a {{ config('saas.trial_days') }}-day free trial. Paid subscriptions are managed through Billing and our payment provider, with the plan, billing cycle and price shown before authorization. Paid access is activated after the provider confirms payment. Plan changes do not automatically create prorated credits or refunds. For refunds and cancellation, see our <a href="{{ route('landing.refund') }}">Refund &amp; Cancellation Policy</a>.
         </p>
         
         <h3>4. Limitation of Liability</h3>

@@ -2197,7 +2197,7 @@
           <!-- STEP 2: Tell us about your brand -->
           <div id="saasFormStep2" class="saas-form-step">
             <div class="saas-modal-header">
-              <span class="saas-badge class-plan-badge">Starter</span>
+              <span class="saas-badge class-plan-badge">{{ config('saas.plans.base.name') }}</span>
               <h2>Tell us about your brand</h2>
               <p class="saas-lead">We will optimize your dashboard tailored to your company goals</p>
             </div>

@@ -230,4 +230,15 @@ class LandingHomepageTest extends TestCase
             ->assertDontSee('2M+')->assertDontSee('99.9%')->assertDontSee('Stores Powered');
     }
 
+    public function test_public_refund_policy_matches_the_seven_day_trial_and_paid_refund_window(): void
+    {
+        $this->get('/refund-cancellation')->assertOk()->assertSee('7-day free trial')
+            ->assertSee('within 7 days of your first paid')
+            ->assertSee('separately from the free trial')->assertDontSee('14-day')
+            ->assertDontSee('grace period of 30 days');
+        $this->get('/admin/login')->assertOk()->assertHeader('X-Robots-Tag', 'noindex, nofollow')
+            ->assertSee('name="robots" content="noindex, nofollow"', false)
+            ->assertSee('<title>Merchant Login | MetoHub</title>', false);
+    }
+
 }

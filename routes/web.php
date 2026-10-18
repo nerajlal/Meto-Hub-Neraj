@@ -58,6 +58,7 @@ Route::get('/solutions', [App\Http\Controllers\LandingController::class, 'soluti
 Route::get('/pricing', [App\Http\Controllers\LandingController::class, 'pricing'])->name('landing.pricing');
 Route::get('/themes', [App\Http\Controllers\LandingController::class, 'themes'])->name('landing.themes');
 Route::get('/analytics', [App\Http\Controllers\LandingController::class, 'analytics'])->name('landing.analytics');
+Route::post('/contact', [App\Http\Controllers\ContactController::class, 'store'])->middleware('throttle:3,1')->name('landing.contact.submit');
 Route::get('/contact', [App\Http\Controllers\LandingController::class, 'contact'])->name('landing.contact');
 Route::get('/about', [App\Http\Controllers\LandingController::class, 'about'])->name('landing.about');
 Route::get('/privacy-policy', [App\Http\Controllers\LandingController::class, 'privacy'])->name('landing.privacy');

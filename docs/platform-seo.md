@@ -38,7 +38,7 @@ Private routes, signup query variants, previews and error responses receive `X-R
 
 ## Validation
 
-- 140 PHP tests passed, with 3549 assertions, including existing merchant search-readiness and blog tests.
+- 147 PHP tests passed, with 3592 assertions, including existing merchant search-readiness and blog tests.
 - Added checks for distinct titles, tracking-free canonicals, valid JSON-LD, escaped blog data, sharing-image size, staging/signup noindex and public sitemap entries.
 - Chrome verified public layouts and shared navigation on mobile and desktop.
 
@@ -73,3 +73,5 @@ Tests cover shared caching, duplicate/invalid IDs, XML parsing, actual update da
 Article and breadcrumb references: [Google Article documentation](https://developers.google.com/search/docs/appearance/structured-data/article), [Google Breadcrumb documentation](https://developers.google.com/search/docs/appearance/structured-data/breadcrumb).
 
 Owner tasks remain deployment, correct production environment/DNS/redirects, Search Console verification and submission, useful original articles and approved real client feedback, followed by live PageSpeed and indexing monitoring. These require production/account access or source material outside this repository.
+
+The earlier page-fetcher audit has been reviewed against the updated repository; see [beta-audit-followup.md](beta-audit-followup.md) for resolved findings, this pass’s contact/refund/login fixes, and still-pending business/legal and live-deployment checks.
