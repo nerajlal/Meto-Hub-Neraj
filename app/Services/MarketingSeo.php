@@ -53,10 +53,28 @@ class MarketingSeo
             ['@type' => 'WebSite', '@id' => $base.'/#website', 'url' => $base, 'name' => 'MetoHub', 'publisher' => ['@id' => $base.'/#organization']],
             ['@type' => 'WebPage', '@id' => $url.'#webpage', 'url' => $url, 'name' => $title, 'description' => $description, 'isPartOf' => ['@id' => $base.'/#website']]]];
 
+        if (in_array($path, ['/', '/pricing'], true)) {
+            $schema['@graph'][] = ['@type' => 'SoftwareApplication', '@id' => $base.'/#application',
+                'name' => 'MetoHub', 'url' => $base, 'applicationCategory' => 'BusinessApplication', 'operatingSystem' => 'Web',
+                'description' => app(MarketingContent::class)->summary(), 'publisher' => ['@id' => $base.'/#organization'],
+                'offers' => collect(config('saas.plans'))->map(fn ($plan) => [
+                    '@type' => 'Offer', 'name' => 'MetoHub '.$plan['name'].' monthly subscription', 'url' => $base.'/#pricing',
+                    'price' => number_format($plan['monthly_price'], 2, '.', ''), 'priceCurrency' => config('saas.currency'),
+                    'priceSpecification' => ['@type' => 'UnitPriceSpecification', 'price' => number_format($plan['monthly_price'], 2, '.', ''),
+                        'priceCurrency' => config('saas.currency'), 'unitText' => 'month', 'billingDuration' => 'P1M'],
+                ])->values()->all()];
+        }
+        if ($path === '/') {
+            $schema['@graph'][] = ['@type' => 'FAQPage', '@id' => $base.'/#faq', 'mainEntity' =>
+                array_map(fn ($faq) => ['@type' => 'Question', 'name' => $faq['question'],
+                    'acceptedAnswer' => ['@type' => 'Answer', 'text' => $faq['answer']]], app(MarketingContent::class)->faqs())];
+        }
+
+        $posting = null;
         $article = $overrides['article'] ?? null;
         if ($request->routeIs('landing.blog.show') && is_array($article)) {
             $posting = ['@type' => 'BlogPosting', '@id' => $url.'#article', 'url' => $url,
-                'headline' => $article['title'], 'description' => $article['excerpt'], 'image' => [$image],
+                'headline' => $article['title'], 'description' => $article['seo_description'] ?? $article['excerpt'], 'image' => [$image],
                 'mainEntityOfPage' => ['@id' => $url.'#webpage'], 'publisher' => ['@id' => $base.'/#organization']];
             if ($article['author_name'] === 'MetoHub team') {
                 $posting['author'] = ['@id' => $base.'/#organization'];
@@ -79,6 +97,7 @@ class MarketingSeo
         }
 
         return compact('title', 'description', 'image', 'url', 'schema') + [
+            'article' => $posting,
             'robots' => config('search.indexable') && ! $request->is('admin', 'admin/*', 'superadmin', 'superadmin/*', 'saas/*') && ! $request->has('preview') && ! $request->has('get_started')
                 ? 'index, follow, max-image-preview:large' : 'noindex, nofollow',
             'type' => ($overrides['type'] ?? '') === 'article' ? 'article' : 'website',

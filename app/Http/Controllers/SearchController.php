@@ -85,6 +85,14 @@ class SearchController extends Controller
         });
     }
 
+    public function llms(\App\Services\MarketingContent $content)
+    {
+        abort_if($this->hostTenant() || ! config('search.indexable'), 404);
+
+        return response($content->llms(), 200, ['Content-Type' => 'text/plain; charset=UTF-8',
+            'X-Robots-Tag' => 'noindex, follow', 'X-Content-Type-Options' => 'nosniff']);
+    }
+
     public function platform(StorefrontSeo $seo)
     {
         abort_if($this->hostTenant() || ! config('search.indexable'), 404);

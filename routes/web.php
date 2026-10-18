@@ -12,6 +12,7 @@ Route::get('/merchant-manifest/{tenant}.webmanifest', function (int $tenant) {
 })->whereNumber('tenant');
 
 Route::get('/robots.txt', [App\Http\Controllers\SearchController::class, 'robots']);
+Route::get('/llms.txt', [App\Http\Controllers\SearchController::class, 'llms']);
 Route::get('/sitemap-blogs.xml', [App\Http\Controllers\SearchController::class, 'blogs']);
 Route::get('/sitemap-platform.xml', [App\Http\Controllers\SearchController::class, 'platform']);
 Route::get('/sitemap.xml', [App\Http\Controllers\SearchController::class, 'index']);

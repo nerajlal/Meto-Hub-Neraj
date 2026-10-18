@@ -12,6 +12,9 @@
 <meta name="description" content="{{ $metadata['description'] }}">
 <meta name="robots" content="{{ $metadata['robots'] }}">
 <link rel="canonical" href="{{ $metadata['url'] }}">
+@if(config('search.indexable') && str_starts_with($metadata['robots'], 'index,'))
+<link rel="describedby" href="{{ rtrim(config('app.url'), '/') }}/llms.txt" type="text/plain">
+@endif
 @if(config('marketing.seo.google_site_verification'))
 <meta name="google-site-verification" content="{{ config('marketing.seo.google_site_verification') }}">
 @endif
@@ -19,6 +22,14 @@
 <meta property="og:site_name" content="MetoHub">
 <meta property="og:locale" content="en_IN">
 <meta property="og:type" content="{{ $metadata['type'] }}">
+@if($metadata['article'])
+<meta name="author" content="{{ $blog['author_name'] }}">
+@foreach(['datePublished' => 'article:published_time', 'dateModified' => 'article:modified_time'] as $field => $property)
+@if(isset($metadata['article'][$field]))
+<meta property="{{ $property }}" content="{{ $metadata['article'][$field] }}">
+@endif
+@endforeach
+@endif
 <meta property="og:title" content="{{ $metadata['title'] }}">
 <meta property="og:description" content="{{ $metadata['description'] }}">
 <meta property="og:url" content="{{ $metadata['url'] }}">

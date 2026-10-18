@@ -64,6 +64,12 @@
 <div class="creator-businesses">
 <div class="container-page"><p>A home for independent brands</p><div><span>Handmade jewelry</span><span>Streetwear</span><span>Aesthetic decor</span><span>Artisan skincare</span><span>Signature scents</span></div></div>
 </div>
+<section class="py-10" aria-labelledby="platform-summary-heading">
+<div class="container-page">
+<h2 id="platform-summary-heading" class="text-lg font-medium">What is MetoHub?</h2>
+<p class="mt-3 leading-relaxed text-muted-foreground">{{ app(\App\Services\MarketingContent::class)->summary() }}</p>
+</div>
+</section>
 <section id="demos" class="py-20 md:py-28">
 <div class="container-page">
 <div class="max-w-2xl">
@@ -473,70 +479,12 @@
 </div>
 </div>
 <div class="divide-y divide-border border-y border-border">
+@foreach(app(\App\Services\MarketingContent::class)->faqs() as $faq)
 <details class="group py-5">
-<summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-lg font-medium">Is it really ₹{{ number_format(config('saas.plans.base.monthly_price')) }} per month?<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down h-5 w-5 shrink-0 text-muted-foreground transition group-open:rotate-180" aria-hidden="true">
-<path d="m6 9 6 6 6-6">
-</path>
-</svg>
-</summary>
-<p class="mt-3 leading-relaxed text-muted-foreground">Yes. The Base plan is ₹{{ number_format(config('saas.plans.base.monthly_price')) }}/month after your {{ config('saas.trial_days') }}-day free trial. Pro is ₹{{ number_format(config('saas.plans.pro.monthly_price')) }}/month and Enterprise ₹{{ number_format(config('saas.plans.enterprise.monthly_price')) }}/month.</p>
+<summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-lg font-medium"><h3 style="font: inherit; margin: 0">{{ $faq['question'] }}</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down h-5 w-5 shrink-0 text-muted-foreground transition group-open:rotate-180" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+<p class="mt-3 leading-relaxed text-muted-foreground">{{ $faq['answer'] }}</p>
 </details>
-<details class="group py-5">
-<summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-lg font-medium">Do I need coding skills?<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down h-5 w-5 shrink-0 text-muted-foreground transition group-open:rotate-180" aria-hidden="true">
-<path d="m6 9 6 6 6-6">
-</path>
-</svg>
-</summary>
-<p class="mt-3 leading-relaxed text-muted-foreground">No. You pick a theme, add your details and products from a simple dashboard.</p>
-</details>
-<details class="group py-5">
-<summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-lg font-medium">Can I sell products other than clothing?<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down h-5 w-5 shrink-0 text-muted-foreground transition group-open:rotate-180" aria-hidden="true">
-<path d="m6 9 6 6 6-6">
-</path>
-</svg>
-</summary>
-<p class="mt-3 leading-relaxed text-muted-foreground">Yes — grocery, gadgets, jewelry, watches, perfume and other catalog-based businesses all work well.</p>
-</details>
-<details class="group py-5">
-<summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-lg font-medium">Can I personalize the theme and store content?<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down h-5 w-5 shrink-0 text-muted-foreground transition group-open:rotate-180" aria-hidden="true">
-<path d="m6 9 6 6 6-6">
-</path>
-</svg>
-</summary>
-<p class="mt-3 leading-relaxed text-muted-foreground">Yes. Change your theme, logo, colors and homepage content whenever you like.</p>
-</details>
-<details class="group py-5">
-<summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-lg font-medium">How do customers pay for orders?<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down h-5 w-5 shrink-0 text-muted-foreground transition group-open:rotate-180" aria-hidden="true">
-<path d="m6 9 6 6 6-6">
-</path>
-</svg>
-</summary>
-<p class="mt-3 leading-relaxed text-muted-foreground">Customer checkout currently supports cash on delivery. Razorpay handles your MetoHub subscription. Recording an order as paid does not charge or transfer money.</p>
-</details>
-<details class="group py-5">
-<summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-lg font-medium">Can I use my own domain?<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down h-5 w-5 shrink-0 text-muted-foreground transition group-open:rotate-180" aria-hidden="true">
-<path d="m6 9 6 6 6-6">
-</path>
-</svg>
-</summary>
-<p class="mt-3 leading-relaxed text-muted-foreground">Connecting your own domain is available on Pro and Enterprise. Buying the domain itself is separate.</p>
-</details>
-<details class="group py-5">
-<summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-lg font-medium">What happens after the free trial?<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down h-5 w-5 shrink-0 text-muted-foreground transition group-open:rotate-180" aria-hidden="true">
-<path d="m6 9 6 6 6-6">
-</path>
-</svg>
-</summary>
-<p class="mt-3 leading-relaxed text-muted-foreground">Choose a paid subscription in your merchant dashboard to keep managing your store after the free trial. Historical records remain available.</p>
-</details>
-<details class="group py-5">
-<summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-lg font-medium">What do I need to create a store?<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down h-5 w-5 shrink-0 text-muted-foreground transition group-open:rotate-180" aria-hidden="true">
-<path d="m6 9 6 6 6-6">
-</path>
-</svg>
-</summary>
-<p class="mt-3 leading-relaxed text-muted-foreground">Your name, email, business name and a password. You can add products afterwards.</p>
-</details>
+@endforeach
 </div>
 </div>
 </section>

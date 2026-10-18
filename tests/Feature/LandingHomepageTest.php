@@ -10,6 +10,49 @@ class LandingHomepageTest extends TestCase
 {
     use DatabaseMigrations;
 
+    public function test_plan_offers_and_faq_schema_match_visible_configured_content(): void
+    {
+        config(['app.url' => 'https://metohub.cloud', 'saas.plans.base.monthly_price' => 129, 'saas.trial_days' => 9]);
+        foreach (['/', '/pricing'] as $path) {
+            $response = $this->get($path)->assertOk();
+            preg_match('/<script type="application\/ld\+json">(.*?)<\/script>/s', $response->getContent(), $matches);
+            $graph = collect(json_decode($matches[1], true, 512, JSON_THROW_ON_ERROR)['@graph']);
+            $app = $graph->firstWhere('@type', 'SoftwareApplication');
+            $this->assertCount(3, $app['offers']);
+            $this->assertSame('129.00', $app['offers'][0]['price']);
+            $this->assertSame('INR', $app['offers'][0]['priceCurrency']);
+            $this->assertSame('P1M', $app['offers'][0]['priceSpecification']['billingDuration']);
+            $this->assertStringContainsString('9-day free trial', $app['description']);
+            if ($path === '/') {
+                $questions = $graph->firstWhere('@type', 'FAQPage')['mainEntity'];
+                $this->assertCount(8, $questions);
+                foreach ($questions as $question) {
+                    $response->assertSee('<h3 style="font: inherit; margin: 0">'.e($question['name']).'</h3>', false)
+                        ->assertSee(e($question['acceptedAnswer']['text']), false);
+                }
+                $response->assertSee('What is MetoHub?')->assertSee(count(config('storefront_themes')).' customizable themes');
+            } else {
+                $this->assertNull($graph->firstWhere('@type', 'FAQPage'));
+            }
+        }
+        $this->get('/about')->assertOk()->assertDontSee('<h4', false)->assertSee('<h3>Product variants</h3>', false);
+    }
+
+    public function test_llms_summary_uses_canonical_configuration_and_respects_staging(): void
+    {
+        config(['app.url' => 'https://metohub.cloud', 'search.indexable' => true, 'saas.plans.base.monthly_price' => 129]);
+        \Illuminate\Support\Facades\Http::preventStrayRequests();
+        $this->get('/llms.txt')->assertOk()->assertHeader('Content-Type', 'text/plain; charset=UTF-8')
+            ->assertHeader('X-Robots-Tag', 'noindex, follow')->assertSee('# MetoHub')->assertSee('₹129/month')
+            ->assertSee('cash on delivery')->assertSee(count(config('storefront_themes')).' customizable themes')
+            ->assertSee('https://metohub.cloud/blogs')->assertDontSee('localhost')->assertDontSee('test-project-key');
+        Tenant::create(['name' => 'Custom shop', 'domain' => 'shop.example.com']);
+        $this->get('https://shop.example.com/llms.txt')->assertNotFound();
+        config(['search.indexable' => false]);
+        $this->get('/llms.txt')->assertNotFound()->assertHeader('X-Robots-Tag', 'noindex, nofollow');
+        \Illuminate\Support\Facades\Http::assertNothingSent();
+    }
+
     public function runDatabaseMigrations()
     {
         $this->refreshTestDatabase();

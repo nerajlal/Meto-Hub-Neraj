@@ -68,9 +68,13 @@ class BlogFeed
             $modified = null;
         }
 
+        $excerpt = is_string($blog['excerpt'] ?? null) && $blog['excerpt'] !== '' ? $blog['excerpt'] : $text;
+        $snippet = preg_replace('/\s+/u', ' ', html_entity_decode(strip_tags($excerpt), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+
         return [
             'id' => (int) $blog['id'], 'title' => $blog['title'], 'content' => $content, 'sections' => $sections,
             'excerpt' => Str::limit(is_string($blog['excerpt'] ?? null) && $blog['excerpt'] !== '' ? strip_tags($blog['excerpt']) : $text, 160),
+            'seo_description' => Str::limit(trim($snippet ?? ''), 160, '', preserveWords: true),
             'cover_image' => $renderer->imageUrl(is_string($blog['cover_image'] ?? null) ? $blog['cover_image'] : null),
             'author_avatar' => $renderer->imageUrl(is_string($blog['author_avatar'] ?? null) ? $blog['author_avatar'] : null),
             'author_name' => is_string($blog['author_name'] ?? null) && $blog['author_name'] !== '' ? $blog['author_name'] : 'MetoHub team',

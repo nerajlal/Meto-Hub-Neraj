@@ -24,6 +24,24 @@ class BlogFeedTest extends TestCase
             'cover_image' => '/storage/cover.jpg', 'created_at' => '2026-10-12T10:00:00Z'];
     }
 
+    public function test_article_dates_and_search_description_are_rendered_from_real_feed_data(): void
+    {
+        $article = $this->article() + ['author_name' => 'Anu Menon', 'updated_at' => '2026-10-13T10:00:00Z',
+            'excerpt' => '<p>'.str_repeat('Useful advice &amp; practical examples. ', 12).'</p>'];
+        Http::fake(['blog.metora.in/*' => Http::response(['blogs' => [$article]])]);
+        $response = $this->get('/blogs/19')->assertOk()
+            ->assertSee('<time datetime="2026-10-12T10:00:00Z">', false)
+            ->assertSee('<meta property="article:published_time" content="2026-10-12T10:00:00Z">', false)
+            ->assertSee('<meta property="article:modified_time" content="2026-10-13T10:00:00Z">', false)
+            ->assertSee('<meta name="author" content="Anu Menon">', false);
+        preg_match('/<meta name="description" content="([^"]*)">/', $response->getContent(), $matches);
+        $description = html_entity_decode($matches[1], ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        $this->assertLessThanOrEqual(160, mb_strlen($description), $description);
+        $this->assertStringContainsString('advice & practical', $description);
+        $this->assertStringNotContainsString('...', $description);
+        $this->assertStringNotContainsString('<p>', $description);
+    }
+
     public function test_successful_empty_project_feed_is_not_an_outage(): void
     {
         Http::fake(['blog.metora.in/*' => Http::response(['project' => 'MetoHub', 'blogs' => []])]);
@@ -137,6 +155,9 @@ class BlogFeedTest extends TestCase
         $this->assertStringContainsString('loading="lazy" decoding="async" width="640" height="400"', $html);
         $this->assertStringNotContainsString('width="999999"', $html);
         $this->assertStringNotContainsString('onerror=', $html);
+        $this->assertStringNotContainsString('article:published_time', $html);
+        $this->assertStringNotContainsString('article:modified_time', $html);
+        $this->assertStringNotContainsString('<time datetime=', $html);
     }
 
     public function test_padded_article_ids_redirect_to_the_same_canonical_article_before_fetching(): void

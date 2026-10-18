@@ -349,7 +349,7 @@
       font-size: 1.2rem;
     }
 
-    .mgc-text h4 {
+    .mgc-text h3 {
       font-size: 1.1rem;
       margin-bottom: 4px;
       color: var(--v2-dark);
@@ -433,7 +433,7 @@
       text-align: center;
     }
 
-    .stat-item h4 {
+    .stat-item h3 {
       font-size: clamp(2rem, 3vw, 3.5rem);
       color: #fff;
       margin-bottom: 8px;
@@ -508,7 +508,7 @@
           <div class="mission-glass-card">
             <div class="mgc-icon"><i class="fa-solid fa-boxes-stacked"></i></div>
             <div class="mgc-text">
-              <h4>Product variants</h4>
+              <h3>Product variants</h3>
               <p>Sizes and stock in one place</p>
             </div>
           </div>
@@ -518,19 +518,19 @@
 
     <section class="stats-section reveal">
       <div class="stat-item">
-        <h4>{{ count(config('storefront_themes')) }}</h4>
+        <h3>{{ count(config('storefront_themes')) }}</h3>
         <p>Storefront themes</p>
       </div>
       <div class="stat-item">
-        <h4>{{ config('saas.trial_days') }} days</h4>
+        <h3>{{ config('saas.trial_days') }} days</h3>
         <p>Free trial</p>
       </div>
       <div class="stat-item">
-        <h4>₹{{ number_format(config('saas.plans.base.monthly_price')) }}</h4>
+        <h3>₹{{ number_format(config('saas.plans.base.monthly_price')) }}</h3>
         <p>Base plan per month</p>
       </div>
       <div class="stat-item">
-        <h4>Your brand</h4>
+        <h3>Your brand</h3>
         <p>Your logo and colors</p>
       </div>
     </section>

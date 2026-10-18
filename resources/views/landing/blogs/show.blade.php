@@ -1,9 +1,9 @@
 @extends('layouts.landing')
 
-@section('page_title', e($blog['title']).' | MetoHub Blog')
-@section('meta_description', e($blog['excerpt']))
+@section('page_title', $blog['title'].' | MetoHub Blog')
+@section('meta_description', $blog['seo_description'] ?? $blog['excerpt'])
 @section('og_type', 'article')
-@section('meta_image', e($blog['cover_image'] ?? asset('images/landing/social-card.png')))
+@section('meta_image', $blog['cover_image'] ?? asset('images/landing/social-card.png'))
 
 @section('content')
 <style>
@@ -382,7 +382,9 @@
       <h3 class="author-name">{{ $blog['author_name'] }}</h3>
       <div class="author-title" style="margin-bottom: 0.5rem;">{{ $blog['author_title'] ?? 'Author' }}</div>
       <div style="display:flex; justify-content:center; gap: 1rem; color: var(--muted); font-size: 0.85rem; margin-bottom: 1.5rem; font-weight: 500;">
-        <span><i class="fa-regular fa-calendar"></i> {{ $blog['date_label'] }}</span>
+        @if(($blog['published_at'] ?? 0) > 0 && $blog['published_at'] <= now()->timestamp)
+        <time datetime="{{ gmdate('Y-m-d\TH:i:s\Z', (int) $blog['published_at']) }}"><i class="fa-regular fa-calendar" aria-hidden="true"></i> {{ $blog['date_label'] }}</time>
+        @endif
         <span><i class="fa-regular fa-clock"></i> {{ $blog['reading_minutes'] }} min read</span>
       </div>
       <p style="font-size: 0.95rem; color: var(--muted); margin-bottom: 1.5rem;">
