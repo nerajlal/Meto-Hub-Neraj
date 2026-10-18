@@ -62,6 +62,12 @@ class BlogFeed
             $date = null;
         }
 
+        try {
+            $modified = empty($blog['updated_at']) ? null : Carbon::parse($blog['updated_at']);
+        } catch (\Throwable $error) {
+            $modified = null;
+        }
+
         return [
             'id' => (int) $blog['id'], 'title' => $blog['title'], 'content' => $content, 'sections' => $sections,
             'excerpt' => Str::limit(is_string($blog['excerpt'] ?? null) && $blog['excerpt'] !== '' ? strip_tags($blog['excerpt']) : $text, 160),
@@ -70,6 +76,7 @@ class BlogFeed
             'author_name' => is_string($blog['author_name'] ?? null) && $blog['author_name'] !== '' ? $blog['author_name'] : 'MetoHub team',
             'author_title' => is_string($blog['author_title'] ?? null) ? $blog['author_title'] : 'Author',
             'image_credits' => is_string($blog['image_credits'] ?? null) ? $blog['image_credits'] : null,
+            'modified_at' => $modified?->timestamp,
             'published_at' => $date?->timestamp ?? 0, 'date_label' => $date?->format('M d, Y') ?? '',
             'reading_minutes' => max(1, (int) ceil(str_word_count($text) / 200)),
         ];

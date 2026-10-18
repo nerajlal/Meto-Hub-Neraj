@@ -3,7 +3,7 @@
 @section('page_title', e($blog['title']).' | MetoHub Blog')
 @section('meta_description', e($blog['excerpt']))
 @section('og_type', 'article')
-@section('meta_image', e($blog['cover_image'] ?? asset('images/og-image.jpg')))
+@section('meta_image', e($blog['cover_image'] ?? asset('images/landing/social-card.png')))
 
 @section('content')
 <style>

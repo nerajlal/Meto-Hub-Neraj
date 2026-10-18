@@ -97,4 +97,124 @@ class LandingHomepageTest extends TestCase
         }
     }
 
+    public function test_public_seo_is_unique_canonical_and_has_valid_safe_structured_data(): void
+    {
+        config(['app.url' => 'https://metohub.cloud', 'marketing.seo.google_site_verification' => 'example-verification']);
+        $titles = [];
+        foreach (['/', '/pricing', '/themes', '/about', '/contact', '/privacy-policy', '/terms', '/refund-cancellation'] as $path) {
+            $html = $this->get($path.'?utm_source=instagram')->assertOk()->getContent();
+            preg_match('/<title>(.*?)<\/title>/s', $html, $title);
+            $titles[] = $title[1];
+            $canonical = 'https://metohub.cloud'.($path === '/' ? '' : $path);
+            $this->assertStringContainsString('rel="canonical" href="'.$canonical.'"', $html);
+            $this->assertStringContainsString('name="google-site-verification" content="example-verification"', $html);
+            $this->assertStringContainsString('name="twitter:description"', $html);
+            $this->assertStringContainsString('https://metohub.cloud/images/landing/social-card.png', $html);
+            $this->assertStringNotContainsString('images/og-image.jpg', $html);
+            preg_match_all('/<script type="application\/ld\+json">(.*?)<\/script>/s', $html, $schemas);
+            $this->assertCount(1, $schemas[1]);
+            $schema = json_decode($schemas[1][0], true, 512, JSON_THROW_ON_ERROR);
+            $this->assertSame('metohub@metora.in', $schema['@graph'][0]['email']);
+            $this->assertSame($canonical, $schema['@graph'][2]['url']);
+            $this->assertStringNotContainsString('AggregateRating', $schemas[1][0]);
+        }
+        $this->assertCount(count($titles), array_unique($titles));
+        $image = getimagesize(public_path('images/landing/social-card.png'));
+        $this->assertSame([1200, 630], [$image[0], $image[1]]);
+    }
+
+    public function test_staging_and_signup_queries_have_consistent_noindex_rules(): void
+    {
+        $this->get('/?get_started=1')->assertOk()->assertHeader('X-Robots-Tag', 'noindex, nofollow')
+            ->assertSee('name="robots" content="noindex, nofollow"', false);
+        config(['search.indexable' => false]);
+        foreach (['/', '/about', '/contact'] as $path) {
+            $this->get($path)->assertOk()->assertHeader('X-Robots-Tag', 'noindex, nofollow')
+                ->assertSee('name="robots" content="noindex, nofollow"', false);
+        }
+        $this->get('/robots.txt')->assertSee('Disallow: /', false);
+    }
+
+    public function test_platform_sitemap_includes_public_blog_and_policies_without_private_urls(): void
+    {
+        config(['app.url' => 'https://metohub.cloud', 'search.indexable' => true]);
+        $xml = $this->get('/sitemap-platform.xml')->assertOk()->streamedContent();
+        $this->assertNotFalse(simplexml_load_string($xml));
+        foreach (['/blogs', '/refund-cancellation', '/security'] as $path) {
+            $this->assertStringContainsString('https://metohub.cloud'.$path, $xml);
+        }
+        $this->assertStringNotContainsString('/admin', $xml);
+        $this->assertStringNotContainsString('get_started', $xml);
+    }
+
+    public function test_dynamic_blog_sitemap_shares_the_public_feed_cache_and_uses_local_canonicals(): void
+    {
+        config(['app.url' => 'https://metohub.cloud', 'services.blog.key' => 'sitemap-test', 'search.indexable' => true]);
+        \Illuminate\Support\Facades\Http::preventStrayRequests();
+        $article = ['id' => 42, 'title' => 'A & B', 'content' => '<p>Collection launch.</p>', 'updated_at' => '2020-02-03T12:30:00Z'];
+        \Illuminate\Support\Facades\Http::fake(['*' => \Illuminate\Support\Facades\Http::response(['blogs' => [$article, $article, ['id' => 'invalid', 'title' => 'Skip']]])]);
+        $this->get('/blogs')->assertOk();
+        $xml = $this->get('/sitemap-blogs.xml')->assertOk()->streamedContent();
+        $this->assertNotFalse(simplexml_load_string($xml));
+        $this->assertSame(1, substr_count($xml, '<loc>https://metohub.cloud/blogs/42</loc>'));
+        $this->assertStringContainsString('<lastmod>2020-02-03T12:30:00Z</lastmod>', $xml);
+        $this->assertStringNotContainsString('blog.metora.in', $xml);
+        $this->assertStringNotContainsString('invalid', $xml);
+        \Illuminate\Support\Facades\Http::assertSentCount(1);
+        $index = $this->get('/sitemap.xml')->assertOk()->streamedContent();
+        $this->assertStringContainsString('/sitemap-blogs.xml', $index);
+        $this->get('/robots.txt')->assertOk()->assertHeader('Content-Type', 'text/plain; charset=UTF-8')
+            ->assertSee('Sitemap: https://metohub.cloud/sitemap.xml', false);
+    }
+
+    public function test_blog_sitemap_refreshes_with_new_and_removed_feed_entries(): void
+    {
+        config(['services.blog.key' => 'refresh-test', 'search.indexable' => true]);
+        \Illuminate\Support\Facades\Http::fakeSequence()
+            ->push(['blogs' => [['id' => 11, 'title' => 'First post']]])
+            ->push(['blogs' => [['id' => 12, 'title' => 'New post', 'updated_at' => 'invalid-date']]]);
+        $this->assertStringContainsString('/blogs/11', $this->get('/sitemap-blogs.xml')->streamedContent());
+        $this->travel(6)->minutes();
+        $xml = $this->get('/sitemap-blogs.xml')->assertOk()->streamedContent();
+        $this->assertStringContainsString('/blogs/12', $xml);
+        $this->assertStringNotContainsString('/blogs/11', $xml);
+        $this->assertStringNotContainsString('<lastmod>', $xml);
+    }
+
+    public function test_blog_sitemap_uses_saved_feed_then_returns_retryable_error_when_unavailable(): void
+    {
+        config(['services.blog.key' => 'outage-test', 'search.indexable' => true]);
+        \Illuminate\Support\Facades\Http::fakeSequence()
+            ->push(['blogs' => [['id' => 9, 'title' => 'Saved post']]])->pushStatus(503)->pushStatus(503);
+        $this->get('/sitemap-blogs.xml')->assertOk()->streamedContent();
+        $this->travel(6)->minutes();
+        $xml = $this->get('/sitemap-blogs.xml')->assertOk()->streamedContent();
+        $this->assertStringContainsString('/blogs/9', $xml);
+        $this->travel(2)->days();
+        $this->get('/sitemap-blogs.xml')->assertStatus(503)->assertHeader('Retry-After', '3600');
+        $this->get('/sitemap-platform.xml')->assertOk();
+        $this->get('/robots.txt')->assertOk();
+        \Illuminate\Support\Facades\Http::assertSentCount(3);
+    }
+
+    public function test_empty_and_disabled_blog_sitemaps_do_not_publish_fake_urls_or_fetch_on_staging(): void
+    {
+        config(['services.blog.key' => 'empty-test', 'search.indexable' => true]);
+        \Illuminate\Support\Facades\Http::fake(['*' => \Illuminate\Support\Facades\Http::response(['blogs' => []])]);
+        $xml = $this->get('/sitemap-blogs.xml')->assertOk()->streamedContent();
+        $this->assertNotFalse(simplexml_load_string($xml));
+        $this->assertStringNotContainsString('<url>', $xml);
+        \Illuminate\Support\Facades\Http::fake();
+        config(['search.indexable' => false]);
+        $this->get('/sitemap-blogs.xml')->assertNotFound();
+        \Illuminate\Support\Facades\Http::assertNothingSent();
+        config(['search.indexable' => true, 'services.blog.key' => null]);
+        $xml = $this->get('/sitemap.xml')->assertOk()->streamedContent();
+        $this->assertFileDoesNotExist(public_path('sitemap.xml'));
+        $this->assertFileDoesNotExist(public_path('robots.txt'));
+        $this->assertStringNotContainsString('/sitemap-blogs.xml', $xml);
+        $this->get('/sitemap-blogs.xml')->assertStatus(503);
+        \Illuminate\Support\Facades\Http::assertNothingSent();
+    }
+
 }

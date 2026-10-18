@@ -4,12 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="csrf-token" content="{{ csrf_token() }}">
-<title>MetoHub — Your own online store from ₹{{ number_format(config('saas.plans.base.monthly_price')) }}/month</title>
-<meta name="description" content="Give your small business a beautiful online home. Your own store from ₹{{ config('saas.plans.base.monthly_price') }}/month with a {{ config('saas.trial_days') }}-day free trial. No coding needed.">
-<link rel="canonical" href="{{ route('landing') }}">
-<meta property="og:type" content="website"><meta property="og:title" content="MetoHub — Your brand, beautifully online"><meta property="og:description" content="Your own online store from ₹{{ config('saas.plans.base.monthly_price') }}/month. Explore stores and start your {{ config('saas.trial_days') }}-day free trial."><meta property="og:url" content="{{ route('landing') }}"><meta property="og:image" content="{{ asset('merchant-icon-512.png') }}">
-<meta name="twitter:card" content="summary"><meta name="twitter:title" content="MetoHub — Your brand, beautifully online">
-<link rel="icon" href="{{ asset('merchant-icon-192.png') }}">
+@include('landing.partials.seo')
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="{{ asset('css/metohub-reference.css') }}?v={{ filemtime(public_path('css/metohub-reference.css')) }}">
@@ -351,7 +346,7 @@
 <div class="demo-carousel-viewport" id="reviewViewport" role="region" aria-roledescription="carousel" aria-label="Seller stories" tabindex="0">
 <div class="review-track" id="reviewTrack">
 @foreach($reviews as $review)
-<figure class="review-card" data-review>@if(($review['sample'] ?? false) === true)<span class="review-sample-label">Illustrative example</span>@endif<span class="review-mark" aria-hidden="true">“</span><blockquote>{{ $review['quote'] }}</blockquote><figcaption><span class="review-initial" aria-hidden="true">{{ mb_substr(trim($review['name']), 0, 1) }}</span><span><strong>{{ $review['name'] }}</strong>@if(!empty($review['store']))<small>{{ $review['store'] }}</small>@endif</span></figcaption></figure>
+<figure class="review-card" data-review @if(($review['sample'] ?? false) === true) data-nosnippet @endif>@if(($review['sample'] ?? false) === true)<span class="review-sample-label">Illustrative example</span>@endif<span class="review-mark" aria-hidden="true">“</span><blockquote>{{ $review['quote'] }}</blockquote><figcaption><span class="review-initial" aria-hidden="true">{{ mb_substr(trim($review['name']), 0, 1) }}</span><span><strong>{{ $review['name'] }}</strong>@if(!empty($review['store']))<small>{{ $review['store'] }}</small>@endif</span></figcaption></figure>
 @endforeach
 </div>
 </div>

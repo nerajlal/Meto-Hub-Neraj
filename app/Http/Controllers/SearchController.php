@@ -51,7 +51,8 @@ class SearchController extends Controller
         $allow = (bool) config('search.indexable');
         $text = "User-agent: *\n".($allow ? "Allow: /\n" : "Disallow: /\n");
         if ($allow && (! $tenant || $seo->indexable($tenant))) {
-            $text .= 'Sitemap: '.request()->getSchemeAndHttpHost()."/sitemap.xml\n";
+            $base = $tenant ? request()->getSchemeAndHttpHost() : rtrim(config('app.url'), '/');
+            $text .= 'Sitemap: '.$base."/sitemap.xml\n";
         }
 
         return response($text, 200, ['Content-Type' => 'text/plain; charset=UTF-8']);
@@ -65,6 +66,9 @@ class SearchController extends Controller
             echo '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
             if (! request()->route('store_slug') && ! $this->hostTenant() && config('search.indexable')) {
                 echo '<sitemap><loc>'.$this->escape(rtrim(config('app.url'), '/').'/sitemap-platform.xml').'</loc></sitemap>';
+                if (config('services.blog.key')) {
+                    echo '<sitemap><loc>'.$this->escape(rtrim(config('app.url'), '/').'/sitemap-blogs.xml').'</loc></sitemap>';
+                }
             }
             foreach ($tenants as $tenant) {
                 if (! $seo->indexable($tenant)) {
@@ -87,8 +91,32 @@ class SearchController extends Controller
 
         return $this->xml(function () {
             echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
-            foreach (['', '/features', '/pricing', '/themes', '/about', '/contact', '/privacy-policy', '/terms'] as $path) {
+            foreach (['', '/features', '/pricing', '/themes', '/about', '/contact', '/blogs', '/privacy-policy', '/terms', '/refund-cancellation', '/security'] as $path) {
                 echo '<url><loc>'.$this->escape(rtrim(config('app.url'), '/').$path).'</loc></url>';
+            }
+            echo '</urlset>';
+        });
+    }
+
+    public function blogs(\App\Services\BlogFeed $feed)
+    {
+        abort_if($this->hostTenant() || ! config('search.indexable'), 404);
+        $result = $feed->load();
+        if ($result['state'] === 'unavailable') {
+            return response('Blog sitemap temporarily unavailable. Please retry later.', 503,
+                ['Content-Type' => 'text/plain; charset=UTF-8', 'Retry-After' => '3600']);
+        }
+        $blogs = collect($result['blogs'])->unique('id');
+
+        return $this->xml(function () use ($blogs) {
+            echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
+            foreach ($blogs as $blog) {
+                $url = rtrim(config('app.url'), '/').'/blogs/'.$blog['id'];
+                echo '<url><loc>'.$this->escape($url).'</loc>';
+                if (! empty($blog['modified_at']) && $blog['modified_at'] <= now()->timestamp) {
+                    echo '<lastmod>'.gmdate('Y-m-d\TH:i:s\Z', $blog['modified_at']).'</lastmod>';
+                }
+                echo '</url>';
             }
             echo '</urlset>';
         });

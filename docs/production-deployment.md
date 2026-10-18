@@ -1,7 +1,7 @@
 # MetoHub production deployment
 
-Current canonical domain: `https://betametohub.metora.in`.
-Future canonical domain: `https://metohub.cloud`.
+Current canonical domain: `https://metohub.cloud`.
+Previous beta domain: `https://betametohub.metora.in`.
 Sender: `info@metora.in`.
 
 ## Configure the server
@@ -42,7 +42,7 @@ Monitor `/up` externally, plus disk capacity, application errors, failed notific
 
 Perform a representative concurrent browsing/cart/checkout load test on a staging copy of the production host. Measure response times and database contention before choosing capacity. A passing local test suite alone is not proof of production capacity or recoverability.
 
-## Move to metohub.cloud
+## Domain configuration and beta redirects
 
 Provision DNS and TLS for the new domain first. Change `APP_URL` to `https://metohub.cloud`, `MAIL_EHLO_DOMAIN` to `metohub.cloud`, and Google callback settings if enabled. Update registered provider callbacks and permitted origins. Rebuild configuration and route caches, restart workers, and rerun preflight and the end-to-end checks above. Keep the sender `info@metora.in` if the mailbox provider still authorizes it.
 

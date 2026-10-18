@@ -4,31 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>@yield('page_title', 'MetoHub — The Ultimate Ecommerce Website Builder')</title>
-  <meta name="description"
-    content="@yield('meta_description', 'MetoHub is the SaaS platform businesses use to build, price, promote, and run their own online stores — pricing engine, promotions, themes, analytics, and payments in one place.')">
-  <meta name="keywords"
-    content="ecommerce builder, saas for online stores, create website, online shop platform, delivery software, POS integration">
-  <link rel="icon"
-    href="{{ asset('merchant-icon-192.png') }}">
-
-  <link rel="canonical" href="{{ url()->current() }}">
-
-  <!-- Open Graph / Facebook -->
-  <meta property="og:type" content="@yield('og_type', 'website')">
-  <meta property="og:url" content="{{ url()->current() }}">
-  <meta property="og:title" content="@yield('page_title', 'MetoHub — Start Your Online Business')">
-  <meta property="og:description"
-    content="@yield('meta_description', 'MetoHub is the SaaS platform businesses use to build, price, promote, and run their own online stores.')">
-  <meta property="og:image" content="@yield('meta_image', asset('images/og-image.jpg'))">
-
-  <!-- Twitter -->
-  <meta property="twitter:card" content="summary_large_image">
-  <meta property="twitter:url" content="{{ url()->current() }}">
-  <meta property="twitter:title" content="@yield('page_title', 'MetoHub — Start Your Online Business')">
-  <meta property="twitter:description"
-    content="@yield('meta_description', 'MetoHub is the SaaS platform businesses use to build, price, promote, and run their own online stores.')">
-  <meta property="twitter:image" content="@yield('meta_image', asset('images/og-image.jpg'))">
+  @include('landing.partials.seo')
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
@@ -2029,22 +2005,6 @@
 
 }
   </style>
-  <!-- JSON-LD Structured Data for SEO -->
-  <script type="application/ld+json">
-    {
-      "@@context": "https://schema.org",
-      "@@type": "SoftwareApplication",
-      "name": "MetoHub",
-      "applicationCategory": "BusinessApplication",
-      "operatingSystem": "Web",
-      "description": "MetoHub helps independent businesses create and manage their own online stores.",
-      "url": "{{ url()->current() }}",
-      "publisher": {
-        "@@type": "Organization",
-        "name": "MetoHub"
-      }
-    }
-  </script>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="{{ asset('css/metohub-reference.css') }}?v={{ filemtime(public_path('css/metohub-reference.css')) }}">
 <link rel="stylesheet" href="{{ asset('css/metohub-home.css') }}?v={{ filemtime(public_path('css/metohub-home.css')) }}">
