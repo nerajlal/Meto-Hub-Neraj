@@ -11,3 +11,9 @@ All CTAs use the existing merchant onboarding wizard. Button handlers prevent an
 The stylesheet is isolated to this homepage. The shared layout supports a page-specific footer; other marketing pages retain their footer. Navigation links to the live demos and setup instructions on the homepage.
 
 Validation: homepage feature tests cover configured pricing, missing demo stores, curated links, and registration triggers. Browser checks cover 375px/768px/1440px layouts, all three plan selections, first-step validation, progression through three onboarding steps, and mobile navigation. The complete suite passed with 124 tests.
+
+## Light premium presentation
+
+The homepage uses an ivory and champagne palette, charcoal typography, fine warm borders and a photographic storefront illustration built from the existing local fragrance asset. The header, hero, pricing, invitation and closing sections all use light surfaces. Dark tones are reserved for text, buttons and imagery.
+
+The demo gallery uses WebP screenshots of the seven seeded public storefronts from `public/images/landing/demos/`. These are static previews; store links still open the live storefronts. Re-capture the screenshots when demo theme/content changes. The fallback card still works if a preview image is missing. The hero is explicitly labeled as an illustrative store preview. No registration, order, mail or payment was submitted during browser QA.
