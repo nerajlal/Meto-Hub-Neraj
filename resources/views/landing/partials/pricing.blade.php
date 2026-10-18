@@ -363,7 +363,8 @@
 <section class="pricing-section" id="pricing">
   <div class="pricing-header">
     <span class="eyebrow">All-in-one platform for grocery businesses</span>
-    <h2>Launch & Grow Your Grocery Business Online</h2>
+    @php($pageHeadingTag = request()->routeIs('landing.pricing') ? 'h1' : 'h2')
+      <{{ $pageHeadingTag }}>Launch & Grow Your Grocery Business Online</{{ $pageHeadingTag }}>
     <p>B2B + B2C &bull; Payments &bull; Delivery &bull; Apps &bull; Everything You Need</p>
   </div>
 

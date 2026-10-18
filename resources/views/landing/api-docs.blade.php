@@ -3,7 +3,7 @@
   <section class="features" style="padding-top: 150px; padding-bottom: 100px; background: var(--bg);">
     <div class="section-head">
       <span class="eyebrow">Developers</span>
-      <h2>API Documentation</h2>
+      <h1>API Documentation</h1>
       <p>Build custom integrations and extend the MetoHub platform.</p>
     </div>
     

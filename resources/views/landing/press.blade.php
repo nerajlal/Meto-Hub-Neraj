@@ -3,7 +3,7 @@
   <section class="features" style="padding-top: 150px; padding-bottom: 100px; background: var(--bg);">
     <div class="section-head">
       <span class="eyebrow">News & Media</span>
-      <h2>Press Room</h2>
+      <h1>Press Room</h1>
       <p>The latest news, announcements, and resources from MetoHub.</p>
     </div>
     

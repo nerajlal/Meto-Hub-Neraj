@@ -52,6 +52,31 @@ class MarketingSeo
             ['@type' => 'WebSite', '@id' => $base.'/#website', 'url' => $base, 'name' => 'MetoHub', 'publisher' => ['@id' => $base.'/#organization']],
             ['@type' => 'WebPage', '@id' => $url.'#webpage', 'url' => $url, 'name' => $title, 'description' => $description, 'isPartOf' => ['@id' => $base.'/#website']]]];
 
+        $article = $overrides['article'] ?? null;
+        if ($request->routeIs('landing.blog.show') && is_array($article)) {
+            $posting = ['@type' => 'BlogPosting', '@id' => $url.'#article', 'url' => $url,
+                'headline' => $article['title'], 'description' => $article['excerpt'], 'image' => [$image],
+                'mainEntityOfPage' => ['@id' => $url.'#webpage'], 'publisher' => ['@id' => $base.'/#organization']];
+            if ($article['author_name'] === 'MetoHub team') {
+                $posting['author'] = ['@id' => $base.'/#organization'];
+            } else {
+                $posting['author'] = ['@type' => 'Person', 'name' => $article['author_name']];
+            }
+            foreach (['published_at' => 'datePublished', 'modified_at' => 'dateModified'] as $field => $property) {
+                $timestamp = $article[$field] ?? 0;
+                if (is_numeric($timestamp) && $timestamp > 0 && $timestamp <= now()->timestamp
+                    && ($field !== 'modified_at' || $timestamp >= ($article['published_at'] ?? 0))) {
+                    $posting[$property] = gmdate('Y-m-d\\TH:i:s\\Z', (int) $timestamp);
+                }
+            }
+            $schema['@graph'][] = $posting;
+            $schema['@graph'][] = ['@type' => 'BreadcrumbList', 'itemListElement' => [
+                ['@type' => 'ListItem', 'position' => 1, 'name' => 'Home', 'item' => $base],
+                ['@type' => 'ListItem', 'position' => 2, 'name' => 'Blog', 'item' => $base.'/blogs'],
+                ['@type' => 'ListItem', 'position' => 3, 'name' => $article['title'], 'item' => $url],
+            ]];
+        }
+
         return compact('title', 'description', 'image', 'url', 'schema') + [
             'robots' => config('search.indexable') && ! $request->has('preview') && ! $request->has('get_started')
                 ? 'index, follow, max-image-preview:large' : 'noindex, nofollow',

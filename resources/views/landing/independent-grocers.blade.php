@@ -3,7 +3,7 @@
   <section class="features" style="padding-top: 150px; padding-bottom: 100px; background: var(--bg);">
     <div class="section-head">
       <span class="eyebrow">For Independent Grocers</span>
-      <h2>Compete and Win in the Digital Age</h2>
+      <h1>Compete and Win in the Digital Age</h1>
       <p>Everything a local grocery store needs to launch, run, and scale an independent online delivery service.</p>
     </div>
     

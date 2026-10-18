@@ -11,6 +11,9 @@
 </address>
 </div>
 <nav class="flex flex-wrap gap-x-6 gap-y-2 text-sm text-muted-foreground" aria-label="Footer navigation">
+<a href="{{ route('landing.features') }}" class="hover:text-foreground">Features</a>
+<a href="{{ route('landing.themes') }}" class="hover:text-foreground">Themes</a>
+<a href="{{ route('landing') }}#pricing" class="hover:text-foreground">Pricing</a>
 <a class="hover:text-foreground" href="{{ route('admin.common.login') }}">Merchant login</a>
 <a href="{{ route('landing') }}#faq" class="hover:text-foreground">Help</a>
 <a href="{{ route('landing.about') }}" class="hover:text-foreground">About us</a>

@@ -38,7 +38,7 @@ Private routes, signup query variants, previews and error responses receive `X-R
 
 ## Validation
 
-- 136 PHP tests passed, with 3489 assertions, including existing merchant search-readiness and blog tests.
+- 140 PHP tests passed, with 3549 assertions, including existing merchant search-readiness and blog tests.
 - Added checks for distinct titles, tracking-free canonicals, valid JSON-LD, escaped blog data, sharing-image size, staging/signup noindex and public sitemap entries.
 - Chrome verified public layouts and shared navigation on mobile and desktop.
 
@@ -60,3 +60,16 @@ New or removed posts appear after the existing five-minute feed cache refresh. T
 If the feed fails, the last successful response can be served for up to a day. Without a usable saved feed, the blog sitemap returns HTTP 503 with `Retry-After: 3600`; it does not falsely report an empty publication list. A genuinely successful empty feed produces valid empty sitemap XML. The platform sitemap and robots.txt remain independent of this outage. Disabled global indexing blocks the blog sitemap before any API request, and tenant custom domains cannot expose the platform blog sitemap.
 
 Tests cover shared caching, duplicate/invalid IDs, XML parsing, actual update dates, refreshes adding/removing posts, successful empty responses, cached outage fallback, retryable outages and staging/missing-key behavior. The existence of a sitemap does not establish that Google has fetched or indexed the articles.
+
+## Additional code-side SEO pass
+
+- Blog pages now include `BlogPosting` and visible breadcrumb navigation with matching `BreadcrumbList` data. Headline, author, cover and dates come from the normalized feed. Missing or future dates are omitted; a modified date preceding publication is not invented or substituted. The fallback editorial author points to the existing MetoHub Organization. JSON remains safely escaped.
+- Blog covers reserve space and receive priority loading. Author, related-post and content images use lazy loading/async decoding; sanitized HTML retains only sensible numeric width/height pairs. This reduces avoidable loading/layout work but is not a measured live performance score.
+- Blog articles link to theme browsing, plan comparison and the actual trial signup URL. Shared footer links expose Features, Themes and Pricing. Social-sharing actions use the canonical platform article URL.
+- `/home` and `/home1` permanently redirect to the main landing page. `/templates` permanently redirects to `/themes`. Leading-zero article IDs redirect to their normalized numeric URL. Query parameters are preserved; canonical metadata still omits campaign tracking. Beta-domain redirects remain a hosting task for the owner.
+- Standalone public pages have one main H1; reusable sections retain H2 when embedded. The inner-page layout identifies the main content region and no longer requests a duplicate font stylesheet.
+- About-page unverified store/order counts, uptime SLA and round-the-clock support statistics were replaced with configured theme count, trial length, starting price and branding options. Sample review personas remain explicitly labelled as requested; genuine client feedback still needs to be supplied by the owner.
+
+Article and breadcrumb references: [Google Article documentation](https://developers.google.com/search/docs/appearance/structured-data/article), [Google Breadcrumb documentation](https://developers.google.com/search/docs/appearance/structured-data/breadcrumb).
+
+Owner tasks remain deployment, correct production environment/DNS/redirects, Search Console verification and submission, useful original articles and approved real client feedback, followed by live PageSpeed and indexing monitoring. These require production/account access or source material outside this repository.

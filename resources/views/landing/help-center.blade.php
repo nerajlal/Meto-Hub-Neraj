@@ -3,7 +3,7 @@
   <section class="features" style="padding-top: 150px; padding-bottom: 100px; background: var(--bg);">
     <div class="section-head">
       <span class="eyebrow">Support & Resources</span>
-      <h2>Help Center</h2>
+      <h1>Help Center</h1>
       <p>Find answers to common questions and learn how to configure your store.</p>
     </div>
     

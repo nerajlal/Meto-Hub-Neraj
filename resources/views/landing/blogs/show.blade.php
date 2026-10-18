@@ -330,6 +330,7 @@
 
 <div class="blog-hero">
   <div class="blog-hero-inner">
+    <nav class="blog-breadcrumbs" aria-label="Breadcrumb"><a href="{{ route('landing') }}">Home</a><span aria-hidden="true">/</span><a href="{{ route('landing.blogs') }}">Blog</a><span aria-hidden="true">/</span><span aria-current="page">{{ $blog['title'] }}</span></nav>
     <a href="{{ route('landing.blogs') }}" class="back-link">
       <i class="fa-solid fa-arrow-left"></i> Back to all articles
     </a>
@@ -343,7 +344,7 @@
 <div class="blog-layout">
   <div class="blog-main">
     @if($blog['cover_image'])
-      <img src="{{ $blog['cover_image'] }}" alt="{{ $blog['title'] }}" class="blog-cover">
+      <img src="{{ $blog['cover_image'] }}" alt="{{ $blog['title'] }}" class="blog-cover" width="1200" height="675" decoding="async" fetchpriority="high">
       @if($blog['image_credits'])
         <div class="image-credits">
           Image credits: {{ $blog['image_credits'] }}
@@ -359,7 +360,7 @@
       @if(isset($blog['sections']) && count($blog['sections']) > 0)
         @foreach($blog['sections'] as $section)
           @if(!empty($section['image_path']))
-            <img src="{{ $section['image_path'] }}" alt="Section image" style="width: 100%; border-radius: 12px; margin: 2rem 0; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+            <img src="{{ $section['image_path'] }}" alt="{{ $blog['title'] }} — section {{ $loop->iteration }}" loading="lazy" decoding="async" style="width: 100%; border-radius: 12px; margin: 2rem 0; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
           @endif
           @if(!empty($section['text_content']))
             <div style="margin-bottom: 1.5rem;">{!! $section['text_content'] !!}</div>
@@ -372,7 +373,7 @@
   <aside class="blog-sidebar">
     <div class="sidebar-widget author-card">
       @if($blog['author_avatar'])
-        <img src="{{ $blog['author_avatar'] }}" alt="{{ $blog['author_name'] }}" class="author-avatar">
+        <img src="{{ $blog['author_avatar'] }}" alt="{{ $blog['author_name'] }}" class="author-avatar" width="80" height="80" loading="lazy" decoding="async">
       @else
         <div class="author-avatar" style="background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 2.5rem;">
           {{ mb_substr($blog['author_name'], 0, 1) }}
@@ -388,9 +389,9 @@
         Sharing insights on grocery technology, eCommerce trends, and retail management.
       </p>
       <div class="share-buttons">
-        <a href="https://twitter.com/intent/tweet?url={{ urlencode(url()->current()) }}&amp;text={{ urlencode($blog['title']) }}" aria-label="Share on X" target="_blank" rel="noopener noreferrer" class="share-btn share-tw"><i class="fa-brands fa-x-twitter"></i></a>
-        <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(url()->current()) }}" aria-label="Share on Facebook" target="_blank" rel="noopener noreferrer" class="share-btn share-fb"><i class="fa-brands fa-facebook-f"></i></a>
-        <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ urlencode(url()->current()) }}" aria-label="Share on LinkedIn" target="_blank" rel="noopener noreferrer" class="share-btn share-in"><i class="fa-brands fa-linkedin-in"></i></a>
+        <a href="https://twitter.com/intent/tweet?url={{ urlencode(rtrim(config('app.url'), '/').'/blogs/'.$blog['id']) }}&amp;text={{ urlencode($blog['title']) }}" aria-label="Share on X" target="_blank" rel="noopener noreferrer" class="share-btn share-tw"><i class="fa-brands fa-x-twitter"></i></a>
+        <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(rtrim(config('app.url'), '/').'/blogs/'.$blog['id']) }}" aria-label="Share on Facebook" target="_blank" rel="noopener noreferrer" class="share-btn share-fb"><i class="fa-brands fa-facebook-f"></i></a>
+        <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ urlencode(rtrim(config('app.url'), '/').'/blogs/'.$blog['id']) }}" aria-label="Share on LinkedIn" target="_blank" rel="noopener noreferrer" class="share-btn share-in"><i class="fa-brands fa-linkedin-in"></i></a>
       </div>
     </div>
 
@@ -398,8 +399,9 @@
     
     <div class="sidebar-widget" style="background: var(--primary); color: white; text-align: center;">
       <h3 style="color: white; font-size: 1.5rem; margin-bottom: 1rem; font-weight: 700;">Start selling online today</h3>
-      <p style="color: rgba(255,255,255,0.9); margin-bottom: 1.5rem; font-size: 0.95rem;">Build your grocery storefront with MetoHub.</p>
-      <a href="/#pricing" class="btn btn-white" style="width: 100%;">Start Free Trial</a>
+      <p style="color: rgba(255,255,255,0.9); margin-bottom: 1.5rem; font-size: 0.95rem;">Give your products a store of their own. Explore themes and choose a plan for your brand.</p>
+      <a href="{{ route('landing', ['get_started' => 1, 'plan' => 'base']) }}" class="btn btn-white" style="width: 100%;">Start {{ config('saas.trial_days') }}-day free trial</a>
+      <div class="blog-useful-links"><a href="{{ route('landing.themes') }}">Explore store themes</a><a href="{{ route('landing') }}#pricing">Compare plans</a></div>
     </div>
   </aside>
 </div>
@@ -411,7 +413,7 @@
     @foreach($recentBlogs as $recent)
     <div class="bottom-article-card">
       @if($recent['cover_image'])
-        <img src="{{ $recent['cover_image'] }}" class="bottom-article-img" alt="Blog cover">
+        <img src="{{ $recent['cover_image'] }}" class="bottom-article-img" alt="{{ $recent['title'] }}" width="640" height="400" loading="lazy" decoding="async">
       @else
          <div class="bottom-article-img" style="display:flex; align-items:center; justify-content:center; color:#8c857a;">
            <i class="fa-solid fa-image fa-2x"></i>

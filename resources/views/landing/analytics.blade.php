@@ -3,7 +3,7 @@
   <section class="features" id="analytics" style="padding-bottom: 40px;">
     <div class="section-head" style="margin-bottom: 40px;">
       <span class="eyebrow">Data & Analytics</span>
-      <h2>Data that drives grocery growth</h2>
+      <h1>Data that drives grocery growth</h1>
       <p>Get real-time, actionable insights into your inventory, sales, and customer behavior.</p>
     </div>
 

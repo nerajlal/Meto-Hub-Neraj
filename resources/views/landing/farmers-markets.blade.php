@@ -3,7 +3,7 @@
   <section class="features" style="padding-top: 150px; padding-bottom: 100px; background: var(--bg);">
     <div class="section-head">
       <span class="eyebrow">Local & Fresh</span>
-      <h2>Farmers Markets Online</h2>
+      <h1>Farmers Markets Online</h1>
       <p>Connect local farms and artisanal vendors directly to digital consumers.</p>
     </div>
     

@@ -83,7 +83,13 @@ class BlogContent
                 if (! $url) {
                     continue;
                 }
-                $attributes = ' src="'.htmlspecialchars($url, ENT_QUOTES, 'UTF-8').'" alt="'.htmlspecialchars($child->getAttribute('alt'), ENT_QUOTES, 'UTF-8').'" loading="lazy"';
+                $attributes = ' src="'.htmlspecialchars($url, ENT_QUOTES, 'UTF-8').'" alt="'.htmlspecialchars($child->getAttribute('alt'), ENT_QUOTES, 'UTF-8').'" loading="lazy" decoding="async"';
+                $width = $child->getAttribute('width');
+                $height = $child->getAttribute('height');
+                if (ctype_digit($width) && ctype_digit($height) && (int) $width > 0 && (int) $height > 0
+                    && (int) $width <= 8192 && (int) $height <= 8192) {
+                    $attributes .= ' width="'.(int) $width.'" height="'.(int) $height.'"';
+                }
             }
             $html .= '<'.$tag.$attributes.'>';
             if (! in_array($tag, ['img', 'br', 'hr'], true)) {

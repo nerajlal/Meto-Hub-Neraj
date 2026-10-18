@@ -48,3 +48,13 @@
 .page-content.page-content :is(.pricing-card,.sidebar-widget,.contact-form-card){background:#fffdfa;border-color:#e4ded3}
 .page-content.page-content .submit-btn:hover{background:#18382c}
 @media(max-width:768px){.page-content.page-content .about-hero{padding-top:52px}}
+
+.page-content .blog-breadcrumbs{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:11px;line-height:1.8;color:#6f6b63;margin-bottom:20px}
+.page-content .blog-breadcrumbs a{color:#244a3b}.page-content .blog-breadcrumbs a:hover{text-decoration:underline}
+.page-content .blog-breadcrumbs [aria-current]{overflow-wrap:anywhere}
+.page-content .blog-useful-links{display:flex;justify-content:center;flex-wrap:wrap;gap:12px;margin-top:16px;font-size:11px}
+.page-content .blog-useful-links a{text-decoration:underline;text-underline-offset:3px}
+.page-content img.blog-cover{aspect-ratio:16/9;object-fit:cover;height:auto}
+
+.page-content.page-content .section-head h1{font-size:clamp(1.9rem,3.2vw,2.6rem);margin-bottom:16px}
+.page-content.page-content .pricing-header h1{font-size:clamp(1.9rem,3.2vw,2.5rem);margin:0 0 10px}

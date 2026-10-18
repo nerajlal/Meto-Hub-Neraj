@@ -5,6 +5,7 @@
         'description' => $decode($__env->yieldContent('meta_description')),
         'image' => $decode($__env->yieldContent('meta_image')),
         'type' => $decode($__env->yieldContent('og_type')),
+        'article' => request()->routeIs('landing.blog.show') ? ($blog ?? null) : null,
     ]);
 @endphp
 <title>{{ $metadata['title'] }}</title>
@@ -22,6 +23,10 @@
 <meta property="og:description" content="{{ $metadata['description'] }}">
 <meta property="og:url" content="{{ $metadata['url'] }}">
 <meta property="og:image" content="{{ $metadata['image'] }}">
+@if($metadata['image'] === rtrim(config('app.url'), '/').'/images/landing/social-card.png')
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+@endif
 <meta property="og:image:alt" content="{{ $metadata['title'] }}">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="{{ $metadata['title'] }}">

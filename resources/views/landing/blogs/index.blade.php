@@ -125,7 +125,7 @@
       @foreach($blogs as $blog)
         <div class="blog-card">
           @if($blog['cover_image'])
-            <img src="{{ $blog['cover_image'] }}" alt="{{ $blog['title'] }}" class="blog-image" loading="lazy" width="640" height="400">
+            <img src="{{ $blog['cover_image'] }}" alt="{{ $blog['title'] }}" class="blog-image" loading="lazy" decoding="async" width="640" height="400">
           @else
             <div class="blog-image" style="display: flex; align-items: center; justify-content: center; background: #e4ded3; color: #8c857a;">
               <i class="fa-solid fa-image fa-2x"></i>
@@ -137,7 +137,7 @@
             <p class="blog-excerpt">{{ $blog['excerpt'] }}</p>
             <div class="blog-meta">
               @if($blog['author_avatar'])
-                <img src="{{ $blog['author_avatar'] }}" alt="{{ $blog['author_name'] }}" class="blog-avatar" loading="lazy" width="32" height="32">
+                <img src="{{ $blog['author_avatar'] }}" alt="{{ $blog['author_name'] }}" class="blog-avatar" loading="lazy" decoding="async" width="32" height="32">
               @else
                 <div class="blog-avatar" style="background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.8rem;">
                   {{ mb_substr($blog['author_name'], 0, 1) }}

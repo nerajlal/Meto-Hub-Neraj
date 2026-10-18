@@ -48,9 +48,7 @@ Route::get('/demo/{tenantId}', function ($tenantId) {
     return redirect()->route('landing');
 })->name('demo.set-tenant');
 
-Route::get('/home1', function () {
-    return view('landing.vespr-landing');
-})->name('landing.vespr');
+Route::get('/home1', fn () => redirect()->route('landing', request()->query(), 301))->name('landing.vespr');
 
 Route::get('/home', [App\Http\Controllers\LandingController::class, 'index'])->name('landing.old');
 Route::get('/templates', [App\Http\Controllers\LandingController::class, 'templates'])->name('landing.templates');

@@ -1,7 +1,8 @@
   <section class="features" id="features">
     <div class="section-head">
       <span class="eyebrow">Platform</span>
-      <h2>Every tool a grocery merchant needs, in one platform</h2>
+      @php($pageHeadingTag = request()->routeIs('landing.features') ? 'h1' : 'h2')
+      <{{ $pageHeadingTag }}>Every tool a grocery merchant needs, in one platform</{{ $pageHeadingTag }}>
       <p>Not a storefront. A complete operating system for running a grocery business online.</p>
     </div>
     <div class="feature-grid">

@@ -90,6 +90,7 @@ class LandingHomepageTest extends TestCase
             '/pricing', '/themes', '/analytics', '/careers', '/press', '/independent-grocers', '/grocery-chains',
             '/farmers-markets', '/help-center', '/api-docs', '/guides', '/security', '/blogs', '/blogs/7'] as $path) {
             $html = $this->get($path)->assertOk()->getContent();
+            $this->assertSame(1, preg_match_all('/<h1\\b/i', $html), $path.' needs one main page heading');
             preg_match('/<header data-marketing-header.*?<\/header>/s', $html, $pageHeader);
             preg_match('/<footer data-marketing-footer.*?<\/footer>/s', $html, $pageFooter);
             $this->assertSame($normalizeHeader($header[0]), $normalizeHeader($pageHeader[0] ?? ''), $path);
@@ -215,6 +216,18 @@ class LandingHomepageTest extends TestCase
         $this->assertStringNotContainsString('/sitemap-blogs.xml', $xml);
         $this->get('/sitemap-blogs.xml')->assertStatus(503);
         \Illuminate\Support\Facades\Http::assertNothingSent();
+    }
+
+    public function test_legacy_marketing_urls_redirect_and_about_uses_configured_facts(): void
+    {
+        foreach (['/home', '/home1'] as $path) {
+            $this->get($path.'?get_started=1')->assertStatus(301)
+                ->assertRedirect(route('landing', ['get_started' => 1]));
+        }
+        $this->get('/templates')->assertStatus(301)->assertRedirect(route('landing.themes'));
+        config(['saas.plans.base.monthly_price' => 129, 'saas.trial_days' => 9]);
+        $this->get('/about')->assertOk()->assertSee('₹129')->assertSee('9 days')
+            ->assertDontSee('2M+')->assertDontSee('99.9%')->assertDontSee('Stores Powered');
     }
 
 }

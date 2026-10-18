@@ -1,7 +1,8 @@
   <section class="themes" id="themes">
     <div class="section-head">
       <span class="eyebrow">Theme marketplace</span>
-      <h2>Launch with a theme built for grocery</h2>
+      @php($pageHeadingTag = request()->routeIs('landing.themes') ? 'h1' : 'h2')
+      <{{ $pageHeadingTag }}>Launch with a theme built for grocery</{{ $pageHeadingTag }}>
       <p>Every theme is responsive, checkout-ready, and customizable without touching code.</p>
     </div>
     <div class="theme-grid">

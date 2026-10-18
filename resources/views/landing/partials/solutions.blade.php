@@ -1,7 +1,8 @@
   <section class="pricing-engine" id="solutions">
     <div class="engine-copy">
       <span class="eyebrow">Pricing engine</span>
-      <h2>Set the right price for every customer, automatically</h2>
+      @php($pageHeadingTag = request()->routeIs('landing.solutions') ? 'h1' : 'h2')
+      <{{ $pageHeadingTag }}>Set the right price for every customer, automatically</{{ $pageHeadingTag }}>
       <p>MetoHub's rule-based pricing engine applies the correct rate at checkout — no manual price lists, no
         spreadsheets.</p>
       <ul class="engine-list">

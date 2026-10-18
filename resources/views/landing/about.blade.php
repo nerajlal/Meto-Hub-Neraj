@@ -464,15 +464,14 @@
       <div class="about-hero-header fade-up">
         <span class="eyebrow">Our Story</span>
         <h1>Redefining the <br><span>eCommerce Experience</span></h1>
-        <p>MetoHub is the operating system for modern retail. We're building the infrastructure that empowers merchants to
-          run, scale, and transform their businesses in a digital-first world.</p>
+        <p>MetoHub helps independent sellers give their products a home beyond social media. Create a store that feels like your brand, organize your catalog, and manage orders from one dashboard.</p>
       </div>
 
       <div class="hero-3d-scene fade-up" style="animation-delay: 0.2s;">
         <!-- Main 3D Card -->
         <div class="scene-card card-main">
           <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2426&auto=format&fit=crop"
-            alt="Dashboard Tech">
+            alt="Dashboard Tech" decoding="async" fetchpriority="high">
         </div>
 
         <!-- 3D Orbs -->
@@ -484,8 +483,8 @@
         <div class="card-floating-badge">
           <div class="badge-icon"><i class="fa-solid fa-bolt"></i></div>
           <div>
-            <div class="badge-text">Ultra Fast</div>
-            <div class="badge-sub">Commerce Engine</div>
+            <div class="badge-text">Your own brand</div>
+            <div class="badge-sub">Your online store</div>
           </div>
         </div>
       </div>
@@ -495,24 +494,22 @@
       <div class="mission-container">
         <div class="mission-content">
           <span class="eyebrow">The Challenge</span>
-          <h2>Built for the <br><span>Scale</span> of Global Trade</h2>
-          <p>Traditional ecommerce platforms often fall short when it comes to complex inventory logic, multi-region
-            sales, customized checkout flows, and seamless real-time analytics.</p>
-          <p>MetoHub was founded with a simple mission: to provide a powerful, no-code platform built from the ground up
-            to solve these exact challenges, giving you the tools needed to compete and succeed globally.</p>
+          <h2>Built for your <br><span>next</span> chapter</h2>
+          <p>Selling through chats can mean scattered product photos, repeated price questions, and order details that are difficult to track.</p>
+          <p>Choose a theme, add your products and share your store link. Customers can browse your collections and place an order, while you keep the details together.</p>
         </div>
 
         <div class="mission-image-wrapper">
           <div class="mission-image">
             <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070&auto=format&fit=crop"
-              alt="Analytics Dashboard">
+              alt="Analytics Dashboard" loading="lazy" decoding="async">
           </div>
 
           <div class="mission-glass-card">
             <div class="mgc-icon"><i class="fa-solid fa-boxes-stacked"></i></div>
             <div class="mgc-text">
-              <h4>Inventory Synced</h4>
-              <p>100% Real-time accuracy</p>
+              <h4>Product variants</h4>
+              <p>Sizes and stock in one place</p>
             </div>
           </div>
         </div>
@@ -521,20 +518,20 @@
 
     <section class="stats-section reveal">
       <div class="stat-item">
-        <h4>₹5,000+</h4>
-        <p>Stores Powered</p>
+        <h4>{{ count(config('storefront_themes')) }}</h4>
+        <p>Storefront themes</p>
       </div>
       <div class="stat-item">
-        <h4>2M+</h4>
-        <p>Orders Processed</p>
+        <h4>{{ config('saas.trial_days') }} days</h4>
+        <p>Free trial</p>
       </div>
       <div class="stat-item">
-        <h4>99.9%</h4>
-        <p>Uptime SLA</p>
+        <h4>₹{{ number_format(config('saas.plans.base.monthly_price')) }}</h4>
+        <p>Base plan per month</p>
       </div>
       <div class="stat-item">
-        <h4>24/7</h4>
-        <p>Expert Support</p>
+        <h4>Your brand</h4>
+        <p>Your logo and colors</p>
       </div>
     </section>
 

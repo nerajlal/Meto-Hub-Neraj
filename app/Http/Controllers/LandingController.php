@@ -31,12 +31,12 @@ class LandingController extends Controller
 
     public function index()
     {
-        return view('landing.new-landing');
+        return redirect()->route('landing', request()->query(), 301);
     }
 
     public function templates()
     {
-        return view('landing.templates');
+        return redirect()->route('landing.themes', request()->query(), 301);
     }
 
     public function features()
@@ -134,6 +134,9 @@ class LandingController extends Controller
     public function blogShow($id, \App\Services\BlogFeed $feed)
     {
         abort_unless(ctype_digit((string) $id) && (int) $id > 0, 404);
+        if ((string) (int) $id !== (string) $id) {
+            return redirect()->route('landing.blog.show', ['id' => (int) $id] + request()->query(), 301);
+        }
         $result = $feed->load();
         if ($result['state'] === 'unavailable') {
             return response()->view('landing.blogs.index', ['blogs' => [], 'feedState' => 'unavailable'], 503);

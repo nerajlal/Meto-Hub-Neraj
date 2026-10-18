@@ -3,7 +3,7 @@
   <section class="features" style="padding-top: 150px; padding-bottom: 100px; background: var(--bg);">
     <div class="section-head">
       <span class="eyebrow">Learn & Grow</span>
-      <h2>Guides & Playbooks</h2>
+      <h1>Guides & Playbooks</h1>
       <p>Actionable advice to scale your grocery delivery business.</p>
     </div>
     

@@ -3,7 +3,7 @@
   <section class="features" style="padding-top: 150px; padding-bottom: 100px; background: var(--bg);">
     <div class="section-head">
       <span class="eyebrow">Join the Team</span>
-      <h2>Careers at MetoHub</h2>
+      <h1>Careers at MetoHub</h1>
       <p>Help us build the most powerful commerce platform for modern grocers.</p>
     </div>
     

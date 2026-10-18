@@ -97,4 +97,54 @@ class BlogFeedTest extends TestCase
             ->assertDontSee('https://blog.metora.inhttps://', false)->assertSee('<h2>Grocery tips</h2>', false);
         $this->assertNull(app(BlogContent::class)->imageUrl('data:text/html,hello'));
     }
+    public function test_article_schema_uses_real_feed_identity_dates_and_breadcrumbs(): void
+    {
+        config(['app.url' => 'https://metohub.cloud']);
+        $article = $this->article() + ['author_name' => 'Anjali', 'updated_at' => '2026-10-13T12:00:00Z'];
+        Http::fake(['*' => Http::response(['blogs' => [$article]])]);
+        $html = $this->get('/blogs/19?utm_source=instagram')->assertOk()
+            ->assertSee('aria-label="Breadcrumb"', false)->assertSee('fetchpriority="high"', false)
+            ->assertSee('Explore store themes')->getContent();
+        preg_match('/<script type="application\/ld\+json">(.*?)<\/script>/s', $html, $matches);
+        $schema = json_decode($matches[1], true, 512, JSON_THROW_ON_ERROR);
+        $posting = collect($schema['@graph'])->firstWhere('@type', 'BlogPosting');
+        $this->assertSame('Fresh grocery insights', $posting['headline']);
+        $this->assertSame(['@type' => 'Person', 'name' => 'Anjali'], $posting['author']);
+        $this->assertSame('2026-10-12T10:00:00Z', $posting['datePublished']);
+        $this->assertSame('2026-10-13T12:00:00Z', $posting['dateModified']);
+        $this->assertSame('https://metohub.cloud/blogs/19', $posting['url']);
+        $breadcrumbs = collect($schema['@graph'])->firstWhere('@type', 'BreadcrumbList');
+        $this->assertCount(3, $breadcrumbs['itemListElement']);
+        $this->assertSame($posting['url'], $breadcrumbs['itemListElement'][2]['item']);
+        $index = $this->get('/blogs')->assertOk()->getContent();
+        $this->assertStringNotContainsString('"@type":"BlogPosting"', $index);
+    }
+
+    public function test_unknown_article_dates_are_not_invented_and_image_sizes_are_sanitized(): void
+    {
+        $article = $this->article();
+        $article['created_at'] = 'invalid';
+        $article['updated_at'] = '2999-01-01';
+        $article['content'] = '<img src="/photo.jpg" width="640" height="400"><img src="/bad.jpg" width="999999" height="300" onerror="alert(1)">';
+        Http::fake(['*' => Http::response(['blogs' => [$article]])]);
+        $html = $this->get('/blogs/19')->assertOk()->getContent();
+        preg_match('/<script type="application\/ld\+json">(.*?)<\/script>/s', $html, $matches);
+        $schema = json_decode($matches[1], true, 512, JSON_THROW_ON_ERROR);
+        $posting = collect($schema['@graph'])->firstWhere('@type', 'BlogPosting');
+        $this->assertArrayNotHasKey('datePublished', $posting);
+        $this->assertArrayNotHasKey('dateModified', $posting);
+        $this->assertSame(['@id' => rtrim(config('app.url'), '/').'/#organization'], $posting['author']);
+        $this->assertStringContainsString('loading="lazy" decoding="async" width="640" height="400"', $html);
+        $this->assertStringNotContainsString('width="999999"', $html);
+        $this->assertStringNotContainsString('onerror=', $html);
+    }
+
+    public function test_padded_article_ids_redirect_to_the_same_canonical_article_before_fetching(): void
+    {
+        Http::fake();
+        $this->get('/blogs/0019?utm_source=instagram')->assertStatus(301)
+            ->assertRedirect(route('landing.blog.show', ['id' => 19, 'utm_source' => 'instagram']));
+        Http::assertNothingSent();
+    }
+
 }

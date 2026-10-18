@@ -3,7 +3,7 @@
   <section class="features" style="padding-top: 150px; padding-bottom: 100px; background: var(--bg);">
     <div class="section-head">
       <span class="eyebrow">Enterprise Solutions</span>
-      <h2>Platform for Grocery Chains</h2>
+      <h1>Platform for Grocery Chains</h1>
       <p>Scale your multi-location supermarket operations with enterprise-grade headless commerce.</p>
     </div>
     
