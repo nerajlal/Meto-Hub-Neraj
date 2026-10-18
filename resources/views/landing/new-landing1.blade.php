@@ -402,6 +402,7 @@
 </svg>Discount codes and bundles</li>
 </ul>
 <a class="mt-8 btn-ghost" href="{{ route('landing', ['get_started' => 1, 'plan' => 'base']) }}" data-start="" data-plan="base">Start {{ config('saas.trial_days') }}-day free trial</a>
+@include('landing.partials.trial-reassurance')
 </div>
 <div class="relative flex flex-col rounded-xl border bg-card p-8 pricing-recommended">
 <span class="pricing-recommended-badge">Recommended for growing brands</span>
@@ -435,6 +436,7 @@
 </ul>
 <p class="pricing-domain-note">Connect a domain you own. Domain purchase is separate.</p>
 <a class="mt-8 btn-primary" href="{{ route('landing', ['get_started' => 1, 'plan' => 'pro']) }}" data-start="" data-plan="pro">Start {{ config('saas.trial_days') }}-day free trial</a>
+@include('landing.partials.trial-reassurance')
 </div>
 <div class="relative flex flex-col rounded-xl border bg-card p-8 border-border shadow-soft">
 <h3 class="text-lg font-semibold">{{ config('saas.plans.enterprise.name') }}</h3>
@@ -456,6 +458,7 @@
 </svg>Additional support offering</li>
 </ul>
 <a class="mt-8 btn-ghost" href="{{ route('landing', ['get_started' => 1, 'plan' => 'enterprise']) }}" data-start="" data-plan="enterprise">Start {{ config('saas.trial_days') }}-day free trial</a>
+@include('landing.partials.trial-reassurance')
 </div>
 </div>
 <p class="mx-auto mt-8 max-w-2xl text-center text-sm text-muted-foreground">Prices shown are for monthly subscriptions. A paid plan is required after the trial. Domain registration is separate from connecting a domain.</p>
@@ -555,6 +558,7 @@
 </path>
 </svg>
 </a>
+@include('landing.partials.trial-reassurance')
 </div>
 </section>
 </main>

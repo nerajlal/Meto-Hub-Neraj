@@ -188,3 +188,7 @@ body .btn-primary:hover{background:#18382c;border-color:#18382c;color:#fff}
 .home-footer-contact{display:flex;flex-direction:column;align-items:flex-start;gap:6px;margin-top:16px;font-size:12px;font-style:normal;line-height:1.6;color:var(--muted-foreground)}
 .home-footer-contact a:hover{color:#244a3b;text-decoration:underline;text-underline-offset:4px}
 .home-footer-contact a:focus-visible{outline:2px solid #244a3b;outline-offset:4px}
+
+.trial-trust-caption{display:flex;align-items:flex-start;justify-content:center;gap:6px;margin:12px auto 0;max-width:390px;font-size:10px;line-height:1.7;text-align:center;color:var(--muted-foreground)}
+.trial-trust-caption>span:first-child{color:#244a3b;flex-shrink:0}
+.trial-trust-caption>span>span{padding:0 3px;color:#8c857a}
