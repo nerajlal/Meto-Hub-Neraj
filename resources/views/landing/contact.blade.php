@@ -2,14 +2,14 @@
 @section('content')
   <style>
     :root {
-        --v2-primary: #4F46E5;
-        --v2-secondary: #7C3AED;
-        --v2-accent: #EC4899;
-        --v2-dark: #0F172A;
-        --v2-text: #334155;
-        --v2-light: #F8FAFC;
-        --v2-muted: #94A3B8;
-        --v2-border: #E2E8F0;
+        --v2-primary: #244a3b;
+        --v2-secondary: #54705c;
+        --v2-accent: #8c6843;
+        --v2-dark: #282c28;
+        --v2-text: #6f6b63;
+        --v2-light: #fbfaf7;
+        --v2-muted: #8c857a;
+        --v2-border: #e4ded3;
     }
     
     .contact-page-wrapper {
@@ -28,7 +28,7 @@
       right: -5%;
       width: 600px;
       height: 600px;
-      background: radial-gradient(circle, rgba(79, 70, 229, 0.08) 0%, transparent 60%);
+      background: radial-gradient(circle, rgba(36, 74, 59, 0.08) 0%, transparent 60%);
       z-index: 0;
     }
     
@@ -52,7 +52,7 @@
     .contact-info .eyebrow {
       display: inline-block;
       padding: 8px 16px;
-      background: rgba(79, 70, 229, 0.1);
+      background: rgba(36, 74, 59, 0.1);
       color: var(--v2-primary);
       border-radius: 30px;
       font-weight: 600;
@@ -138,7 +138,7 @@
       left: 10%;
       width: 80%;
       height: 20px;
-      background: rgba(79, 70, 229, 0.2);
+      background: rgba(36, 74, 59, 0.2);
       filter: blur(20px);
       z-index: -1;
       border-radius: 100%;
@@ -172,7 +172,7 @@
       outline: none;
       border-color: var(--v2-primary);
       background: #fff;
-      box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+      box-shadow: 0 0 0 4px rgba(36, 74, 59, 0.1);
     }
 
     textarea.form-control {
@@ -200,7 +200,7 @@
     .submit-btn:hover {
       background: var(--v2-primary);
       transform: translateY(-2px);
-      box-shadow: 0 10px 20px rgba(79, 70, 229, 0.2);
+      box-shadow: 0 10px 20px rgba(36, 74, 59, 0.2);
     }
 
     @media (max-width: 980px) {
@@ -235,21 +235,21 @@
             <div class="method-icon"><i class="fa-solid fa-envelope"></i></div>
             <div class="method-text">
               <h4>Email Us</h4>
-              <p>support@metohub.com</p>
+              <p><a href="mailto:{{ config('marketing.contact.email') }}">{{ config('marketing.contact.email') }}</a></p>
             </div>
           </div>
           <div class="method-item">
             <div class="method-icon"><i class="fa-solid fa-phone"></i></div>
             <div class="method-text">
               <h4>Call Us</h4>
-              <p>+91 (800) 123-4567</p>
+              <p><a href="tel:{{ config('marketing.contact.phone_uri') }}">{{ config('marketing.contact.phone') }}</a></p>
             </div>
           </div>
           <div class="method-item">
             <div class="method-icon"><i class="fa-solid fa-location-dot"></i></div>
             <div class="method-text">
               <h4>Visit Us</h4>
-              <p>123 Innovation Drive, Tech Park<br>Bangalore, IN 560001</p>
+              <p>{{ config('marketing.contact.location') }}</p>
             </div>
           </div>
         </div>

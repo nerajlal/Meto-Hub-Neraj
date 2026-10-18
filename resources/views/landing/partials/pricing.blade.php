@@ -1,16 +1,16 @@
 <style>
   .pricing-section {
-    background: #f8faf7; /* Or var(--bg) */
+    background: #fbfaf7; /* Or var(--bg) */
     padding: 110px 8vw;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Manrope', sans-serif;
   }
   .pricing-header {
     text-align: center;
     margin-bottom: 60px;
   }
   .pricing-header .eyebrow {
-    background: #e8f5e9;
-    color: #2e7d32;
+    background: #edf1e7;
+    color: #244a3b;
     padding: 6px 14px;
     border-radius: 999px;
     font-size: 0.85rem;
@@ -22,12 +22,12 @@
   }
   .pricing-header h2 {
     font-size: 2.5rem;
-    color: #1f2937;
+    color: #282c28;
     margin: 0 0 10px;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Manrope', sans-serif;
   }
   .pricing-header p {
-    color: #6b7280;
+    color: #6f6b63;
     font-size: 1.1rem;
     margin: 0;
   }
@@ -52,7 +52,7 @@
     border-radius: 16px;
     padding: 40px 30px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.04);
-    border: 1px solid #e5e7eb;
+    border: 1px solid #e4ded3;
     display: flex;
     flex-direction: column;
     position: relative;
@@ -60,16 +60,16 @@
   
   /* Business Card Highlight */
   .pricing-card.featured {
-    border: 2px solid #2e7d32;
+    border: 2px solid #244a3b;
     transform: translateY(-10px);
-    box-shadow: 0 20px 40px rgba(46, 125, 50, 0.1);
+    box-shadow: 0 20px 40px rgba(36, 74, 59, 0.1);
   }
   .featured-badge {
     position: absolute;
     top: -15px;
     left: 50%;
     transform: translateX(-50%);
-    background: #2e7d32;
+    background: #244a3b;
     color: #fff;
     padding: 6px 20px;
     border-radius: 999px;
@@ -113,53 +113,53 @@
     justify-content: center;
     font-size: 1.4rem;
   }
-  .icon-starter { background: #e8f5e9; color: #2e7d32; }
-  .icon-business { background: #2e7d32; color: #fff; }
-  .icon-pro { background: #f3e8ff; color: #7e22ce; }
+  .icon-starter { background: #edf1e7; color: #244a3b; }
+  .icon-business { background: #244a3b; color: #fff; }
+  .icon-pro { background: #f3e8ff; color: #8c6843; }
 
   .card-top h3 {
     margin: 0;
     font-size: 1.5rem;
-    color: #1f2937;
-    font-family: 'Poppins', sans-serif;
+    color: #282c28;
+    font-family: 'Manrope', sans-serif;
   }
   .card-top p {
     margin: 4px 0 0;
     font-size: 0.85rem;
-    color: #6b7280;
+    color: #6f6b63;
   }
 
   .price-monthly {
     font-size: 2.2rem;
     font-weight: 700;
-    color: #2e7d32;
+    color: #244a3b;
     margin-bottom: 15px;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Manrope', sans-serif;
   }
   .price-monthly span {
     font-size: 1rem;
     font-weight: 500;
-    color: #6b7280;
+    color: #6f6b63;
   }
   .icon-pro-price {
-    color: #7e22ce;
+    color: #8c6843;
   }
 
   .setup-fee {
-    background: #f3f4f6;
+    background: #f3f0e9;
     padding: 12px;
     border-radius: 8px;
     text-align: center;
     margin-bottom: 30px;
   }
-  .icon-starter-setup { background: #f0fdf4; color: #166534; }
-  .icon-business-setup { background: #f0fdf4; color: #166534; }
-  .icon-pro-setup { background: #faf5ff; color: #6b21a8; }
+  .icon-starter-setup { background: #f2f5ee; color: #166534; }
+  .icon-business-setup { background: #f2f5ee; color: #166534; }
+  .icon-pro-setup { background: #f7f2e9; color: #6b21a8; }
   
   .setup-fee p {
     margin: 0 0 5px;
     font-size: 0.85rem;
-    color: #6b7280;
+    color: #6f6b63;
   }
   .setup-fee h4 {
     margin: 0;
@@ -175,11 +175,11 @@
   .divider::before, .divider::after {
     content: '';
     flex: 1;
-    border-bottom: 1px solid #e5e7eb;
+    border-bottom: 1px solid #e4ded3;
   }
   .divider span {
     padding: 0 10px;
-    color: #6b7280;
+    color: #6f6b63;
     font-size: 0.85rem;
     font-weight: 500;
   }
@@ -199,12 +199,12 @@
     gap: 10px;
   }
   .feature-list li i {
-    color: #2e7d32;
+    color: #244a3b;
     margin-top: 3px;
     font-size: 0.9rem;
   }
   .feature-list.pro li i {
-    color: #7e22ce;
+    color: #8c6843;
   }
 
   .btn-pricing {
@@ -216,28 +216,28 @@
     font-weight: 600;
     text-decoration: none;
     transition: all 0.3s ease;
-    border: 1px solid #2e7d32;
+    border: 1px solid #244a3b;
   }
   .btn-outline-green {
     background: transparent;
-    color: #2e7d32;
+    color: #244a3b;
   }
   .btn-outline-green:hover {
-    background: #f0fdf4;
+    background: #f2f5ee;
   }
   .btn-solid-green {
-    background: #2e7d32;
+    background: #244a3b;
     color: #fff;
   }
   .btn-solid-green:hover {
     background: #1b5e20;
   }
   .btn-outline-purple {
-    border-color: #7e22ce;
-    color: #7e22ce;
+    border-color: #8c6843;
+    color: #8c6843;
   }
   .btn-outline-purple:hover {
-    background: #faf5ff;
+    background: #f7f2e9;
   }
 
   /* Bottom Trust Bar */
@@ -248,7 +248,7 @@
     gap: 40px;
     margin-top: 80px;
     padding-top: 40px;
-    border-top: 1px solid #e5e7eb;
+    border-top: 1px solid #e4ded3;
   }
   .trust-item {
     display: flex;
@@ -265,12 +265,12 @@
     color: #fff;
     font-size: 0.9rem;
   }
-  .trust-text h5 { margin: 0; font-size: 0.9rem; color: #1f2937; }
-  .trust-text p { margin: 0; font-size: 0.8rem; color: #6b7280; }
+  .trust-text h5 { margin: 0; font-size: 0.9rem; color: #282c28; }
+  .trust-text p { margin: 0; font-size: 0.8rem; color: #6f6b63; }
 
   .billing-info {
     font-size: 0.85rem;
-    color: #6b7280;
+    color: #6f6b63;
     margin-top: -10px;
     margin-bottom: 20px;
     font-weight: 500;
@@ -318,7 +318,7 @@
     display: inline-flex;
     align-items: center;
     background: #ffffff;
-    border: 1px solid #e2e8f0;
+    border: 1px solid #e4ded3;
     border-radius: 999px;
     padding: 6px;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
@@ -330,7 +330,7 @@
     font-size: 1rem;
     font-weight: 600;
     border-radius: 999px;
-    color: #0f763e !important;
+    color: #244a3b !important;
     cursor: pointer;
     transition: all 0.3s ease;
     display: flex;
@@ -338,14 +338,14 @@
     gap: 8px;
   }
   .toggle-btn.toggle-active {
-    background: #0f763e !important;
+    background: #244a3b !important;
     color: white !important;
   }
   .toggle-btn.toggle-active .toggle-text {
     color: white !important;
   }
   .toggle-btn:not(.toggle-active) .toggle-text {
-    color: #0f763e !important;
+    color: #244a3b !important;
   }
   .save-badge {
     background: #fcd34d;
@@ -402,7 +402,7 @@
       </div>
     </div>
     <div class="trust-item">
-      <div class="trust-icon" style="background: #3b82f6;"><i class="fa-solid fa-mobile-screen-button"></i></div>
+      <div class="trust-icon" style="background: #244a3b;"><i class="fa-solid fa-mobile-screen-button"></i></div>
       <div class="trust-text">
         <h5>Mobile First</h5>
         <p>Android & iOS Apps</p>
@@ -416,7 +416,7 @@
       </div>
     </div>
     <div class="trust-item">
-      <div class="trust-icon" style="background: #ec4899;"><i class="fa-solid fa-chart-column"></i></div>
+      <div class="trust-icon" style="background: #8c6843;"><i class="fa-solid fa-chart-column"></i></div>
       <div class="trust-text">
         <h5>Business Growth</h5>
         <p>Tools & Insights</p>

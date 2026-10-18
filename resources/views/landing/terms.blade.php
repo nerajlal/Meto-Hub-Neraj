@@ -59,7 +59,7 @@
       transform: translateX(-50%);
       width: 600px;
       height: 600px;
-      background: radial-gradient(circle, rgba(46, 125, 50, 0.08) 0%, transparent 70%);
+      background: radial-gradient(circle, rgba(36, 74, 59, 0.08) 0%, transparent 70%);
       z-index: 0;
       pointer-events: none;
     }
@@ -104,7 +104,7 @@
       margin-top: 2.5rem;
       margin-bottom: 1rem;
       font-weight: 700;
-      font-family: 'Poppins', sans-serif;
+      font-family: 'Manrope', sans-serif;
     }
     .legal-card h3 {
       font-size: 1.6rem;

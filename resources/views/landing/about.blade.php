@@ -2,12 +2,12 @@
 @section('content')
   <style>
     :root {
-      --v2-primary: #4F46E5;
-      --v2-secondary: #7C3AED;
-      --v2-accent: #EC4899;
-      --v2-dark: #0F172A;
-      --v2-text: #334155;
-      --v2-light: #F8FAFC;
+      --v2-primary: #244a3b;
+      --v2-secondary: #54705c;
+      --v2-accent: #8c6843;
+      --v2-dark: #282c28;
+      --v2-text: #6f6b63;
+      --v2-light: #fbfaf7;
     }
 
     .about-page-wrapper {
@@ -21,7 +21,7 @@
     /* Ultra Premium 3D Hero */
     .about-hero {
       padding: 160px 8vw 80px !important;
-      background: radial-gradient(circle at 50% 0%, rgba(79, 70, 229, 0.08), transparent 70%), var(--v2-light);
+      background: radial-gradient(circle at 50% 0%, rgba(36, 74, 59, 0.08), transparent 70%), var(--v2-light);
       position: relative;
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -37,7 +37,7 @@
     .about-hero-header .eyebrow {
       display: inline-block;
       padding: 8px 16px;
-      background: rgba(79, 70, 229, 0.1);
+      background: rgba(36, 74, 59, 0.1);
       color: var(--v2-primary);
       border-radius: 30px;
       font-weight: 600;
@@ -116,7 +116,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: linear-gradient(135deg, #ffffff, #f3f4f6);
+      background: linear-gradient(135deg, #ffffff, #f3f0e9);
       box-shadow:
         -10px 10px 20px rgba(0, 0, 0, 0.1),
         inset 5px 5px 10px rgba(255, 255, 255, 1),
@@ -251,7 +251,7 @@
 
     .mission-section {
       padding: 120px 8vw;
-      background: linear-gradient(180deg, #fff 0%, rgba(79, 70, 229, 0.03) 100%);
+      background: linear-gradient(180deg, #fff 0%, rgba(36, 74, 59, 0.03) 100%);
       position: relative;
     }
 
@@ -298,7 +298,7 @@
       content: '';
       position: absolute;
       inset: -20px -20px 20px 20px;
-      background: radial-gradient(circle at top right, rgba(236, 72, 153, 0.15), transparent 50%);
+      background: radial-gradient(circle at top right, rgba(140, 104, 67, 0.15), transparent 50%);
       border-radius: 40px;
       z-index: -1;
     }
@@ -341,7 +341,7 @@
       width: 48px;
       height: 48px;
       border-radius: 12px;
-      background: rgba(79, 70, 229, 0.1);
+      background: rgba(36, 74, 59, 0.1);
       color: var(--v2-primary);
       display: flex;
       align-items: center;
@@ -396,14 +396,14 @@
     .value-card:hover {
       transform: translateY(-8px);
       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
-      border-color: rgba(79, 70, 229, 0.2);
+      border-color: rgba(36, 74, 59, 0.2);
     }
 
     .value-icon {
       width: 60px;
       height: 60px;
       border-radius: 16px;
-      background: rgba(79, 70, 229, 0.1);
+      background: rgba(36, 74, 59, 0.1);
       color: var(--v2-primary);
       display: flex;
       align-items: center;
@@ -541,7 +541,7 @@
     <section class="values-section reveal">
       <div class="section-title text-center" style="margin-bottom: 60px;">
         <span class="eyebrow"
-          style="color: var(--v2-primary); font-weight: 600; text-transform: uppercase; padding: 8px 16px; background: rgba(79, 70, 229, 0.1); border-radius: 30px; display: inline-block; margin-bottom: 16px;">Our
+          style="color: var(--v2-primary); font-weight: 600; text-transform: uppercase; padding: 8px 16px; background: rgba(36, 74, 59, 0.1); border-radius: 30px; display: inline-block; margin-bottom: 16px;">Our
           Core Values</span>
         <h2 style="font-size: clamp(2rem, 4vw, 2.5rem); color: var(--v2-dark); font-weight: 800; margin-bottom: 16px;">
           What Drives Us Forward</h2>

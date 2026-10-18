@@ -11,13 +11,22 @@ class LandingController extends Controller
     {
         $profiles = config('demo_storefronts', []);
         $tenants = \App\Models\Tenant::whereIn('slug', array_keys($profiles))->get()->keyBy('slug');
-        $products = \App\Models\Product::withoutGlobalScopes()->whereIn('tenant_id', $tenants->pluck('id'))
-            ->where('status', 'active')->with(['images', 'variants'])->orderBy('id')->get()->groupBy('tenant_id');
-        $demos = collect($profiles)->map(function ($profile, $slug) use ($tenants, $products) {
+        $demos = collect($profiles)->map(function ($profile, $slug) use ($tenants) {
             $tenant = $tenants->get($slug);
-            return $tenant ? $profile + ['tenant' => $tenant, 'products' => $products->get($tenant->id, collect())->unique('collection_id')->take(3)] : null;
+            return $tenant ? $profile + ['tenant' => $tenant] : null;
         })->filter();
-        return view('landing.new-landing1', compact('demos'));
+        $landingConfig = [
+            'plans' => config('saas.plans'), 'trialDays' => config('saas.trial_days'),
+            'register' => route('saas.register'), 'resend' => route('saas.verification.resend'),
+        ];
+
+        $reviews = collect(config('landing_reviews', []))->filter(function ($review) {
+            return is_array($review) && (($review['approved'] ?? false) === true || ($review['sample'] ?? false) === true)
+                && is_string($review['quote'] ?? null) && trim($review['quote']) !== ''
+                && is_string($review['name'] ?? null) && trim($review['name']) !== '';
+        });
+
+        return view('landing.new-landing1', compact('demos', 'landingConfig', 'reviews'));
     }
 
     public function index()

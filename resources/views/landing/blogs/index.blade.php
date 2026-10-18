@@ -57,7 +57,7 @@
   }
   .blog-date {
     font-size: 0.85rem;
-    color: #5B6B60;
+    color: #6f6b63;
     margin-bottom: 0.5rem;
     font-weight: 500;
   }
@@ -104,7 +104,7 @@
   .blog-author span {
     display: block;
     font-size: 0.75rem;
-    color: #5B6B60;
+    color: #6f6b63;
     font-weight: 400;
   }
 </style>
@@ -127,7 +127,7 @@
           @if($blog['cover_image'])
             <img src="{{ $blog['cover_image'] }}" alt="{{ $blog['title'] }}" class="blog-image" loading="lazy" width="640" height="400">
           @else
-            <div class="blog-image" style="display: flex; align-items: center; justify-content: center; background: #e2e8f0; color: #94a3b8;">
+            <div class="blog-image" style="display: flex; align-items: center; justify-content: center; background: #e4ded3; color: #8c857a;">
               <i class="fa-solid fa-image fa-2x"></i>
             </div>
           @endif

@@ -18,7 +18,7 @@
 
       <div class="feature-card" style="margin-bottom: 40px; padding: 40px;">
         <div style="display: flex; gap: 30px; align-items: flex-start;">
-          <div class="f-icon" style="margin: 0; background: rgba(46, 125, 50, 0.1); width: 60px; height: 60px; font-size: 1.5rem;"><i class="fa-solid fa-map-location-dot"></i></div>
+          <div class="f-icon" style="margin: 0; background: rgba(36, 74, 59, 0.1); width: 60px; height: 60px; font-size: 1.5rem;"><i class="fa-solid fa-map-location-dot"></i></div>
           <div>
             <h3 style="color: var(--dark); margin-top: 5px; margin-bottom: 15px; font-size: 1.5rem;">Multi-Store Architecture</h3>
             <p style="color: var(--muted); line-height: 1.8; font-size: 1rem; margin: 0;">
@@ -30,7 +30,7 @@
 
       <div class="feature-card" style="margin-bottom: 40px; padding: 40px;">
         <div style="display: flex; gap: 30px; align-items: flex-start;">
-          <div class="f-icon" style="margin: 0; background: rgba(46, 125, 50, 0.1); width: 60px; height: 60px; font-size: 1.5rem;"><i class="fa-solid fa-server"></i></div>
+          <div class="f-icon" style="margin: 0; background: rgba(36, 74, 59, 0.1); width: 60px; height: 60px; font-size: 1.5rem;"><i class="fa-solid fa-server"></i></div>
           <div>
             <h3 style="color: var(--dark); margin-top: 5px; margin-bottom: 15px; font-size: 1.5rem;">Advanced ERP & POS Integration</h3>
             <p style="color: var(--muted); line-height: 1.8; font-size: 1rem; margin: 0;">
@@ -42,7 +42,7 @@
 
       <div class="feature-card" style="margin-bottom: 60px; padding: 40px;">
         <div style="display: flex; gap: 30px; align-items: flex-start;">
-          <div class="f-icon" style="margin: 0; background: rgba(46, 125, 50, 0.1); width: 60px; height: 60px; font-size: 1.5rem;"><i class="fa-solid fa-chart-pie"></i></div>
+          <div class="f-icon" style="margin: 0; background: rgba(36, 74, 59, 0.1); width: 60px; height: 60px; font-size: 1.5rem;"><i class="fa-solid fa-chart-pie"></i></div>
           <div>
             <h3 style="color: var(--dark); margin-top: 5px; margin-bottom: 15px; font-size: 1.5rem;">Headquarter Analytics</h3>
             <p style="color: var(--muted); line-height: 1.8; font-size: 1rem; margin: 0;">
@@ -52,7 +52,7 @@
         </div>
       </div>
 
-      <div style="background: linear-gradient(135deg, var(--white), #f8faf7); padding: 50px; border-radius: var(--radius-lg); text-align: center; border: 1px solid var(--line);">
+      <div style="background: linear-gradient(135deg, var(--white), #fbfaf7); padding: 50px; border-radius: var(--radius-lg); text-align: center; border: 1px solid var(--line);">
         <h4 style="color: var(--dark); margin-bottom: 15px; font-size: 1.5rem;">Ready to upgrade your enterprise architecture?</h4>
         <p style="color: var(--muted); margin-bottom: 25px; font-size: 1.05rem;">Contact our enterprise sales team for a custom deployment plan and SLA details.</p>
         <a href="{{ route('landing.contact') }}" class="btn btn-primary" style="padding: 12px 30px; font-size: 1.05rem;">Contact Sales</a>

@@ -9,8 +9,8 @@
 <style>
   .blog-hero {
     padding: 9rem 1rem 1.5rem;
-    background: #f8fafc;
-    border-bottom: 1px solid #e2e8f0;
+    background: #fbfaf7;
+    border-bottom: 1px solid #e4ded3;
     text-align: center;
   }
   .blog-hero-inner {
@@ -80,7 +80,7 @@
   .blog-content {
     font-size: 1.125rem;
     line-height: 1.8;
-    color: #334155;
+    color: #6f6b63;
   }
   
   .blog-content h2 {
@@ -115,7 +115,7 @@
   .blog-content blockquote {
     border-left: 4px solid var(--primary);
     padding: 1.5rem;
-    background: #f8fafc;
+    background: #fbfaf7;
     border-radius: 0 8px 8px 0;
     font-style: italic;
     color: #475569;
@@ -139,7 +139,7 @@
   
   .sidebar-widget {
     background: white;
-    border: 1px solid #e2e8f0;
+    border: 1px solid #e4ded3;
     border-radius: 16px;
     padding: 2rem;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
@@ -165,7 +165,7 @@
     border-radius: 50%;
     object-fit: cover;
     margin: 0 auto 1rem;
-    border: 4px solid #f8fafc;
+    border: 4px solid #fbfaf7;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
   }
   
@@ -188,7 +188,7 @@
     gap: 1rem;
     margin-bottom: 1.5rem;
     padding-bottom: 1.5rem;
-    border-bottom: 1px solid #f1f5f9;
+    border-bottom: 1px solid #f3f0e9;
   }
   .recent-blog:last-child {
     margin-bottom: 0;
@@ -285,7 +285,7 @@
   }
   .bottom-article-card {
     background: white;
-    border: 1px solid #e2e8f0;
+    border: 1px solid #e4ded3;
     border-radius: 12px;
     overflow: hidden;
     transition: transform 0.2s, box-shadow 0.2s;
@@ -300,7 +300,7 @@
     width: 100%;
     height: 180px;
     object-fit: cover;
-    background: #f1f5f9;
+    background: #f3f0e9;
   }
   .bottom-article-content {
     padding: 1.5rem;
@@ -413,7 +413,7 @@
       @if($recent['cover_image'])
         <img src="{{ $recent['cover_image'] }}" class="bottom-article-img" alt="Blog cover">
       @else
-         <div class="bottom-article-img" style="display:flex; align-items:center; justify-content:center; color:#94a3b8;">
+         <div class="bottom-article-img" style="display:flex; align-items:center; justify-content:center; color:#8c857a;">
            <i class="fa-solid fa-image fa-2x"></i>
          </div>
       @endif

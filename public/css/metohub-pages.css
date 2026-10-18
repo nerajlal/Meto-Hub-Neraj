@@ -1,0 +1,50 @@
+/* Public page content inherits the landing palette; storefront themes are independent. */
+.page-content.page-content{
+ --primary:#244a3b;--primary-dark:#18382c;--secondary:#54705c;--accent:#8c6843;
+ --bg:#fbfaf7;--white:#fffdfa;--dark:#282c28;--ink:#282c28;--muted:#6f6b63;--line:#e4ded3;
+ --v2-primary:#244a3b;--v2-secondary:#54705c;--v2-accent:#8c6843;--v2-dark:#282c28;--v2-text:#6f6b63;--v2-light:#fbfaf7;--v2-muted:#8c857a;--v2-border:#e4ded3;
+ --bg-card:#fffdfa;--text-muted:#6f6b63;
+ --radius-lg:16px;--radius-xl:20px;
+ --shadow-sm:0 3px 12px #59473408;--shadow-md:0 12px 32px #5947340c;--shadow-lg:0 24px 56px #59473412;
+ font-family:Manrope,system-ui,sans-serif;background:var(--bg);color:var(--ink)
+}
+.page-content.page-content :is(h1,h2,h3,h4){font-family:Manrope,system-ui,sans-serif;letter-spacing:-.035em}
+.page-content.page-content :is(h1,h2){font-weight:500;line-height:1.12}
+.page-content.page-content :is(h3,h4){font-weight:600;line-height:1.35}
+.page-content.page-content :is(.highlight,.about-hero-header h1 span,.contact-info h1 span){font-family:'Instrument Serif',serif;font-style:italic;font-weight:400;color:#8c6843;background:none;-webkit-text-fill-color:currentColor}
+.page-content.page-content .eyebrow{font-family:Manrope,system-ui,sans-serif;font-size:10px;letter-spacing:.14em;color:#8c6843;background:none;border:0;padding:0;border-radius:0;font-weight:600}
+.page-content.page-content .btn{border-radius:8px;font-family:Manrope,system-ui,sans-serif;font-weight:600;box-shadow:none}
+.page-content.page-content .btn-primary{background:#244a3b;color:#fff;border:1px solid #244a3b}
+.page-content.page-content .btn-primary:hover{background:#18382c;box-shadow:0 6px 16px #244a3b18}
+.page-content.page-content .btn-outline{background:#fffdfa;border-color:#d9d0c3;color:#282c28}
+.page-content.page-content .btn-outline:hover{border-color:#244a3b;color:#244a3b}
+.page-content.page-content .legal-hero{padding:88px 24px 100px;background:linear-gradient(115deg,#fcfaf6,#f1ece2)}
+.page-content.page-content .legal-hero h1{font-size:clamp(36px,4.5vw,58px);font-weight:500}
+.page-content.page-content .legal-hero p{font-size:13px}
+.page-content.page-content .legal-card{background:#fffdfa;border:1px solid #e4ded3;border-radius:16px;box-shadow:0 20px 48px #5947340a;padding:48px 56px}
+.page-content.page-content .legal-card h3{font-size:21px;letter-spacing:-.02em}
+.page-content.page-content .legal-card h3:after{height:2px;background:#8c6843;width:24px}
+.page-content.page-content .legal-card p{font-size:15px;line-height:1.9}
+.page-content.page-content .legal-card a{color:#244a3b;border-bottom-color:#a6b8a8}
+.page-content.page-content .legal-content-section{padding-bottom:80px}
+.page-content.page-content .contact-page-wrapper{padding-top:80px;padding-bottom:80px;min-height:0}
+.page-content.page-content .about-hero{padding-top:80px}
+.page-content.page-content :is(.contact-form-card,.method-icon,.about-stat-card,.feature-card,.promo-card,.plan-card,.blog-card){border-color:#e4ded3;box-shadow:0 8px 24px #59473408}
+.page-content.page-content .submit-btn{background:#244a3b;border-radius:8px}
+.page-content.page-content :is(.blogs-container,.blog-detail-container){padding-top:80px}
+.page-content.page-content :is(.final-cta,.about-cta){background:#edf1e7;color:#282c28}
+.page-content.page-content .final-cta :is(h2,p){color:#282c28!important}
+.page-content.page-content .final-cta .btn-outline-light{border-color:#244a3b;color:#244a3b}
+@media(max-width:768px){
+ .page-content.page-content .legal-hero{padding:60px 24px 88px}
+ .page-content.page-content .legal-card{padding:30px 24px}
+ .page-content.page-content .legal-container{margin-top:-44px}
+ .page-content.page-content .legal-card h3{font-size:19px}
+ .page-content.page-content .contact-page-wrapper{padding-top:48px;padding-bottom:56px}
+ .page-content.page-content :is(.blogs-container,.blog-detail-container){padding-top:52px}
+}
+
+.page-content.page-content .mission-content h2 span{font-family:'Instrument Serif',serif;font-style:italic;font-weight:400;color:#8c6843}
+.page-content.page-content :is(.pricing-card,.sidebar-widget,.contact-form-card){background:#fffdfa;border-color:#e4ded3}
+.page-content.page-content .submit-btn:hover{background:#18382c}
+@media(max-width:768px){.page-content.page-content .about-hero{padding-top:52px}}

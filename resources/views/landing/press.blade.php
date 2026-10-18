@@ -51,7 +51,7 @@
           <div style="font-size: 0.95rem;">
             <strong style="display: block; color: var(--dark); margin-bottom: 4px;">Sarah Jenkins</strong>
             <span style="display: block; color: var(--muted); margin-bottom: 10px;">Director of Communications</span>
-            <a href="mailto:press@metohub.com" style="color: var(--primary); font-weight: 500;">press@metohub.com</a>
+            <a href="mailto:{{ config('marketing.contact.email') }}" style="color: var(--primary); font-weight: 500;">{{ config('marketing.contact.email') }}</a>
           </div>
         </div>
       </div>

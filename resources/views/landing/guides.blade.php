@@ -28,31 +28,31 @@
 
         <!-- Guide 2 -->
         <div class="feature-card" style="padding: 0; overflow: hidden; display: flex; flex-direction: column;">
-          <div style="height: 200px; background: linear-gradient(135deg, #1e3a8a, #3b82f6); display: flex; align-items: center; justify-content: center;">
+          <div style="height: 200px; background: linear-gradient(135deg, #18382c, #244a3b); display: flex; align-items: center; justify-content: center;">
              <i class="fa-solid fa-boxes-stacked" style="font-size: 4rem; color: var(--white); opacity: 0.9;"></i>
           </div>
           <div style="padding: 30px; flex: 1; display: flex; flex-direction: column;">
-            <span style="font-size: 0.85rem; color: #3b82f6; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; font-weight: 600;">Inventory</span>
+            <span style="font-size: 0.85rem; color: #244a3b; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; font-weight: 600;">Inventory</span>
             <h3 style="color: var(--dark); margin-bottom: 15px; font-size: 1.4rem;">Mastering Produce & Perishables Online</h3>
             <p style="color: var(--muted); font-size: 1rem; line-height: 1.6; margin-bottom: 25px; flex: 1;">
               Selling variable-weight items online can be tricky. This playbook teaches you how to configure your catalog, manage customer expectations, and handle substitutions gracefully.
             </p>
-            <a href="#" style="color: #3b82f6; font-weight: 600; text-decoration: none; align-self: flex-start;">Read Guide &rarr;</a>
+            <a href="#" style="color: #244a3b; font-weight: 600; text-decoration: none; align-self: flex-start;">Read Guide &rarr;</a>
           </div>
         </div>
 
         <!-- Guide 3 -->
         <div class="feature-card" style="padding: 0; overflow: hidden; display: flex; flex-direction: column;">
-          <div style="height: 200px; background: linear-gradient(135deg, #831843, #ec4899); display: flex; align-items: center; justify-content: center;">
+          <div style="height: 200px; background: linear-gradient(135deg, #705236, #8c6843); display: flex; align-items: center; justify-content: center;">
              <i class="fa-solid fa-bullseye" style="font-size: 4rem; color: var(--white); opacity: 0.9;"></i>
           </div>
           <div style="padding: 30px; flex: 1; display: flex; flex-direction: column;">
-            <span style="font-size: 0.85rem; color: #ec4899; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; font-weight: 600;">Marketing</span>
+            <span style="font-size: 0.85rem; color: #8c6843; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; font-weight: 600;">Marketing</span>
             <h3 style="color: var(--dark); margin-bottom: 15px; font-size: 1.4rem;">Customer Retention Strategies for Local Grocers</h3>
             <p style="color: var(--muted); font-size: 1rem; line-height: 1.6; margin-bottom: 25px; flex: 1;">
               Acquiring new customers is expensive. Learn how to implement loyalty points, subscription boxes, and targeted email marketing to keep your local community coming back.
             </p>
-            <a href="#" style="color: #ec4899; font-weight: 600; text-decoration: none; align-self: flex-start;">Read Guide &rarr;</a>
+            <a href="#" style="color: #8c6843; font-weight: 600; text-decoration: none; align-self: flex-start;">Read Guide &rarr;</a>
           </div>
         </div>
 

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 
 <head>
   <meta charset="UTF-8">
@@ -10,7 +10,7 @@
   <meta name="keywords"
     content="ecommerce builder, saas for online stores, create website, online shop platform, delivery software, POS integration">
   <link rel="icon"
-    href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>S</text></svg>">
+    href="{{ asset('merchant-icon-192.png') }}">
 
   <link rel="canonical" href="{{ url()->current() }}">
 
@@ -32,25 +32,27 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap"
     rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <style>
+@scope (.page-content) {
+
     /* =========================================================
    MetoHub — Premium SaaS Homepage
    ========================================================= */
 
-    :root {
-      --primary: #4F46E5;
-      --primary-dark: #3730A3;
-      --secondary: #6366F1;
-      --accent: #F43F5E;
-      --bg: #F8FAF7;
-      --dark: #1F2937;
+    :scope {
+      --primary: #244a3b;
+      --primary-dark: #18382c;
+      --secondary: #54705c;
+      --accent: #8c6843;
+      --bg: #fbfaf7;
+      --dark: #282c28;
       --white: #FFFFFF;
 
-      --ink: #16241A;
-      --muted: #5B6B60;
+      --ink: #282c28;
+      --muted: #6f6b63;
       --line: rgba(31, 41, 55, 0.08);
 
       --radius-sm: 10px;
@@ -82,13 +84,13 @@
       box-sizing: border-box;
     }
 
-    html {
+    :scope {
       scroll-behavior: smooth;
     }
 
-    body {
+    :scope {
       margin: 0;
-      font-family: 'Inter', sans-serif;
+      font-family: 'Manrope', sans-serif;
       color: var(--ink);
       background: var(--bg);
       -webkit-font-smoothing: antialiased;
@@ -99,7 +101,7 @@
     h2,
     h3,
     h4 {
-      font-family: 'Poppins', sans-serif;
+      font-family: 'Manrope', sans-serif;
       color: var(--dark);
       margin: 0;
       line-height: 1.15;
@@ -142,13 +144,13 @@
 
     .eyebrow {
       display: inline-block;
-      font-family: 'Poppins', sans-serif;
+      font-family: 'Manrope', sans-serif;
       font-size: 0.78rem;
       font-weight: 600;
       letter-spacing: 0.08em;
       text-transform: uppercase;
       color: var(--primary);
-      background: rgba(46, 125, 50, 0.08);
+      background: rgba(36, 74, 59, 0.08);
       padding: 6px 14px;
       border-radius: 999px;
       margin-bottom: 18px;
@@ -232,12 +234,12 @@
     .btn-primary {
       background: linear-gradient(135deg, var(--primary), var(--secondary));
       color: var(--white);
-      box-shadow: 0 8px 24px rgba(79, 70, 229, 0.28);
+      box-shadow: 0 8px 24px rgba(36, 74, 59, 0.28);
     }
 
     .btn-primary:hover {
       transform: translateY(-2px);
-      box-shadow: 0 14px 32px rgba(79, 70, 229, 0.36);
+      box-shadow: 0 14px 32px rgba(36, 74, 59, 0.36);
     }
 
     .btn-outline {
@@ -323,7 +325,7 @@
     }
 
     .logo-text {
-      font-family: 'Poppins', sans-serif;
+      font-family: 'Manrope', sans-serif;
       font-weight: 700;
       font-size: 1.25rem;
       color: var(--dark);
@@ -603,7 +605,7 @@
     }
 
     .dash-title {
-      font-family: 'Poppins', sans-serif;
+      font-family: 'Manrope', sans-serif;
       font-weight: 600;
       font-size: 0.85rem;
       color: var(--muted);
@@ -637,7 +639,7 @@
     }
 
     .tile-value {
-      font-family: 'Poppins', sans-serif;
+      font-family: 'Manrope', sans-serif;
       font-weight: 700;
       font-size: 1.4rem;
       color: var(--dark);
@@ -681,7 +683,7 @@
 
     .float-card strong {
       display: block;
-      font-family: 'Poppins', sans-serif;
+      font-family: 'Manrope', sans-serif;
       font-size: 0.85rem;
       color: var(--dark);
     }
@@ -697,7 +699,7 @@
       width: 34px;
       height: 34px;
       border-radius: 50%;
-      background: rgba(46, 125, 50, 0.1);
+      background: rgba(36, 74, 59, 0.1);
       color: var(--primary);
       font-size: 0.95rem;
       flex-shrink: 0;
@@ -802,7 +804,7 @@
     }
 
     .marquee-track span {
-      font-family: 'Poppins', sans-serif;
+      font-family: 'Manrope', sans-serif;
       font-weight: 600;
       font-size: 1.2rem;
       color: rgba(31, 41, 55, 0.28);
@@ -855,7 +857,7 @@
     .feature-card:hover {
       transform: translateY(-6px);
       box-shadow: var(--shadow-md);
-      border-color: rgba(46, 125, 50, 0.3);
+      border-color: rgba(36, 74, 59, 0.3);
     }
 
     .f-icon {
@@ -866,7 +868,7 @@
       height: 48px;
       margin-bottom: 16px;
       border-radius: var(--radius-sm);
-      background: rgba(46, 125, 50, 0.09);
+      background: rgba(36, 74, 59, 0.09);
       color: var(--primary);
       font-size: 1.15rem;
     }
@@ -914,7 +916,7 @@
 
     .engine-list li {
       font-weight: 600;
-      font-family: 'Poppins', sans-serif;
+      font-family: 'Manrope', sans-serif;
       font-size: 0.95rem;
       color: var(--dark);
       padding-left: 26px;
@@ -953,7 +955,7 @@
     }
 
     .rule-tag {
-      font-family: 'Poppins', sans-serif;
+      font-family: 'Manrope', sans-serif;
       font-weight: 600;
       font-size: 0.85rem;
       padding: 6px 14px;
@@ -962,7 +964,7 @@
     }
 
     .rule-tag.retail {
-      background: #6B7280;
+      background: #6f6b63;
     }
 
     .rule-tag.group {
@@ -983,7 +985,7 @@
     }
 
     .rule-price {
-      font-family: 'Poppins', sans-serif;
+      font-family: 'Manrope', sans-serif;
       font-weight: 700;
       color: var(--dark);
     }
@@ -1057,7 +1059,7 @@
         gap: 16px;
         align-items: center;
         padding: 20px;
-        background: linear-gradient(135deg, var(--white), #f8faf7);
+        background: linear-gradient(135deg, var(--white), #fbfaf7);
       }
 
       .p-icon {
@@ -1135,7 +1137,7 @@
 
     .pm-stock.ok {
       color: var(--primary);
-      background: rgba(46, 125, 50, 0.1);
+      background: rgba(36, 74, 59, 0.1);
     }
 
     .pm-stock.low {
@@ -1223,7 +1225,7 @@
     }
 
     .an-value {
-      font-family: 'Poppins', sans-serif;
+      font-family: 'Manrope', sans-serif;
       font-weight: 700;
       font-size: 1.5rem;
     }
@@ -1351,11 +1353,11 @@
     }
 
     .theme-dark {
-      background: linear-gradient(135deg, #1F2937, #374151);
+      background: linear-gradient(135deg, #282c28, #374151);
     }
 
     .theme-modern {
-      background: linear-gradient(135deg, #E8F5E9, #2E7D32);
+      background: linear-gradient(135deg, #edf1e7, #244a3b);
     }
 
     .theme-card h3 {
@@ -1411,7 +1413,7 @@
         top: 20px;
         bottom: 20px;
         width: 2px;
-        background: rgba(46, 125, 50, 0.2);
+        background: rgba(36, 74, 59, 0.2);
         z-index: 0;
       }
     }
@@ -1431,7 +1433,7 @@
       background: var(--white);
       border: 2px solid var(--primary);
       color: var(--primary);
-      font-family: 'Poppins', sans-serif;
+      font-family: 'Manrope', sans-serif;
       font-weight: 700;
       margin-bottom: 14px;
       position: relative;
@@ -1459,7 +1461,7 @@
       .step-num {
         margin-bottom: 0;
         grid-row: 1 / span 2;
-        box-shadow: 0 4px 12px rgba(46, 125, 50, 0.15);
+        box-shadow: 0 4px 12px rgba(36, 74, 59, 0.15);
       }
 
       .timeline-step h4 {
@@ -1492,7 +1494,7 @@
       border-radius: 999px;
       padding: 12px 24px;
       font-weight: 600;
-      font-family: 'Poppins', sans-serif;
+      font-family: 'Manrope', sans-serif;
       font-size: 0.9rem;
       color: var(--dark);
       transition: transform .3s var(--ease), border-color .3s var(--ease), color .3s var(--ease);
@@ -1546,7 +1548,7 @@
     }
 
     .compare-table th {
-      font-family: 'Poppins', sans-serif;
+      font-family: 'Manrope', sans-serif;
       background: var(--bg);
       font-weight: 600;
     }
@@ -1562,7 +1564,7 @@
     }
 
     .compare-table tbody tr:hover {
-      background: rgba(46, 125, 50, 0.03);
+      background: rgba(36, 74, 59, 0.03);
     }
 
     /* ---------- Testimonials ---------- */
@@ -1595,7 +1597,7 @@
     }
 
     .testi-quote {
-      font-family: 'Poppins', sans-serif;
+      font-family: 'Manrope', sans-serif;
       font-size: 1.2rem;
       color: var(--dark);
       font-weight: 500;
@@ -1620,7 +1622,7 @@
       align-items: center;
       justify-content: center;
       font-weight: 700;
-      font-family: 'Poppins', sans-serif;
+      font-family: 'Manrope', sans-serif;
     }
 
     .testi-author div {
@@ -1730,7 +1732,7 @@
       font-weight: 700;
       padding: 6px 16px;
       border-radius: 999px;
-      font-family: 'Poppins', sans-serif;
+      font-family: 'Manrope', sans-serif;
     }
 
     .plan-card h3 {
@@ -1752,7 +1754,7 @@
     }
 
     .plan-price {
-      font-family: 'Poppins', sans-serif;
+      font-family: 'Manrope', sans-serif;
       font-weight: 700;
       font-size: 2.4rem;
       margin-bottom: 24px;
@@ -1823,7 +1825,7 @@
       padding: 20px 24px;
       background: none;
       border: none;
-      font-family: 'Poppins', sans-serif;
+      font-family: 'Manrope', sans-serif;
       font-weight: 600;
       font-size: 0.98rem;
       color: var(--dark);
@@ -2024,6 +2026,8 @@
       background: var(--primary);
       transform: translateY(-3px);
     }
+
+}
   </style>
   <!-- JSON-LD Structured Data for SEO -->
   <script type="application/ld+json">
@@ -2041,139 +2045,26 @@
       }
     }
   </script>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ asset('css/metohub-reference.css') }}?v={{ filemtime(public_path('css/metohub-reference.css')) }}">
+<link rel="stylesheet" href="{{ asset('css/metohub-home.css') }}?v={{ filemtime(public_path('css/metohub-home.css')) }}">
+<link rel="stylesheet" href="{{ asset('css/metohub-pages.css') }}?v={{ filemtime(public_path('css/metohub-pages.css')) }}">
 </head>
 
 <body>
 
-  <!-- ================= HEADER ================= -->
-  <header class="site-header" id="siteHeader">
-    <div class="header-inner">
-      <a href="{{ route('landing') }}" class="logo" aria-label="MetoHub home">
-        <span class="logo-mark" aria-hidden="true">
-          <svg viewBox="0 0 32 32" width="30" height="30">
-            <rect x="3" y="10" width="26" height="18" rx="4" fill="var(--primary)" />
-            <rect x="3" y="10" width="26" height="6" rx="3" fill="var(--accent)" />
-            <path d="M9 10 L11 4 H21 L23 10" stroke="var(--primary)" stroke-width="2.4" fill="none"
-              stroke-linecap="round" stroke-linejoin="round" />
-          </svg>
-        </span>
-        <span class="logo-text">Meto<span class="logo-accent">Hub</span></span>
-      </a>
-
-      <nav class="main-nav" id="mainNav" aria-label="Primary">
-        <!-- <a href="{{ route('landing.old') }}">Home</a> -->
-        @if(request()->routeIs('landing'))
-        <a href="#demos">Explore stores</a><a href="#how-it-works">How it works</a>
-        @else
-        <a href="{{ route('landing.about') }}">About Us</a>
-        @endif
-        <!-- <a href="{{ route('landing.features') }}">Features</a> -->
-        <!-- <a href="{{ route('landing.solutions') }}">Solutions</a> -->
-        <a href="{{ route('landing') }}#pricing">Pricing</a>
-        <a href="{{ route('landing.themes') }}">Themes</a>
-        <!-- <a href="{{ route('landing.analytics') }}">Analytics</a> -->
-        <a href="{{ route('landing.contact') }}">Contact</a>
-      </nav>
-
-      <div class="header-actions">
-        <a href="{{ route('admin.common.login') }}" class="btn btn-ghost">Log in</a>
-        <a href="javascript:void(0)" class="btn btn-primary pricing-btn-trigger" data-plan="base">Get Started</a>
-      </div>
-
-      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">
-        <span></span><span></span><span></span>
-      </button>
-    </div>
-  </header>
+  @include('landing.partials.header')
 
   <!-- ================= HERO ================= -->
   <main class="page-content">
     @yield('content')
   </main>
-  @hasSection('footer')
-    @yield('footer')
-  @else
-  <footer class="site-footer" id="contact">
-    <div class="footer-top">
-      <div class="footer-brand">
-        <a href="{{ route('landing') }}" class="logo text-decoration-none" aria-label="MetoHub home"
-          style="display: flex; align-items: center; gap: 8px; margin-bottom: 15px;">
-          <span class="logo-mark" aria-hidden="true">
-            <svg viewBox="0 0 32 32" width="30" height="30">
-              <rect x="3" y="10" width="26" height="18" rx="4" fill="var(--primary)" />
-              <rect x="3" y="10" width="26" height="6" rx="3" fill="var(--accent)" />
-              <path d="M9 10 L11 4 H21 L23 10" stroke="var(--primary)" stroke-width="2.4" fill="none"
-                stroke-linecap="round" stroke-linejoin="round" />
-            </svg>
-          </span>
-          <span class="logo-text text-white" style="color: white;">Meto<span class="logo-accent">Hub</span></span>
-        </a>
-        <p>The platform merchants use to build and run their own online stores and scale globally.</p>
-        <form class="newsletter" id="newsletterForm">
-          <input type="email" placeholder="Your work email" required aria-label="Email address for newsletter">
-          <button type="submit" class="btn btn-primary">Subscribe</button>
-        </form>
-      </div>
-      <div class="footer-col">
-        <h4>Company</h4>
-        <a href="{{ route('landing.about') }}">About</a>
-        <a href="{{ route('landing.blogs') }}">Blog</a>
-        <a href="{{ route('landing.contact') }}">Contact</a>
-      </div>
-      <div class="footer-col">
-        <h4>Platform</h4>
-        <a href="{{ route('landing.features') }}">Features</a>
-        <a href="{{ route('landing.themes') }}">Themes</a>
-        <a href="{{ route('landing') }}#pricing">Pricing</a>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <div class="footer-bottom-left">
-        <span>&copy; 2026 MetoHub. All rights reserved.</span>
-        <div class="footer-legal-links">
-          <a href="{{ route('landing.privacy') }}">Privacy</a>
-          <a href="{{ route('landing.terms') }}">Terms</a>
-          <a href="{{ route('landing.security') }}">Security</a>
-          <a href="{{ route('landing.refund') }}">Refund & Cancellation</a>
-        </div>
-      </div>
-      <div class="social-icons" aria-label="Social media">
-        <a href="#" aria-label="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
-        <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-        <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
-        <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
-      </div>
-    </div>
-  </footer>
-  @endif
+  @include('landing.partials.footer')
+  <script src="{{ asset('js/metohub-navigation.js') }}?v={{ filemtime(public_path('js/metohub-navigation.js')) }}" defer></script>
 
   <script>
     (function () {
       'use strict';
-
-      /* ---------- Sticky glass header ---------- */
-      const header = document.getElementById('siteHeader');
-      const onScroll = () => {
-        if (window.scrollY > 24) header.classList.add('scrolled');
-        else header.classList.remove('scrolled');
-      };
-      document.addEventListener('scroll', onScroll, { passive: true });
-      onScroll();
-
-      /* ---------- Mobile nav toggle ---------- */
-      const navToggle = document.getElementById('navToggle');
-      const mainNav = document.getElementById('mainNav');
-      navToggle.addEventListener('click', () => {
-        const open = mainNav.classList.toggle('open');
-        navToggle.setAttribute('aria-expanded', open);
-        navToggle.classList.toggle('active', open);
-      });
-      mainNav.querySelectorAll('a').forEach((link) => {
-        link.addEventListener('click', () => {
-          mainNav.classList.remove('open');
-          navToggle.setAttribute('aria-expanded', 'false');
-        });
-      });
 
       /* ---------- Reveal-on-scroll ---------- */
       const revealTargets = document.querySelectorAll(
@@ -2237,7 +2128,7 @@
         dot.addEventListener('click', () => showSlide(i, true));
         dotsWrap.appendChild(dot);
       });
-      const dots = dotsWrap.querySelectorAll('button');
+      const dots = dotsWrap ? dotsWrap.querySelectorAll('button') : [];
 
       function showSlide(index, manual) {
         slides[activeSlide].classList.remove('active');
@@ -2487,19 +2378,19 @@
   <style>
     .saas-modal-overlay,
     .demo-modal-overlay {
-      --black: #1F2937;
+      --black: #282c28;
       --white: #FFFFFF;
-      --cream: #F8FAFC;
-      --gold: #4F46E5;
-      --gold-light: rgba(79, 70, 229, 0.1);
-      --gold-dark: #4F46E5;
-      --gray-100: #F3F4F6;
-      --gray-200: #E5E7EB;
+      --cream: #fbfaf7;
+      --gold: #244a3b;
+      --gold-light: rgba(36, 74, 59, 0.1);
+      --gold-dark: #244a3b;
+      --gray-100: #f3f0e9;
+      --gray-200: #e4ded3;
       --gray-400: #9CA3AF;
-      --gray-600: #4B5563;
-      --gray-800: #1F2937;
-      --text: #334155;
-      --text-muted: #64748B;
+      --gray-600: #6f6b63;
+      --gray-800: #282c28;
+      --text: #6f6b63;
+      --text-muted: #6f6b63;
       --border: rgba(31, 41, 55, 0.1);
     }
 

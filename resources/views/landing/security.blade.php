@@ -59,7 +59,7 @@
        <div class="vulnerability-box">
           <h4>Vulnerability Reporting</h4>
           <p>If you believe you have found a security vulnerability in our platform, please disclose it to us responsibly.</p>
-          <a href="mailto:security@metohub.com">security@metohub.com</a>
+          <a href="mailto:{{ config('marketing.contact.email') }}">{{ config('marketing.contact.email') }}</a>
        </div>
 
     </div>
@@ -80,7 +80,7 @@
       transform: translateX(-50%);
       width: 600px;
       height: 600px;
-      background: radial-gradient(circle, rgba(46, 125, 50, 0.08) 0%, transparent 70%);
+      background: radial-gradient(circle, rgba(36, 74, 59, 0.08) 0%, transparent 70%);
       z-index: 0;
       pointer-events: none;
     }
@@ -139,7 +139,7 @@
       width: 64px;
       height: 64px;
       border-radius: 16px;
-      background: linear-gradient(135deg, rgba(46, 125, 50, 0.1), rgba(67, 160, 71, 0.1));
+      background: linear-gradient(135deg, rgba(36, 74, 59, 0.1), rgba(67, 160, 71, 0.1));
       color: var(--primary);
       display: flex;
       align-items: center;
