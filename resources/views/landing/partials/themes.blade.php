@@ -1,58 +1,32 @@
-  <section class="themes" id="themes">
-    <div class="section-head">
-      <span class="eyebrow">Theme marketplace</span>
-      @php($pageHeadingTag = request()->routeIs('landing.themes') ? 'h1' : 'h2')
-      <{{ $pageHeadingTag }}>Launch with a theme built for grocery</{{ $pageHeadingTag }}>
-      <p>Every theme is responsive, checkout-ready, and customizable without touching code.</p>
-    </div>
-    <div class="theme-grid">
-      <div class="theme-card template-card" data-demo-url="{{ route('v1.home') }}?preview=1&tenant_id=2">
-        <div class="template-preview"
-          style="background:linear-gradient(180deg, var(--bg) 0%, var(--bg) 60%, var(--white) 60%);padding:16px;height:140px;border-radius:10px;margin-bottom:14px;position:relative;overflow:hidden;text-align:left;border:1px solid var(--line);">
-          <div
-            style="font-family:'Poppins', sans-serif;font-weight:700;font-size:13px;margin-bottom:8px;color:var(--dark);">
-            Market Basic</div>
-          <div style="display:flex;gap:6px;">
-            <div style="width:30%;height:60px;background:rgba(31,41,55,0.12);border-radius:6px;"></div>
-            <div style="width:30%;height:60px;background:rgba(46,125,50,0.12);border-radius:6px;"></div>
-            <div style="width:30%;height:60px;background:rgba(255,179,0,0.15);border-radius:6px;"></div>
-          </div>
+<link rel="stylesheet" href="{{ asset('css/metohub-themes.css') }}?v={{ filemtime(public_path('css/metohub-themes.css')) }}">
+<section class="public-themes" aria-labelledby="themes-heading">
+  <div class="public-themes-intro">
+    <span class="eyebrow">Your brand, your storefront</span>
+    @php($headingTag = request()->routeIs('landing.themes') ? 'h1' : 'h2')
+    <{{ $headingTag }} id="themes-heading">A different look.<br><em>The same possibilities.</em></{{ $headingTag }}>
+    <p>Explore {{ count(config('storefront_themes')) }} customizable designs for clothing, grocery, gadgets, jewelry and more. Your products, brand colors and store tools work across every theme.</p>
+    <a href="{{ route('landing.pricing') }}">From ₹{{ number_format(config('saas.plans.base.monthly_price')) }}/month · {{ config('saas.trial_days') }}-day free trial ↗</a>
+  </div>
+  <div class="public-themes-note">Layout illustrations below show each design’s style. Live previews use a demo store’s products; your own logo, colors and content make it yours.</div>
+  <div class="public-themes-grid">
+    @foreach($themes ?? config('storefront_themes') as $id => $theme)
+    <article class="public-theme-card" data-public-theme="{{ $id }}" style="--theme-background:{{ $theme['background'] }}">
+      <div class="public-theme-art"><img src="{{ asset('images/themes/'.$id.'.svg') }}" alt="{{ $theme['name'] }} layout illustration" width="640" height="400" loading="lazy" decoding="async"></div>
+      <div class="public-theme-content">
+        <span class="public-theme-edition">{{ $theme['version'] }}</span>
+        <h2>{{ $theme['name'] }}</h2>
+        <p>{{ $theme['description'] }}</p>
+        <div class="public-theme-actions">
+          @if(!empty($theme['preview_url']))
+          <a class="public-theme-preview" href="{{ $theme['preview_url'] }}" target="_blank" rel="noopener noreferrer" aria-label="Preview {{ $theme['name'] }} in a new tab">Live preview ↗</a>
+          @else
+          <span class="public-theme-unavailable">Live demo coming soon</span>
+          @endif
+          <a class="public-theme-start" href="{{ route('landing', ['get_started' => 1, 'plan' => 'base', 'theme' => $id]) }}" aria-label="Start with {{ $theme['name'] }}">Start with this theme →</a>
         </div>
-        <h3>Market Basic</h3>
-        <a href="javascript:void(0)" class="btn btn-outline btn-sm" style="margin-top: 10px;">Preview Theme</a>
       </div>
-
-      <div class="theme-card template-card" data-demo-url="{{ route('velvet.home') }}?preview=1&tenant_id=2">
-        <div class="template-preview"
-          style="background:var(--dark);padding:16px;height:140px;border-radius:10px;margin-bottom:14px;position:relative;overflow:hidden;text-align:left;">
-          <div style="font-family:'Poppins', sans-serif;font-weight:700;font-size:13px;margin-bottom:8px;color:#fff;">
-            Night Grocer</div>
-          <div style="display:flex;gap:6px;">
-            <div style="width:30%;height:60px;background:var(--primary);border-radius:6px;"></div>
-            <div style="width:30%;height:60px;background:rgba(255,255,255,0.15);border-radius:6px;"></div>
-            <div style="width:30%;height:60px;background:var(--accent);border-radius:6px;"></div>
-          </div>
-        </div>
-        <h3>Night Grocer</h3>
-        <a href="javascript:void(0)" class="btn btn-outline btn-sm" style="margin-top: 10px;">Preview Theme</a>
-      </div>
-
-      <div class="theme-card template-card" data-demo-url="{{ route('v3.home') }}?preview=1&tenant_id=2">
-        <div class="template-preview"
-          style="background:linear-gradient(135deg, #E8F5E9, #C8E6C9);padding:16px;height:140px;border-radius:10px;margin-bottom:14px;position:relative;overflow:hidden;border:1px solid var(--line);text-align:left;">
-          <div
-            style="font-family:'Poppins', sans-serif;font-weight:700;font-size:13px;margin-bottom:8px;color:var(--primary-dark);">
-            Fresh App</div>
-          <div style="display:flex;gap:6px;">
-            <div style="width:30%;height:60px;background:var(--primary);border-radius:12px;"></div>
-            <div style="width:30%;height:60px;background:#E53935;border-radius:12px;"></div>
-            <div style="width:30%;height:60px;background:var(--accent);border-radius:12px;"></div>
-          </div>
-        </div>
-        <h3>Fresh App</h3>
-        <a href="javascript:void(0)" class="btn btn-outline btn-sm" style="margin-top: 10px;">Preview Theme</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- ================= STORE CREATION TIMELINE ================= -->
+    </article>
+    @endforeach
+  </div>
+  <div class="public-themes-bottom"><h2>Make it feel like you.</h2><p>Customize your logo, brand colors and homepage content in your dashboard. You can change themes later.</p><a href="{{ route('landing.pricing') }}">Compare plans</a><a href="{{ route('landing.contact') }}">Ask us a question</a></div>
+</section>

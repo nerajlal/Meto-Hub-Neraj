@@ -10,6 +10,27 @@ class LandingHomepageTest extends TestCase
 {
     use DatabaseMigrations;
 
+    public function test_public_themes_match_admin_catalog_and_do_not_link_missing_demos(): void
+    {
+        $response = $this->get('/themes')->assertOk()->assertDontSee('tenant_id=2')->assertDontSee('Market Basic')
+            ->assertSee('Live demo coming soon')->assertDontSee('class="public-theme-preview"', false);
+        foreach (config('storefront_themes') as $id => $theme) {
+            $response->assertSee($theme['name'])->assertSee('data-public-theme="'.$id.'"', false)
+                ->assertSee(e(route('landing', ['get_started' => 1, 'plan' => 'base', 'theme' => $id])), false);
+        }
+    }
+
+    public function test_public_theme_previews_use_curated_demo_and_explicit_theme(): void
+    {
+        $demo = Tenant::create(['name' => 'Demo', 'theme' => 'template_7']);
+        $demo->forceFill(['slug' => 'mens-clothing'])->save();
+        $private = Tenant::create(['name' => 'Private store', 'theme' => 'template_9']);
+        $response = $this->get('/themes')->assertOk()->assertDontSee('Live demo coming soon')->assertDontSee($private->storefrontUrl(), false);
+        foreach (array_keys(config('storefront_themes')) as $id) {
+            $response->assertSee(e($demo->storefrontUrl(['preview' => 1, 'preview_theme' => $id])), false);
+        }
+    }
+
     public function test_plan_offers_and_faq_schema_match_visible_configured_content(): void
     {
         config(['app.url' => 'https://metohub.cloud', 'saas.plans.base.monthly_price' => 129, 'saas.trial_days' => 9]);

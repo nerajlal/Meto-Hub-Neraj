@@ -301,5 +301,12 @@
     }
   });
   const parameters = new URLSearchParams(location.search);
-  if (parameters.has('get_started')) open(parameters.get('plan') || 'base');
+  if (parameters.has('get_started')) {
+    const selectedTheme = $$('input[name="theme"]', form).find(input => input.value === parameters.get('theme'));
+    if (selectedTheme) {
+      selectedTheme.checked = true;
+      selectedTheme.dispatchEvent(new Event('change', {bubbles: true}));
+    }
+    open(parameters.get('plan') || 'base');
+  }
 })();

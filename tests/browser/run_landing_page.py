@@ -17,6 +17,9 @@ output.mkdir(parents=True,exist_ok=True)
 mock='''window.__calls=[];window.__scenario='success';window.fetch=async(url,options)=>{const payload=JSON.parse(options.body);window.__calls.push({url,payload});if(window.__scenario==='network')throw new Error('mock network');if(String(url).endsWith('/resend'))return{ok:true,status:200,json:async()=>({message:'If this account needs verification, a new link has been sent.'})};if(window.__scenario==='validation')return{ok:false,status:422,json:async()=>({errors:{email:['This email is already registered.']}})};if(window.__scenario==='rate')return{ok:false,status:429,json:async()=>({})};return{ok:true,status:201,json:async()=>({success:true,email:payload.email,email_sent:window.__scenario!=='mail-failed',message:window.__scenario==='mail-failed'?'Your account was created, but the email could not be sent. Please retry using Resend link.':'Check your inbox to verify your email, then sign in.'})};};'''
 with Chrome(browser=args.browser) as c:
  c.call('Page.addScriptToEvaluateOnNewDocument',{'source':mock})
+ c.visit(p.as_uri()+'?get_started=1&plan=base&theme=template_15')
+ assert c.js("document.getElementById('wizard').open")
+ assert c.js("document.querySelector('input[name=theme]:checked').value")=='template_15'
  c.visit(p.as_uri())
  assert c.js("document.querySelectorAll('[data-demo]').length")==7
  assert c.js("document.querySelectorAll('input[name=theme]').length")==15

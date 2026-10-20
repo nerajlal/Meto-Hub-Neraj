@@ -53,7 +53,14 @@ class LandingController extends Controller
     }
     public function themes()
     {
-        return view('landing.themes');
+        $demos = \App\Models\Tenant::whereIn('slug', array_keys(config('demo_storefronts', [])))->orderBy('id')->get();
+        $themes = collect(app(\App\Services\StorefrontTheme::class)->all())->map(function ($theme, $id) use ($demos) {
+            $demo = $demos->firstWhere('theme', $id) ?? $demos->first();
+
+            return $theme + ['preview_url' => $demo?->storefrontUrl(['preview' => 1, 'preview_theme' => $id])];
+        });
+
+        return view('landing.themes', compact('themes'));
     }
     public function analytics()
     {

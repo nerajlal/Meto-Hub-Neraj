@@ -1,0 +1,28 @@
+.public-themes{padding:72px 24px 80px;background:#fbfaf7;color:#282c28;font-family:Manrope,system-ui,sans-serif}
+.public-themes .public-themes-intro{max-width:760px;margin:0 auto 40px;text-align:center}
+.public-themes .eyebrow{color:#8c6843;text-transform:uppercase;font-size:.7rem;letter-spacing:.15em;font-weight:600}
+.public-themes .public-themes-intro :is(h1,h2){font:500 clamp(2.4rem,5vw,4rem)/1.12 Manrope,system-ui,sans-serif;letter-spacing:-.04em;margin:20px 0}
+.public-themes .public-themes-intro em{font:italic 1.12em 'Instrument Serif',serif;color:#8c6843;letter-spacing:-.02em}
+.public-themes .public-themes-intro p{font-size:1rem;line-height:1.85;color:#6f6b63;margin:0 0 20px}
+.public-themes .public-themes-intro a{font-size:.85rem;font-weight:600;color:#244a3b;text-decoration:underline;text-underline-offset:5px}
+.public-themes .public-themes-note{max-width:1200px;margin:0 auto 28px;padding:16px 20px;border:1px solid #e4ded3;border-radius:12px;color:#6f6b63;font-size:.8rem;line-height:1.8;background:#f3f0e9}
+.public-themes .public-themes-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;max-width:1200px;margin:auto}
+.public-themes .public-theme-card{border:1px solid #e4ded3;border-radius:16px;overflow:hidden;background:#fffdfa;display:flex;flex-direction:column;min-width:0}
+.public-themes .public-theme-art{padding:20px 20px 0;background:var(--theme-background)}
+.public-themes .public-theme-art img{display:block;width:100%;height:auto;aspect-ratio:8/5;object-fit:contain}
+.public-themes .public-theme-content{padding:24px;display:flex;flex-direction:column;flex:1}
+.public-themes .public-theme-edition{font-size:.65rem;text-transform:uppercase;letter-spacing:.1em;color:#8c6843;font-weight:600}
+.public-themes .public-theme-content h2{font:600 1.25rem/1.4 Manrope,system-ui,sans-serif;letter-spacing:-.02em;margin:8px 0 12px;color:#282c28}
+.public-themes .public-theme-content p{font-size:.8rem;line-height:1.8;color:#6f6b63;flex:1;margin:0 0 24px}
+.public-themes .public-theme-actions{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
+.public-themes .public-theme-actions a{font-size:.75rem;font-weight:600;padding:12px 0;color:#244a3b;text-decoration:none}
+.public-themes .public-theme-actions .public-theme-start{background:#244a3b;color:white;padding:12px 14px;border-radius:8px}
+.public-themes .public-theme-start:hover{background:#18382c}
+.public-themes .public-theme-unavailable{font-size:.75rem;color:#6f6b63}
+.public-themes a:focus-visible{outline:2px solid #8c6843;outline-offset:4px}
+.public-themes .public-themes-bottom{max-width:650px;margin:64px auto 0;text-align:center}
+.public-themes .public-themes-bottom h2{font-size:2rem;letter-spacing:-.03em;margin-bottom:16px}
+.public-themes .public-themes-bottom p{color:#6f6b63;font-size:.9rem;line-height:1.8}
+.public-themes .public-themes-bottom a{display:inline-block;margin:16px 12px 0;color:#244a3b;font-size:.85rem;text-decoration:underline;text-underline-offset:4px}
+@media(max-width:1050px){.public-themes .public-themes-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:650px){.public-themes{padding:48px 20px 64px}.public-themes .public-themes-grid{grid-template-columns:1fr}.public-themes .public-theme-content{padding:22px}}
