@@ -148,7 +148,9 @@ with Chrome(browser=args.browser) as c:
  c.js("document.getElementById('wClose').click()")
  c.size(375);c.js("document.getElementById('menuBtn').click()")
  assert not c.js("document.getElementById('mm').hidden")
- c.js("document.querySelector('#mm a').click()")
+ # The fixture is a local file; prevent its absolute homepage link from leaving
+ # the fixture while still exercising the real menu's click handler.
+ c.js("const link=document.querySelector('#mm a');link.addEventListener('click',e=>e.preventDefault(),{once:true});link.click()")
  assert c.js("document.getElementById('mm').hidden")
  print('PASS: seven demos, 15 themes, plan selection, required fields, server validation, network/429 handling, real-result success/failure states, resend, mobile menu. All responses mocked; no account or email created.')
 
