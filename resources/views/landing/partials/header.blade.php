@@ -1,3 +1,4 @@
+<a class="marketing-skip-link" href="#main-content">Skip to content</a>
 <header data-marketing-header class="sticky top-0 z-50 border-b border-border/70 bg-background/85 backdrop-blur-md">
 <div class="container-page flex h-16 items-center justify-between gap-4">
 <a class="flex items-center gap-2 text-lg font-semibold tracking-tight text-foreground" href="{{ route('landing') }}">

@@ -1,5 +1,7 @@
 /* Application behavior and onboarding styles layered over the published visual design. */
 :root{color-scheme:light}
+.marketing-skip-link{position:fixed;top:8px;left:12px;z-index:1000;transform:translateY(calc(-100% - 16px));padding:12px 18px;border-radius:8px;background:#244a3b;color:#fff;font:600 14px Manrope,system-ui,sans-serif}
+.marketing-skip-link:focus{transform:translateY(0);outline:2px solid #8c6843;outline-offset:3px}
 .home-footer-legal{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:18px;border-top:1px solid var(--border);margin-top:32px;padding-top:24px;font-size:12px;line-height:1.7;color:var(--muted-foreground)}
 .home-footer-legal nav{display:flex;flex-wrap:wrap;gap:10px 24px}
 .home-footer-legal a:hover{color:var(--foreground);text-decoration:underline;text-underline-offset:4px}

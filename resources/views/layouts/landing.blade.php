@@ -2013,7 +2013,7 @@
   @include('landing.partials.header')
 
   <!-- ================= HERO ================= -->
-  <main id="main-content" class="page-content">
+  <main id="main-content" class="page-content" tabindex="-1">
     @yield('content')
   </main>
   @include('landing.partials.footer')

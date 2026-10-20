@@ -13,7 +13,7 @@
 <body>
 <div class="min-h-screen bg-background">
 @include('landing.partials.header')
-<main id="main-content">
+<main id="main-content" tabindex="-1">
 <section class="home-hero" id="hero" aria-labelledby="hero-title">
 <div class="container-page hero-layout">
 <div class="hero-copy animate-rise">
