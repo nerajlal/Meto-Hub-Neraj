@@ -26,6 +26,7 @@
 <a href="{{ route('landing.privacy') }}">Privacy Policy</a>
 <a href="{{ route('landing.terms') }}">Terms of Service</a>
 <a href="{{ route('landing.refund') }}">Refund &amp; Cancellation Policy</a>
+<a href="{{ route('landing.security') }}">Security</a>
 </nav>
 </div>
 </div>

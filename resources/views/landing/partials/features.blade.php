@@ -2,8 +2,8 @@
     <div class="section-head">
       <span class="eyebrow">Platform</span>
       @php($pageHeadingTag = request()->routeIs('landing.features') ? 'h1' : 'h2')
-      <{{ $pageHeadingTag }}>Every tool a grocery merchant needs, in one platform</{{ $pageHeadingTag }}>
-      <p>Not a storefront. A complete operating system for running a grocery business online.</p>
+      <{{ $pageHeadingTag }}>A storefront and the tools to run it</{{ $pageHeadingTag }}>
+      <p>Build your brand’s store, organize your catalog, and manage incoming orders in one dashboard.</p>
     </div>
     <div class="feature-grid">
       <!-- <div class="feature-card"><span class="f-icon"><i class="fa-solid fa-shop"></i></span>
@@ -20,11 +20,11 @@
       </div>
       <div class="feature-card"><span class="f-icon"><i class="fa-solid fa-boxes-stacked"></i></span>
         <h3>Inventory Control</h3>
-        <p>Live stock counts with automatic low-stock alerts across every location.</p>
+        <p>Manage stock for each product variant from your merchant dashboard.</p>
       </div>
       <div class="feature-card"><span class="f-icon"><i class="fa-solid fa-layer-group"></i></span>
         <h3>Product Collections</h3>
-        <p>Group products into collections like Organic, Fresh Produce, or Weekly Deals.</p>
+        <p>Group products into collections, from new arrivals to everyday essentials.</p>
       </div>
       <div class="feature-card"><span class="f-icon"><i class="fa-solid fa-tag"></i></span>
         <h3>Custom Pricing</h3>
@@ -52,10 +52,10 @@
       </div>
       <div class="feature-card"><span class="f-icon"><i class="fa-solid fa-palette"></i></span>
         <h3>Theme Marketplace</h3>
-        <p>Choose from professionally designed, grocery-ready storefront themes.</p>
+        <p>Choose from {{ count(config('storefront_themes')) }} customizable storefront themes for your brand.</p>
       </div>
       <div class="feature-card"><span class="f-icon"><i class="fa-solid fa-credit-card"></i></span>
-        <h3>Payment Gateways</h3>
+        <h3>Checkout &amp; Subscription Billing</h3>
         <p>Offer cash-on-delivery checkout. MetoHub software subscription billing is handled through Razorpay.</p>
       </div>
       <div class="feature-card"><span class="f-icon"><i class="fa-solid fa-globe"></i></span>
@@ -77,22 +77,25 @@
         <div class="pm-row"><span><i class="fa-solid fa-leaf"></i> Organic Spinach</span><span class="pm-stock ok">312
             in stock</span></div>
         <div class="pm-row"><span><i class="fa-solid fa-bread-slice"></i> Multigrain Bread</span><span
-            class="pm-stock low">8 left — alert</span></div>
+            class="pm-stock low">8 in stock</span></div>
         <div class="pm-row"><span><i class="fa-solid fa-cheese"></i> Dairy Bundle</span><span class="pm-stock ok">140 in
             stock</span></div>
         <div class="pm-row"><span><i class="fa-solid fa-apple-whole"></i> Apple Crate (10kg)</span><span
             class="pm-stock ok">76 in stock</span></div>
-        <div class="pm-search"><span><i class="fa-solid fa-magnifying-glass"></i></span> Search 6,304 productsâ€¦</div>
+        <div class="pm-search"><span><i class="fa-solid fa-magnifying-glass"></i></span> Search your products…</div>
       </div>
     </div>
     <div class="pm-copy">
-      <span class="eyebrow">Product management</span>
+      <span class="eyebrow">Product management · illustrative example</span>
       <h2>Manage your entire catalog from one screen</h2>
       <div class="pm-tags">
         <span>Products</span><span>Inventory</span><span>Collections</span><span>Variants</span>
-        <span>Stock Alerts</span><span>Import / Export</span><span>Bulk Upload</span><span>Search</span>
+        <span>Variant Stock</span><span>Import / Export</span><span>Bulk Upload</span><span>Search</span>
       </div>
     </div>
   </section>
 
-  <!-- ================= ANALYTICS ================= -->
+  <section class="section-head">
+    <h2>Find the right fit for your brand.</h2>
+    <p><a href="{{ route('landing.themes') }}">Explore storefront themes</a> · <a href="{{ route('landing.pricing') }}">Compare plans</a> · <a href="{{ route('landing.contact') }}">Ask a question</a></p>
+  </section>

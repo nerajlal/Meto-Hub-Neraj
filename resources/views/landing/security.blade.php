@@ -16,7 +16,7 @@
        
        <div style="text-align: center; margin-bottom: 60px;">
         <p style="color: var(--muted); line-height: 1.8; font-size: 1.15rem; max-width: 800px; margin: 0 auto;">
-          As a commerce platform processing thousands of transactions daily, security is our top priority. We employ enterprise-grade security measures to ensure your store remains online, secure, and compliant.
+          MetoHub uses account authentication, store access checks and request validation to help protect merchant accounts. The controls below describe application behavior; hosting, HTTPS and operational monitoring also require correct production configuration.
         </p>
       </div>
 
@@ -24,25 +24,25 @@
          
          <div class="security-card">
            <div class="sec-icon"><i class="fa-solid fa-shield-halved"></i></div>
-           <h3>Data Encryption</h3>
+           <h3>Account Protection</h3>
            <p>
-             All data transmitted between your customers and our servers is encrypted using industry-standard TLS 1.3. Sensitive data at rest is encrypted using AES-256 encryption.
+             Account passwords are hashed. Authentication routes limit repeated login attempts, and merchant dashboard access checks the signed-in account and store.
            </p>
          </div>
 
          <div class="security-card">
            <div class="sec-icon"><i class="fa-solid fa-credit-card"></i></div>
-           <h3>PCI-DSS Compliance</h3>
+           <h3>Subscription Payments</h3>
            <p>
-             We partner with top Tier 1 payment processors. We do not store raw credit card numbers on our servers, ensuring your store is fully PCI-DSS Level 1 compliant out of the box.
+             MetoHub subscriptions use Razorpay’s hosted checkout. Customer storefront checkout currently supports cash on delivery. Platform subscription billing is separate from customer order payments.
            </p>
          </div>
 
          <div class="security-card">
            <div class="sec-icon"><i class="fa-solid fa-server"></i></div>
-           <h3>Infrastructure & Uptime</h3>
+           <h3>Request Protection</h3>
            <p>
-             Hosted on highly available cloud architecture, we guarantee a 99.99% uptime SLA. Our infrastructure automatically scales during high-traffic events to prevent downtime.
+             Browser forms use CSRF protection and server-side validation. Sensitive account actions require authentication. These application controls work alongside the server’s HTTPS and hosting configuration.
            </p>
          </div>
 
@@ -50,14 +50,14 @@
            <div class="sec-icon"><i class="fa-solid fa-user-lock"></i></div>
            <h3>Access Control</h3>
            <p>
-             Protect your admin dashboard with role-based access control (RBAC). Assign specific permissions to staff so they only see the data they need.
+             Merchant and delivery dashboards check account roles and store membership. Keep your account credentials private and contact us if you suspect unauthorized access.
            </p>
          </div>
 
        </div>
 
        <div class="vulnerability-box">
-          <h4>Vulnerability Reporting</h4>
+          <h2>Vulnerability Reporting</h2>
           <p>If you believe you have found a security vulnerability in our platform, please disclose it to us responsibly.</p>
           <a href="mailto:{{ config('marketing.contact.email') }}">{{ config('marketing.contact.email') }}</a>
        </div>
@@ -172,7 +172,7 @@
       box-shadow: 0 10px 30px rgba(31, 41, 55, 0.04);
     }
 
-    .vulnerability-box h4 {
+    .vulnerability-box h2 {
       font-size: 1.4rem;
       color: var(--dark);
       margin-bottom: 15px;

@@ -15,7 +15,7 @@ with tempfile.TemporaryDirectory(prefix='metohub-public-qa-') as folder:
         for width in [375, 1440]:
             c.size(width)
             baseline = None
-            for page in ['home', 'pricing', 'privacy-policy', 'terms', 'refund-cancellation', 'about', 'contact', 'themes', 'blogs', 'blogs-7']:
+            for page in ['home', 'features', 'security', 'pricing', 'privacy-policy', 'terms', 'refund-cancellation', 'about', 'contact', 'themes', 'blogs', 'blogs-7']:
                 c.visit((folder/(page+'.html')).as_uri())
                 metrics = c.js("""(()=>{const h=document.querySelector('[data-marketing-header]'),f=document.querySelector('[data-marketing-footer]');const properties=e=>{const s=getComputedStyle(e),b=e.getBoundingClientRect();return {height:b.height,font:s.fontFamily,color:s.color,background:s.backgroundColor,padding:s.padding}};return {header:properties(h),footer:properties(f),overflow:document.documentElement.scrollWidth>innerWidth+1,errors:window.__pageErrors};})()""")
                 assert not metrics['overflow'], (width,page,'horizontal overflow')

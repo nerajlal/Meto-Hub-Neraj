@@ -30,7 +30,7 @@ echo "Rendered landing fixture from isolated in-memory database.\n";
 if (($argv[2] ?? '') === '--public-pages') {
     config(['services.blog.key' => 'browser-fixture']);
     Illuminate\Support\Facades\Http::fake(['*' => Illuminate\Support\Facades\Http::response(['blogs' => [['id' => 7, 'title' => 'Your first collection launch', 'content' => '<h2>A place for your brand</h2><p>Introduce your collection with clear product details and a store link.</p>', 'cover_image' => 'http://127.0.0.1:8000/images/landing/reference/hero.jpg', 'created_at' => '2026-10-01', 'updated_at' => '2026-10-02']]])]);
-    foreach (['pricing', 'privacy-policy', 'terms', 'refund-cancellation', 'about', 'contact', 'themes', 'blogs', 'blogs/7'] as $path) {
+    foreach (['features', 'security', 'pricing', 'privacy-policy', 'terms', 'refund-cancellation', 'about', 'contact', 'themes', 'blogs', 'blogs/7'] as $path) {
         $pageRequest = Illuminate\Http\Request::create('http://127.0.0.1:8000/'.$path, 'GET');
         $pageResponse = $kernel->handle($pageRequest);
         if ($pageResponse->getStatusCode() !== 200) throw new RuntimeException('Page fixture failed: '.$path);
