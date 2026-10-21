@@ -144,7 +144,7 @@ class TenantCatalogSeeder
         }
 
         // 4. Seed Delivery Partners
-        $partnersData = [
+        $partnersData = array_merge(array_values(config('delivery_partners')), [
             [
                 'name' => 'BlueDart',
                 'site_url' => 'https://www.bluedart.com',
@@ -157,10 +157,11 @@ class TenantCatalogSeeder
                 'tracking_url_template' => 'https://www.delhivery.com/track/package/{tracking_number}',
                 'status' => true,
             ],
-        ];
+        ]);
 
         foreach ($partnersData as $data) {
             $data['tenant_id'] = $tenantId;
+            $data['status'] ??= true;
             DeliveryPartner::create($data);
         }
     }

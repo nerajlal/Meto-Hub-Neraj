@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\DeliveryPartner;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class DeliveryPartnerController extends Controller
 {
@@ -33,13 +34,14 @@ class DeliveryPartnerController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'site_url' => 'nullable|url',
-            'tracking_url_template' => 'nullable|string'
-        ]);
-
-        DeliveryPartner::create($request->except('_token'));
+        $request->validate(['preset' => ['nullable', Rule::in(array_keys(config('delivery_partners')))]]);
+        $tenantId = $request->attributes->get('resolved_tenant_id');
+        if ($request->filled('preset')) {
+            $preset = config('delivery_partners.'.$request->preset);
+            DeliveryPartner::firstOrCreate(['tenant_id' => $tenantId, 'name' => $preset['name']], $preset + ['status' => true, 'is_default' => false]);
+        } else {
+            DeliveryPartner::create($this->validated($request) + ['tenant_id' => $tenantId]);
+        }
 
         return redirect()->back()->with('success', 'Delivery Partner added successfully!');
     }
@@ -51,13 +53,7 @@ class DeliveryPartnerController extends Controller
     {
         $partner = DeliveryPartner::findOrFail($id);
         
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'site_url' => 'nullable|url',
-            'tracking_url_template' => 'nullable|string'
-        ]);
-
-        $partner->update($request->except('_token'));
+        $partner->update($this->validated($request));
 
         return redirect()->back()->with('success', 'Delivery Partner updated successfully!');
     }
@@ -75,13 +71,22 @@ class DeliveryPartnerController extends Controller
 
     public function setDefault($id)
     {
+        $partner = DeliveryPartner::findOrFail($id);
         // Unset any existing default
         DeliveryPartner::where('is_default', true)->update(['is_default' => false]);
         
         // Set the new default
-        $partner = DeliveryPartner::findOrFail($id);
         $partner->update(['is_default' => true]);
 
         return redirect()->back()->with('success', 'Default Delivery Partner updated!');
+    }
+    private function validated(Request $request): array
+    {
+        return $request->validate([
+            'name' => 'required|string|max:255',
+            'site_url' => 'nullable|url:http,https|max:2048',
+            'tracking_url_template' => ['nullable', 'string', 'max:2048', 'url:http,https'],
+            'status' => 'required|boolean',
+        ]);
     }
 }

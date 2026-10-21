@@ -62,10 +62,7 @@ class OrderController extends Controller
         $order = Order::with(['items.product', 'items.bundle.products.variants', 'user', 'deliveryPartner'])->findOrFail($id);
         $deliveryPartners = DeliveryPartner::where('status', true)->orderBy('is_default', 'desc')->get();
         
-        $tenantId = session('active_tenant_id') ?? request()->route('tenant') ?? 1;
-        $deliveryStaff = \App\Models\User::where('tenant_id', $tenantId)->where('type', 'delivery_boy')->get();
-        
-        return view('admin.orders.show', compact('order', 'deliveryPartners', 'deliveryStaff'));
+        return view('admin.orders.show', compact('order', 'deliveryPartners'));
     }
 
     public function updateStatus(Request $request, $id)

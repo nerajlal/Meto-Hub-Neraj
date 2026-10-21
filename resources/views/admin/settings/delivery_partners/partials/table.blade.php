@@ -4,7 +4,7 @@
     <td class="px-3 py-3 fw-medium text-dark">{{ $partner->name }}</td>
     <td class="px-3 py-3">
         @if($partner->tracking_url_template)
-            <a href="{{ $partner->tracking_url_template }}" target="_blank" class="text-decoration-none text-success small">
+            <a href="{{ $partner->tracking_url_template }}" target="_blank" rel="noopener noreferrer" class="text-decoration-none text-success small">
                 <i class="fas fa-external-link-alt me-1"></i> {{ Str::limit($partner->tracking_url_template, 40) }}
             </a>
         @else
@@ -26,7 +26,7 @@
     </td>
     <td class="px-3 py-3 text-end">
         <div class="btn-group">
-            <button class="btn btn-sm btn-white border shadow-sm" onclick="editPartner({{ $partner }})">
+            <button class="btn btn-sm btn-white border shadow-sm" onclick="editPartner({{ $partner }}, '{{ route('admin.settings.delivery-partners.update', $partner->id) }}')">
                 <i class="fas fa-edit text-secondary"></i>
             </button>
             <form action="{{ route('admin.settings.delivery-partners.destroy', $partner->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure?')">

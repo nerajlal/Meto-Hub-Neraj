@@ -6,6 +6,20 @@
     <button class="btn btn-primary shadow-sm" data-bs-toggle="modal" data-bs-target="#addPartnerModal">Add Partner</button>
 </div>
 
+<div class="card border shadow-sm mb-4"><div class="card-body">
+    <h2 class="h6">Common delivery partners</h2>
+    <p class="small text-muted">Add your courier, book the shipment with them, then save its tracking number on the order. India Post tracking opens its official portal; enter the consignment number there.</p>
+    <div class="d-flex flex-wrap gap-2">
+    @foreach(config('delivery_partners') as $key => $preset)
+        <form action="{{ route('admin.settings.delivery-partners.store') }}" method="POST">
+            @csrf
+            <input type="hidden" name="preset" value="{{ $key }}">
+            <button class="btn btn-outline-primary" type="submit">Add {{ $preset['name'] }}</button>
+        </form>
+    @endforeach
+    </div>
+</div></div>
+
 <div class="card border shadow-sm">
     <div class="card-header bg-light border-bottom p-3">
         <div class="d-flex gap-3">
@@ -155,13 +169,13 @@
 </div>
 
 <script>
-    function editPartner(partner) {
+    function editPartner(partner, updateUrl) {
         document.getElementById('edit_name').value = partner.name;
         document.getElementById('edit_site_url').value = partner.site_url;
         document.getElementById('edit_tracking_url_template').value = partner.tracking_url_template;
         document.getElementById('edit_status').value = partner.status;
         
-        document.getElementById('editForm').action = `/admin/settings/delivery-partners/${partner.id}`;
+        document.getElementById('editForm').action = updateUrl;
         
         new bootstrap.Modal(document.getElementById('editPartnerModal')).show();
     }
