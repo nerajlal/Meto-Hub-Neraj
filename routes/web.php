@@ -198,6 +198,7 @@ Route::get('/login', function () {
 
 // Protected Admin Panel Routes
 Route::prefix('{tenant}/admin')->name('admin.')->middleware(['identify_tenant', 'auth', 'tenant_role:admin', \App\Http\Middleware\EnforceSubscription::class])->group(function () {
+    Route::get('/settings', [App\Http\Controllers\Admin\SettingsOverviewController::class, 'index'])->name('settings.index');
     Route::get('/', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
     Route::get('/notifications', [App\Http\Controllers\Admin\OrderNotificationController::class, 'index'])->name('notifications.index');
     Route::get('/notifications/feed', [App\Http\Controllers\Admin\OrderNotificationController::class, 'feed'])->middleware('throttle:60,1')->name('notifications.feed');

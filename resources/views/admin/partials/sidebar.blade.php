@@ -87,6 +87,11 @@
                 Settings
             </li>
             <li>
+                <a href="{{ route('admin.settings.index') }}" class="sidebar-item {{ request()->routeIs('admin.settings.index') ? 'active' : '' }}">
+                    <i class="fa-solid fa-sliders"></i><span>Settings overview</span>
+                </a>
+            </li>
+            <li>
                  <a href="{{ route('admin.settings.slider') }}" class="sidebar-item {{ request()->routeIs('admin.settings.slider') ? 'active' : '' }}">
                     <i class="fa-solid fa-images"></i>
                     <span>Hero Slider</span>
