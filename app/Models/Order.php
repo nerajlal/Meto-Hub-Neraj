@@ -62,6 +62,15 @@ class Order extends Model
         return $this->belongsTo(DeliveryPartner::class);
     }
 
+    public function trackingUrl(): ?string
+    {
+        $partner = $this->deliveryPartner;
+        if (!$this->tracking_number || !$partner || (int) $partner->tenant_id !== (int) $this->tenant_id) return null;
+        $url = str_replace('{tracking_number}', rawurlencode($this->tracking_number), (string) $partner->tracking_url_template);
+        return filter_var($url, FILTER_VALIDATE_URL) && in_array(strtolower((string) parse_url($url, PHP_URL_SCHEME)), ['http', 'https'], true)
+            && !parse_url($url, PHP_URL_USER) && !parse_url($url, PHP_URL_PASS) ? $url : null;
+    }
+
     public function deliveryBoy()
     {
         return $this->belongsTo(User::class, 'delivery_boy_id');

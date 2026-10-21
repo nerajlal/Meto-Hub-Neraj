@@ -60,7 +60,7 @@ class AccountController extends Controller
 
     public function orders()
     {
-        $orders = \App\Models\Order::where('user_id', Auth::id())->with(['items.product', 'items.bundle'])->orderBy('created_at', 'desc')->get();
+        $orders = \App\Models\Order::where('user_id', Auth::id())->with(['items.product', 'items.bundle', 'deliveryPartner'])->orderBy('created_at', 'desc')->get();
         
         $tenantId = session('active_tenant_id') 
             ?? (Auth::check() ? Auth::user()->tenant_id : null) 

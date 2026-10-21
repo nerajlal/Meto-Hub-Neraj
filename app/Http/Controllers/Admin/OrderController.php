@@ -82,6 +82,7 @@ class OrderController extends Controller
                 $order->delivery_partner_id = $validated['delivery_partner_id'] ?? $order->delivery_partner_id;
             }
             $order->save();
+            app(\App\Services\CustomerShipmentNotifications::class)->record($order);
         }, 3);
 
         return response()->json(['success' => true, 'message' => 'Order status updated successfully']);

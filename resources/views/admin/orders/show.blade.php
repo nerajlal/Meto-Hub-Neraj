@@ -20,6 +20,7 @@
         <div class="d-flex flex-wrap gap-2">
             <a href="{{ route('admin.orders.print', $order->id) }}" target="_blank" class="btn btn-white border shadow-sm btn-sm">Shipping Label</a>
             <a href="{{ route('admin.orders.print', ['id' => $order->id, 'document' => 'invoice']) }}" target="_blank" class="btn btn-white border shadow-sm btn-sm">Invoice / Save PDF</a>
+            @if($order->status === 'shipped')<button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#shipmentModal">Edit shipment</button>@endif
             <button onclick="advanceAction()" id="fulfillBtn" class="btn btn-warning text-white shadow-sm btn-sm fw-medium">Mark as Processing</button>
         </div>
     </div>
@@ -41,8 +42,8 @@
                             @if($order->deliveryPartner)
                                 <span class="mx-2">|</span>
                                 <span class="text-muted">via {{ $order->deliveryPartner->name }}</span>
-                                @if($order->deliveryPartner->tracking_url_template)
-                                    <a href="{{ str_replace('{tracking_number}', $order->tracking_number, $order->deliveryPartner->tracking_url_template) }}" target="_blank" class="ms-1 text-decoration-none">
+                                @if($trackingUrl = $order->trackingUrl())
+                                    <a href="{{ $trackingUrl }}" target="_blank" rel="noopener noreferrer" class="ms-1 text-decoration-none">
                                         <i class="fas fa-external-link-alt small"></i> Track
                                     </a>
                                 @endif
@@ -243,18 +244,19 @@
                 <div class="modal-body">
                     <div class="mb-3">
                         <label class="form-label">Tracking Number</label>
-                        <input type="text" id="modalTrackingId" class="form-control" placeholder="Enter tracking number">
+                        <input type="text" id="modalTrackingId" class="form-control" value="{{ $order->tracking_number }}" placeholder="Enter tracking number">
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Delivery Partner</label>
                         <select id="modalDeliveryPartner" class="form-select">
                             <option value="">Select Partner</option>
                             @foreach($deliveryPartners as $partner)
-                                <option value="{{ $partner->id }}" {{ $partner->is_default ? 'selected' : '' }}>{{ $partner->name }}</option>
+                                <option value="{{ $partner->id }}" {{ ($order->delivery_partner_id ? $order->delivery_partner_id == $partner->id : $partner->is_default) ? 'selected' : '' }}>{{ $partner->name }}</option>
                             @endforeach
                         </select>
                     </div>
                 </div>
+                <p class="px-3 small text-muted">Shipment details appear in the customer's My Orders. An email is queued when a valid customer email is recorded. Saving the same details again does not send another email.</p>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                     <button type="button" class="btn btn-primary" onclick="confirmShipment()">Confirm Shipment</button>
@@ -358,6 +360,7 @@
         .then(data => {
             if(data.success) {
                 orderStatus = nextStatus;
+                btn.disabled = false;
                 
                 // Update Badge and Button
                  if (orderStatus === 'processing') {
@@ -378,7 +381,7 @@
                     document.getElementById('trackingNumberDisplay').innerText = trackingId;
                     trackingDisplay.classList.remove('d-none');
                     
-                    showToast('Order marked as Shipped!');
+                    location.reload();
 
                 } else if (orderStatus === 'delivered') {
                     badge.className = 'badge bg-success bg-opacity-10 text-success border border-success border-opacity-10 text-uppercase';

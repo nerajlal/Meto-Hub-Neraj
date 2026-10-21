@@ -55,6 +55,8 @@
                     </div>
                 </div>
 
+                @include('storefront.partials.order_tracking')
+
                 <div class="order-items-list">
                     @foreach($order->items as $item)
                     <div style="display: flex; align-items: center; gap: 1.5rem; margin-bottom: 1.5rem;">
