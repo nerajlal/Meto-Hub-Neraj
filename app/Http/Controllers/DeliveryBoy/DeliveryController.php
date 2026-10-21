@@ -56,8 +56,12 @@ class DeliveryController extends Controller
             'status' => 'required|in:processing,shipped,delivered,cancelled', // Depending on statuses
         ]);
 
-        $order->status = $validated['status'];
-        $order->save();
+        \Illuminate\Support\Facades\DB::transaction(function () use ($id, $tenantId, $deliveryBoyId, $validated) {
+            $order = Order::where('tenant_id', $tenantId)->where('delivery_boy_id', $deliveryBoyId)->lockForUpdate()->findOrFail($id);
+            app(\App\Services\ManualOrderStock::class)->transition($order, $validated['status']);
+            $order->status = $validated['status'];
+            $order->save();
+        }, 3);
 
         return redirect()->back()->with('success', 'Order status updated successfully.');
     }

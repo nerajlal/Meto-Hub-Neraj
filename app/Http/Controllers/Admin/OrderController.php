@@ -76,12 +76,16 @@ class OrderController extends Controller
             'tracking_id' => 'nullable|string|max:255',
             'delivery_partner_id' => ['nullable', \Illuminate\Validation\Rule::exists('delivery_partners', 'id')->where('tenant_id', $order->tenant_id)],
         ]);
-        $order->status = $validated['status'];
-        if ($validated['status'] === 'shipped') {
-            $order->tracking_number = $validated['tracking_id'] ?? $order->tracking_number;
-            $order->delivery_partner_id = $validated['delivery_partner_id'] ?? $order->delivery_partner_id;
-        }
-        $order->save();
+        \Illuminate\Support\Facades\DB::transaction(function () use ($id, $validated) {
+            $order = Order::lockForUpdate()->findOrFail($id);
+            app(\App\Services\ManualOrderStock::class)->transition($order, $validated['status']);
+            $order->status = $validated['status'];
+            if ($validated['status'] === 'shipped') {
+                $order->tracking_number = $validated['tracking_id'] ?? $order->tracking_number;
+                $order->delivery_partner_id = $validated['delivery_partner_id'] ?? $order->delivery_partner_id;
+            }
+            $order->save();
+        }, 3);
 
         return response()->json(['success' => true, 'message' => 'Order status updated successfully']);
     }
@@ -137,9 +141,10 @@ class OrderController extends Controller
 
     public function store(Request $request)
     {
+        $tenantId = (int) $request->attributes->get('resolved_tenant_id');
         $validated = $request->validate([
             'customer_type' => 'required|in:existing,new',
-            'user_id' => 'required_if:customer_type,existing|nullable|exists:users,id',
+            'user_id' => ['required_if:customer_type,existing', 'nullable', \Illuminate\Validation\Rule::exists('users', 'id')->where('tenant_id', $tenantId)->where('type', 'user')],
             'customer_name' => 'required|string|max:255',
             'customer_email' => 'required|email|max:255',
             'customer_phone' => 'required|string|max:20',
@@ -171,23 +176,19 @@ class OrderController extends Controller
             
             // Items
             'items' => 'required|array|min:1',
-            'items.*.product_id' => 'required|exists:products,id',
+            'items.*.product_id' => ['required', \Illuminate\Validation\Rule::exists('products', 'id')->where('tenant_id', $tenantId)->where('status', 'active')],
             'items.*.variant_id' => 'nullable|exists:product_variants,id',
             'items.*.quantity' => 'required|integer|min:1',
             'items.*.price' => 'required|numeric|min:0',
         ]);
 
-        \Illuminate\Support\Facades\DB::transaction(function () use ($validated, $request) {
-            $dateCtx = now()->format('d');
-            $pool = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-            $rLetters = substr(str_shuffle($pool), 0, 2);
-            $randomMix = str_shuffle(rand(10, 99) . $rLetters);
-            $orderNumber = "NR-{$dateCtx}-MAN-{$randomMix}";
+        \Illuminate\Support\Facades\DB::transaction(function () use ($validated, $tenantId) {
+            $orderNumber = 'MH-MAN-'.strtoupper((string) \Illuminate\Support\Str::ulid());
 
             $userId = $validated['customer_type'] === 'existing' ? $validated['user_id'] : null;
 
             $shippingAddress = [
-                'address' => $validated['shipping_address_line1'] . ($validated['shipping_address_line2'] ? ', ' . $validated['shipping_address_line2'] : ''),
+                'address' => $validated['shipping_address_line1'] . (($validated['shipping_address_line2'] ?? null) ? ', ' . $validated['shipping_address_line2'] : ''),
                 'city' => $validated['shipping_city'],
                 'state' => $validated['shipping_state'],
                 'postal_code' => $validated['shipping_postal_code'] ?? '',
@@ -195,7 +196,7 @@ class OrderController extends Controller
             ];
 
             $billingAddress = [
-                'address' => ($validated['billing_address_line1'] ?? $validated['shipping_address_line1']) . (($validated['billing_address_line2'] ?? $validated['shipping_address_line2']) ? ', ' . ($validated['billing_address_line2'] ?? $validated['shipping_address_line2']) : ''),
+                'address' => ($validated['billing_address_line1'] ?? $validated['shipping_address_line1']) . (($validated['billing_address_line2'] ?? $validated['shipping_address_line2'] ?? null) ? ', ' . ($validated['billing_address_line2'] ?? $validated['shipping_address_line2'] ?? null) : ''),
                 'city' => $validated['billing_city'] ?? $validated['shipping_city'],
                 'state' => $validated['billing_state'] ?? $validated['shipping_state'],
                 'postal_code' => $validated['billing_postal_code'] ?? $validated['shipping_postal_code'] ?? '',
@@ -212,8 +213,6 @@ class OrderController extends Controller
                 $totalAmount = 0;
             }
 
-            $tenantId = session('active_tenant_id') ?? request()->route('tenant') ?? 1;
-
             $order = Order::create([
                 'user_id' => $userId,
                 'order_number' => $orderNumber,
@@ -229,16 +228,17 @@ class OrderController extends Controller
                 'customer_phone' => $validated['customer_phone'],
                 'shipping_address' => $shippingAddress,
                 'billing_address' => $billingAddress,
-                'notes' => $validated['notes'],
+                'notes' => $validated['notes'] ?? null,
                 'delivery_date' => $validated['delivery_date'] ?? null,
                 'delivery_time_slot' => $validated['delivery_time_slot'] ?? null,
                 'placed_at' => now(),
                 'tenant_id' => $tenantId,
             ]);
 
-            foreach ($validated['items'] as $itemData) {
-                $product = \App\Models\Product::findOrFail($itemData['product_id']);
-                $variant = $itemData['variant_id'] ? \App\Models\ProductVariant::find($itemData['variant_id']) : null;
+            foreach (collect($validated['items'])->sortBy(fn ($item) => sprintf('%020d-%020d', $item['product_id'], $item['variant_id'] ?? 0)) as $itemData) {
+                $product = \App\Models\Product::where('tenant_id', $tenantId)->where('status', 'active')->lockForUpdate()->findOrFail($itemData['product_id']);
+                $reserved = $validated['status'] !== 'cancelled';
+                $variant = app(\App\Services\ManualOrderStock::class)->select($product, isset($itemData['variant_id']) ? (int) $itemData['variant_id'] : null, (int) $itemData['quantity'], $reserved);
                 
                 \App\Models\OrderItem::create([
                     'order_id' => $order->id,
@@ -248,15 +248,15 @@ class OrderController extends Controller
                     'quantity' => $itemData['quantity'],
                     'price' => $itemData['price'],
                     'total' => $itemData['price'] * $itemData['quantity'],
-                    'size' => $variant ? $variant->size : null,
+                    'size' => $variant->size,
                     'type' => 'product',
+                    'options' => ['manual_stock' => ['variant_id' => $variant->id, 'reserved' => $reserved]],
                 ]);
             }
             app(\App\Services\MerchantOrderNotifications::class)->record($order);
-        });
+        }, 3);
 
-        $tenant = request()->route('tenant');
-        return redirect()->route('admin.orders', ['tenant' => $tenant])->with('success', 'Order created successfully.');
+        return redirect()->route('admin.orders', ['tenant' => $tenantId])->with('success', 'Order created successfully.');
     }
 
     public function export(Request $request)

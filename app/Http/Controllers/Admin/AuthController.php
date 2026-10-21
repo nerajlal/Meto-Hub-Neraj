@@ -33,10 +33,8 @@ class AuthController extends Controller
             'password' => ['required'],
         ]);
 
-        \Log::info('Login attempt', ['email' => $credentials['email']]);
 
         $attempt = Auth::attempt($credentials, $request->boolean('remember'));
-        \Log::info('Login attempt result', ['attempt' => $attempt]);
 
         if ($attempt) {
             if (Auth::user()->email_verification_required && ! Auth::user()->email_verified_at) {
@@ -52,7 +50,6 @@ class AuthController extends Controller
             $request->session()->regenerate();
 
             $user = Auth::user();
-            \Log::info('User authenticated', ['type' => $user->type, 'tenant' => $user->tenant_id]);
 
             if ($user->type === 'super_admin') {
                 return redirect()->route('super_admin.dashboard');
@@ -61,7 +58,6 @@ class AuthController extends Controller
             if ($user->type === 'admin' && $user->tenant_id) {
                 // Set the session active tenant ID
                 session(['active_tenant_id' => $user->tenant_id]);
-                \Log::info('Redirecting to admin dashboard', ['tenant' => $user->tenant_id]);
 
                 return $this->merchantIntendedRedirect($request, $user);
             }
@@ -73,7 +69,6 @@ class AuthController extends Controller
             }
 
             // Fallback if user doesn't have a tenant or super_admin type
-            \Log::info('Fallback hit - logging out');
             Auth::logout();
 
             return back()->withErrors([

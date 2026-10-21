@@ -7,15 +7,15 @@
         
         <div class="reels-container" style="display: flex; overflow-x: auto; gap: 1.5rem; padding-bottom: 1rem; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;">
             @foreach($reels as $reel)
+            @php
+                $instagramPost = \App\Services\InstagramPostUrl::normalize($reel->instagram_url);
+                $embedUrl = $instagramPost ? $instagramPost.'embed' : null;
+            @endphp
+            @continue(!$instagramPost)
             <div class="reel-card" style="flex: 0 0 320px; scroll-snap-align: start; display: flex; flex-direction: column; gap: 1rem; position: relative;">
                 
                 <!-- Instagram Embed -->
                 <div style="width: 320px; height: 540px; background: #000; border-radius: 1rem; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); position: relative;">
-                    @php
-                        // Clean the URL (remove query parameters like ?igsh=...)
-                        $baseUrl = strtok($reel->instagram_url, '?');
-                        $embedUrl = rtrim($baseUrl, '/') . '/embed';
-                    @endphp
                     <!-- Sandbox prevents redirecting the parent page or opening popups -->
                     <iframe src="{{ $embedUrl }}" sandbox="allow-scripts allow-same-origin" width="320" height="540" frameborder="0" scrolling="no" allowtransparency="true" style="border: none; width: 100%; height: 100%;"></iframe>
                 </div>

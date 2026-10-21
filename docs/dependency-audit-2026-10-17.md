@@ -1,5 +1,7 @@
 # Dependency audit — 17 October 2026
 
+Remediated in the tested 21 October dependency update: see [dependency-audit-2026-10-21.md](dependency-audit-2026-10-21.md). Findings below describe the earlier lockfile.
+
 Composer reported 63 advisory entries across 19 locked packages while adding owner Web Push. Some advisories overlap. These entries are findings, not a completed remediation.
 
 The added packages (`minishlink/web-push`, `web-token/jwt-library`, `spomky-labs/base64url`, `spomky-labs/pki-framework`, `symfony/polyfill-php82`) had no advisory entries in this audit. No existing package version was updated by this install.

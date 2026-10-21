@@ -1,5 +1,7 @@
 # MetoHub production deployment
 
+Latest hardening release and go-live gates: [production-release-2026-10-21.md](production-release-2026-10-21.md). Deploy its updated composer.lock with Composer install, not a production Composer update.
+
 Current canonical domain: `https://metohub.cloud`.
 Previous beta domain: `https://betametohub.metora.in`.
 Sender: `info@metora.in`.

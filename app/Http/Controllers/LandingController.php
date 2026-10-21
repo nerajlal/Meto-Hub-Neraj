@@ -103,18 +103,18 @@ class LandingController extends Controller
         $validated = $request->validate([
             'email' => 'required|email|max:255',
             'business_name' => 'required|string|max:255',
-            'target_url' => 'nullable|string'
+            'target_url' => 'nullable|url:http,https|max:2048'
         ]);
 
         try {
-            $adminEmail = config('app.admin_email');
+            $adminEmail = config('marketing.contact.email');
             $senderEmail = config('mail.from.address');
             $appName = config('app.name');
 
             $messageContent = "New Demo Request Received for {$appName}:\n\n" .
                 "Email: {$validated['email']}\n" .
                 "Business Name: {$validated['business_name']}\n" .
-                "Requested Demo: {$validated['target_url']}\n\n" .
+                "Requested Demo: " . ($validated['target_url'] ?? '') . "\n\n" .
                 "Timestamp: " . now()->format('Y-m-d H:i:s');
 
             Mail::raw($messageContent, function ($message) use ($adminEmail, $appName) {
@@ -124,10 +124,8 @@ class LandingController extends Controller
 
             return response()->json(['success' => true, 'message' => 'Request submitted successfully.']);
         } catch (\Exception $e) {
-            \Log::error('Mail Error: ' . $e->getMessage());
-            // We still return success to the user so they can see the demo, 
-            // but log the error for the developer.
-            return response()->json(['success' => true, 'message' => 'Request processed (Mail logged).']);
+            report($e);
+            return response()->json(['success' => false, 'message' => 'Unable to send your request. Please try again or contact support.'], 503);
         }
     }
     public function blogs(\App\Services\BlogFeed $feed)

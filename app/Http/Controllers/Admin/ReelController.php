@@ -8,6 +8,8 @@ use App\Models\Product;
 use App\Models\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
+use App\Services\InstagramPostUrl;
 
 class ReelController extends Controller
 {
@@ -27,17 +29,19 @@ class ReelController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'instagram_url' => 'required|url',
+            'instagram_url' => ['required', 'string', 'max:500', function ($attribute, $value, $fail) {
+                if (! InstagramPostUrl::normalize($value)) $fail('Enter an HTTPS Instagram reel or post URL.');
+            }],
             'title' => 'nullable|string|max:255',
             'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
             'link_type' => 'required|in:product,collection',
-            'product_id' => 'nullable|required_if:link_type,product|exists:products,id',
-            'collection_id' => 'nullable|required_if:link_type,collection|exists:collections,id',
+            'product_id' => ['nullable', 'required_if:link_type,product', Rule::exists('products', 'id')->where('tenant_id', $request->attributes->get('resolved_tenant_id'))->where('status', 'active')],
+            'collection_id' => ['nullable', 'required_if:link_type,collection', Rule::exists('collections', 'id')->where('tenant_id', $request->attributes->get('resolved_tenant_id'))->where('status', true)],
             'status' => 'boolean',
         ]);
 
         $data = [
-            'instagram_url' => $request->instagram_url,
+            'instagram_url' => InstagramPostUrl::normalize($request->instagram_url),
             'title' => $request->title,
             'link_type' => $request->link_type,
             'product_id' => $request->link_type === 'product' ? $request->product_id : null,
@@ -68,17 +72,19 @@ class ReelController extends Controller
         $reel = Reel::findOrFail($id);
 
         $request->validate([
-            'instagram_url' => 'required|url',
+            'instagram_url' => ['required', 'string', 'max:500', function ($attribute, $value, $fail) {
+                if (! InstagramPostUrl::normalize($value)) $fail('Enter an HTTPS Instagram reel or post URL.');
+            }],
             'title' => 'nullable|string|max:255',
             'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
             'link_type' => 'required|in:product,collection',
-            'product_id' => 'nullable|required_if:link_type,product|exists:products,id',
-            'collection_id' => 'nullable|required_if:link_type,collection|exists:collections,id',
+            'product_id' => ['nullable', 'required_if:link_type,product', Rule::exists('products', 'id')->where('tenant_id', $request->attributes->get('resolved_tenant_id'))->where('status', 'active')],
+            'collection_id' => ['nullable', 'required_if:link_type,collection', Rule::exists('collections', 'id')->where('tenant_id', $request->attributes->get('resolved_tenant_id'))->where('status', true)],
             'status' => 'boolean',
         ]);
 
         $data = [
-            'instagram_url' => $request->instagram_url,
+            'instagram_url' => InstagramPostUrl::normalize($request->instagram_url),
             'title' => $request->title,
             'link_type' => $request->link_type,
             'product_id' => $request->link_type === 'product' ? $request->product_id : null,
@@ -102,7 +108,7 @@ class ReelController extends Controller
     {
         $request->validate([
             'order' => 'required|array',
-            'order.*' => 'exists:reels,id',
+            'order.*' => ['required', 'integer', 'distinct', Rule::exists('reels', 'id')->where('tenant_id', $request->attributes->get('resolved_tenant_id'))],
         ]);
 
         foreach ($request->order as $index => $id) {

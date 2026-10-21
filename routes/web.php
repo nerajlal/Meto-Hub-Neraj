@@ -77,7 +77,7 @@ Route::get('/security', [App\Http\Controllers\LandingController::class, 'securit
 
 Route::get('/blogs', [App\Http\Controllers\LandingController::class, 'blogs'])->name('landing.blogs');
 Route::get('/blogs/{id}', [App\Http\Controllers\LandingController::class, 'blogShow'])->name('landing.blog.show');
-Route::post('/demo-request', [App\Http\Controllers\LandingController::class, 'handleDemoRequest'])->name('demo.request');
+Route::post('/demo-request', [App\Http\Controllers\LandingController::class, 'handleDemoRequest'])->middleware('throttle:3,1')->name('demo.request');
 
 // Shared Actions (Global)
 Route::middleware([\App\Http\Middleware\IdentifyStorefrontTenant::class, \App\Http\Middleware\TrackStorefrontCart::class])->group(function () {
@@ -342,8 +342,8 @@ Route::prefix('{tenant}/admin')->name('admin.')->middleware(['identify_tenant', 
     Route::get('/settings/theme', [App\Http\Controllers\Admin\ThemeSettingsController::class, 'index'])->name('settings.theme');
     Route::post('/settings/theme', [App\Http\Controllers\Admin\ThemeSettingsController::class, 'update'])->name('settings.theme.update');
 
-    Route::get('/settings/videos', [App\Http\Controllers\Admin\TenantVideoController::class, 'index'])->name('settings.videos');
-    Route::post('/settings/videos', [App\Http\Controllers\Admin\TenantVideoController::class, 'update'])->name('settings.videos.update');
+    Route::get('/settings/videos', fn () => redirect()->route('admin.settings.reels'))->name('settings.videos');
+    Route::post('/settings/videos', fn () => abort(410, 'Video settings have been retired. Manage Instagram Reels instead.'))->name('settings.videos.update');
 
     Route::get('/settings/domain', [App\Http\Controllers\Admin\SettingController::class, 'domainIndex'])->name('settings.domain');
     Route::post('/settings/domain', [App\Http\Controllers\Admin\SettingController::class, 'domainUpdate'])->name('settings.domain.update');

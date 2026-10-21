@@ -52,9 +52,7 @@ class ProductionPreflight extends Command
         }
         $pushPublic = config('order_notifications.vapid.public_key');
         $pushPrivate = config('order_notifications.vapid.private_key');
-        if ($pushPublic || $pushPrivate) {
-            $check((bool) $pushPublic && (bool) $pushPrivate, 'Web Push needs both public and private VAPID keys.');
-        }
+        $check((bool) $pushPublic && (bool) $pushPrivate, 'Web Push needs both public and private VAPID keys.');
 
         $check((bool) config('services.razorpay.key') && (bool) config('services.razorpay.secret'), 'Configure Razorpay subscription credentials before charging for plans.');
         $check((bool) config('services.razorpay.webhook_secret'), 'RAZORPAY_WEBHOOK_SECRET is missing; configure signed subscription webhooks.');
