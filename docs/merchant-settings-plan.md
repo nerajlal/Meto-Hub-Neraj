@@ -11,8 +11,8 @@ Implemented on 21 October 2026. The overview follows this specification; no data
 ## Page and navigation
 
 - New URL: `/{tenant}/admin/settings`, named `admin.settings.index`.
-- Add “Settings overview” as the first item under the sidebar’s Settings heading.
-- Keep current settings URLs and sidebar shortcuts working. The overview connects them rather than replacing their editors.
+- Use one Settings sidebar entry linking to the overview.
+- Keep current settings URLs working. Detailed settings shortcuts live in the overview rather than the sidebar.
 - Use the existing admin layout, header, mobile navigation and authenticated merchant session.
 - Resolve the tenant from the middleware’s `resolved_tenant_id`; do not fall back to tenant 1.
 - Keep the overview readable after trial expiration so the merchant can reach Billing. Existing subscription middleware continues controlling writes on destination pages.
@@ -130,7 +130,7 @@ Completion means the overview is accessible from the sidebar, accurately represe
 
 ## Implementation record
 
-- Added `SettingsOverviewController`, the `admin.settings.index` route and Settings overview sidebar entry.
+- Added `SettingsOverviewController`, the `admin.settings.index` route and Settings sidebar entry.
 - Added `resources/views/admin/settings/index.blade.php` with isolated styles in `public/css/metohub-settings.css`.
 - Existing integration sections now have stable fragment IDs for the four overview shortcuts.
 - Access state uses PlanAccess; subscription records are read locally without provider synchronization or creation. Saved tracking IDs and verification tokens are not displayed.
@@ -138,3 +138,7 @@ Completion means the overview is accessible from the sidebar, accurately represe
 - PHP tests cover tenant/role isolation, read-only access, trial expiry, pending payments, cancelled subscriptions with remaining paid access, integration states and fragment destinations.
 - Chrome checks passed at 320, 375, 768 and 1440px using an isolated SQLite in-memory fixture, including long identity details, all 21 settings rows and visible keyboard focus. No live stores or billing records were modified.
 - Deployment: include the new controller, view, CSS, sidebar, integration view and route changes; run normal Laravel cache refresh commands. No migration, Composer install or npm build is needed for this change.
+
+### Sidebar simplification
+
+Following the owner’s feedback about navigation overload, the merchant sidebar now has nine primary entries: Home, Orders, Products, Customers, Carts, Discounts, Analytics, Billing and Settings. Products expands to All products, Collections and Bundles, and opens automatically on catalog pages. Billing has a direct sidebar entry as requested, and is also reachable from Settings. Detailed store configuration lives in Settings. A Settings overview return link appears on settings, delivery-staff, billing and notification pages. Delivery staff retain their My Deliveries navigation. Existing URLs and authorization remain unchanged.

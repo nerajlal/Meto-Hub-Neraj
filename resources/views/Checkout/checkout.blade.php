@@ -232,8 +232,8 @@
 
                 <!-- Delivery Schedule -->
                 @php
-                    $showDate = !isset($cf['delivery_date']) || (isset($cf['delivery_date']['enabled']) && $cf['delivery_date']['enabled']);
-                    $showTime = !isset($cf['delivery_time_slot']) || (isset($cf['delivery_time_slot']['enabled']) && $cf['delivery_time_slot']['enabled']);
+                    $showDate = (bool) ($cf['delivery_date']['enabled'] ?? false);
+                    $showTime = (bool) ($cf['delivery_time_slot']['enabled'] ?? false);
                 @endphp
                 @if($showDate || $showTime)
                 <div class="checkout-card" style="background: #fff; border: 1px solid var(--border-color); border-radius: 1.5rem; padding: 2.5rem; margin-bottom: 2rem;">

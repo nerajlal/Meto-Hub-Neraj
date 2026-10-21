@@ -17,7 +17,7 @@ with tempfile.TemporaryDirectory(prefix='metohub-settings-qa-') as folder:
             time.sleep(.2)
             assert not c.js('document.documentElement.scrollWidth>innerWidth+1'), (width, 'page overflow')
             assert not c.js('window.__errors'), (width, c.js('window.__errors'))
-            assert c.js("document.querySelectorAll('.settings-overview .settings-row').length") == 21
+            assert c.js("document.querySelectorAll('.settings-overview .settings-row').length") == 19
             assert c.js("document.querySelector('.settings-overview').textContent.includes('Paused in GTM mode')")
             assert c.js("Array.from(document.querySelectorAll('.settings-overview a')).every(a=>a.getAttribute('href') && !a.getAttribute('href').startsWith('javascript:'))")
             c.call('Input.dispatchKeyEvent', {'type': 'keyDown', 'key': 'Tab', 'code': 'Tab', 'windowsVirtualKeyCode': 9})

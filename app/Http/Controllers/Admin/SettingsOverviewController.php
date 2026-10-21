@@ -39,13 +39,11 @@ class SettingsOverviewController extends Controller
             ],
             'Delivery' => [
                 $row('Delivery partners', 'Manage partner records and tracking details', 'truck', 'admin.settings.delivery-partners.index'),
-                $row('Delivery staff', 'Manage your store’s delivery team', 'people-group', 'admin.delivery-staff.index'),
             ],
             'Homepage content' => [
                 $row('Hero slider', 'Update your storefront banners', 'images', 'admin.settings.slider'),
                 $row('Instagram reels', 'Showcase your store’s reels', 'film', 'admin.settings.reels'),
                 $row('Home products', 'Choose products to feature on your homepage', 'box', 'admin.settings.home-products'),
-                $row('Videos', 'Manage your storefront video content', 'video', 'admin.settings.videos'),
             ],
             'Search & marketing' => [
                 $row('Search readiness', 'Page titles, descriptions and indexing preferences', 'magnifying-glass', 'admin.settings.seo'),

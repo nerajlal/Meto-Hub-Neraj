@@ -211,7 +211,7 @@
                                         <td class="text-center">
                                             <div class="form-check form-switch d-inline-block">
                                                 <input class="form-check-input" type="checkbox" role="switch"
-                                                    name="fields[delivery_date][enabled]" value="1" {{ !isset($fields['delivery_date']) || (isset($fields['delivery_date']['enabled']) && $fields['delivery_date']['enabled']) ? 'checked' : '' }}>
+                                                    name="fields[delivery_date][enabled]" value="1" {{ (bool) ($fields['delivery_date']['enabled'] ?? false) ? 'checked' : '' }}>
                                             </div>
                                         </td>
                                         <td class="text-center text-muted small">
@@ -225,7 +225,7 @@
                                         <td class="text-center">
                                             <div class="form-check form-switch d-inline-block">
                                                 <input class="form-check-input" type="checkbox" role="switch"
-                                                    name="fields[delivery_time_slot][enabled]" value="1" {{ !isset($fields['delivery_time_slot']) || (isset($fields['delivery_time_slot']['enabled']) && $fields['delivery_time_slot']['enabled']) ? 'checked' : '' }}>
+                                                    name="fields[delivery_time_slot][enabled]" value="1" {{ (bool) ($fields['delivery_time_slot']['enabled'] ?? false) ? 'checked' : '' }}>
                                             </div>
                                         </td>
                                         <td class="text-center text-muted small">

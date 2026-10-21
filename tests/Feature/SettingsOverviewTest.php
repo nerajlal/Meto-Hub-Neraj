@@ -91,4 +91,21 @@ class SettingsOverviewTest extends TestCase
             $response->assertSee('id="integration-'.$provider.'"', false);
         }
     }
+
+    public function test_sidebar_has_nine_main_entries_with_billing_catalog_and_settings_reachable(): void
+    {
+        [$tenant] = $this->merchant();
+        $html = $this->get("/{$tenant->id}/admin/settings")->assertOk()->getContent();
+        $dom = new \DOMDocument;
+        @$dom->loadHTML($html);
+        $xpath = new \DOMXPath($dom);
+        $this->assertCount(9, $xpath->query('//*[@id="adminSidebar"]/nav/ul/li'));
+        $this->assertCount(0, $xpath->query('//*[@id="adminSidebar"]//details[@open]'));
+        $this->assertCount(3, $xpath->query('//*[@id="adminSidebar"]//details//a'));
+        $this->assertCount(0, $xpath->query('//*[@id="adminSidebar"]//a[contains(@href,"settings/theme")]'));
+        $this->get("/{$tenant->id}/admin/settings/theme")->assertOk()->assertSee('← Settings overview');
+        $html = $this->get("/{$tenant->id}/admin/collections")->assertOk()->getContent();
+        @$dom->loadHTML($html);
+        $this->assertCount(1, (new \DOMXPath($dom))->query('//*[@id="adminSidebar"]//details[@open]'));
+    }
 }

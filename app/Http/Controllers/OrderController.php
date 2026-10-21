@@ -46,12 +46,12 @@ class OrderController extends Controller
         ];
 
         // Delivery schedule validation
-        $deliveryDateEnabled = !isset($cf['delivery_date']) || (isset($cf['delivery_date']['enabled']) && $cf['delivery_date']['enabled']);
+        $deliveryDateEnabled = (bool) ($cf['delivery_date']['enabled'] ?? false);
         if ($deliveryDateEnabled) {
             $rules['delivery_date'] = 'required|date';
         }
         
-        $deliveryTimeSlotEnabled = !isset($cf['delivery_time_slot']) || (isset($cf['delivery_time_slot']['enabled']) && $cf['delivery_time_slot']['enabled']);
+        $deliveryTimeSlotEnabled = (bool) ($cf['delivery_time_slot']['enabled'] ?? false);
         if ($deliveryTimeSlotEnabled) {
             $rules['delivery_time_slot'] = 'required|string';
         }

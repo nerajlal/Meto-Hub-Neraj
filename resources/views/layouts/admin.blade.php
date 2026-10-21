@@ -235,6 +235,9 @@
                         </div>
                     @endif
 
+                    @if(auth()->user()?->type === 'admin' && request()->routeIs('admin.settings.*', 'admin.delivery-staff.*', 'admin.billing*', 'admin.notifications.*') && !request()->routeIs('admin.settings.index'))
+                        <nav aria-label="Settings navigation" class="mb-3 px-2"><a href="{{ route('admin.settings.index') }}" class="small text-decoration-none fw-medium">← Settings overview</a></nav>
+                    @endif
                     @yield('content')
 
                     <div class="mt-5 pt-4 border-top text-center small text-primary fw-medium">
