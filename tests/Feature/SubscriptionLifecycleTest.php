@@ -100,6 +100,18 @@ class SubscriptionLifecycleTest extends TestCase
         $this->assertFalse(app(PlanAccess::class)->hasPaidAccess($this->store->fresh()));
     }
 
+    public function test_verified_paid_callback_reports_unlocked_access(): void
+    {
+        $this->local('created');
+        $this->postJson('/'.$this->store->id.'/admin/billing/verify', [
+            'razorpay_payment_id' => 'pay_owned', 'razorpay_subscription_id' => 'sub_owned',
+            'razorpay_signature' => hash_hmac('sha256', 'pay_owned|sub_owned', 'test_secret'),
+        ])->assertOk()->assertJsonPath('paid_access', true);
+        $this->getJson('/'.$this->store->id.'/admin/billing/status')->assertOk()->assertJsonPath('paid_access', true);
+        $this->assertSame('pro', $this->store->fresh()->plan);
+        $this->assertDatabaseHas('subscription_payments', ['gateway_id' => 'pay_owned', 'status' => 'captured']);
+    }
+
     public function test_pending_checkout_is_reused_and_live_subscription_cannot_be_duplicated(): void
     {
         $this->postJson('/'.$this->store->id.'/admin/billing/subscribe', ['plan_tier' => 'base', 'cycle' => 'monthly'])->assertOk();
@@ -241,6 +253,67 @@ class SubscriptionLifecycleTest extends TestCase
         $this->get('/store/'.$this->store->slug)->assertOk()->assertDontSee('Powered by');
         $this->get('https://custom.example/')->assertOk();
     }
+    public function test_mapped_plan_is_verified_and_a_mismatched_price_cannot_create_checkout(): void
+    {
+        config(['services.razorpay.plans.pro.monthly' => 'plan_owned']);
+        $this->gateway->planData['item']['amount'] = 1;
+        $this->postJson('/'.$this->store->id.'/admin/billing/subscribe', ['plan_tier' => 'pro', 'cycle' => 'monthly'])->assertUnprocessable();
+        $this->assertSame(0, $this->gateway->creates);
+        $this->assertDatabaseCount('store_subscriptions', 0);
+        $this->gateway->planData['item']['amount'] = 24900;
+        $this->postJson('/'.$this->store->id.'/admin/billing/subscribe', ['plan_tier' => 'pro', 'cycle' => 'monthly'])->assertOk();
+        $this->assertSame(0, $this->gateway->planCreates);
+    }
+
+    public function test_plan_discovery_uses_later_pages_instead_of_creating_duplicates(): void
+    {
+        $this->gateway->planPages[0] = array_fill(0, 100, ['id' => 'plan_old', 'item' => ['name' => 'Old plan']]);
+        $this->gateway->planPages[100] = [['id' => 'plan_owned', 'period' => 'monthly', 'interval' => 1,
+            'item' => ['name' => 'MetoHub Base', 'amount' => 9900, 'currency' => 'INR']]];
+        $this->postJson('/'.$this->store->id.'/admin/billing/subscribe', ['plan_tier' => 'base', 'cycle' => 'monthly'])->assertOk();
+        $this->assertSame(0, $this->gateway->planCreates);
+    }
+
+    public function test_provider_reactivated_subscription_cannot_be_replaced_using_stale_terminal_state(): void
+    {
+        $local = $this->local('cancelled');
+        $this->gateway->remote['status'] = 'active';
+        $this->gateway->remote['paid_count'] = 0;
+        $this->gateway->invoices = [];
+        $this->postJson('/'.$this->store->id.'/admin/billing/subscribe', ['plan_tier' => 'pro', 'cycle' => 'monthly'])->assertConflict();
+        $this->assertSame(0, $this->gateway->creates);
+        $this->assertSame('active', $local->fresh()->status);
+    }
+
+    public function test_signed_authorization_without_paid_invoice_does_not_unlock_paid_access(): void
+    {
+        $this->store->forceFill(['created_at' => now()->subDays(10)])->save();
+        $this->local('authenticated');
+        $this->gateway->remote['status'] = 'authenticated';
+        $this->gateway->remote['paid_count'] = 0;
+        $this->gateway->invoices = [];
+        unset($this->gateway->paymentData['invoice_id']);
+        $this->postJson('/'.$this->store->id.'/admin/billing/verify', [
+            'razorpay_subscription_id' => 'sub_owned', 'razorpay_payment_id' => 'pay_owned',
+            'razorpay_signature' => hash_hmac('sha256', 'pay_owned|sub_owned', 'test_secret'),
+        ])->assertOk()->assertJsonPath('paid_access', false);
+        $fetches = $this->gateway->fetches;
+        $this->getJson('/'.$this->store->id.'/admin/billing/status')->assertOk()->assertJsonPath('paid_access', false)
+            ->assertHeader('Cache-Control', 'no-store, private');
+        $this->assertSame($fetches, $this->gateway->fetches);
+        $this->getJson('/'.Tenant::create(['name' => 'Other'])->id.'/admin/billing/status')->assertForbidden();
+    }
+
+    public function test_checkout_requires_webhook_setup_and_billing_page_hides_credentials(): void
+    {
+        config(['services.razorpay.key' => 'rzp_test_public', 'services.razorpay.secret' => 'private-api-secret', 'services.razorpay.webhook_secret' => null]);
+        $this->postJson('/'.$this->store->id.'/admin/billing/subscribe', ['plan_tier' => 'base', 'cycle' => 'monthly'])->assertStatus(503);
+        $this->assertSame(0, $this->gateway->creates);
+        $this->get('/'.$this->store->id.'/admin/billing')->assertOk()->assertSee('not configured yet')->assertDontSee('private-api-secret');
+        config(['services.razorpay.webhook_secret' => 'private-hook-secret']);
+        $this->get('/'.$this->store->id.'/admin/billing')->assertOk()->assertSee('Test mode')->assertSee('id="billing-config"', false)->assertSee('js/metohub-billing.js')->assertDontSee('private-api-secret')->assertDontSee('private-hook-secret');
+    }
+
 }
 
 class FakeBillingGateway
@@ -250,6 +323,14 @@ class FakeBillingGateway
     public array $paymentData;
 
     public array $invoices;
+
+    public array $planData = ['id' => 'plan_owned', 'period' => 'monthly', 'interval' => 1, 'item' => ['amount' => 24900, 'currency' => 'INR']];
+
+    public array $planPages = [];
+
+    public int $planCreates = 0;
+
+    public int $fetches = 0;
 
     public int $creates = 0;
 
@@ -284,13 +365,14 @@ class FakeBillingResource
     public function all(array $options = []): array
     {
         return ['items' => match ($this->type) {
-            'invoice' => $this->gateway->invoices, 'subscription' => [$this->gateway->remote], default => []
+            'invoice' => $this->gateway->invoices, 'subscription' => [$this->gateway->remote], 'plan' => $this->gateway->planPages[$options['skip'] ?? 0] ?? [], default => []
         }];
     }
 
     public function create(array $data): object
     {
         if ($this->type === 'plan') {
+            $this->gateway->planCreates++;
             return (object) ['id' => 'plan_owned'];
         }
         $this->gateway->creates++;
@@ -304,8 +386,9 @@ class FakeBillingResource
 
     public function fetch(string $id): object
     {
+        $this->gateway->fetches++;
         $data = match ($this->type) {
-            'subscription' => $this->gateway->remote, 'payment' => $this->gateway->paymentData, 'invoice' => $this->gateway->invoices[0], default => ['period' => 'monthly', 'item' => ['amount' => 24900, 'currency' => 'INR']]
+            'subscription' => $this->gateway->remote, 'payment' => $this->gateway->paymentData, 'invoice' => $this->gateway->invoices[0], default => $this->gateway->planData
         };
 
         return new FakeBillingEntity($this->gateway, $data);

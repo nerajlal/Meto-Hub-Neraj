@@ -45,6 +45,8 @@ class SubscriptionBilling
 
     public function start(Tenant $tenant, string $tier, string $cycle): StoreSubscription
     {
+        abort_unless(in_array($cycle, ['monthly', 'yearly'], true), 422, 'Choose monthly or yearly billing.');
+        abort_unless(config('services.razorpay.webhook_secret'), 503, 'Subscription webhooks must be configured before starting checkout.');
         return Cache::lock('billing-tenant-'.$tenant->id, 600)->block(5, function () use ($tenant, $tier, $cycle) {
             $tenant->refresh();
             $current = $tenant->subscriptions()->whereNotIn('status', ['cancelled', 'completed', 'expired'])->latest('id')->first() ?? $this->local($tenant);
@@ -62,6 +64,7 @@ class SubscriptionBilling
             }
             if ($current?->gateway_id && in_array($current->status, ['cancelled', 'completed', 'expired'], true)) {
                 $current = $this->sync($current);
+                abort_unless(in_array($current->status, ['cancelled', 'completed', 'expired'], true), 409, 'The provider reports an existing subscription. Refresh Billing before starting another checkout.');
                 abort_if($current->paid_count > 0 && ! $current->paid_through, 409, 'The previous paid period needs provider review before another subscription is created.');
             }
             abort_if($current?->paid_through?->isFuture() && $current->paid_count > 0, 409, 'The existing paid subscription period has not ended yet.');
@@ -70,18 +73,7 @@ class SubscriptionBilling
             abort_unless($definition, 422, 'Choose a current subscription plan.');
             $amount = $definition['monthly_price'] * 100 * ($cycle === 'yearly' ? config('saas.annual_months') : 1);
             $planName = 'MetoHub '.$definition['name'].($cycle === 'yearly' ? ' Yearly' : '');
-            $plans = $this->array($api->plan->all());
-            $planId = null;
-            foreach ($plans['items'] ?? [] as $plan) {
-                if (($plan['item']['name'] ?? '') === $planName && (int) ($plan['item']['amount'] ?? 0) === $amount && ($plan['item']['currency'] ?? '') === 'INR'
-                    && ($plan['period'] ?? '') === $cycle && (int) ($plan['interval'] ?? 0) === 1) {
-                    $planId = $plan['id'];
-                }
-            }
-            if (! $planId) {
-                $planId = $this->array($api->plan->create(['period' => $cycle, 'interval' => 1,
-                    'item' => ['name' => $planName, 'amount' => $amount, 'currency' => 'INR']]))['id'];
-            }
+            $planId = $this->resolvePlan($api, $tier, $cycle, $planName, $amount);
             $tenant->subscriptions()->whereIn('status', ['cancelled', 'completed', 'expired'])->where(fn ($q) => $q->whereNull('paid_through')->orWhere('paid_through', '<=', now()))->update(['checkout_guard' => null]);
             // Persist before making a remote request. Uncertain attempts must be reconciled, never blindly recreated.
             $local = StoreSubscription::create(['tenant_id' => $tenant->id, 'checkout_attempt' => (string) Str::uuid(),
@@ -95,6 +87,39 @@ class SubscriptionBilling
             $tenant->update(['razorpay_subscription_id' => $local->gateway_id, 'subscription_status' => 'pending']);
 
             return $local;
+        });
+    }
+
+    private function resolvePlan($api, string $tier, string $cycle, string $name, int $amount): string
+    {
+        $matches = fn ($plan) => (int) ($plan['item']['amount'] ?? 0) === $amount
+            && ($plan['item']['currency'] ?? '') === 'INR' && ($plan['period'] ?? '') === $cycle
+            && (int) ($plan['interval'] ?? 0) === 1;
+        if ($id = config('services.razorpay.plans.'.$tier.'.'.$cycle)) {
+            $plan = $this->array($api->plan->fetch($id));
+            abort_unless(($plan['id'] ?? '') === $id && $matches($plan), 422, 'The configured Razorpay plan does not match the selected price, currency or billing period. Contact support.');
+
+            return $id;
+        }
+
+        // Serialize plan discovery across tenants in this application/account.
+        return Cache::lock('billing-plan-'.hash('sha256', config('services.razorpay.key').'|'.$tier.'|'.$cycle.'|'.$amount), 120)->block(5, function () use ($api, $matches, $name, $cycle, $amount) {
+            for ($skip = 0; $skip < 10000; $skip += 100) {
+                $page = $this->array($api->plan->all(['count' => 100, 'skip' => $skip]));
+                $items = $page['items'] ?? null;
+                abort_unless(is_array($items), 502, 'Unable to confirm the provider plan list.');
+                foreach ($items as $plan) {
+                    if (($plan['item']['name'] ?? '') === $name && $matches($plan) && ! empty($plan['id'])) return $plan['id'];
+                }
+                if (count($items) < 100) {
+                    $plan = $this->array($api->plan->create(['period' => $cycle, 'interval' => 1,
+                        'item' => ['name' => $name, 'amount' => $amount, 'currency' => 'INR']]));
+                    abort_unless(! empty($plan['id']), 502, 'Provider did not return a plan reference.');
+
+                    return $plan['id'];
+                }
+            }
+            abort(409, 'Plan discovery requires support review. Configure a Razorpay plan ID before checkout.');
         });
     }
 

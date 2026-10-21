@@ -28,7 +28,7 @@ class PlanPricingTest extends TestCase
 
     public function test_new_subscriptions_charge_the_displayed_monthly_and_annual_prices(): void
     {
-        config(['services.razorpay.key' => 'test_key', 'services.razorpay.secret' => 'test_secret']);
+        config(['services.razorpay.key' => 'test_key', 'services.razorpay.secret' => 'test_secret', 'services.razorpay.webhook_secret' => 'test_webhook']);
         foreach (['base' => 99, 'pro' => 249, 'enterprise' => 749] as $tier => $monthly) {
             foreach (['monthly' => $monthly, 'yearly' => $monthly * 11] as $cycle => $amount) {
                 $store = Tenant::create(['name' => 'Billing Store', 'plan' => 'base']);

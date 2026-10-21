@@ -270,8 +270,9 @@ Route::prefix('{tenant}/admin')->name('admin.')->middleware(['identify_tenant', 
     Route::get('/customers/{id}', [App\Http\Controllers\Admin\CustomerController::class, 'show'])->name('customers.show');
 
     Route::get('/billing', [App\Http\Controllers\Admin\BillingController::class, 'index'])->name('billing');
-    Route::post('/billing/subscribe', [App\Http\Controllers\Admin\BillingController::class, 'subscribe'])->name('billing.subscribe');
-    Route::post('/billing/verify', [App\Http\Controllers\Admin\BillingController::class, 'verify'])->name('billing.verify');
+    Route::get('/billing/status', [App\Http\Controllers\Admin\BillingController::class, 'status'])->middleware('throttle:60,1')->name('billing.status');
+    Route::post('/billing/subscribe', [App\Http\Controllers\Admin\BillingController::class, 'subscribe'])->middleware('throttle:10,1')->name('billing.subscribe');
+    Route::post('/billing/verify', [App\Http\Controllers\Admin\BillingController::class, 'verify'])->middleware('throttle:20,1')->name('billing.verify');
     Route::post('/billing/refresh', [App\Http\Controllers\Admin\BillingController::class, 'refresh'])->middleware('throttle:10,1')->name('billing.refresh');
     Route::post('/billing/cancel', [App\Http\Controllers\Admin\BillingController::class, 'cancel'])->middleware('throttle:5,1')->name('billing.cancel');
     Route::get('/billing/receipts/{payment}', [App\Http\Controllers\Admin\BillingController::class, 'receipt'])->name('billing.receipt');
