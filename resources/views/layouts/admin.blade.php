@@ -235,7 +235,7 @@
                         </div>
                     @endif
 
-                    @if(auth()->user()?->type === 'admin' && request()->routeIs('admin.settings.*', 'admin.delivery-staff.*', 'admin.billing*', 'admin.notifications.*') && !request()->routeIs('admin.settings.index'))
+                    @if(!($billingOnly ?? false) && auth()->user()?->type === 'admin' && request()->routeIs('admin.settings.*', 'admin.delivery-staff.*', 'admin.billing*', 'admin.notifications.*') && !request()->routeIs('admin.settings.index'))
                         <nav aria-label="Settings navigation" class="mb-3 px-2"><a href="{{ route('admin.settings.index') }}" class="small text-decoration-none fw-medium">← Settings overview</a></nav>
                     @endif
                     @yield('content')
@@ -261,7 +261,9 @@
 
     <!-- Bootstrap Bundle JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    @unless($billingOnly ?? false)
     @include('admin.notifications.runtime')
+    @endunless
     @stack('scripts')
 </body>
 </html>

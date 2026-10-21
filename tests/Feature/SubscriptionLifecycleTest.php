@@ -215,16 +215,16 @@ class SubscriptionLifecycleTest extends TestCase
         app(SubscriptionBilling::class)->sync($local);
         $this->store->update(['name' => 'Changed store name']);
         $this->assertFalse(app(PlanAccess::class)->hasPaidAccess($this->store->fresh()));
-        $this->assertSame([], app(\App\Services\CheckoutPaymentPolicy::class)->availableMethods($this->store->fresh()));
-        $this->get('/'.$this->store->id.'/admin/orders')->assertOk();
+        $this->assertSame(['cod'], app(\App\Services\CheckoutPaymentPolicy::class)->availableMethods($this->store->fresh()));
+        $this->get('/'.$this->store->id.'/admin/orders')->assertRedirect(route('admin.billing', ['tenant' => $this->store->id]));
         $this->postJson('/'.$this->store->id.'/admin/products', [])->assertStatus(402);
     }
 
-    public function test_expired_trials_keep_billing_and_history_but_block_writes_and_base_premium_features(): void
+    public function test_expired_trials_allow_only_billing_and_paid_base_still_restricts_premium_features(): void
     {
         $this->store->forceFill(['created_at' => now()->subDays(8)])->save();
         $this->get('/'.$this->store->id.'/admin/billing')->assertOk();
-        $this->get('/'.$this->store->id.'/admin/orders')->assertOk();
+        $this->get('/'.$this->store->id.'/admin/orders')->assertRedirect(route('admin.billing', ['tenant' => $this->store->id]));
         $this->postJson('/'.$this->store->id.'/admin/products', [])->assertStatus(402);
         $local = $this->local();
         $this->gateway->remote['plan_id'] = 'plan_owned';

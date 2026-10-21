@@ -2,6 +2,7 @@
 
 return [
     'trial_days' => 7,
+    'storefront_grace_days' => 30,
     'currency' => 'INR',
     'annual_months' => 11,
     'plans' => [

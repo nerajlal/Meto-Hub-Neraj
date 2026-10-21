@@ -44,6 +44,7 @@ class IdentifyTenant
             view()->share('trialDaysRemaining', $daysRemaining);
             view()->share('isTrialExpired', $isTrialExpired);
             view()->share('isPaidPlan', $isPaid);
+            view()->share('billingOnly', $request->user()?->type === 'admin' && ! $access->adminAvailable($tenant));
             view()->share('renewsIn', $renewsIn);
             $request->user(); // Resolve authentication before applying tenant scopes to users.
             $request->attributes->set('resolved_tenant_id', $tenant->id);

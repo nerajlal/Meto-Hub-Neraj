@@ -16,7 +16,7 @@
        <div class="legal-card">
         
         <h3>1. Your free trial</h3>
-        <p>Your MetoHub store starts with a {{ config('saas.trial_days') }}-day free trial. No credit card is required to create the trial store. Creating a trial does not create a paid subscription or authorize a payment. When the trial ends, choose and pay for a subscription from Billing to continue using paid store-management features.</p>
+        <p>Your MetoHub store starts with a {{ config('saas.trial_days') }}-day free trial. No credit card is required to create the trial store. Creating a trial does not create a paid subscription or authorize a payment. When the trial ends, choose and pay for a subscription from Billing to continue using paid store-management features. Your admin access is limited to Billing until payment is confirmed. The customer storefront remains available for {{ config('saas.storefront_grace_days') }} days after trial or paid access expires, then displays a temporary-unavailability message. Store records are retained.</p>
 
         <h3>2. Seven-day refund window</h3>
         <p>You may request a full refund within {{ config('marketing.policies.refund_days') }} days of your first paid MetoHub subscription purchase. This refund window starts with the paid purchase, separately from the free trial. Email <a href="mailto:{{ config('marketing.contact.email') }}">{{ config('marketing.contact.email') }}</a> from your account email address and include the payment reference and store name. Do not send passwords or card details.</p>

@@ -10,13 +10,17 @@ class EnforceSubscription
 {
     public function handle(Request $request, Closure $next)
     {
-        $tenant = \App\Models\Tenant::findOrFail($request->user()->tenant_id);
+        $tenant = \App\Models\Tenant::findOrFail($request->attributes->get('resolved_tenant_id'));
         $access = app(PlanAccess::class);
-        if ($request->routeIs('admin.billing*', 'admin.notifications.*')) {
+        if ($request->routeIs('admin.billing*') || $request->user()->type === 'super_admin') {
             return $next($request);
         }
-        if (! $request->isMethodSafe() && ! $access->inTrial($tenant) && ! $access->hasPaidAccess($tenant)) {
-            abort(402, 'Your trial or paid period has ended. Open Billing to activate a subscription. Historical records remain available.');
+        if (! $access->adminAvailable($tenant)) {
+            $url = route('admin.billing', ['tenant' => $tenant->id]);
+            if ($request->expectsJson()) {
+                return response()->json(['success' => false, 'message' => 'Your subscription has ended. Renew from Billing to unlock your dashboard.', 'billing_url' => $url], 402);
+            }
+            return redirect()->to($url, $request->isMethodSafe() ? 302 : 303)->with('billing_required', 'Renew your subscription to unlock your dashboard.');
         }
         if ($request->routeIs('admin.analytics*')) {
             abort_unless($access->allows($tenant, 'advanced_analytics'), 403, 'Advanced analytics requires Pro or Enterprise.');

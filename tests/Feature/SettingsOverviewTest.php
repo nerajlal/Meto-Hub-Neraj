@@ -45,9 +45,10 @@ class SettingsOverviewTest extends TestCase
     {
         [$tenant] = $this->merchant();
         $tenant->forceFill(['created_at' => now()->subDays(15), 'subscription_status' => 'expired'])->save();
-        $this->get("/{$tenant->id}/admin/settings")->assertOk()->assertSee('Subscription required')->assertSee('Choose a plan');
+        $this->get("/{$tenant->id}/admin/settings")->assertRedirect(route('admin.billing', ['tenant' => $tenant->id]));
+        $this->get("/{$tenant->id}/admin/billing")->assertOk()->assertSee('Your subscription has ended.');
         $tenant->update(['subscription_status' => 'pending']);
-        $this->get("/{$tenant->id}/admin/settings")->assertOk()->assertSee('Payment pending')->assertDontSee('Paid access active');
+        $this->get("/{$tenant->id}/admin/settings")->assertRedirect(route('admin.billing', ['tenant' => $tenant->id]));
     }
 
     public function test_cancelled_subscription_can_retain_paid_access_until_period_ends(): void

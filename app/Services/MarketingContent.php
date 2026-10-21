@@ -20,7 +20,7 @@ class MarketingContent
             ['question' => 'Can I personalize the theme and store content?', 'answer' => 'Yes. Change your theme, logo, colors and homepage content whenever you like.'],
             ['question' => 'How do customers pay for orders?', 'answer' => 'Customer checkout currently supports cash on delivery. Razorpay handles your MetoHub subscription. Recording an order as paid does not charge or transfer money.'],
             ['question' => 'Can I use my own domain?', 'answer' => 'Connecting your own domain is available on Pro and Enterprise. Buying the domain itself is separate.'],
-            ['question' => 'What happens after the free trial?', 'answer' => 'Choose a paid subscription in your merchant dashboard to keep managing your store after the free trial. Historical records remain available.'],
+            ['question' => 'What happens after the free trial?', 'answer' => 'After the trial, your dashboard is limited to Billing until a paid subscription is confirmed. Your storefront stays open for '.config('saas.storefront_grace_days').' days after access expires, then shows an unavailable message. Your records are retained.'],
             ['question' => 'What do I need to create a store?', 'answer' => 'Your name, email, mobile number, country, business name and a password. Choose a theme during setup, then add your products.'],
         ];
     }

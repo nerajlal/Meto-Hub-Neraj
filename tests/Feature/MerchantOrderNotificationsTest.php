@@ -160,8 +160,9 @@ class MerchantOrderNotificationsTest extends TestCase
         $this->get($prefix.'/'.$own->id.'/open')->assertRedirect();
         $this->assertNull($own->fresh()->read_at);
         $tenant->forceFill(['created_at' => now()->subDays(10)])->save();
-        $this->postJson($prefix.'/'.$own->id.'/read')->assertOk();
-        $this->getJson($prefix.'/feed')->assertJsonPath('unread_count', 0);
+        $this->postJson($prefix.'/'.$own->id.'/read')->assertStatus(402);
+        $this->getJson($prefix.'/feed')->assertStatus(402);
+        $this->assertNull($own->fresh()->read_at);
         $this->actingAs(User::factory()->create(['tenant_id' => $tenant->id, 'type' => 'user']))->getJson($prefix.'/feed')->assertForbidden();
     }
 

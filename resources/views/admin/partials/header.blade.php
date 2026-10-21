@@ -21,7 +21,7 @@
         @if(isset($isPaidPlan) && !$isPaidPlan)
             @if(isset($isTrialExpired) && $isTrialExpired)
                 <span class="badge bg-danger rounded-pill fw-medium d-flex align-items-center gap-1" style="font-size: 11px; padding: 5px 10px;">
-                    <i class="fas fa-exclamation-circle"></i> Trial Expired
+                    <i class="fas fa-exclamation-circle"></i> Subscription ended
                 </span>
             @else
                 <span class="badge rounded-pill fw-medium d-flex align-items-center gap-1" style="background-color: rgba(255,255,255,0.15); color: #fff; font-size: 11px; padding: 5px 10px;">
@@ -54,7 +54,9 @@
             $hasNotifications = $pendingOrdersCount > 0 || $outOfStockCount > 0;
         @endphp
         
+        @unless($billingOnly ?? false)
         @include('admin.notifications.bell')
+        @endunless
 
         <div class="dropdown">
             <div class="d-flex align-items-center gap-2 cursor-pointer" data-bs-toggle="dropdown" aria-expanded="false">
@@ -62,7 +64,7 @@
                 <span class="small fw-medium text-white d-none d-sm-block" style="font-size: 12px;">{{ $currentTenant->name ?? 'Deity & Relics' }}</span>
             </div>
             <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2">
-                <li><a class="dropdown-item small" href="#" data-bs-toggle="modal" data-bs-target="#profileModal"><i class="fas fa-user-edit me-2 text-muted"></i> Edit Profile</a></li>
+                @unless($billingOnly ?? false)<li><a class="dropdown-item small" href="#" data-bs-toggle="modal" data-bs-target="#profileModal"><i class="fas fa-user-edit me-2 text-muted"></i> Edit Profile</a></li>@endunless
                 <li><hr class="dropdown-divider"></li>
                 <li>
                     <a class="dropdown-item small text-danger" href="javascript:void(0)" onclick="event.preventDefault(); document.getElementById('admin-logout-form').submit();">

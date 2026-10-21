@@ -3,6 +3,9 @@
         <ul class="list-unstyled mb-0 px-2 d-flex flex-column gap-1">
         @if(auth()->check() && auth()->user()->type === 'delivery_boy')
             <li><a href="{{ route('delivery.dashboard', request()->route('tenant') ?? session('active_tenant_id') ?? 1) }}" class="sidebar-item {{ request()->routeIs('delivery.dashboard', 'delivery.orders.*') ? 'active' : '' }}"><i class="fa-solid fa-list-check" aria-hidden="true"></i><span>My Deliveries</span></a></li>
+        @elseif($billingOnly ?? false)
+            <li><a href="{{ route('admin.billing', ['tenant' => $currentTenant->id]) }}" class="sidebar-item active" aria-current="page"><i class="fa-solid fa-file-invoice-dollar" aria-hidden="true"></i><span>Billing</span></a></li>
+            <li class="px-3 py-2 text-white-50 small">Renew your subscription to unlock your dashboard.</li>
         @else
             <li><a href="{{ route('admin.dashboard') }}" class="sidebar-item {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}"><i class="fa-solid fa-house" aria-hidden="true"></i><span>Home</span></a></li>
             <li><a href="{{ route('admin.orders') }}" class="sidebar-item {{ request()->routeIs('admin.orders', 'admin.orders.*') ? 'active' : '' }}"><i class="fa-solid fa-inbox" aria-hidden="true"></i><span>Orders</span>@if(isset($pendingOrdersCount) && $pendingOrdersCount > 0)<span class="ms-auto badge rounded-pill">{{ $pendingOrdersCount }}</span>@endif</a></li>

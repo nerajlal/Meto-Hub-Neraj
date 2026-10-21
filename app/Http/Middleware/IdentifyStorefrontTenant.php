@@ -12,7 +12,6 @@ class IdentifyStorefrontTenant
     public function handle(Request $request, Closure $next): Response
     {
         $hostTenant = app(\App\Services\IntegrationDomainVerification::class)->isPlatformHost($request->getHost()) ? null : Tenant::where('domain', $request->getHost())->first();
-        if ($hostTenant) abort_unless(app(\App\Services\PlanAccess::class)->allows($hostTenant, 'custom_domain'), 403, 'This store’s custom domain is not available on its current plan.');
         $slug = $request->route('store_slug') ?? $request->query('store');
         $slugTenant = null;
         if ($slug !== null) {
@@ -30,6 +29,16 @@ class IdentifyStorefrontTenant
             ?? 2;
         abort_unless(filter_var($tenantId, FILTER_VALIDATE_INT) && (int) $tenantId > 0, 404);
         $tenant = $hostTenant ?? $slugTenant ?? Tenant::findOrFail($tenantId);
+
+        $access = app(\App\Services\PlanAccess::class);
+        if (! $access->storefrontAvailable($tenant)) {
+            $headers = ['Cache-Control' => 'private, no-store', 'Retry-After' => '3600', 'X-Robots-Tag' => 'noindex, nofollow'];
+            if ($request->expectsJson() || ! $request->isMethodSafe()) {
+                return response()->json(['success' => false, 'message' => 'This store is temporarily unavailable because its subscription needs renewal.'], 503, $headers);
+            }
+            return response()->view('storefront.unavailable', [], 503, $headers);
+        }
+        if ($hostTenant) abort_unless($access->storefrontDomainAvailable($tenant), 403, 'This store’s custom domain is not available on its current plan.');
 
         $user = $request->user();
         if ($user && $user->type !== 'super_admin') {

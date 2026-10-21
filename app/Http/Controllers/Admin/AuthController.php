@@ -15,7 +15,7 @@ class AuthController extends Controller
                 return redirect()->route('super_admin.dashboard');
             }
             if (Auth::user()->type === 'admin' && Auth::user()->tenant_id) {
-                return redirect()->route('admin.dashboard', ['tenant' => Auth::user()->tenant_id]);
+                return $this->merchantIntendedRedirect($request, Auth::user());
             }
             if (Auth::user()->type === 'delivery_boy' && Auth::user()->tenant_id) {
                 return redirect()->route('delivery.dashboard', ['tenant' => Auth::user()->tenant_id]);
@@ -85,8 +85,11 @@ class AuthController extends Controller
     {
         $tenant = $tenant ?? session('active_tenant_id') ?? 1;
         if (Auth::check()) {
-            if (Auth::user()->type === 'super_admin' || Auth::user()->type === 'admin') {
-                return redirect()->route('admin.dashboard', ['tenant' => $tenant]);
+            if (Auth::user()->type === 'admin') {
+                return $this->merchantIntendedRedirect($request, Auth::user());
+            }
+            if (Auth::user()->type === 'super_admin') {
+                return redirect()->route('super_admin.dashboard');
             }
             if (Auth::user()->type === 'delivery_boy') {
                 return redirect()->route('delivery.dashboard', ['tenant' => $tenant]);
@@ -166,6 +169,10 @@ class AuthController extends Controller
     private function merchantIntendedRedirect(Request $request, \App\Models\User $user)
     {
         $intended = $request->session()->pull('url.intended');
+        $tenant = \App\Models\Tenant::findOrFail($user->tenant_id);
+        if (! app(\App\Services\PlanAccess::class)->adminAvailable($tenant)) {
+            return redirect()->route('admin.billing', ['tenant' => $tenant->id]);
+        }
         if (is_string($intended)) {
             $parts = parse_url($intended);
             $sameHost = ! isset($parts['host']) || (strtolower($parts['host']) === strtolower($request->getHost())

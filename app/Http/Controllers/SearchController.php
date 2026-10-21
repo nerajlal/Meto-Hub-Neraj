@@ -13,7 +13,7 @@ class SearchController extends Controller
     {
         $tenant = app(\App\Services\IntegrationDomainVerification::class)->isPlatformHost(request()->getHost()) ? null : Tenant::where('domain', request()->getHost())->first();
         if ($tenant) {
-            abort_unless(app(\App\Services\PlanAccess::class)->allows($tenant, 'custom_domain'), 403);
+            abort_unless(app(\App\Services\PlanAccess::class)->storefrontDomainAvailable($tenant), 403);
         }
 
         return $tenant;

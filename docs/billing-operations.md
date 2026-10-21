@@ -6,7 +6,7 @@ Updated 15 October 2026. Application changes are implemented locally; this docum
 
 1. Deploy the complete release, including `config/saas.php`, billing models/services/controllers, views, routes and all subscription-tracking migrations. Back up the existing database and uploads first; preserve `APP_KEY`.
 2. Set `RAZORPAY_KEY`, `RAZORPAY_SECRET` and a separate `RAZORPAY_WEBHOOK_SECRET` in the server environment. Do not share secrets in chat or commit them. Confirm the provider account is authorized for subscriptions and the required mandate methods. Test and live credentials must not be mixed.
-3. In the Razorpay dashboard, register `https://betametohub.metora.in/billing/razorpay/webhook`. Configure the same webhook secret and subscribe to `subscription.authenticated`, `subscription.activated`, `subscription.charged`, `subscription.updated`, `subscription.pending`, `subscription.halted`, `subscription.cancelled`, `subscription.completed`, `subscription.paused`, and `subscription.resumed`. Reconciliation also imports provider state `expired`.
+3. In the Razorpay dashboard, register `https://metohub.cloud/billing/razorpay/webhook`. Configure the same webhook secret and subscribe to `subscription.authenticated`, `subscription.activated`, `subscription.charged`, `subscription.updated`, `subscription.pending`, `subscription.halted`, `subscription.cancelled`, `subscription.completed`, `subscription.paused`, and `subscription.resumed`. Reconciliation also imports provider state `expired`.
 4. Run the deployment commands from the actual project directory:
 
 ```bash
@@ -52,7 +52,7 @@ Cancellation is explicitly requested by the owner in Billing. Cancellation of a 
 
 Payment retry execution remains with Razorpay’s subscription system. MetoHub does not create additional collection requests in response to a failed webhook. The application records pending/halted states and offers refresh/status management.
 
-After a trial or verified paid period ends, subscription management, receipts and historical records remain accessible. Store mutations and new customer checkout are blocked until access is restored. Pro/Enterprise entitlement checks protect advanced analytics, custom domain configuration/routing and removal of storefront branding. Trials can preview these features. Unbuilt warehouse, abandoned-cart recovery and general gateway integration promises have been removed from the current plan offers.
+After a trial or verified paid period ends, merchant admin is limited to Billing until renewal. The storefront and customer checkout have a 30-day grace period, then show an unavailable response. Records are retained. See [subscription-expiry-policy.md](subscription-expiry-policy.md), including the legacy subscription reconciliation step before rollout. Pro/Enterprise entitlement checks still protect paid features outside this storefront grace exception.
 
 ## Provider references
 

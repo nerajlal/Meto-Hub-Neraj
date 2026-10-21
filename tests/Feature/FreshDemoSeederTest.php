@@ -38,7 +38,12 @@ class FreshDemoSeederTest extends TestCase
             $this->assertSame(9, DB::table('products')->where('tenant_id', $tenant->id)->count());
             $this->get('/store/'.$tenant->slug)->assertOk();
             $owner = User::withoutGlobalScopes()->where('tenant_id', $tenant->id)->where('type', 'admin')->firstOrFail();
-            $this->actingAs($owner)->get('/'.$tenant->id.'/admin')->assertOk();
+            $response = $this->actingAs($owner)->get('/'.$tenant->id.'/admin');
+            if (app(\App\Services\PlanAccess::class)->adminAvailable($tenant)) {
+                $response->assertOk();
+            } else {
+                $response->assertRedirect(route('admin.billing', ['tenant' => $tenant->id]));
+            }
             auth()->forgetGuards();
         }
         foreach (StoreSubscription::all() as $subscription) {

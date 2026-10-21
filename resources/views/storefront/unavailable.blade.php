@@ -1,0 +1,4 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Store temporarily unavailable</title>
+<style>body{margin:0;min-height:100vh;display:grid;place-items:center;background:#f5f3ff;color:#202223;font-family:system-ui,sans-serif}main{max-width:480px;margin:24px;padding:36px;background:white;border:1px solid #e5e1ed;border-radius:18px;text-align:center}h1{font-size:28px;line-height:1.2}p{color:#6d7175;line-height:1.8}a{color:#6d28d9;text-underline-offset:4px}a:focus-visible{outline:2px solid #7c3aed;outline-offset:4px}</style></head>
+<body><main><h1>Store temporarily unavailable</h1><p>This store’s subscription payment needs renewal. Please try again later.</p><p><a href="{{ rtrim(config('app.url'), '/') }}/admin/login">Store owner? Sign in to renew</a></p></main></body></html>

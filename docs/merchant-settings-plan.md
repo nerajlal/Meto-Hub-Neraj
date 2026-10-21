@@ -15,7 +15,7 @@ Implemented on 21 October 2026. The overview follows this specification; no data
 - Keep current settings URLs working. Detailed settings shortcuts live in the overview rather than the sidebar.
 - Use the existing admin layout, header, mobile navigation and authenticated merchant session.
 - Resolve the tenant from the middleware’s `resolved_tenant_id`; do not fall back to tenant 1.
-- Keep the overview readable after trial expiration so the merchant can reach Billing. Existing subscription middleware continues controlling writes on destination pages.
+- After expiry, the newer subscription policy redirects all admin pages to Billing and shows only Billing in the sidebar. The overview returns after renewal; see subscription-expiry-policy.md.
 
 ## Visual direction
 

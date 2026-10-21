@@ -11,7 +11,7 @@ class StorefrontSeo
 {
     public function indexable(Tenant $tenant): bool
     {
-        return (bool) config('search.indexable') && $tenant->search_indexable !== false;
+        return (bool) config('search.indexable') && $tenant->search_indexable !== false && app(PlanAccess::class)->storefrontAvailable($tenant);
     }
 
     public function url(Tenant $tenant, string $page = 'home', array $query = []): string
