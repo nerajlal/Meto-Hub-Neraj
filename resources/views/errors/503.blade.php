@@ -1,48 +1,45 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Store Maintenance | MetoHub</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Store Maintenance — MetoHub</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <style>
-        :root{
-            --paper:#FDFCFA;--paper-dim:#F7F5F0;--ink:#1C231B;--ink-soft:#4B5245;--ink-faint:#7C8177;
-            --green:#3F6C4E;--green-deep:#2A4A35;--green-pale:#E7EFE7;
-            --yellow:#E8B93F;--yellow-deep:#8A6414;--line:#DDD8CB;--card:#FFFFFF;--radius:14px;
-            --font-display:'Archivo', sans-serif;--font-body:'Inter', sans-serif;--font-mono:'IBM Plex Mono', monospace;
-        }
-        *{box-sizing:border-box;margin:0;padding:0;}
-        body{background:var(--paper);color:var(--ink);font-family:var(--font-body);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh;display:flex;flex-direction:column;}
-        a{color:inherit;text-decoration:none;}
-        .error-content{flex:1;display:flex;align-items:center;justify-content:center;padding:80px 20px;text-align:center;}
-        .error-inner{max-width:520px;}
-        .error-code{font-family:var(--font-display);font-size:120px;font-weight:800;line-height:1;color:var(--green);margin-bottom:16px;letter-spacing:-4px;animation:float 6s ease-in-out infinite;}
-        .error-title{font-family:var(--font-display);font-size:28px;font-weight:700;letter-spacing:-0.02em;margin-bottom:12px;}
-        .error-divider{width:48px;height:3px;background:var(--yellow);margin:20px auto;border-radius:2px;}
-        .error-desc{font-size:15px;color:var(--ink-soft);margin-bottom:36px;max-width:400px;margin-left:auto;margin-right:auto;}
-        .error-btn{display:inline-flex;align-items:center;gap:10px;font-family:var(--font-body);font-weight:600;font-size:14.5px;padding:13px 28px;border-radius:9px;background:var(--ink);color:var(--paper);border:none;cursor:pointer;transition:background .15s ease, transform .15s ease;}
-        .error-btn:hover{background:var(--green-deep);transform:translateY(-1px);}
-        .error-btn svg{width:16px;height:16px;}
-        @keyframes float{0%{transform:translateY(0);}50%{transform:translateY(-8px);}100%{transform:translateY(0);}}
-        @media (max-width:920px){.error-code{font-size:90px;}}
-        @media (max-width:480px){.error-code{font-size:72px;}.error-title{font-size:22px;}}
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/metohub-reference.css') }}?v={{ filemtime(public_path('css/metohub-reference.css')) }}">
+    <link rel="stylesheet" href="{{ asset('css/metohub-home.css') }}?v={{ filemtime(public_path('css/metohub-home.css')) }}">
 </head>
-<body>
-    <div class="error-content">
-        <div class="error-inner">
-            <div class="error-code">503</div>
-            <h1 class="error-title">Store Maintenance</h1>
-            <div class="error-divider"></div>
-            <p class="error-desc">We're currently updating our storefront. We'll be back shortly with fresh groceries. Please check back soon.</p>
-            <button onclick="history.back()" class="error-btn">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"/></svg>
-                Go Back
-            </button>
+<body class="min-h-screen bg-background text-foreground antialiased flex flex-col justify-between selection:bg-bronze/20">
+    <header class="p-6 sm:p-8">
+        <a class="inline-flex items-center gap-2 text-lg font-semibold tracking-tight text-foreground transition hover:opacity-80" href="{{ route('landing') }}">
+            <span class="grid h-8 w-8 place-items-center rounded-md bg-primary font-serif text-xl italic text-primary-foreground">M</span>
+            <span>MetoHub</span>
+        </a>
+    </header>
+
+    <main class="flex-1 flex items-center justify-center px-6 py-12">
+        <div class="max-w-md w-full text-center">
+            <span class="font-serif text-8xl sm:text-9xl italic font-normal text-bronze block leading-none select-none tracking-tight">503</span>
+            <p class="eyebrow mt-4">Scheduled Upgrade</p>
+            <h1 class="mt-3 text-3xl font-medium tracking-[-0.02em] text-foreground">Polishing the shelves</h1>
+            <p class="mt-3 text-sm leading-relaxed text-muted-foreground">
+                We are performing brief scheduled maintenance to make your shopping and store experience even better. We'll be back online in just a few minutes.
+            </p>
+            <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
+                <button onclick="window.location.reload()" class="btn-ghost !px-5 !py-2.5 text-sm cursor-pointer">
+                    <span aria-hidden="true">↻</span> Check again
+                </button>
+                <a href="{{ route('landing') }}" class="btn-primary !px-5 !py-2.5 text-sm">
+                    Return to home <span aria-hidden="true">→</span>
+                </a>
+            </div>
         </div>
-    </div>
+    </main>
+
+    <footer class="p-6 text-center text-xs text-muted-foreground">
+        <span>© {{ date('Y') }} MetoHub. All rights reserved.</span>
+    </footer>
 </body>
 </html>
+

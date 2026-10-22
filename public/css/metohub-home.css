@@ -197,3 +197,10 @@ body .btn-primary:hover{background:#18382c;border-color:#18382c;color:#fff}
 
 [data-marketing-footer] nav[aria-label="Footer navigation"]{max-width:520px;justify-content:flex-end}
 @media(max-width:767px){[data-marketing-footer] nav[aria-label="Footer navigation"]{justify-content:flex-start}}
+
+/* Mobile Step Cards - Shadow / Watermark Effect to save vertical space */
+@media(max-width:767px){
+  .step-card{position:relative;padding:24px 20px 20px;overflow:hidden}
+  .step-card .step-num{position:absolute;top:-6px;right:14px;font-size:74px;line-height:1;opacity:.15;pointer-events:none;user-select:none}
+  .step-card h3{margin-top:0!important}
+}

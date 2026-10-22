@@ -262,18 +262,18 @@
 <p class="eyebrow">How it works</p>
 <h2 class="mt-4 max-w-2xl text-4xl font-medium tracking-[-0.02em] md:text-5xl">Three steps to your own store.</h2>
 <div class="mt-12 grid gap-px overflow-hidden rounded-xl border border-border bg-border md:grid-cols-3">
-<div class="bg-card p-8">
-<span class="font-serif text-4xl italic text-bronze">01</span>
+<div class="bg-card p-8 step-card">
+<span class="font-serif text-4xl italic text-bronze step-num">01</span>
 <h3 class="mt-6 text-xl font-semibold">Create your store</h3>
 <p class="mt-3 leading-relaxed text-muted-foreground">Enter your name, email, business details and a password. Verify your email to open your dashboard.</p>
 </div>
-<div class="bg-card p-8">
-<span class="font-serif text-4xl italic text-bronze">02</span>
+<div class="bg-card p-8 step-card">
+<span class="font-serif text-4xl italic text-bronze step-num">02</span>
 <h3 class="mt-6 text-xl font-semibold">Make it yours</h3>
 <p class="mt-3 leading-relaxed text-muted-foreground">Choose a theme, add your logo and colors, and upload products with prices, variants and stock.</p>
 </div>
-<div class="bg-card p-8">
-<span class="font-serif text-4xl italic text-bronze">03</span>
+<div class="bg-card p-8 step-card">
+<span class="font-serif text-4xl italic text-bronze step-num">03</span>
 <h3 class="mt-6 text-xl font-semibold">Share your store link</h3>
 <p class="mt-3 leading-relaxed text-muted-foreground">Put the link in your Instagram bio or share it on WhatsApp. Manage every order from one dashboard.</p>
 </div>
