@@ -3,6 +3,94 @@
 @section('title', 'Dashboard')
 
 @section('content')
+@if(isset($isNewStore) && $isNewStore)
+<!-- Onboarding / Setup Guide for New Stores -->
+<div class="mb-5">
+    <div class="mb-3">
+        <span class="text-secondary small fw-medium d-block mb-1">Welcome aboard</span>
+        <h1 class="h2 fw-bold text-dark mb-0" style="letter-spacing: -0.02em;">Let's get your store ready</h1>
+    </div>
+
+    <div class="card border rounded-4 shadow-xs overflow-hidden" style="border-color: #edeae4 !important; background: #ffffff;">
+        <div class="p-4 p-md-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <h2 class="h6 fw-bold text-dark mb-1">Get started</h2>
+                    <p class="text-muted small mb-0">Complete these steps for your store</p>
+                </div>
+                <span class="badge bg-light text-secondary rounded-pill px-3 py-1 fw-semibold border" style="font-size: 0.8rem;">
+                    {{ $completedSteps }}/{{ $totalSteps }}
+                </span>
+            </div>
+
+            <div class="d-flex flex-column gap-2 mt-3">
+                <!-- Step 1: Upload your business logo -->
+                <a href="{{ route('admin.settings.storefront') }}" class="text-decoration-none d-flex align-items-center justify-content-between p-3 rounded-3 border transition-all" 
+                   style="{{ $hasLogo ? 'background: #ffffff; border-color: #e5e7eb;' : 'background: #fffdf0; border-color: #f6e8c3;' }}">
+                    <div class="d-flex align-items-center gap-2">
+                        @if($hasLogo)
+                            <span class="badge rounded-circle bg-success text-white d-flex align-items-center justify-content-center me-1" style="width: 20px; height: 20px; font-size: 10px;">
+                                <i class="fas fa-check"></i>
+                            </span>
+                        @endif
+                        <span class="text-secondary fw-normal">Step 1:</span>
+                        <span class="fw-semibold text-dark">Upload your business logo</span>
+                    </div>
+                    <i class="fas fa-chevron-right text-muted extra-small"></i>
+                </a>
+
+                <!-- Step 2: Add your first product -->
+                <a href="{{ route('admin.products.create') }}" class="text-decoration-none d-flex align-items-center justify-content-between p-3 rounded-3 border transition-all"
+                   style="{{ $hasProducts ? 'background: #ffffff; border-color: #e5e7eb;' : (!$hasLogo ? 'background: #ffffff; border-color: #f1f1f1;' : 'background: #fffdf0; border-color: #f6e8c3;') }}">
+                    <div class="d-flex align-items-center gap-2">
+                        @if($hasProducts)
+                            <span class="badge rounded-circle bg-success text-white d-flex align-items-center justify-content-center me-1" style="width: 20px; height: 20px; font-size: 10px;">
+                                <i class="fas fa-check"></i>
+                            </span>
+                        @endif
+                        <span class="text-secondary fw-normal">Step 2:</span>
+                        <span class="fw-semibold text-dark">Add your first product</span>
+                    </div>
+                    <i class="fas fa-chevron-right text-muted extra-small"></i>
+                </a>
+
+                <!-- Step 3: Try customising your website -->
+                <a href="{{ route('admin.settings.theme') }}" class="text-decoration-none d-flex align-items-center justify-content-between p-3 rounded-3 border transition-all"
+                   style="{{ $hasCustomTheme ? 'background: #ffffff; border-color: #e5e7eb;' : 'background: #ffffff; border-color: #f1f1f1;' }}">
+                    <div class="d-flex align-items-center gap-2">
+                        @if($hasCustomTheme)
+                            <span class="badge rounded-circle bg-success text-white d-flex align-items-center justify-content-center me-1" style="width: 20px; height: 20px; font-size: 10px;">
+                                <i class="fas fa-check"></i>
+                            </span>
+                        @endif
+                        <span class="text-secondary fw-normal">Step 3:</span>
+                        <span class="fw-semibold text-dark">Try customising your website</span>
+                    </div>
+                    <i class="fas fa-chevron-right text-muted extra-small"></i>
+                </a>
+
+                <!-- Step 4: Share your website! -->
+                <div class="d-flex align-items-center justify-content-between p-3 rounded-3 border bg-white" style="border-color: #f1f1f1;">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="text-secondary fw-normal">Step 4:</span>
+                        <span class="fw-semibold text-dark">Share your website!</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                        <a href="{{ $storefrontUrl ?? '#' }}" target="_blank" class="btn btn-sm btn-outline-secondary px-3 py-1 small rounded-pill">
+                            <i class="fas fa-external-link-alt me-1 extra-small"></i> Visit
+                        </a>
+                        <button type="button" onclick="navigator.clipboard.writeText('{{ $storefrontUrl ?? '' }}'); alert('Store link copied to clipboard!');" class="btn btn-sm btn-primary px-3 py-1 small rounded-pill">
+                            <i class="fas fa-copy me-1 extra-small"></i> Copy link
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<hr class="my-5 border-dashed" style="border-color: #e5e7eb;">
+@endif
+
 <!-- Welcome Section -->
 <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
@@ -10,10 +98,6 @@
         <p class="text-muted small">Overview of your store's performance.</p>
     </div>
     <div class="d-flex align-items-center gap-2">
-        <!-- <a href="{{ $storefrontUrl }}" target="_blank" class="btn btn-sm bg-primary text-white d-none d-sm-flex align-items-center gap-2">
-            <i class="fas fa-external-link-alt"></i>
-            View Storefront
-        </a> -->
         <span class="small text-muted bg-white border border-light px-3 py-2 rounded shadow-sm">
             <i class="far fa-calendar-alt me-2 text-secondary"></i> Today, {{ date('M d, Y') }}
         </span>

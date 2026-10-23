@@ -30,8 +30,8 @@
     @foreach($groups as $heading => $rows)
     <section class="settings-group" aria-labelledby="settings-group-{{ $loop->index }}"><h2 id="settings-group-{{ $loop->index }}">{{ $heading }}</h2><div class="settings-group-card">
         @foreach($rows as $row)
-        @php($destination = route($row['route'], str_starts_with($row['route'], 'admin.') ? ['tenant' => $tenant->id] : []).(isset($row['fragment']) ? '#'.$row['fragment'] : ''))
-        <a class="settings-row" href="{{ $destination }}"><span class="settings-row-icon" aria-hidden="true"><i class="fa-solid fa-{{ $row['icon'] }}"></i></span><span class="settings-row-copy"><strong>{{ $row['label'] }}</strong><small>{{ $row['description'] }}</small></span>@if($row['badge'])<span class="settings-row-badge">{{ $row['badge'] }}</span>@endif<span class="settings-chevron" aria-hidden="true">›</span></a>
+        @php($destination = isset($row['route']) ? route($row['route'], str_starts_with($row['route'], 'admin.') ? ['tenant' => $tenant->id] : []).(isset($row['fragment']) ? '#'.$row['fragment'] : '') : ($row['url'] ?? '#'))
+        <a class="settings-row {{ !empty($row['danger']) ? 'settings-row-danger' : '' }}" href="{{ $destination }}" @if(!empty($row['onclick'])) onclick="{{ $row['onclick'] }}" @endif><span class="settings-row-icon" aria-hidden="true"><i class="fa-solid fa-{{ $row['icon'] }}"></i></span><span class="settings-row-copy"><strong>{{ $row['label'] }}</strong><small>{{ $row['description'] }}</small></span>@if(!empty($row['badge']))<span class="settings-row-badge">{{ $row['badge'] }}</span>@endif<span class="settings-chevron" aria-hidden="true">›</span></a>
         @endforeach
     </div>@if($heading === 'Search & marketing')<p class="settings-group-note">Configured means setup is saved. It does not confirm provider verification or event delivery. Tracking also depends on consent, installation mode and domain eligibility.</p>@endif</section>
     @endforeach

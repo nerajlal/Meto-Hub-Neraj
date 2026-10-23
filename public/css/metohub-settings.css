@@ -27,6 +27,9 @@
 .settings-overview .settings-row+.settings-row{border-top:1px solid #ede9fe}
 .settings-overview .settings-row:hover{background:var(--sf-bg, #f5f3ff)}
 .settings-overview .settings-row-icon{flex-shrink:0;display:grid;place-items:center;width:36px;height:36px;border-radius:11px;background:#ede9fe;color:var(--sf-accent-hover, #7c3aed);font-size:14px}
+.settings-overview .settings-row.settings-row-danger strong{color:#dc2626}
+.settings-overview .settings-row-danger .settings-row-icon{background:#fef2f2;color:#ef4444}
+.settings-overview .settings-row.settings-row-danger:hover{background:#fff5f5}
 .settings-overview .settings-row-copy{display:block;min-width:0;flex:1}
 .settings-overview .settings-row-copy strong{display:block;font-size:13px;font-weight:600;line-height:1.6;overflow-wrap:anywhere}
 .settings-overview .settings-row-copy small{display:block;font-size:11px;line-height:1.7;color:var(--sf-text-secondary, #6d7175);margin-top:2px;overflow-wrap:anywhere}

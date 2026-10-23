@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\User;
 use App\Models\ProductVariant;
+use App\Models\Product;
+use App\Models\Tenant;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
@@ -14,6 +16,21 @@ class DashboardController extends Controller
     public function index()
     {
         $tenantId = auth()->user()->tenant_id ?? session('active_tenant_id') ?? 1;
+        $tenant = Tenant::find($tenantId);
+
+        // Store Setup Onboarding Checklist
+        $hasLogo = !empty($tenant?->logo);
+        $hasProducts = Product::where('tenant_id', $tenantId)->exists();
+        $hasCustomTheme = !empty($tenant?->theme) && $tenant->theme !== 'minimal';
+        
+        $completedSteps = 0;
+        if ($hasLogo) $completedSteps++;
+        if ($hasProducts) $completedSteps++;
+        if ($hasCustomTheme) $completedSteps++;
+
+        $totalSteps = 4;
+        $allOrdersCount = Order::count();
+        $isNewStore = ($allOrdersCount === 0 || $completedSteps < $totalSteps);
 
         // Define Period (Last 30 days)
         $startDate = now()->subDays(30);
@@ -78,7 +95,9 @@ class DashboardController extends Controller
             'currentOrders', 'prevOrders', 'ordersGrowth',
             'currentCustomers', 'prevCustomers', 'customersGrowth',
             'lowStockItems', 'lowStockCount',
-            'recentOrders'
+            'recentOrders',
+            'hasLogo', 'hasProducts', 'hasCustomTheme',
+            'completedSteps', 'totalSteps', 'isNewStore', 'tenant'
         ));
     }
 

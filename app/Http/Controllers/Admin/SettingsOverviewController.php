@@ -66,6 +66,32 @@ class SettingsOverviewController extends Controller
             $row('Order notifications', 'Your notification inbox and device alert setup', 'bell', 'admin.notifications.index'),
             $row('Contact support', 'Get help with your MetoHub store', 'headset', 'landing.contact'),
         ];
+        $groups['Account'] = [
+            [
+                'label' => 'Store Maintenance',
+                'description' => 'Show a maintenance page to customers',
+                'icon' => 'store',
+                'url' => '#store-maintenance',
+                'danger' => true,
+                'action_type' => 'maintenance',
+            ],
+            [
+                'label' => 'Delete Site',
+                'description' => 'Permanently delete this site',
+                'icon' => 'trash-can',
+                'url' => '#delete-site',
+                'danger' => true,
+                'action_type' => 'delete-site',
+            ],
+            [
+                'label' => 'Account Deletion',
+                'description' => 'Request account deletion',
+                'icon' => 'user-xmark',
+                'url' => '#account-deletion',
+                'danger' => true,
+                'action_type' => 'account-deletion',
+            ],
+        ];
 
         return view('admin.settings.index', compact('tenant', 'subscription', 'paid', 'trial', 'trialEnds', 'status', 'statusTone', 'planName', 'groups', 'access'));
     }
