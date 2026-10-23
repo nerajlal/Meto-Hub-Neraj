@@ -104,10 +104,12 @@
                          previewGrid.classList.remove('d-none');
                     }
 
-                    // Max 5 Images Validation
-                    if (files.length > 5) {
-                        alert('You can only upload a maximum of 5 images.');
-                        event.target.value = ''; // Clear input
+                    if (!files || files.length === 0) return;
+
+                    // Max 5 Images Validation across accumulated files
+                    if (dt.items.length + files.length > 5) {
+                        alert(`You can only upload a maximum of 5 images. You already have ${dt.items.length} selected and are trying to add ${files.length} more.`);
+                        event.target.files = dt.files;
                         return;
                     }
 

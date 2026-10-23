@@ -94,6 +94,9 @@
             <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
 
             <script>
+                // Global DataTransfer to accumulate new files across multiple clicks/selections
+                let newMediaDt = new DataTransfer();
+
                 // Initialize Sortable
                 document.addEventListener('DOMContentLoaded', function() {
                     var el = document.getElementById('media_preview_grid');
@@ -107,29 +110,22 @@
                     });
                 });
 
-                /*
-                function toggleUrlInput() {
-                    document.getElementById('urlInputContainer').classList.toggle('d-none');
-                }
-                */
-
                 function handleFileSelect(event) {
                     const files = event.target.files;
                     const previewGrid = document.getElementById('media_preview_grid');
+                    const fileInput = document.getElementById('media_upload');
                     
-                    if (files.length > 0) {
-                         previewGrid.classList.remove('d-none');
-                    }
-                    
-                    // Max 5 Images Validation
+                    if (!files || files.length === 0) return;
+
+                    // Existing non-deleted images in DOM
                     const existingCount = document.querySelectorAll('.existing-image').length;
-                    const deletedCount = document.querySelectorAll('input[name="deleted_images[]"]').length;
-                    const newCount = files.length;
+                    const currentNewCount = newMediaDt.items.length;
+                    const incomingCount = files.length;
                     
-                    if ((existingCount - deletedCount + newCount) > 5) {
-                        alert(`You can only have a maximum of 5 images. You currently have ${existingCount}, are deleting ${deletedCount}, and trying to add ${newCount}.`);
-                        event.target.value = ''; // Clear input
-                        return; // Stop processing
+                    if ((existingCount + currentNewCount + incomingCount) > 5) {
+                        alert(`You can only have a maximum of 5 images. You currently have ${existingCount} saved image(s), ${currentNewCount} new image(s) queued, and are trying to add ${incomingCount} more.`);
+                        fileInput.files = newMediaDt.files;
+                        return;
                     }
 
                     for (let i = 0; i < files.length; i++) {
@@ -141,24 +137,26 @@
                             continue;
                         }
 
+                        // Accumulate in DataTransfer
+                        newMediaDt.items.add(file);
+
                         const reader = new FileReader();
                         reader.onload = function(e) {
-                            createPreviewItem(e.target.result, 'image');
+                            createPreviewItem(e.target.result, 'image', file);
                         };
                         reader.readAsDataURL(file);
                     }
+
+                    // Keep input.files in sync with all accumulated files
+                    fileInput.files = newMediaDt.files;
+                    previewGrid.classList.remove('d-none');
                 }
 
-                /*
-                function addMediaFromUrl() {
-                   // ...
-                }
-                */
-
-                function createPreviewItem(src, type) {
+                function createPreviewItem(src, type, fileObj) {
                     const previewGrid = document.getElementById('media_preview_grid');
                     const col = document.createElement('div');
-                    col.className = 'col-6 col-md-3'; // Note: New items aren't draggable yet
+                    col.className = 'col-6 col-md-3 new-image-preview';
+                    col.fileRef = fileObj;
                     
                     const div = document.createElement('div');
                     div.className = 'ratio ratio-1x1 bg-dark rounded border overflow-hidden position-relative group-hover-container';
@@ -172,13 +170,38 @@
 
                     div.innerHTML = `
                         ${content}
-                        <button type="button" onclick="this.closest('.col-6').remove()" class="btn btn-white btn-sm rounded-circle shadow-sm position-absolute top-0 end-0 m-1 opacity-0 group-hover-visible transition-opacity text-danger p-0 d-flex align-items-center justify-content-center" style="width: 24px; height: 24px;">
+                        <button type="button" onclick="removeNewMediaItem(this)" class="btn btn-white btn-sm rounded-circle shadow-sm position-absolute top-0 end-0 m-1 opacity-0 group-hover-visible transition-opacity text-danger p-0 d-flex align-items-center justify-content-center" style="width: 24px; height: 24px;">
                             <i class="fas fa-trash extra-small"></i>
                         </button>
                     `;
                     col.appendChild(div);
-                    // Append new items to the grid. Note: They won't be in the media_order array until saved and reloaded.
                     previewGrid.appendChild(col);
+                }
+
+                function removeNewMediaItem(btn) {
+                    const col = btn.closest('.new-image-preview');
+                    if (col) {
+                        col.remove();
+                    }
+                    syncNewMediaFromDOM();
+                }
+
+                function syncNewMediaFromDOM() {
+                    const updatedDt = new DataTransfer();
+                    const newPreviews = document.querySelectorAll('.new-image-preview');
+                    newPreviews.forEach(item => {
+                        if (item.fileRef) {
+                            updatedDt.items.add(item.fileRef);
+                        }
+                    });
+                    newMediaDt = updatedDt;
+                    document.getElementById('media_upload').files = newMediaDt.files;
+
+                    const previewGrid = document.getElementById('media_preview_grid');
+                    const totalRemaining = previewGrid.querySelectorAll('.existing-image, .new-image-preview').length;
+                    if (totalRemaining === 0) {
+                        previewGrid.classList.add('d-none');
+                    }
                 }
 
                 function markImageForDeletion(btn, id) {
@@ -189,6 +212,12 @@
                     input.name = 'deleted_images[]';
                     input.value = id;
                     container.appendChild(input);
+
+                    const previewGrid = document.getElementById('media_preview_grid');
+                    const totalRemaining = previewGrid.querySelectorAll('.existing-image, .new-image-preview').length;
+                    if (totalRemaining === 0) {
+                        previewGrid.classList.add('d-none');
+                    }
                 }
             </script>
 
