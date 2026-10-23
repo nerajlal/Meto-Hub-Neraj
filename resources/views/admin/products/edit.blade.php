@@ -110,12 +110,60 @@
                     });
                 });
 
-                function handleFileSelect(event) {
-                    const files = event.target.files;
+                // Convert any image file to WebP using HTML5 Canvas
+                async function convertToWebp(file) {
+                    if (file.type === 'image/webp') {
+                        return file;
+                    }
+                    return new Promise((resolve) => {
+                        const img = new Image();
+                        const url = URL.createObjectURL(file);
+                        img.onload = function() {
+                            URL.revokeObjectURL(url);
+                            const canvas = document.createElement('canvas');
+                            let width = img.naturalWidth || img.width;
+                            let height = img.naturalHeight || img.height;
+                            const maxDimension = 1600; // Optimal for web product photos
+
+                            if (width > maxDimension || height > maxDimension) {
+                                if (width > height) {
+                                    height = Math.round((height * maxDimension) / width);
+                                    width = maxDimension;
+                                } else {
+                                    width = Math.round((width * maxDimension) / height);
+                                    height = maxDimension;
+                                }
+                            }
+
+                            canvas.width = width;
+                            canvas.height = height;
+                            const ctx = canvas.getContext('2d');
+                            ctx.drawImage(img, 0, 0, width, height);
+
+                            canvas.toBlob((blob) => {
+                                if (blob) {
+                                    const newName = file.name.replace(/\.[^/.]+$/, "") + ".webp";
+                                    const webpFile = new File([blob], newName, { type: 'image/webp' });
+                                    resolve(webpFile);
+                                } else {
+                                    resolve(file); // Fallback to original
+                                }
+                            }, 'image/webp', 0.85); // 85% high quality, massive size savings
+                        };
+                        img.onerror = function() {
+                            URL.revokeObjectURL(url);
+                            resolve(file);
+                        };
+                        img.src = url;
+                    });
+                }
+
+                async function handleFileSelect(event) {
+                    const files = Array.from(event.target.files || []);
                     const previewGrid = document.getElementById('media_preview_grid');
                     const fileInput = document.getElementById('media_upload');
                     
-                    if (!files || files.length === 0) return;
+                    if (files.length === 0) return;
 
                     // Existing non-deleted images in DOM
                     const existingCount = document.querySelectorAll('.existing-image').length;
@@ -137,14 +185,17 @@
                             continue;
                         }
 
+                        // Convert to lightweight WebP
+                        const webpFile = await convertToWebp(file);
+
                         // Accumulate in DataTransfer
-                        newMediaDt.items.add(file);
+                        newMediaDt.items.add(webpFile);
 
                         const reader = new FileReader();
                         reader.onload = function(e) {
-                            createPreviewItem(e.target.result, 'image', file);
+                            createPreviewItem(e.target.result, 'image', webpFile);
                         };
-                        reader.readAsDataURL(file);
+                        reader.readAsDataURL(webpFile);
                     }
 
                     // Keep input.files in sync with all accumulated files
