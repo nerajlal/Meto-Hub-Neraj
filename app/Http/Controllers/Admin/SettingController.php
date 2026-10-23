@@ -321,12 +321,14 @@ class SettingController extends Controller
         $tenant = Tenant::findOrFail($tenantId);
 
         $validated = $request->validate([
-            'maintenance_mode' => 'required|boolean',
+            'maintenance_mode' => 'nullable',
             'maintenance_message' => 'nullable|string|max:500',
         ]);
 
+        $enabled = $request->boolean('maintenance_mode');
+
         $tenant->update([
-            'maintenance_mode' => (bool) $validated['maintenance_mode'],
+            'maintenance_mode' => $enabled,
             'maintenance_message' => $validated['maintenance_message'] ?? null,
         ]);
 

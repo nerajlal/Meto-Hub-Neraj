@@ -69,6 +69,7 @@
                         <label class="form-check-label fw-semibold cursor-pointer mb-0" for="maintenance_mode_switch">
                             Enable Maintenance Page
                         </label>
+                        <input type="hidden" name="maintenance_mode" value="0">
                         <input class="form-check-input ms-0 fs-5" type="checkbox" role="switch" id="maintenance_mode_switch" name="maintenance_mode" value="1" {{ $tenant->maintenance_mode ? 'checked' : '' }}>
                     </div>
                     
