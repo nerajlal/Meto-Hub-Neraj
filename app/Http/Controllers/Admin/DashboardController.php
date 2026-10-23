@@ -28,9 +28,11 @@ class DashboardController extends Controller
         if ($hasProducts) $completedSteps++;
         if ($hasCustomTheme) $completedSteps++;
 
-        $totalSteps = 4;
+        $totalSteps = 3;
         $allOrdersCount = Order::count();
-        $isNewStore = ($allOrdersCount === 0 || $completedSteps < $totalSteps);
+        // Hide setup guide once all setup steps are completed (or if store already has active orders)
+        $isNewStore = ($completedSteps < $totalSteps);
+        $storefrontUrl = $tenant ? $tenant->storefrontUrl() : url('/');
 
         // Define Period (Last 30 days)
         $startDate = now()->subDays(30);
@@ -97,7 +99,7 @@ class DashboardController extends Controller
             'lowStockItems', 'lowStockCount',
             'recentOrders',
             'hasLogo', 'hasProducts', 'hasCustomTheme',
-            'completedSteps', 'totalSteps', 'isNewStore', 'tenant'
+            'completedSteps', 'totalSteps', 'isNewStore', 'tenant', 'storefrontUrl'
         ));
     }
 
