@@ -73,7 +73,8 @@ class SettingsOverviewController extends Controller
                 'icon' => 'store',
                 'url' => '#store-maintenance',
                 'danger' => true,
-                'action_type' => 'maintenance',
+                'badge' => $tenant->maintenance_mode ? 'Active' : null,
+                'modal' => 'maintenanceModal',
             ],
             [
                 'label' => 'Delete Site',
@@ -81,7 +82,7 @@ class SettingsOverviewController extends Controller
                 'icon' => 'trash-can',
                 'url' => '#delete-site',
                 'danger' => true,
-                'action_type' => 'delete-site',
+                'modal' => 'deleteSiteModal',
             ],
             [
                 'label' => 'Account Deletion',
@@ -89,7 +90,8 @@ class SettingsOverviewController extends Controller
                 'icon' => 'user-xmark',
                 'url' => '#account-deletion',
                 'danger' => true,
-                'action_type' => 'account-deletion',
+                'badge' => $tenant->deletion_requested_at ? 'Pending Review' : null,
+                'modal' => 'accountDeletionModal',
             ],
         ];
 

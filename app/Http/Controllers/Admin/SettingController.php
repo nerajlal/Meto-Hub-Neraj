@@ -311,4 +311,78 @@ class SettingController extends Controller
 
         return redirect()->back()->with('success', 'Checkout fields configuration updated successfully.');
     }
+
+    /**
+     * Update store maintenance mode settings.
+     */
+    public function updateMaintenance(Request $request)
+    {
+        $tenantId = request()->attributes->get('resolved_tenant_id') ?? auth()->user()->tenant_id ?? session('active_tenant_id') ?? 1;
+        $tenant = Tenant::findOrFail($tenantId);
+
+        $validated = $request->validate([
+            'maintenance_mode' => 'required|boolean',
+            'maintenance_message' => 'nullable|string|max:500',
+        ]);
+
+        $tenant->update([
+            'maintenance_mode' => (bool) $validated['maintenance_mode'],
+            'maintenance_message' => $validated['maintenance_message'] ?? null,
+        ]);
+
+        $statusText = $tenant->maintenance_mode ? 'Store maintenance mode is now active.' : 'Store maintenance mode has been turned off.';
+
+        return redirect()->back()->with('success', $statusText);
+    }
+
+    /**
+     * Submit an account deletion request.
+     */
+    public function requestAccountDeletion(Request $request)
+    {
+        $tenantId = request()->attributes->get('resolved_tenant_id') ?? auth()->user()->tenant_id ?? session('active_tenant_id') ?? 1;
+        $tenant = Tenant::findOrFail($tenantId);
+
+        $validated = $request->validate([
+            'reason' => 'required|string|min:5|max:1000',
+            'confirm_email' => ['required', 'email', function ($attr, $value, $fail) {
+                if (strtolower(trim($value)) !== strtolower(trim(auth()->user()->email))) {
+                    $fail('The confirmation email does not match your account email.');
+                }
+            }],
+        ]);
+
+        $tenant->update([
+            'deletion_requested_at' => now(),
+            'deletion_reason' => $validated['reason'],
+        ]);
+
+        return redirect()->back()->with('success', 'Your account deletion request has been submitted to support. Our team will contact you shortly.');
+    }
+
+    /**
+     * Permanently delete / deactivate site.
+     */
+    public function deleteSite(Request $request)
+    {
+        $tenantId = request()->attributes->get('resolved_tenant_id') ?? auth()->user()->tenant_id ?? session('active_tenant_id') ?? 1;
+        $tenant = Tenant::findOrFail($tenantId);
+
+        $request->validate([
+            'confirm_store_name' => ['required', function ($attr, $value, $fail) use ($tenant) {
+                if (trim($value) !== trim($tenant->name)) {
+                    $fail('Confirmation store name does not match.');
+                }
+            }],
+        ]);
+
+        // Soft delete the tenant and revoke active sessions
+        $tenant->delete();
+
+        auth()->logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('admin.common.login')->with('success', 'Your site has been permanently deleted.');
+    }
 }

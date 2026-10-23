@@ -38,6 +38,24 @@ class IdentifyStorefrontTenant
             }
             return response()->view('storefront.unavailable', [], 503, $headers);
         }
+
+        $user = $request->user();
+        $isAdminPreview = $user && ($user->type === 'super_admin' || ((int) $user->tenant_id === (int) $tenant->id && $user->type === 'admin'));
+
+        if (! empty($tenant->maintenance_mode) && ! $isAdminPreview) {
+            $headers = ['Cache-Control' => 'no-cache, private', 'Retry-After' => '1800', 'X-Robots-Tag' => 'noindex, nofollow'];
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $tenant->maintenance_message ?: 'We are currently performing maintenance. Please check back soon!',
+                ], 503, $headers);
+            }
+            return response()->view('storefront.maintenance', [
+                'tenant' => $tenant,
+                'message' => $tenant->maintenance_message ?: 'We are currently performing scheduled maintenance to improve our store. Please check back shortly!',
+            ], 503, $headers);
+        }
+
         if ($hostTenant) abort_unless($access->storefrontDomainAvailable($tenant), 403, 'This store’s custom domain is not available on its current plan.');
 
         $user = $request->user();

@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Tenant extends Model
 {
+    use SoftDeletes;
+
     protected static function booted(): void
     {
         static::creating(function (Tenant $tenant) {
@@ -58,10 +61,16 @@ class Tenant extends Model
         'razorpay_customer_id',
         'razorpay_subscription_id',
         'subscription_status',
+        'maintenance_mode',
+        'maintenance_message',
+        'deletion_requested_at',
+        'deletion_reason',
     ];
 
     protected $casts = [
         'search_indexable' => 'boolean',
+        'maintenance_mode' => 'boolean',
+        'deletion_requested_at' => 'datetime',
         'settings' => 'array',
         'checkout_fields' => 'array',
     ];

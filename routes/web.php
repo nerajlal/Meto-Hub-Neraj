@@ -364,6 +364,10 @@ Route::prefix('{tenant}/admin')->name('admin.')->middleware(['identify_tenant', 
     Route::post('/settings/storefront', [App\Http\Controllers\Admin\SettingController::class, 'storefrontUpdate'])->name('settings.storefront.update');
     Route::get('/settings/checkout-fields', [App\Http\Controllers\Admin\SettingController::class, 'checkoutFields'])->name('settings.checkout-fields');
     Route::post('/settings/checkout-fields', [App\Http\Controllers\Admin\SettingController::class, 'checkoutFieldsUpdate'])->name('settings.checkout-fields.update');
+
+    Route::post('/settings/maintenance', [App\Http\Controllers\Admin\SettingController::class, 'updateMaintenance'])->name('settings.maintenance.update');
+    Route::post('/settings/request-deletion', [App\Http\Controllers\Admin\SettingController::class, 'requestAccountDeletion'])->name('settings.request-deletion');
+    Route::post('/settings/delete-site', [App\Http\Controllers\Admin\SettingController::class, 'deleteSite'])->name('settings.delete-site');
 });
 
 // Protected Delivery Boy Routes
