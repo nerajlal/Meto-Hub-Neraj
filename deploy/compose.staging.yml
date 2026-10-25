@@ -1,0 +1,50 @@
+name: metohub-next-staging
+x-app: &app
+  image: metohub-next-app:${RELEASE:?Set RELEASE}
+  env_file: ../shared/app.env
+  restart: unless-stopped
+  volumes:
+    - uploads:/var/www/html/public/storage
+    - private:/var/www/html/storage/app/private
+    - logs:/var/www/html/storage/logs
+  depends_on:
+    db:
+      condition: service_healthy
+services:
+  app:
+    <<: *app
+  worker:
+    <<: *app
+    command: [php, artisan, queue:work, database, '--queue=order-notifications,default', '--sleep=1', '--tries=3', '--timeout=240']
+    stop_grace_period: 300s
+  scheduler:
+    <<: *app
+    command: [php, artisan, schedule:work]
+  web:
+    image: metohub-next-web:${RELEASE:?Set RELEASE}
+    restart: unless-stopped
+    ports: ['127.0.0.1:8893:80']
+    volumes:
+      - uploads:/var/www/html/public/storage:ro
+    depends_on: [app]
+    healthcheck:
+      test: [CMD, wget, -q, -O, /dev/null, 'http://127.0.0.1/up']
+      interval: 10s
+      timeout: 5s
+      retries: 12
+  db:
+    image: mysql:8.0
+    restart: unless-stopped
+    env_file: ../shared/db.env
+    volumes:
+      - db:/var/lib/mysql
+    healthcheck:
+      test: [CMD-SHELL, 'MYSQL_PWD="$$MYSQL_PASSWORD" mysql -h 127.0.0.1 -u "$$MYSQL_USER" "$$MYSQL_DATABASE" -e "SELECT 1" >/dev/null']
+      interval: 10s
+      timeout: 5s
+      retries: 30
+volumes:
+  uploads:
+  private:
+  logs:
+  db:

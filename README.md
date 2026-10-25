@@ -18,6 +18,8 @@ MetoHub is a multi-tenant SaaS e-commerce platform designed specifically for gro
 
 ## Production deployment
 
+For the deployment TL;DR and `deploy.sh test --push`, `prod`, `status`, and `rollback` workflow, see [script-deployment.md](docs/script-deployment.md).
+
 See [production-deployment.md](docs/production-deployment.md) for the beta domain, mail configuration, preflight checks, and later domain migration.
 
 ## Getting Started
