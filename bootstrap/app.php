@@ -14,6 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->trustProxies(at: '*');
         $middleware->validateCsrfTokens(except: ['billing/razorpay/webhook']);
         $middleware->web(append: [
+            \App\Http\Middleware\ResolveStoreSubdomain::class,
             \App\Http\Middleware\FormatCurrencyResponse::class,
             \App\Http\Middleware\SearchIndexing::class,
         ]);

@@ -21,6 +21,9 @@ class IntegrationDomainVerification
     {
         $domain = strtolower(trim((string) $tenant->domain));
         $platform = strtolower((string) parse_url(config('app.url'), PHP_URL_HOST));
+        if (app(StoreDomains::class)->withinNamespace($domain) && ! app(StoreDomains::class)->availableHostname($domain)) {
+            throw ValidationException::withMessages(['domain' => 'This platform hostname is reserved or is not a single store subdomain.']);
+        }
         if (! $domain || ! filter_var($domain, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME) || ! str_contains($domain, '.') || filter_var($domain, FILTER_VALIDATE_IP) || $this->isPlatformHost($domain) || str_ends_with($platform, '.'.$domain) || in_array($domain, ['localhost', 'localhost.localdomain']) || str_ends_with($domain, '.local')) {
             throw ValidationException::withMessages(['domain' => 'Connect a valid custom domain different from the platform domain first.']);
         }

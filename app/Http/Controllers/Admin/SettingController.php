@@ -28,28 +28,28 @@ class SettingController extends Controller
         $tenantId = request()->attributes->get('resolved_tenant_id') ?? auth()->user()->tenant_id ?? session('active_tenant_id') ?? 1;
         $tenant = Tenant::findOrFail($tenantId);
 
+        if (is_string($request->input('domain'))) {
+            $request->merge(['domain' => strtolower(trim($request->input('domain')))]);
+        }
         $request->validate([
-            'domain' => ['nullable', 'string', 'max:255', 'unique:tenants,domain,'.$tenantId, function ($attribute, $value, $fail) use ($tenant) {
-                if (!$value) return;
-                $value = strtolower(trim($value));
-                $platformHost = strtolower(parse_url(config('app.url'), PHP_URL_HOST) ?: request()->getHost());
-                
-                // Allow subdomain of platform host (e.g. shop.metohub.cloud)
-                if (str_ends_with($value, '.' . $platformHost)) {
-                    $sub = str_replace('.' . $platformHost, '', $value);
-                    if (!preg_match('/^[a-z0-9]+(?:-[a-z0-9]+)*$/', $sub)) {
-                        $fail('Subdomain can only contain lowercase letters, numbers, and hyphens.');
+            'domain' => ['nullable', 'string', 'max:253', 'unique:tenants,domain,'.$tenantId, function ($attribute, $value, $fail) use ($tenant) {
+                if (! $value) return;
+                $domains = app(\App\Services\StoreDomains::class);
+                if ($domains->withinNamespace($value)) {
+                    if (! $domains->availableHostname($value)) {
+                        $fail('Choose an available, non-reserved subdomain with up to 63 lowercase letters, numbers, or hyphens.');
                     }
                     return;
                 }
-
-                // If connecting custom domain
                 $candidate = clone $tenant;
                 $candidate->domain = $value;
                 try {
                     app(\App\Services\IntegrationDomainVerification::class)->domain($candidate);
                 } catch (\Illuminate\Validation\ValidationException $e) {
                     $fail('Use a valid hostname different from the MetoHub root platform domain.');
+                }
+                if (! app(\App\Services\PlanAccess::class)->allows($tenant, 'custom_domain')) {
+                    $fail('Your current plan supports a free platform subdomain. Upgrade to connect a custom domain.');
                 }
             }],
         ]);

@@ -1,0 +1,8 @@
+[Unit]
+Description=Renew Metohub wildcard certificate using Hostinger DNS
+After=network-online.target
+Wants=network-online.target
+[Service]
+Type=oneshot
+UMask=0077
+ExecStart=/opt/metohub-acme/renew.sh

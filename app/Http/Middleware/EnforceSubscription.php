@@ -25,7 +25,9 @@ class EnforceSubscription
         if ($request->routeIs('admin.analytics*')) {
             abort_unless($access->allows($tenant, 'advanced_analytics'), 403, 'Advanced analytics requires Pro or Enterprise.');
         }
-        if ($request->routeIs('admin.settings.domain.update') && $request->filled('domain')) {
+        $domain = $request->input('domain');
+        $freeSubdomain = is_string($domain) && app(\App\Services\StoreDomains::class)->availableHostname(strtolower(trim($domain)));
+        if ($request->routeIs('admin.settings.domain.update') && $request->filled('domain') && ! $freeSubdomain) {
             abort_unless($access->allows($tenant, 'custom_domain'), 403, 'Custom domains require Pro or Enterprise.');
         }
 

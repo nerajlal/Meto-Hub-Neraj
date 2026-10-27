@@ -56,15 +56,8 @@
                     @csrf
                     
                     @php
-                        $host = request()->getHost();
-                        // Extract base platform domain (e.g. metohub.cloud from metohub.cloud or localhost)
-                        $parsedHost = parse_url(config('app.url'), PHP_URL_HOST);
-                        $platformDomain = $parsedHost && !in_array($parsedHost, ['localhost', '127.0.0.1']) ? $parsedHost : $host;
-                        if (in_array($platformDomain, ['localhost', '127.0.0.1'])) {
-                            $platformDomain = 'metohub.cloud';
-                        }
-                        // Strip leading www. if present
-                        $platformDomain = preg_replace('/^www\./', '', $platformDomain);
+                        $platformDomain = app(\App\Services\StoreDomains::class)->base();
+                        $isPlatformSubdomain = app(\App\Services\StoreDomains::class)->availableHostname((string) $tenant->domain);
                         $cleanSubdomain = preg_replace('/\.' . preg_quote($platformDomain, '/') . '$/i', '', old('domain', $tenant->domain ?? ''));
                         // Also strip legacy .metohub.com if exists
                         $cleanSubdomain = str_replace('.metohub.com', '', $cleanSubdomain);
@@ -78,7 +71,7 @@
                                 <input type="text" id="subdomain_input" class="form-control py-2.5 px-3" value="{{ $cleanSubdomain }}" placeholder="e.g. myshop" style="border-radius: 0;">
                                 <span class="input-group-text bg-light text-muted" style="border-radius: 0 8px 8px 0;">.{{ $platformDomain }}</span>
                             </div>
-                            <input type="hidden" name="domain" id="domain" value="{{ old('domain', $tenant->domain) }}">
+                            <input type="hidden" name="domain" id="domain" value="{{ $cleanSubdomain ? $cleanSubdomain . '.' . $platformDomain : '' }}">
                             <div class="form-text text-muted small mt-2">Choose your free subdomain name on {{ $platformDomain }}.</div>
                             @error('domain')
                                 <div class="invalid-feedback d-block mt-2">{{ $message }}</div>
@@ -109,7 +102,8 @@
                         <div>
                             @if($tenant->domain)
                                 <span class="badge bg-success-subtle text-success border border-success-subtle px-2.5 py-1.5 rounded-pill" style="font-size: 11px;">
-                                    <i class="fa-solid fa-circle-check me-1"></i> Connected
+                                    <i class="fa-solid fa-circle-check me-1"></i>
+                                    {{ $isPlatformSubdomain && config('store_domains.wildcard_ready') ? 'Subdomain configured' : 'Saved — setup required' }}
                                 </span>
                             @else
                                 <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle px-2.5 py-1.5 rounded-pill" style="font-size: 11px;">
@@ -130,7 +124,7 @@
             <div class="card border-0 rounded-4 shadow-sm p-4 h-100" style="background: #ffffff; border: 1px solid rgba(0,0,0,0.03) !important;">
                 @if(($tenant->plan ?? 'base') == 'base')
                     <h4 class="h5 fw-bold mb-4 text-primary" style="font-family: 'Playfair Display', serif;">Subdomain Setup</h4>
-                    <p class="text-secondary small mb-4" style="line-height: 1.6;">Your free subdomain is linked upon saving. If your custom subdomain DNS record has been added to your server, customers can visit your store directly at your subdomain.</p>
+                    <p class="text-secondary small mb-4" style="line-height: 1.6;">{{ config('store_domains.wildcard_ready') ? 'Save an available subdomain to give customers a direct address for your store. No separate DNS setup is needed for platform subdomains.' : 'You can save your subdomain now. It will become accessible once the platform operator finishes secure subdomain setup. Your public store link remains available.' }}</p>
                     <div class="p-3 bg-light rounded-3 border">
                         <span class="small fw-semibold d-block text-muted mb-1">Direct Storefront Link</span>
                         <a href="{{ $tenant->storefrontUrl() }}" target="_blank" rel="noopener" class="small fw-bold text-primary">{{ $tenant->storefrontUrl() }}</a>
@@ -138,7 +132,7 @@
                 @else
                     <h4 class="h5 fw-bold mb-4 text-primary" style="font-family: 'Playfair Display', serif;">DNS Setup Instructions</h4>
                     
-                    <p class="text-secondary small mb-4" style="line-height: 1.6;">To connect your custom domain, log in to your domain registrar (GoDaddy, Namecheap, Cloudflare, etc.) and add the following DNS records:</p>
+                    <p class="text-secondary small mb-4" style="line-height: 1.6;">Saving a custom domain does not activate it. Configure DNS, verify ownership, and ask the platform operator to provision HTTPS before sharing it. Add these DNS records at your domain provider:</p>
                     
                     <div class="mb-4">
                         <h5 class="small fw-semibold text-dark mb-2">1. Pointing Root Domain (A Record)</h5>
@@ -149,7 +143,7 @@
                                 <div class="col-4 text-muted fw-semibold">Host/Name:</div>
                                 <div class="col-8 text-dark">@</div>
                                 <div class="col-4 text-muted fw-semibold">Value/IP:</div>
-                                <div class="col-8 text-dark fw-bold">{{ request()->server('SERVER_ADDR') ?: '200.234.39.67' }}</div>
+                                <div class="col-8 text-dark fw-bold">200.234.39.67</div>
                             </div>
                         </div>
                     </div>

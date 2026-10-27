@@ -50,6 +50,10 @@ class PlanAccess
 
     public function storefrontDomainAvailable(Tenant $tenant): bool
     {
+        if (app(StoreDomains::class)->availableHostname((string) $tenant->domain)) {
+            return $this->storefrontAvailable($tenant);
+        }
+
         return $this->allows($tenant, 'custom_domain')
             || (! $this->adminAvailable($tenant) && $this->storefrontAvailable($tenant));
     }
