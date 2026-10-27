@@ -288,12 +288,19 @@
                     </h2>
                     <div class="payment-selection-grid" style="display: grid; grid-template-columns: 1fr; gap: 1rem;">
                         @php
-                            $codEnabled = in_array('cod', app(\App\Services\CheckoutPaymentPolicy::class)->availableMethods($currentTenant), true);
-                            $defaultToOnline = false;
+                            $availableMethods = app(\App\Services\CheckoutPaymentPolicy::class)->availableMethods($currentTenant);
+                            $codEnabled = in_array('cod', $availableMethods, true);
+                            $razorpayEnabled = in_array('razorpay', $availableMethods, true);
+                            $stripeEnabled = in_array('stripe', $availableMethods, true);
+                            $phonepeEnabled = in_array('phonepe', $availableMethods, true);
+                            $anyOnlineEnabled = $razorpayEnabled || $stripeEnabled || $phonepeEnabled || in_array('online', $availableMethods, true);
+                            $anyAvailable = !empty($availableMethods);
+                            $defaultToOnline = !$codEnabled && $anyAvailable;
                         @endphp
-                        @unless($codEnabled)
+                        @unless($anyAvailable)
                             <p role="status">Ordering is temporarily unavailable. Please contact the store.</p>
                         @endunless
+
                         @if($codEnabled)
                         <label class="pay-option {{ !$defaultToOnline ? 'active' : '' }}" style="display: flex; align-items: center; gap: 1.5rem; padding: 1.5rem; border: 2px solid {{ !$defaultToOnline ? 'var(--accent-color)' : 'var(--border-color)' }}; border-radius: 1rem; cursor: pointer; {{ !$defaultToOnline ? 'background: var(--section-bg);' : '' }} transition: 0.2s;">
                             <input type="radio" name="payment_method" value="cod" {{ !$defaultToOnline ? 'checked' : '' }} style="accent-color: var(--accent-color); transform: scale(1.25);">
@@ -305,11 +312,47 @@
                         </label>
                         @endif
 
+                        @if($razorpayEnabled)
+                        <label class="pay-option {{ $defaultToOnline ? 'active' : '' }}" style="display: flex; align-items: center; gap: 1.5rem; padding: 1.5rem; border: 2px solid {{ $defaultToOnline ? 'var(--accent-color)' : 'var(--border-color)' }}; border-radius: 1rem; cursor: pointer; {{ $defaultToOnline ? 'background: var(--section-bg);' : '' }} transition: 0.2s;">
+                            <input type="radio" name="payment_method" value="razorpay" {{ $defaultToOnline ? 'checked' : '' }} style="accent-color: var(--accent-color); transform: scale(1.25);">
+                            <div class="pay-content" style="flex-grow: 1;">
+                                <span class="pay-title" style="display: block; font-weight: 700; color: var(--primary-color); font-size: 1.1rem; margin-bottom: 0.25rem;">Razorpay (UPI, Cards, NetBanking)</span>
+                                <span class="pay-desc" style="font-size: 0.85rem; color: var(--text-muted);">Pay securely via Google Pay, PhonePe, Paytm, Cards, or NetBanking.</span>
+                            </div>
+                            <i class="fa-solid fa-wallet" style="font-size: 1.5rem; color: {{ $defaultToOnline ? 'var(--accent-color)' : 'var(--text-muted)' }};"></i>
+                        </label>
+                        @endif
+
+                        @if($stripeEnabled)
+                        <label class="pay-option" style="display: flex; align-items: center; gap: 1.5rem; padding: 1.5rem; border: 2px solid var(--border-color); border-radius: 1rem; cursor: pointer; transition: 0.2s;">
+                            <input type="radio" name="payment_method" value="stripe" style="accent-color: var(--accent-color); transform: scale(1.25);">
+                            <div class="pay-content" style="flex-grow: 1;">
+                                <span class="pay-title" style="display: block; font-weight: 700; color: var(--primary-color); font-size: 1.1rem; margin-bottom: 0.25rem;">Credit / Debit Card (Stripe)</span>
+                                <span class="pay-desc" style="font-size: 0.85rem; color: var(--text-muted);">Pay securely with Visa, Mastercard, RuPay, or Apple Pay.</span>
+                            </div>
+                            <i class="fa-brands fa-stripe" style="font-size: 1.8rem; color: var(--text-muted);"></i>
+                        </label>
+                        @endif
+
+                        @if($phonepeEnabled)
+                        <label class="pay-option" style="display: flex; align-items: center; gap: 1.5rem; padding: 1.5rem; border: 2px solid var(--border-color); border-radius: 1rem; cursor: pointer; transition: 0.2s;">
+                            <input type="radio" name="payment_method" value="phonepe" style="accent-color: var(--accent-color); transform: scale(1.25);">
+                            <div class="pay-content" style="flex-grow: 1;">
+                                <span class="pay-title" style="display: block; font-weight: 700; color: var(--primary-color); font-size: 1.1rem; margin-bottom: 0.25rem;">PhonePe UPI</span>
+                                <span class="pay-desc" style="font-size: 0.85rem; color: var(--text-muted);">Pay instantly using your PhonePe UPI app or QR.</span>
+                            </div>
+                            <i class="fa-solid fa-mobile-screen-button" style="font-size: 1.5rem; color: var(--text-muted);"></i>
+                        </label>
+                        @endif
 
                     </div>
                 </div>
 
-                <button type="submit" @disabled(!$codEnabled) class="btn-complete-order" style="width: 100%; background: var(--accent-color); color: #fff; border: none; padding: 1.25rem; border-radius: 9999px; font-weight: 800; font-size: 1.2rem; cursor: pointer; transition: 0.2s;">
+                <input type="hidden" name="gateway_payment_id" id="gateway_payment_id" value="">
+                <input type="hidden" name="gateway_order_id" id="gateway_order_id" value="">
+                <input type="hidden" name="gateway_name" id="gateway_name" value="">
+
+                <button type="submit" @disabled(!$anyAvailable) class="btn-complete-order" style="width: 100%; background: var(--accent-color); color: #fff; border: none; padding: 1.25rem; border-radius: 9999px; font-weight: 800; font-size: 1.2rem; cursor: pointer; transition: 0.2s;">
                     Complete Order • {{ $currentTenant->currency ?? '₹' }}{{ number_format($total, 2) }}
                 </button>
             </form>
@@ -385,6 +428,8 @@
 @endsection
 
 @section('scripts')
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script src="https://js.stripe.com/v3/"></script>
 <script>
     function detectLocation() {
         const btn = document.getElementById('btn-geolocation');
@@ -526,34 +571,133 @@
                 }
             @endif
             
+            const $form = $(this);
             const $btn = $('.btn-complete-order');
             const originalHtml = $btn.html();
-            
-            $btn.html('<i class="fa-solid fa-spinner fa-spin"></i> Processing Order...').prop('disabled', true);
-            
-            $.ajax({
-                url: $(this).attr('action'),
-                method: 'POST',
-                data: $(this).serialize(),
-                success: function(response) {
-                    if(response.success) {
-                        window.MetoHubTracking?.consume(response.tracking);
-                        localStorage.removeItem('checkout_form_data');
-                        window.location.href = response.redirect_url;
-                    } else {
-                        alert(response.message || 'Something went wrong.');
+            const paymentMethod = $('input[name="payment_method"]:checked').val() || 'cod';
+
+            $btn.html('<i class="fa-solid fa-spinner fa-spin"></i> Processing...').prop('disabled', true);
+
+            function executeOrderSubmission() {
+                $.ajax({
+                    url: $form.attr('action'),
+                    method: 'POST',
+                    data: $form.serialize(),
+                    success: function(response) {
+                        if(response.success) {
+                            window.MetoHubTracking?.consume(response.tracking);
+                            localStorage.removeItem('checkout_form_data');
+                            window.location.href = response.redirect_url;
+                        } else {
+                            alert(response.message || 'Something went wrong.');
+                            $btn.html(originalHtml).prop('disabled', false);
+                        }
+                    },
+                    error: function(xhr) {
+                        let msg = 'Something went wrong. Please try again.';
+                        if(xhr.responseJSON && xhr.responseJSON.message) {
+                            msg = xhr.responseJSON.message;
+                        }
+                        alert(msg);
                         $btn.html(originalHtml).prop('disabled', false);
                     }
-                },
-                error: function(xhr) {
-                    let msg = 'Something went wrong. Please try again.';
-                    if(xhr.responseJSON && xhr.responseJSON.message) {
-                        msg = xhr.responseJSON.message;
+                });
+            }
+
+            // Razorpay Gateway
+            if (paymentMethod === 'razorpay') {
+                $.ajax({
+                    url: '{{ route("payment.initiate") }}',
+                    method: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        gateway: 'razorpay',
+                        amount: {{ (float) $total }},
+                        customer_name: $('input[name="name"]').val(),
+                        customer_email: $('input[name="email"]').val(),
+                        customer_phone: $('input[name="phone"]').val()
+                    },
+                    success: function(initRes) {
+                        if (initRes.success) {
+                            const rzpOptions = {
+                                key: initRes.key,
+                                amount: initRes.amount,
+                                currency: initRes.currency,
+                                name: initRes.store_name,
+                                description: 'Order Payment',
+                                order_id: initRes.order_id,
+                                prefill: {
+                                    name: $('input[name="name"]').val(),
+                                    email: $('input[name="email"]').val(),
+                                    contact: $('input[name="phone"]').val()
+                                },
+                                theme: {
+                                    color: getComputedStyle(document.documentElement).getPropertyValue('--accent-color').trim() || '#10b981'
+                                },
+                                handler: function(response) {
+                                    $('#gateway_payment_id').val(response.razorpay_payment_id);
+                                    $('#gateway_order_id').val(response.razorpay_order_id);
+                                    $('#gateway_name').val('razorpay');
+                                    executeOrderSubmission();
+                                },
+                                modal: {
+                                    ondismiss: function() {
+                                        $btn.html(originalHtml).prop('disabled', false);
+                                    }
+                                }
+                            };
+                            const rzp = new Razorpay(rzpOptions);
+                            rzp.on('payment.failed', function(resp) {
+                                alert('Payment failed: ' + resp.error.description);
+                                $btn.html(originalHtml).prop('disabled', false);
+                            });
+                            rzp.open();
+                        } else {
+                            alert(initRes.message || 'Unable to start online payment.');
+                            $btn.html(originalHtml).prop('disabled', false);
+                        }
+                    },
+                    error: function(err) {
+                        alert(err.responseJSON?.message || 'Error initializing Razorpay gateway.');
+                        $btn.html(originalHtml).prop('disabled', false);
                     }
-                    alert(msg);
-                    $btn.html(originalHtml).prop('disabled', false);
-                }
-            });
+                });
+                return;
+            }
+
+            // Stripe / PhonePe Gateways
+            if (paymentMethod === 'stripe' || paymentMethod === 'phonepe') {
+                $.ajax({
+                    url: '{{ route("payment.initiate") }}',
+                    method: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        gateway: paymentMethod,
+                        amount: {{ (float) $total }},
+                        customer_name: $('input[name="name"]').val(),
+                        customer_email: $('input[name="email"]').val(),
+                        customer_phone: $('input[name="phone"]').val()
+                    },
+                    success: function(initRes) {
+                        if (initRes.success) {
+                            $('#gateway_order_id').val(initRes.transaction_id || initRes.client_secret || '');
+                            $('#gateway_name').val(paymentMethod);
+                            executeOrderSubmission();
+                        } else {
+                            alert(initRes.message || 'Payment initiation failed.');
+                            $btn.html(originalHtml).prop('disabled', false);
+                        }
+                    },
+                    error: function(err) {
+                        alert(err.responseJSON?.message || 'Error connecting to payment gateway.');
+                        $btn.html(originalHtml).prop('disabled', false);
+                    }
+                });
+                return;
+            }
+
+            // Standard Cash on Delivery
+            executeOrderSubmission();
         });
 
         // Payment option toggle

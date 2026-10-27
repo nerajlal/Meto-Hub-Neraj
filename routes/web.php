@@ -87,6 +87,9 @@ Route::middleware([\App\Http\Middleware\IdentifyStorefrontTenant::class, \App\Ht
     Route::get('/cart/fetch', [App\Http\Controllers\CartController::class, 'fetch'])->name('cart.fetch');
     Route::get('/cart/state', [App\Http\Controllers\CartController::class, 'state'])->name('cart.state');
     Route::post('/order/place', [App\Http\Controllers\OrderController::class, 'store'])->name('order.place');
+    Route::post('/payment/initiate', [App\Http\Controllers\OnlinePaymentController::class, 'initiate'])->name('payment.initiate');
+    Route::post('/payment/verify', [App\Http\Controllers\OnlinePaymentController::class, 'verify'])->name('payment.verify');
+    Route::post('/payment/phonepe/callback', [App\Http\Controllers\OnlinePaymentController::class, 'verify'])->name('payment.phonepe.callback');
 });
 
 // v1 Nurah Theme Routes

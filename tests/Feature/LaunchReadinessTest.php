@@ -134,14 +134,22 @@ class LaunchReadinessTest extends TestCase
         $this->assertDatabaseCount('orders', 0);
     }
 
-    public function test_gateway_settings_cannot_enable_unimplemented_payments(): void
+    public function test_gateway_settings_can_enable_configured_payments(): void
     {
         $tenant = Tenant::create(['name' => 'Fresh Store', 'theme' => 'template_1']);
         $admin = User::factory()->create(['tenant_id' => $tenant->id, 'type' => 'admin']);
-        $this->actingAs($admin)->postJson("/{$tenant->id}/admin/settings/payment", ['razorpay_enabled' => true])
-            ->assertUnprocessable()->assertJsonValidationErrors('razorpay_enabled');
-        $this->post("/{$tenant->id}/admin/settings/payment", ['cod_enabled' => '0'])->assertRedirect();
-        $this->assertDatabaseHas('tenant_payment_settings', ['tenant_id' => $tenant->id, 'cod_enabled' => false, 'razorpay_enabled' => false]);
+        $this->actingAs($admin)->post("/{$tenant->id}/admin/settings/payment", [
+            'cod_enabled' => '1',
+            'razorpay_enabled' => '1',
+            'razorpay_key' => 'rzp_test_12345',
+            'razorpay_secret' => 'rzp_secret_67890',
+        ])->assertRedirect();
+        $this->assertDatabaseHas('tenant_payment_settings', [
+            'tenant_id' => $tenant->id,
+            'cod_enabled' => true,
+            'razorpay_enabled' => true,
+            'razorpay_key' => 'rzp_test_12345',
+        ]);
     }
 
     public function test_every_theme_pauses_checkout_when_cod_is_disabled(): void

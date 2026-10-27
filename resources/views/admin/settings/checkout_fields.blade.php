@@ -254,10 +254,12 @@
                                     <tr>
                                         <td class="ps-4 fw-semibold"><i
                                                 class="fa-solid fa-shield-check text-muted me-2"></i> Pay Online</td>
-                                        <td class="text-muted small">Online checkout will be available after payment processing is integrated and verified.</td>
+                                        <td class="text-muted small">Allow customers to pay online via your configured payment gateways (Razorpay, Stripe, PhonePe).</td>
                                         <td class="text-center">
-                                            <input type="hidden" name="fields[pay_online][enabled]" value="0">
-                                            <span class="small text-muted">Unavailable</span>
+                                            <div class="form-check form-switch d-inline-block">
+                                                <input class="form-check-input" type="checkbox" role="switch"
+                                                    name="fields[pay_online][enabled]" value="1" {{ !isset($fields['pay_online']) || (isset($fields['pay_online']['enabled']) && $fields['pay_online']['enabled']) ? 'checked' : '' }}>
+                                            </div>
                                         </td>
                                         <td class="text-center text-muted small">
                                             <em>N/A</em>

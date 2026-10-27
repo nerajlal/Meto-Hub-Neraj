@@ -71,21 +71,66 @@ class SettingController extends Controller
         $tenantId = auth()->user()->tenant_id ?? session('active_tenant_id') ?? 1;
         $paymentSetting = TenantPaymentSetting::firstOrCreate(['tenant_id' => $tenantId]);
 
-        $request->validate([
+        $validated = $request->validate([
             'cod_enabled' => 'nullable|boolean',
-            'stripe_enabled' => 'nullable|in:0',
-            'razorpay_enabled' => 'nullable|in:0',
-            'phonepe_enabled' => 'nullable|in:0',
+            'stripe_enabled' => 'nullable|boolean',
+            'stripe_key' => 'nullable|string|max:255',
+            'stripe_secret' => 'nullable|string|max:255',
+            'razorpay_enabled' => 'nullable|boolean',
+            'razorpay_key' => 'nullable|string|max:255',
+            'razorpay_secret' => 'nullable|string|max:255',
+            'phonepe_enabled' => 'nullable|boolean',
+            'phonepe_merchant_id' => 'nullable|string|max:255',
+            'phonepe_salt_key' => 'nullable|string|max:255',
+            'phonepe_salt_index' => 'nullable|string|max:255',
         ]);
 
-        $paymentSetting->update([
+        $stripeKey = $request->input('stripe_key', $paymentSetting->stripe_key);
+        $stripeSecret = $request->filled('stripe_secret') ? $request->stripe_secret : $paymentSetting->stripe_secret;
+        $stripeCanEnable = !empty($stripeKey) && !empty($stripeSecret);
+
+        $razorpayKey = $request->input('razorpay_key', $paymentSetting->razorpay_key);
+        $razorpaySecret = $request->filled('razorpay_secret') ? $request->razorpay_secret : $paymentSetting->razorpay_secret;
+        $razorpayCanEnable = !empty($razorpayKey) && !empty($razorpaySecret);
+
+        $phonepeMid = $request->input('phonepe_merchant_id', $paymentSetting->phonepe_merchant_id);
+        $phonepeSalt = $request->filled('phonepe_salt_key') ? $request->phonepe_salt_key : $paymentSetting->phonepe_salt_key;
+        $phonepeCanEnable = !empty($phonepeMid) && !empty($phonepeSalt);
+
+        $updateData = [
             'cod_enabled' => $request->boolean('cod_enabled'),
-            'stripe_enabled' => false,
-            'razorpay_enabled' => false,
-            'phonepe_enabled' => false,
-        ]);
+            'stripe_enabled' => $request->boolean('stripe_enabled') && $stripeCanEnable,
+            'razorpay_enabled' => $request->boolean('razorpay_enabled') && $razorpayCanEnable,
+            'phonepe_enabled' => $request->boolean('phonepe_enabled') && $phonepeCanEnable,
+        ];
 
-        return redirect()->back()->with('success', 'Payment settings updated successfully.');
+        if ($request->has('stripe_key')) {
+            $updateData['stripe_key'] = $validated['stripe_key'] ?? null;
+        }
+        if ($request->filled('stripe_secret')) {
+            $updateData['stripe_secret'] = $validated['stripe_secret'];
+        }
+
+        if ($request->has('razorpay_key')) {
+            $updateData['razorpay_key'] = $validated['razorpay_key'] ?? null;
+        }
+        if ($request->filled('razorpay_secret')) {
+            $updateData['razorpay_secret'] = $validated['razorpay_secret'];
+        }
+
+        if ($request->has('phonepe_merchant_id')) {
+            $updateData['phonepe_merchant_id'] = $validated['phonepe_merchant_id'] ?? null;
+        }
+        if ($request->filled('phonepe_salt_key')) {
+            $updateData['phonepe_salt_key'] = $validated['phonepe_salt_key'];
+        }
+        if ($request->has('phonepe_salt_index')) {
+            $updateData['phonepe_salt_index'] = $validated['phonepe_salt_index'] ?? null;
+        }
+
+        $paymentSetting->update($updateData);
+
+        return redirect()->back()->with('success', 'Payment gateway settings updated successfully.');
     }
 
     /**
@@ -264,7 +309,7 @@ class SettingController extends Controller
                 'required' => false,
             ],
             'pay_online' => [
-                'enabled' => false,
+                'enabled' => isset($fieldsData['pay_online']['enabled']),
                 'required' => false,
             ],
             'address' => [

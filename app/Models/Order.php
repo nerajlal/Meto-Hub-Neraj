@@ -35,7 +35,10 @@ class Order extends Model
         'tax_name',
         'tax_rate',
         'tax_amount',
-        'custom_checkout_data'
+        'custom_checkout_data',
+        'gateway_payment_id',
+        'gateway_order_id',
+        'gateway_name',
     ];
 
     protected $casts = [

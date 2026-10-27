@@ -202,12 +202,18 @@ class OrderController extends Controller
         }
 
         // 4. Create Order
+        $isOnlinePayment = in_array($request->payment_method, ['online', 'razorpay', 'stripe', 'phonepe'], true);
+        $paymentStatus = ($isOnlinePayment && $request->filled('gateway_payment_id')) ? 'paid' : 'pending';
+
         $order = Order::create([
             'user_id' => Auth::id(),
             'order_number' => $orderNumber,
             'status' => 'pending',
             'payment_method' => $request->payment_method ?? 'cod',
-            'payment_status' => 'pending',
+            'payment_status' => $paymentStatus,
+            'gateway_payment_id' => $request->gateway_payment_id,
+            'gateway_order_id' => $request->gateway_order_id,
+            'gateway_name' => $request->gateway_name ?? ($isOnlinePayment ? $request->payment_method : null),
             'subtotal' => $cartData['subtotal'],
             'discount_amount' => $savings,
             'shipping_cost' => $shipping,
