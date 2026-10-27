@@ -19,6 +19,13 @@ class MerchantVerification
         $expires = now()->addHour();
         $user->forceFill(['email_verification_token_hash' => hash('sha256', $token), 'email_verification_expires_at' => $expires])->save();
         $path = URL::temporarySignedRoute('saas.verify', $expires, ['id' => $user->id, 'token' => $token, 'email_hash' => hash('sha256', $user->email)], absolute: false);
-        Mail::to($user->email)->send(new MerchantVerificationMail($user->name, rtrim(config('app.url'), '/').$path));
+        $appUrl = rtrim(config('app.url'), '/');
+        $basePath = trim(request()->getBaseUrl(), '/');
+        $appPath = trim((string) parse_url($appUrl, PHP_URL_PATH), '/');
+        if ($basePath !== '' && ! str_ends_with('/'.$appPath, '/'.$basePath)) {
+            $appUrl .= '/'.$basePath;
+        }
+
+        Mail::to($user->email)->send(new MerchantVerificationMail($user->name, $appUrl.$path));
     }
 }
