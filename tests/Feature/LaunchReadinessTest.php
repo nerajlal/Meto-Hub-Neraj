@@ -8,6 +8,7 @@ use App\Models\TenantPaymentSetting;
 use App\Models\User;
 use App\Services\MerchantVerification;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use Tests\TestCase;
@@ -56,6 +57,24 @@ class LaunchReadinessTest extends TestCase
         $this->assertNull($user->fresh()->email_verification_token_hash);
         $this->assertGuest();
         $this->get($url)->assertForbidden();
+    }
+
+    public function test_verification_url_includes_the_application_subdirectory(): void
+    {
+        Mail::fake();
+        config(['app.url' => 'http://localhost']);
+        $request = Request::create('/Task19-Grocery/saas/register', 'POST', [], [], [], [
+            'SCRIPT_NAME' => '/Task19-Grocery/index.php',
+            'SCRIPT_FILENAME' => '/var/www/html/Task19-Grocery/index.php',
+            'PHP_SELF' => '/Task19-Grocery/index.php/saas/register',
+            'HTTP_HOST' => 'localhost',
+        ]);
+        $this->app->instance('request', $request);
+
+        $user = User::factory()->create(['email' => 'merchant@example.com', 'type' => 'admin']);
+        app(MerchantVerification::class)->send($user);
+
+        $this->assertStringStartsWith('http://localhost/Task19-Grocery/saas/verify/', $this->verificationUrl());
     }
 
     public function test_unsigned_tampered_and_expired_verification_links_are_rejected(): void
