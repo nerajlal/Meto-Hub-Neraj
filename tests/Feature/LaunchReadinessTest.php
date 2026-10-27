@@ -157,7 +157,7 @@ class LaunchReadinessTest extends TestCase
         $tenant = Tenant::create(['name' => 'Fresh Store', 'theme' => 'template_1']);
         $product = \App\Models\Product::create(['title' => 'Rice', 'status' => 'active', 'tenant_id' => $tenant->id]);
         $product->variants()->create(['size' => '1kg', 'price' => 100, 'stock' => 10]);
-        TenantPaymentSetting::create(['tenant_id' => $tenant->id, 'cod_enabled' => false]);
+        TenantPaymentSetting::create(['tenant_id' => $tenant->id, 'cod_enabled' => false, 'whatsapp_checkout_enabled' => false]);
         foreach (array_keys(config('storefront_themes')) as $theme) {
             $tenant->update(['theme' => $theme]);
             $this->withSession(['active_tenant_id' => $tenant->id, 'cart' => [

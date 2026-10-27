@@ -342,6 +342,35 @@ class OrderController extends Controller
         // 7. Return Success
         $redirectUrl = Auth::check() ? app(\App\Services\StorefrontTheme::class)->url('account.orders') : app(\App\Services\StorefrontTheme::class)->url('v1.home', ['order_success' => 1]);
 
+        $whatsappUrl = null;
+        if (($request->payment_method ?? '') === 'whatsapp') {
+            $tenant = \App\Models\Tenant::find($order->tenant_id);
+            $rawPhone = $tenant?->whatsapp_number ?: ($tenant?->contact_phone ?: config('marketing.contact.phone_uri', ''));
+            $cleanPhone = preg_replace('/\D/', '', $rawPhone);
+            if (!empty($cleanPhone)) {
+                $itemsText = "";
+                foreach ($order->items as $item) {
+                    $itemsText .= "- {$item->name}" . ($item->size ? " ({$item->size})" : "") . " x {$item->quantity}\n";
+                }
+                $address = $order->shipping_address ?? [];
+                $addressText = is_array($address) ? trim(($address['address'] ?? '') . ', ' . ($address['city'] ?? '') . ' ' . ($address['zip'] ?? '')) : '';
+
+                $waMsg = "Hello *{$tenant->name}*!\n\n";
+                $waMsg .= "I would like to confirm my order:\n";
+                $waMsg .= "🆔 *Order #{$order->order_number}*\n";
+                $waMsg .= "👤 *Name:* {$order->customer_name}\n";
+                $waMsg .= "📞 *Phone:* {$order->customer_phone}\n";
+                $waMsg .= "💰 *Total Amount:* " . ($tenant->currency ?? '₹') . number_format($order->total_amount, 2) . "\n\n";
+                $waMsg .= "📦 *Items:*\n{$itemsText}\n";
+                if ($addressText) {
+                    $waMsg .= "📍 *Delivery Address:*\n{$addressText}\n\n";
+                }
+                $waMsg .= "Please confirm and process my order. Thank you!";
+
+                $whatsappUrl = "https://api.whatsapp.com/send?phone=" . urlencode($cleanPhone) . "&text=" . urlencode($waMsg);
+            }
+        }
+
         $tracking = null;
         try {
             $tracking = ['tenant' => (string) $order->tenant_id, 'events' => [app(\App\Services\StorefrontTracking::class)->order($order, \App\Models\Tenant::findOrFail($order->tenant_id))]];
@@ -351,7 +380,8 @@ class OrderController extends Controller
             'success' => true,
             'order_id' => $order->order_number,
             'tracking' => $tracking,
-            'redirect_url' => $redirectUrl
+            'redirect_url' => $redirectUrl,
+            'whatsapp_url' => $whatsappUrl
         ]);
     }
 

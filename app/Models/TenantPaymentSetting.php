@@ -14,6 +14,7 @@ class TenantPaymentSetting extends Model
     protected $fillable = [
         'tenant_id',
         'cod_enabled',
+        'whatsapp_checkout_enabled',
         'stripe_enabled',
         'stripe_key',
         'stripe_secret',
@@ -28,6 +29,7 @@ class TenantPaymentSetting extends Model
 
     protected $casts = [
         'cod_enabled' => 'boolean',
+        'whatsapp_checkout_enabled' => 'boolean',
         'stripe_enabled' => 'boolean',
         'razorpay_enabled' => 'boolean',
         'phonepe_enabled' => 'boolean',

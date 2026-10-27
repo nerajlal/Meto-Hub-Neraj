@@ -73,6 +73,7 @@ class SettingController extends Controller
 
         $validated = $request->validate([
             'cod_enabled' => 'nullable|boolean',
+            'whatsapp_checkout_enabled' => 'nullable|boolean',
             'stripe_enabled' => 'nullable|boolean',
             'stripe_key' => 'nullable|string|max:255',
             'stripe_secret' => 'nullable|string|max:255',
@@ -99,6 +100,7 @@ class SettingController extends Controller
 
         $updateData = [
             'cod_enabled' => $request->boolean('cod_enabled'),
+            'whatsapp_checkout_enabled' => $request->boolean('whatsapp_checkout_enabled'),
             'stripe_enabled' => $request->boolean('stripe_enabled') && $stripeCanEnable,
             'razorpay_enabled' => $request->boolean('razorpay_enabled') && $razorpayCanEnable,
             'phonepe_enabled' => $request->boolean('phonepe_enabled') && $phonepeCanEnable,

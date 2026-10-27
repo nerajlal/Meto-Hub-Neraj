@@ -20,6 +20,10 @@ class CheckoutPaymentPolicy
             $methods[] = 'cod';
         }
 
+        if ($settings?->whatsapp_checkout_enabled ?? true) {
+            $methods[] = 'whatsapp';
+        }
+
         if ($settings) {
             if ($settings->razorpay_enabled && !empty($settings->razorpay_key) && !empty($settings->razorpay_secret)) {
                 $methods[] = 'razorpay';

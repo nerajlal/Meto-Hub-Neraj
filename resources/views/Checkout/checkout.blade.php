@@ -345,6 +345,21 @@
                         </label>
                         @endif
 
+                        @php
+                            $whatsappEnabled = in_array('whatsapp', $availableMethods, true);
+                            $defaultToWhatsapp = !$codEnabled && !$anyOnlineEnabled && $whatsappEnabled;
+                        @endphp
+                        @if($whatsappEnabled)
+                        <label class="pay-option {{ $defaultToWhatsapp ? 'active' : '' }}" style="display: flex; align-items: center; gap: 1.5rem; padding: 1.5rem; border: 2px solid {{ $defaultToWhatsapp ? 'var(--accent-color)' : 'var(--border-color)' }}; border-radius: 1rem; cursor: pointer; {{ $defaultToWhatsapp ? 'background: var(--section-bg);' : '' }} transition: 0.2s;">
+                            <input type="radio" name="payment_method" value="whatsapp" {{ $defaultToWhatsapp ? 'checked' : '' }} style="accent-color: var(--accent-color); transform: scale(1.25);">
+                            <div class="pay-content" style="flex-grow: 1;">
+                                <span class="pay-title" style="display: block; font-weight: 700; color: var(--primary-color); font-size: 1.1rem; margin-bottom: 0.25rem;">Order via WhatsApp</span>
+                                <span class="pay-desc" style="font-size: 0.85rem; color: var(--text-muted);">Confirm and complete your order directly through WhatsApp chat.</span>
+                            </div>
+                            <i class="fa-brands fa-whatsapp" style="font-size: 1.8rem; color: #25d366;"></i>
+                        </label>
+                        @endif
+
                     </div>
                 </div>
 
@@ -587,7 +602,11 @@
                         if(response.success) {
                             window.MetoHubTracking?.consume(response.tracking);
                             localStorage.removeItem('checkout_form_data');
-                            window.location.href = response.redirect_url;
+                            if (response.whatsapp_url) {
+                                window.location.href = response.whatsapp_url;
+                            } else {
+                                window.location.href = response.redirect_url;
+                            }
                         } else {
                             alert(response.message || 'Something went wrong.');
                             $btn.html(originalHtml).prop('disabled', false);

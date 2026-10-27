@@ -46,8 +46,8 @@
 
         <div class="row g-4">
             <!-- COD Gateway -->
-            <div class="col-12">
-                <div class="card border-0 rounded-4 shadow-sm p-4" style="background: #ffffff;">
+            <div class="col-md-6 col-12">
+                <div class="card border-0 rounded-4 shadow-sm p-4 h-100" style="background: #ffffff;">
                     <div class="d-flex align-items-center justify-content-between">
                         <div class="d-flex align-items-center gap-3">
                             <div class="p-3 bg-light rounded-3 text-secondary" style="font-size: 24px;">
@@ -55,11 +55,31 @@
                             </div>
                             <div>
                                 <h4 class="h6 fw-bold mb-1 text-primary" style="font-family: 'Playfair Display', serif;">Cash on Delivery (COD)</h4>
-                                <p class="text-muted small mb-0">Allow customers to pay in cash or via doorstep UPI upon order arrival.</p>
+                                <p class="text-muted small mb-0">Allow customers to place orders with payment upon delivery.</p>
                             </div>
                         </div>
                         <div class="form-check form-switch">
                             <input class="form-check-input" type="checkbox" name="cod_enabled" id="cod_enabled" value="1" {{ $paymentSetting->cod_enabled ? 'checked' : '' }} style="width: 48px; height: 24px; cursor: pointer;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- WhatsApp Checkout Gateway -->
+            <div class="col-md-6 col-12">
+                <div class="card border-0 rounded-4 shadow-sm p-4 h-100" style="background: #ffffff;">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="p-3 rounded-3 text-success" style="background: #e8f8f0; font-size: 24px;">
+                                <i class="fa-brands fa-whatsapp"></i>
+                            </div>
+                            <div>
+                                <h4 class="h6 fw-bold mb-1 text-primary" style="font-family: 'Playfair Display', serif;">WhatsApp Checkout</h4>
+                                <p class="text-muted small mb-0">Allow customers to confirm orders directly via WhatsApp chat with the store.</p>
+                            </div>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" name="whatsapp_checkout_enabled" id="whatsapp_checkout_enabled" value="1" {{ $paymentSetting->whatsapp_checkout_enabled ? 'checked' : '' }} style="width: 48px; height: 24px; cursor: pointer;">
                         </div>
                     </div>
                 </div>
