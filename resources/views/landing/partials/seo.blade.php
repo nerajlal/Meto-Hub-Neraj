@@ -44,6 +44,8 @@
 <meta name="twitter:description" content="{{ $metadata['description'] }}">
 <meta name="twitter:image" content="{{ $metadata['image'] }}">
 <meta name="twitter:image:alt" content="{{ $metadata['title'] }}">
-<link rel="icon" href="{{ asset('merchant-icon-192.png') }}">
-<link rel="apple-touch-icon" href="{{ asset('merchant-icon-192.png') }}">
+<link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}?v={{ filemtime(public_path('favicon.ico')) }}">
+<link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32.png') }}?v={{ filemtime(public_path('favicon-32.png')) }}">
+<link rel="icon" type="image/png" sizes="192x192" href="{{ asset('favicon-192.png') }}?v={{ filemtime(public_path('favicon-192.png')) }}">
+<link rel="apple-touch-icon" href="{{ asset('favicon-192.png') }}?v={{ filemtime(public_path('favicon-192.png')) }}">
 <script type="application/ld+json">{!! json_encode($metadata['schema'], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}</script>
