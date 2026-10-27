@@ -31,10 +31,26 @@ class SettingController extends Controller
         $request->validate([
             'domain' => ['nullable', 'string', 'max:255', 'unique:tenants,domain,'.$tenantId, function ($attribute, $value, $fail) use ($tenant) {
                 if (!$value) return;
+                $value = strtolower(trim($value));
+                $platformHost = strtolower(parse_url(config('app.url'), PHP_URL_HOST) ?: request()->getHost());
+                
+                // Allow subdomain of platform host (e.g. shop.metohub.cloud)
+                if (str_ends_with($value, '.' . $platformHost)) {
+                    $sub = str_replace('.' . $platformHost, '', $value);
+                    if (!preg_match('/^[a-z0-9]+(?:-[a-z0-9]+)*$/', $sub)) {
+                        $fail('Subdomain can only contain lowercase letters, numbers, and hyphens.');
+                    }
+                    return;
+                }
+
+                // If connecting custom domain
                 $candidate = clone $tenant;
                 $candidate->domain = $value;
-                try { app(\App\Services\IntegrationDomainVerification::class)->domain($candidate); }
-                catch (\Illuminate\Validation\ValidationException $e) { $fail('Use a valid custom hostname different from the MetoHub platform domain.'); }
+                try {
+                    app(\App\Services\IntegrationDomainVerification::class)->domain($candidate);
+                } catch (\Illuminate\Validation\ValidationException $e) {
+                    $fail('Use a valid hostname different from the MetoHub root platform domain.');
+                }
             }],
         ]);
 

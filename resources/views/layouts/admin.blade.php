@@ -243,7 +243,9 @@
                     <div class="mt-5 pt-4 border-top text-center small text-primary fw-medium">
                         @if(isset($currentTenant))
                             @php
-                                $displayDomain = $currentTenant->domain ?? (strtolower(str_replace(' ', '', $currentTenant->name)) . '.metohub.com');
+                                $platformDomain = parse_url(config('app.url'), PHP_URL_HOST) ?: request()->getHost();
+                                if (in_array($platformDomain, ['localhost', '127.0.0.1'])) $platformDomain = 'metohub.cloud';
+                                $displayDomain = $currentTenant->domain ?? (strtolower(str_replace(' ', '', $currentTenant->slug ?: $currentTenant->name)) . '.' . $platformDomain);
                             @endphp
                             @if($currentTenant->domain)
                                 Developed by MetoHub. Running on <a href="http://{{ $displayDomain }}" target="_blank" class="text-decoration-none fw-bold text-primary">{{ $displayDomain }}</a>
