@@ -54,7 +54,7 @@
 @push('scripts')
 <script id="billing-config" type="application/json">{!! json_encode([
     'subscribe' => route('admin.billing.subscribe'), 'verify' => route('admin.billing.verify'), 'status' => route('admin.billing.status'),
-    'csrf' => csrf_token(), 'configured' => $billingConfigured, 'prefill' => ['name' => auth()->user()->name, 'email' => auth()->user()->email],
+    'csrf' => csrf_token(), 'configured' => $billingConfigured, 'prefill' => ['name' => auth()->user()->name, 'email' => auth()->user()->email, 'contact' => auth()->user()->phone ?: ($tenant->contact_phone ?: '')],
 ], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_SLASHES) !!}</script>
 @if($billingConfigured)<script src="https://checkout.razorpay.com/v1/checkout.js"></script>@endif
 <script src="{{ asset('js/metohub-billing.js') }}?v={{ filemtime(public_path('js/metohub-billing.js')) }}" defer></script>
