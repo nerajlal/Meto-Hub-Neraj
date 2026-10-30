@@ -422,7 +422,7 @@
          </div>
       @endif
       <div class="bottom-article-content">
-        <h4><a href="{{ route('landing.blog.show', $recent['id']) }}">{{ Str::limit($recent['title'], 60) }}</a></h4>
+        <h4><a href="{{ route('landing.blog.show', $recent['slug'] ?? $recent['id']) }}">{{ Str::limit($recent['title'], 60) }}</a></h4>
         <div class="bottom-article-date">{{ $recent['date_label'] }}</div>
       </div>
     </div>

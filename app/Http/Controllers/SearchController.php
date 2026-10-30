@@ -119,7 +119,8 @@ class SearchController extends Controller
         return $this->xml(function () use ($blogs) {
             echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
             foreach ($blogs as $blog) {
-                $url = rtrim(config('app.url'), '/').'/blogs/'.$blog['id'];
+                $identifier = ! empty($blog['slug']) ? $blog['slug'] : $blog['id'];
+                $url = rtrim(config('app.url'), '/').'/blogs/'.$identifier;
                 echo '<url><loc>'.$this->escape($url).'</loc>';
                 if (! empty($blog['modified_at']) && $blog['modified_at'] <= now()->timestamp) {
                     echo '<lastmod>'.gmdate('Y-m-d\TH:i:s\Z', $blog['modified_at']).'</lastmod>';

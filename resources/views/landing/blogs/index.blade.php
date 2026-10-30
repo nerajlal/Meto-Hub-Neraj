@@ -133,7 +133,7 @@
           @endif
           <div class="blog-content">
             <div class="blog-date">{{ $blog['date_label'] }}</div>
-            <h3 class="blog-title"><a href="{{ route('landing.blog.show', $blog['id']) }}">{{ $blog['title'] }}</a></h3>
+            <h3 class="blog-title"><a href="{{ route('landing.blog.show', $blog['slug'] ?? $blog['id']) }}">{{ $blog['title'] }}</a></h3>
             <p class="blog-excerpt">{{ $blog['excerpt'] }}</p>
             <div class="blog-meta">
               @if($blog['author_avatar'])
