@@ -8,22 +8,66 @@
 @section('content')
 <style>
   .blog-hero {
-    padding: 9rem 1rem 1.5rem;
+    padding: 7.5rem 1.5rem 2.5rem;
     background: #fbfaf7;
-    border-bottom: 1px solid #e4ded3;
+    border-bottom: 1px solid #e8e4db;
     text-align: center;
   }
   .blog-hero-inner {
-    max-width: 900px;
+    max-width: 860px;
     margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .blog-breadcrumbs {
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-bottom: 0.75rem;
+  }
+  .blog-breadcrumbs a {
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .blog-breadcrumbs a:hover {
+    color: var(--primary);
+  }
+  .blog-breadcrumbs span[aria-current="page"] {
+    color: var(--ink);
+    font-weight: 500;
+    max-width: 320px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    color: var(--primary);
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 1.25rem;
+    transition: color 0.2s, transform 0.2s;
+  }
+  .back-link:hover {
+    color: var(--primary-dark);
+    transform: translateX(-3px);
   }
   .blog-title {
-    font-size: clamp(1.75rem, 5vw, 2.75rem);
+    font-size: clamp(2rem, 4.5vw, 2.75rem);
     font-weight: 800;
     color: var(--dark);
-    line-height: 1.2;
-    margin-bottom: 0.5rem;
-    letter-spacing: -0.03em;
+    line-height: 1.25;
+    margin: 0;
+    letter-spacing: -0.025em;
   }
   .blog-meta-top {
     display: flex;
@@ -31,8 +75,8 @@
     justify-content: center;
     gap: 1.5rem;
     color: var(--muted);
-    font-size: 1rem;
-    margin-bottom: 2rem;
+    font-size: 0.95rem;
+    margin-top: 1.25rem;
   }
   .blog-meta-top span {
     display: flex;
@@ -45,8 +89,9 @@
     margin: 0 auto;
     padding: 3rem clamp(1rem, 4vw, 2rem);
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 300px;
-    gap: 2rem;
+    grid-template-columns: minmax(0, 1fr) 320px;
+    gap: 2.5rem;
+    align-items: start;
   }
   
   @media (max-width: 992px) {
@@ -131,18 +176,27 @@
   .blog-sidebar {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: 1.75rem;
     position: sticky;
-    top: 120px;
+    top: 96px;
     align-self: start;
+    z-index: 10;
   }
   
   .sidebar-widget {
-    background: white;
-    border: 1px solid #e4ded3;
+    background: #ffffff;
+    border: 1px solid #e8e4db;
     border-radius: 16px;
-    padding: 2rem;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    padding: 1.75rem 1.5rem;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  }
+
+  .sidebar-widget-cta {
+    background: linear-gradient(145deg, var(--primary), var(--primary-dark)) !important;
+    color: #ffffff !important;
+    text-align: center;
+    border: none !important;
+    box-shadow: 0 10px 28px rgba(36, 74, 59, 0.22) !important;
   }
   
   .widget-title {
@@ -160,24 +214,24 @@
   }
   
   .author-avatar {
-    width: 100px;
-    height: 100px;
+    width: 88px;
+    height: 88px;
     border-radius: 50%;
     object-fit: cover;
     margin: 0 auto 1rem;
-    border: 4px solid #fbfaf7;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    border: 3px solid #fbfaf7;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
   }
   
   .author-name {
-    font-size: 1.25rem;
+    font-size: 1.2rem;
     font-weight: 700;
     color: var(--dark);
     margin-bottom: 0.25rem;
   }
   
   .author-title {
-    font-size: 0.9rem;
+    font-size: 0.88rem;
     color: var(--primary);
     font-weight: 600;
     margin-bottom: 1rem;
@@ -228,41 +282,67 @@
 
   .share-buttons {
     display: flex;
-    gap: 1rem;
+    gap: 0.75rem;
     justify-content: center;
   }
   .share-btn {
-    width: 40px;
-    height: 40px;
+    width: 38px;
+    height: 38px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     color: white;
-    font-size: 1.1rem;
+    font-size: 1rem;
     text-decoration: none;
-    transition: transform 0.2s;
+    transition: transform 0.2s, opacity 0.2s;
   }
   .share-btn:hover {
-    transform: translateY(-3px);
+    transform: translateY(-2px);
+    opacity: 0.9;
   }
   .share-tw { background: #0f1419; }
   .share-fb { background: #1877f2; }
   .share-in { background: #0a66c2; }
-  
-  .back-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
+
+  .btn-white-cta {
+    display: inline-block;
+    width: 100%;
+    background: #ffffff;
+    color: var(--primary-dark) !important;
+    font-weight: 700;
+    padding: 12px 20px;
+    border-radius: 999px;
     text-decoration: none;
-    color: var(--primary);
-    font-weight: 600;
-    margin-bottom: 2rem;
+    font-size: 0.95rem;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+    transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+  }
+  .btn-white-cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.18);
+    background: #fdfdfd;
+  }
+
+  .blog-useful-links {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.25rem;
+    margin-top: 1.25rem;
+    font-size: 0.85rem;
+  }
+  .blog-useful-links a {
+    color: rgba(255, 255, 255, 0.85);
+    text-decoration: underline;
+    text-underline-offset: 3px;
     transition: color 0.2s;
   }
-  .back-link:hover {
-    color: var(--primary-dark);
+  .blog-useful-links a:hover {
+    color: #ffffff;
   }
+  
+
 
   .bottom-articles {
     max-width: 1200px;
@@ -334,7 +414,7 @@
     <a href="{{ route('landing.blogs') }}" class="back-link">
       <i class="fa-solid fa-arrow-left"></i> Back to all articles
     </a>
-    <h1 class="blog-title" style="margin-top: 1rem;">{{ $blog['title'] }}</h1>
+    <h1 class="blog-title">{{ $blog['title'] }}</h1>
   </div>
 </div>
 
@@ -391,18 +471,16 @@
         Sharing insights on grocery technology, eCommerce trends, and retail management.
       </p>
       <div class="share-buttons">
-        <a href="https://twitter.com/intent/tweet?url={{ urlencode(rtrim(config('app.url'), '/').'/blogs/'.$blog['id']) }}&amp;text={{ urlencode($blog['title']) }}" aria-label="Share on X" target="_blank" rel="noopener noreferrer" class="share-btn share-tw"><i class="fa-brands fa-x-twitter"></i></a>
-        <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(rtrim(config('app.url'), '/').'/blogs/'.$blog['id']) }}" aria-label="Share on Facebook" target="_blank" rel="noopener noreferrer" class="share-btn share-fb"><i class="fa-brands fa-facebook-f"></i></a>
-        <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ urlencode(rtrim(config('app.url'), '/').'/blogs/'.$blog['id']) }}" aria-label="Share on LinkedIn" target="_blank" rel="noopener noreferrer" class="share-btn share-in"><i class="fa-brands fa-linkedin-in"></i></a>
+        <a href="https://twitter.com/intent/tweet?url={{ urlencode(rtrim(config('app.url'), '/').'/blogs/'.($blog['slug'] ?? $blog['id'])) }}&amp;text={{ urlencode($blog['title']) }}" aria-label="Share on X" target="_blank" rel="noopener noreferrer" class="share-btn share-tw"><i class="fa-brands fa-x-twitter"></i></a>
+        <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(rtrim(config('app.url'), '/').'/blogs/'.($blog['slug'] ?? $blog['id'])) }}" aria-label="Share on Facebook" target="_blank" rel="noopener noreferrer" class="share-btn share-fb"><i class="fa-brands fa-facebook-f"></i></a>
+        <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ urlencode(rtrim(config('app.url'), '/').'/blogs/'.($blog['slug'] ?? $blog['id'])) }}" aria-label="Share on LinkedIn" target="_blank" rel="noopener noreferrer" class="share-btn share-in"><i class="fa-brands fa-linkedin-in"></i></a>
       </div>
     </div>
-
-
     
-    <div class="sidebar-widget" style="background: var(--primary); color: white; text-align: center;">
-      <h3 style="color: white; font-size: 1.5rem; margin-bottom: 1rem; font-weight: 700;">Start selling online today</h3>
-      <p style="color: rgba(255,255,255,0.9); margin-bottom: 1.5rem; font-size: 0.95rem;">Give your products a store of their own. Explore themes and choose a plan for your brand.</p>
-      <a href="{{ route('landing', ['get_started' => 1, 'plan' => 'base']) }}" class="btn btn-white" style="width: 100%;">Start {{ config('saas.trial_days') }}-day free trial</a>
+    <div class="sidebar-widget sidebar-widget-cta">
+      <h3 style="color: #ffffff; font-size: 1.4rem; margin-bottom: 0.75rem; font-weight: 700; line-height: 1.3;">Start selling online today</h3>
+      <p style="color: rgba(255,255,255,0.9); margin-bottom: 1.5rem; font-size: 0.92rem; line-height: 1.5;">Give your grocery products an independent store of their own. Explore themes and choose a plan for your brand.</p>
+      <a href="{{ route('landing', ['get_started' => 1, 'plan' => 'base']) }}" class="btn-white-cta">Start {{ config('saas.trial_days') }}-day free trial</a>
       <div class="blog-useful-links"><a href="{{ route('landing.themes') }}">Explore store themes</a><a href="{{ route('landing') }}#pricing">Compare plans</a></div>
     </div>
   </aside>
