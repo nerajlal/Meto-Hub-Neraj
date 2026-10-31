@@ -12,6 +12,9 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500;600&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..900,0..100,0..1;1,9..144,300..900,0..100,0..1&family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700&display=swap">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer">
 
+<!-- MetoHub Shared Reference (Tailwind utilities for header/footer and shared components) -->
+<link rel="stylesheet" href="{{ asset('css/metohub-reference.css') }}?v={{ filemtime(public_path('css/metohub-reference.css')) }}">
+
 <!-- Metora Luxury Design System & MetoHub Custom Theme -->
 <link rel="stylesheet" href="{{ asset('css/metora-style.css') }}?v={{ filemtime(public_path('css/metora-style.css')) }}">
 <link rel="stylesheet" href="{{ asset('css/metohub-demo-custom.css') }}?v={{ filemtime(public_path('css/metohub-demo-custom.css')) }}">

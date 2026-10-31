@@ -515,13 +515,146 @@
       color: var(--ink-2);
       max-width: 44em;
     }
-    @media (max-width: 959px) {
-      .metohub-split { grid-template-columns: 1fr; }
-      .demo-stores-grid { grid-template-columns: 1fr; }
-      .pricing-cards-grid { grid-template-columns: 1fr; }
-      .pricing-card-luxury.featured { transform: none; }
-      .faq-split-layout { grid-template-columns: 1fr; }
-      .faq-left-col { position: static; }
+    /* ==========================================================================
+       Shared Marketing Header & Footer — Metora Luxury Enhancements
+       ========================================================================== */
+    header[data-marketing-header] {
+      background: rgba(253, 251, 247, 0.9) !important;
+      backdrop-filter: blur(14px) !important;
+      -webkit-backdrop-filter: blur(14px) !important;
+      border-bottom: 1px solid rgba(217, 119, 6, 0.2) !important;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      transition: background 0.3s var(--ease), border-color 0.3s var(--ease);
+    }
+
+    header[data-marketing-header] .container-page {
+      max-width: calc(var(--max, 1280px) + var(--gutter, 48px) * 2);
+      padding-inline: var(--gutter, 24px);
+    }
+
+    header[data-marketing-header] a {
+      text-decoration: none;
+    }
+
+    header[data-marketing-header] .text-foreground {
+      color: var(--ink, #0F172A) !important;
+    }
+
+    header[data-marketing-header] .text-muted-foreground {
+      color: var(--ink-2, #334155) !important;
+      font-weight: 600;
+    }
+
+    header[data-marketing-header] nav a {
+      font-family: var(--sans);
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--ink-2, #334155);
+      transition: color 0.2s var(--ease);
+      position: relative;
+      padding: 6px 0;
+    }
+
+    header[data-marketing-header] nav a:hover {
+      color: var(--red, #D97706) !important;
+    }
+
+    header[data-marketing-header] .bg-primary {
+      background: var(--red, #D97706) !important;
+      color: var(--paper, #FDFBF7) !important;
+      font-family: var(--display) !important;
+      font-weight: 800 !important;
+      font-style: italic !important;
+      box-shadow: 0 2px 6px rgba(217, 119, 6, 0.3) !important;
+    }
+
+    header[data-marketing-header] .btn-primary {
+      background: var(--red, #D97706) !important;
+      color: var(--paper, #FDFBF7) !important;
+      border-radius: 999px !important;
+      font-family: var(--sans) !important;
+      font-weight: 700 !important;
+      padding: 10px 22px !important;
+      box-shadow: 0 4px 0 var(--red-deep, #92400E) !important;
+      transition: translate 0.2s var(--ease), box-shadow 0.2s var(--ease) !important;
+    }
+
+    header[data-marketing-header] .btn-primary:hover {
+      translate: 0 -1px !important;
+      box-shadow: 0 5px 0 var(--red-deep, #92400E) !important;
+    }
+
+    header[data-marketing-header] .btn-primary:active {
+      translate: 0 2px !important;
+      box-shadow: 0 2px 0 var(--red-deep, #92400E) !important;
+    }
+
+    footer[data-marketing-footer] {
+      background: var(--paper-2, #F7F3EB) !important;
+      border-top: 1px solid rgba(217, 119, 6, 0.2) !important;
+      color: var(--ink, #0F172A) !important;
+      font-family: var(--sans);
+    }
+
+    footer[data-marketing-footer] .container-page {
+      max-width: calc(var(--max, 1280px) + var(--gutter, 48px) * 2);
+      padding-inline: var(--gutter, 24px);
+    }
+
+    footer[data-marketing-footer] .bg-primary {
+      background: var(--red, #D97706) !important;
+      color: var(--paper, #FDFBF7) !important;
+      font-family: var(--display) !important;
+      font-weight: 800 !important;
+      font-style: italic !important;
+    }
+
+    footer[data-marketing-footer] a {
+      text-decoration: none;
+      transition: color 0.2s var(--ease);
+    }
+
+    footer[data-marketing-footer] nav a {
+      color: var(--ink-2, #334155);
+      font-weight: 500;
+    }
+
+    footer[data-marketing-footer] nav a:hover {
+      color: var(--red, #D97706) !important;
+    }
+
+    footer[data-marketing-footer] .text-muted-foreground {
+      color: var(--ink-2, #334155) !important;
+    }
+
+    footer[data-marketing-footer] .home-footer-contact {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 14px;
+      font-size: 13px;
+      color: var(--ink-3, #64748B);
+      font-style: normal;
+    }
+
+    footer[data-marketing-footer] .home-footer-contact a {
+      color: var(--ink, #0F172A);
+      font-weight: 600;
+    }
+
+    footer[data-marketing-footer] .home-footer-contact a:hover {
+      color: var(--red, #D97706);
+    }
+
+    footer[data-marketing-footer] .home-footer-legal {
+      border-top: 1px solid rgba(217, 119, 6, 0.15) !important;
+      color: var(--ink-3, #64748B) !important;
+    }
+
+    footer[data-marketing-footer] .home-footer-legal a:hover {
+      color: var(--red, #D97706) !important;
     }
   
 
