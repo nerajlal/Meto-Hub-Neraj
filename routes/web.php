@@ -260,7 +260,11 @@ Route::prefix('{tenant}/admin')->name('admin.')->middleware(['identify_tenant', 
 
     Route::post('/products/dartpos-sync', fn () => abort(503, 'DartPOS synchronization is not available.'))->name('dartpos.sync');
 
-    Route::view('/reviews', 'admin.reviews.index')->name('reviews');
+    Route::get('/reviews', [App\Http\Controllers\Admin\ReviewController::class, 'index'])->name('reviews');
+    Route::post('/reviews', [App\Http\Controllers\Admin\ReviewController::class, 'store'])->name('reviews.store');
+    Route::put('/reviews/{id}/status', [App\Http\Controllers\Admin\ReviewController::class, 'updateStatus'])->name('reviews.status');
+    Route::put('/reviews/{id}/reply', [App\Http\Controllers\Admin\ReviewController::class, 'reply'])->name('reviews.reply');
+    Route::delete('/reviews/{id}', [App\Http\Controllers\Admin\ReviewController::class, 'destroy'])->name('reviews.destroy');
 
     Route::view('/blog', 'admin.blog.index')->name('blog');
     Route::view('/blog/create', 'admin.blog.create')->name('blog.create');

@@ -24,6 +24,7 @@
                 ['admin.customers', 'Customers', 'user-group'],
                 ['admin.carts', 'Carts', 'cart-shopping'],
                 ['admin.discounts', 'Discounts', 'percent'],
+                ['admin.reviews', 'Reviews', 'star'],
                 ['admin.analytics', 'Analytics', 'chart-simple'],
                 ['admin.billing', 'Billing', 'file-invoice-dollar'],
                 ['admin.settings.index', 'Settings', 'sliders']
