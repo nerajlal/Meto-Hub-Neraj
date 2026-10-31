@@ -1,6 +1,6 @@
     .metohub-hero {
-      padding-top: calc(var(--nav-h) + clamp(40px, 6vw, 90px));
-      padding-bottom: clamp(50px, 7vw, 100px);
+      padding-top: clamp(24px, 4vw, 48px);
+      padding-bottom: clamp(40px, 6vw, 80px);
     }
 
     .metohub-split {

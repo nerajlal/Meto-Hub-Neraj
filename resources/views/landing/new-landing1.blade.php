@@ -29,7 +29,7 @@
     color: var(--ink, #0F172A);
     font-family: var(--sans);
     margin: 0;
-    overflow-x: hidden;
+    overflow-x: clip;
   }
   .grain {
     pointer-events: none;
