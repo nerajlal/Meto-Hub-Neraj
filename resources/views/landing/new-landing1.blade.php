@@ -190,28 +190,24 @@
             </div>
             <div class="phone-body">
               <div class="phone-product-card">
-                <img src="{{ asset('images/landing/reference/hero.jpg') }}" alt="Lumiere Perfume Store Preview">
+                <img src="{{ asset('images/landing/reference/hero.jpg') }}" alt="Lumière Eau de Parfum Store Preview">
                 <div class="phone-product-info">
                   <span class="phone-badge">FEATURED COLLECTION</span>
-                  <h4 style="font-size: 16px; margin: 0; color: var(--ink);">Lumière Eau de Parfum</h4>
-                  <p style="font-size: 13px; color: var(--ink-3); margin: 2px 0 8px;">Signature scent · 50ml / 100ml</p>
-                  <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span style="font-weight: 700; color: var(--red); font-size: 15px;">₹2,450</span>
-                    <span style="font-size: 12px; font-weight: 600; background: var(--paper-2); padding: 4px 8px; border-radius: 6px; border: 1px solid rgba(15,23,42,0.1); color: var(--ink);">Select Size</span>
+                  <h4 style="font-size: 16px; margin: 0; color: var(--ink); font-weight: 700;">Lumière Eau de Parfum</h4>
+                  <div class="phone-price-row">
+                    <span style="font-weight: 800; font-size: 18px; color: var(--red);">₹2,450</span>
+                    <span style="font-size: 12px; font-weight: 600; color: #15803d;">In Stock · Fast COD</span>
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
 
-              <div class="phone-action-bar">
-                <div class="phone-total">
-                  <span>Cart total</span>
-                  <strong>₹2,450</strong>
-                </div>
-                <div class="phone-btn">
-                  <span>Checkout</span>
-                  <i class="fa-solid fa-arrow-right"></i>
-                </div>
-              </div>
+          <div class="live-order-badge">
+            <i class="fa-solid fa-circle-check" style="color: #16a34a; font-size: 20px;"></i>
+            <div>
+              <strong>New Order #1042 Received</strong>
+              <span style="display: block; font-size: 12px; color: var(--ink-3);">Via Instagram Bio Link</span>
             </div>
           </div>
         </div>
