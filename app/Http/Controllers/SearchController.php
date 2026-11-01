@@ -99,7 +99,29 @@ class SearchController extends Controller
 
         return $this->xml(function () {
             echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
-            foreach (['', '/features', '/pricing', '/themes', '/about', '/contact', '/blogs', '/privacy-policy', '/terms', '/refund-cancellation', '/security'] as $path) {
+            foreach ([
+                '',
+                '/features',
+                '/solutions',
+                '/pricing',
+                '/themes',
+                '/about',
+                '/contact',
+                '/analytics',
+                '/careers',
+                '/press',
+                '/independent-grocers',
+                '/grocery-chains',
+                '/farmers-markets',
+                '/help-center',
+                '/api-docs',
+                '/guides',
+                '/blogs',
+                '/privacy-policy',
+                '/terms',
+                '/refund-cancellation',
+                '/security',
+            ] as $path) {
                 echo '<url><loc>'.$this->escape(rtrim(config('app.url'), '/').$path).'</loc></url>';
             }
             echo '</urlset>';
