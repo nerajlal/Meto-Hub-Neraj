@@ -109,7 +109,6 @@ class SearchController extends Controller
                 '/contact',
                 '/analytics',
                 '/careers',
-                '/press',
                 '/help-center',
                 '/api-docs',
                 '/blogs',

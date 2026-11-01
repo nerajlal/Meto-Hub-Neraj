@@ -151,7 +151,7 @@ class LandingHomepageTest extends TestCase
         preg_match('/<header data-marketing-header.*?<\/header>/s', $homepage, $header);
         $normalizeHeader = fn ($html) => preg_replace('/\s+/', ' ', str_replace('data-start="" data-plan="base"', '', $html));
         foreach (['/privacy-policy', '/terms', '/refund-cancellation', '/about', '/contact', '/features', '/solutions',
-            '/pricing', '/themes', '/analytics', '/careers', '/press',
+            '/pricing', '/themes', '/analytics', '/careers',
             '/help-center', '/api-docs', '/security', '/blogs', '/blogs/7'] as $path) {
             $html = $this->get($path)->assertOk()->getContent();
             $this->assertSame(1, preg_match_all('/<h1\\b/i', $html), $path.' needs one main page heading');

@@ -24,7 +24,6 @@ class MarketingSeo
             '/solutions' => ['Online Store Solutions for Small Businesses | MetoHub', 'Discover how MetoHub helps independent businesses organize their products, build storefronts and manage orders.'],
             '/analytics' => ['Store Analytics & Reporting | MetoHub', 'Explore MetoHub store reporting tools and learn about the analytics options available for your business.'],
             '/careers' => ['Careers at MetoHub', 'Explore working with MetoHub and find contact information for career enquiries.'],
-            '/press' => ['MetoHub Press & Media', 'Find MetoHub company information and contact the team for press and media enquiries.'],
             '/help-center' => ['MetoHub Help Center', 'Find guidance for creating your MetoHub store, managing products and understanding your account.'],
             '/api-docs' => ['MetoHub Developer Information', 'Explore MetoHub developer information and contact the team about integration requirements.'],
         ];

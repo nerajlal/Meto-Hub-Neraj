@@ -66,7 +66,6 @@ Route::get('/privacy-policy', [App\Http\Controllers\LandingController::class, 'p
 Route::get('/terms', [App\Http\Controllers\LandingController::class, 'terms'])->name('landing.terms');
 Route::get('/refund-cancellation', [App\Http\Controllers\LandingController::class, 'refund'])->name('landing.refund');
 Route::get('/careers', [App\Http\Controllers\LandingController::class, 'careers'])->name('landing.careers');
-Route::get('/press', [App\Http\Controllers\LandingController::class, 'press'])->name('landing.press');
 Route::get('/help-center', [App\Http\Controllers\LandingController::class, 'helpCenter'])->name('landing.help-center');
 Route::get('/api-docs', [App\Http\Controllers\LandingController::class, 'apiDocs'])->name('landing.api-docs');
 Route::get('/security', [App\Http\Controllers\LandingController::class, 'security'])->name('landing.security');
