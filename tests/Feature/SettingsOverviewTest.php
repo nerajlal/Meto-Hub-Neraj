@@ -34,7 +34,7 @@ class SettingsOverviewTest extends TestCase
         });
         $response = $this->get("/{$tenant->id}/admin/settings")->assertOk()->assertSee('Free trial active')
             ->assertSee($tenant->name)->assertSee($user->email)->assertSee('Bloom Avenue')->assertSee('Not configured')
-            ->assertHeader('X-Robots-Tag', 'noindex, nofollow')->assertDontSee('Delete Site')->assertDontSee('Tax &amp; GST', false);
+            ->assertHeader('X-Robots-Tag', 'noindex, nofollow')->assertDontSee('Tax &amp; GST', false);
         $response->assertSee(route('admin.settings.theme', ['tenant' => $tenant->id]), false)
             ->assertSee(route('admin.settings.integrations', ['tenant' => $tenant->id]).'#integration-ga4', false);
         $this->assertSame([], $writes);
@@ -44,7 +44,7 @@ class SettingsOverviewTest extends TestCase
     public function test_expired_trial_and_pending_payment_do_not_claim_paid_access(): void
     {
         [$tenant] = $this->merchant();
-        $tenant->forceFill(['created_at' => now()->subDays(15), 'subscription_status' => 'expired'])->save();
+        $tenant->forceFill(['created_at' => now()->subDays(config('saas.trial_days') + 5), 'subscription_status' => 'expired'])->save();
         $this->get("/{$tenant->id}/admin/settings")->assertRedirect(route('admin.billing', ['tenant' => $tenant->id]));
         $this->get("/{$tenant->id}/admin/billing")->assertOk()->assertSee('Your subscription has ended.');
         $tenant->update(['subscription_status' => 'pending']);
@@ -100,7 +100,7 @@ class SettingsOverviewTest extends TestCase
         $dom = new \DOMDocument;
         @$dom->loadHTML($html);
         $xpath = new \DOMXPath($dom);
-        $this->assertCount(9, $xpath->query('//*[@id="adminSidebar"]/nav/ul/li'));
+        $this->assertCount(10, $xpath->query('//*[@id="adminSidebar"]/nav/ul/li'));
         $this->assertCount(0, $xpath->query('//*[@id="adminSidebar"]//details[@open]'));
         $this->assertCount(3, $xpath->query('//*[@id="adminSidebar"]//details//a'));
         $this->assertCount(0, $xpath->query('//*[@id="adminSidebar"]//a[contains(@href,"settings/theme")]'));

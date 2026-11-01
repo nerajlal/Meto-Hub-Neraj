@@ -1,8 +1,10 @@
 <?php
 
 return [
-    'trial_days' => 7,
+    'trial_days' => 30,
     'storefront_grace_days' => 30,
+    'subscription_grace_days' => 7,
+    'post_paid_storefront_grace_days' => 30,
     'currency' => 'INR',
     'annual_months' => 11,
     'plans' => [

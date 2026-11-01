@@ -46,9 +46,10 @@ class SuperAdminOverviewTest extends TestCase
 
     public function test_dashboard_counts_trial_boundaries_and_recorded_subscription_states(): void
     {
+        $trialHours = config('saas.trial_days') * 24;
         $this->store('Fresh trial', null, 1);
-        $this->store('Ending trial', null, 167);
-        $this->store('Expired exactly now', null, 168);
+        $this->store('Ending trial', null, $trialHours - 1);
+        $this->store('Expired exactly now', null, $trialHours);
         $this->store('Pending checkout', 'pending', 240);
         $this->store('Authorized mandate', 'authenticated');
         $this->store('Paid store', 'active', 720, 'pro');
@@ -63,8 +64,9 @@ class SuperAdminOverviewTest extends TestCase
 
     public function test_store_filters_match_the_same_status_classification_and_keep_query_on_pagination(): void
     {
+        $trialHours = config('saas.trial_days') * 24;
         $active = $this->store('Active shop', 'active', 240, 'enterprise');
-        $expired = $this->store('Expired shop', null, 168);
+        $expired = $this->store('Expired shop', null, $trialHours);
         $pending = $this->store('Pending shop', 'pending');
         $trial = $this->store('New shop', null, 12);
         $this->signIn();
@@ -82,7 +84,8 @@ class SuperAdminOverviewTest extends TestCase
 
     public function test_tenant_billing_uses_actual_references_and_does_not_invent_payment_dates_or_amount_due(): void
     {
-        $store = $this->store('Billing store', 'pending', 192, 'pro');
+        $trialHours = config('saas.trial_days') * 24;
+        $store = $this->store('Billing store', 'pending', $trialHours + 24, 'pro');
         $store->update(['razorpay_subscription_id' => 'sub_billing_store', 'razorpay_customer_id' => 'cus_billing_store']);
         $this->signIn();
         $this->get('/superadmin/tenants/'.$store->id)->assertOk()->assertSee('Subscription & Trial Details', false)

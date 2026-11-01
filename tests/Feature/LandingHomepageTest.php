@@ -296,7 +296,7 @@ class LandingHomepageTest extends TestCase
 
     public function test_public_refund_policy_matches_the_seven_day_trial_and_paid_refund_window(): void
     {
-        $this->get('/refund-cancellation')->assertOk()->assertSee('7-day free trial')
+        $this->get('/refund-cancellation')->assertOk()->assertSee(config('saas.trial_days').'-day free trial')
             ->assertSee('within 7 days of your first paid')
             ->assertSee('separately from the free trial')->assertDontSee('14-day')
             ->assertDontSee('grace period of 30 days');

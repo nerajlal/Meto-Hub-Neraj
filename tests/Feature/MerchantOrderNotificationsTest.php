@@ -159,7 +159,7 @@ class MerchantOrderNotificationsTest extends TestCase
         $this->getJson('/'.$other->id.'/admin/notifications/feed')->assertForbidden();
         $this->get($prefix.'/'.$own->id.'/open')->assertRedirect();
         $this->assertNull($own->fresh()->read_at);
-        $tenant->forceFill(['created_at' => now()->subDays(10)])->save();
+        $tenant->forceFill(['created_at' => now()->subDays(config('saas.trial_days') + 3)])->save();
         $this->postJson($prefix.'/'.$own->id.'/read')->assertStatus(402);
         $this->getJson($prefix.'/feed')->assertStatus(402);
         $this->assertNull($own->fresh()->read_at);
