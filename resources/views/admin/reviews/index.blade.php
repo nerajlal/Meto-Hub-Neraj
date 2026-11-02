@@ -9,7 +9,7 @@
     <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-4">
         <div>
             <h1 class="h3 mb-1 text-primary">Reviews</h1>
-            <p class="text-muted small mb-0">Manage, add, and reply to customer & store reviews.</p>
+            <p class="text-muted small mb-0">Manage, edit, and add customer & store reviews.</p>
         </div>
         <div class="d-flex align-items-center gap-2">
             <!-- Filter Tabs -->
@@ -88,13 +88,6 @@
                             "{{ $item->review }}"
                         </p>
 
-                        @if(!empty($item->admin_reply))
-                        <div class="mt-2 p-2 bg-light rounded border-start border-3 border-primary small">
-                            <span class="fw-semibold text-dark d-block mb-1"><i class="fas fa-reply me-1 text-primary"></i> Store Reply:</span>
-                            <span class="text-secondary">{{ $item->admin_reply }}</span>
-                        </div>
-                        @endif
-
                         <!-- Actions -->
                         <div class="d-flex align-items-center gap-3 mt-3 pt-3 border-top border-dashed">
                             @if($item->status !== 'published')
@@ -119,8 +112,17 @@
                             </form>
                             @endif
 
-                            <button onclick="toggleReply('reply-{{ $item->id }}')" class="btn btn-link btn-sm p-0 text-primary text-decoration-none fw-semibold text-uppercase small d-flex align-items-center gap-1 hover-text-dark">
-                                <i class="fas fa-reply"></i> {{ !empty($item->admin_reply) ? 'Edit Reply' : 'Reply' }}
+                            <button type="button" class="btn btn-link btn-sm p-0 text-primary text-decoration-none fw-semibold text-uppercase small d-flex align-items-center gap-1 hover-text-dark" 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#editReviewModal"
+                                data-id="{{ $item->id }}"
+                                data-name="{{ $item->name }}"
+                                data-product-id="{{ $item->product_id ?? '' }}"
+                                data-rating="{{ $item->rating }}"
+                                data-review="{{ $item->review }}"
+                                data-status="{{ $item->status }}"
+                                onclick="populateEditModal(this)">
+                                <i class="fas fa-edit"></i> Edit
                             </button>
 
                             <form action="{{ route('admin.reviews.destroy', $item->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Delete this review permanently?')">
@@ -129,19 +131,6 @@
                                 <button type="submit" class="btn btn-link btn-sm p-0 text-danger text-decoration-none fw-semibold text-uppercase small d-flex align-items-center gap-1 hover-text-dark ms-auto">
                                     <i class="fas fa-trash"></i> Delete
                                 </button>
-                            </form>
-                        </div>
-                        
-                        <!-- Reply Box -->
-                        <div id="reply-{{ $item->id }}" class="d-none mt-3 bg-light p-3 rounded border">
-                            <form action="{{ route('admin.reviews.reply', $item->id) }}" method="POST">
-                                @csrf
-                                @method('PUT')
-                                <textarea name="admin_reply" rows="2" class="form-control form-control-sm mb-2" placeholder="Write a reply to the customer...">{{ $item->admin_reply }}</textarea>
-                                <div class="d-flex justify-content-end gap-2">
-                                    <button type="button" onclick="toggleReply('reply-{{ $item->id }}')" class="btn btn-white btn-sm border text-secondary">Cancel</button>
-                                    <button type="submit" class="btn btn-primary btn-sm">Save Reply</button>
-                                </div>
                             </form>
                         </div>
                     </div>
@@ -223,6 +212,67 @@
     </div>
 </div>
 
+<!-- Modal: Edit Review -->
+<div class="modal fade" id="editReviewModal" tabindex="-1" aria-labelledby="editReviewModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <form id="editReviewForm" method="POST">
+                @csrf
+                @method('PUT')
+                <div class="modal-header border-bottom">
+                    <h5 class="modal-title fw-bold text-primary" id="editReviewModalLabel"><i class="fas fa-edit text-primary me-2"></i>Edit Review</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="mb-3">
+                        <label class="form-label fw-medium small text-dark">Customer / Reviewer Name <span class="text-danger">*</span></label>
+                        <input type="text" name="name" id="edit_name" class="form-control form-control-sm" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-medium small text-dark">Product (Optional)</label>
+                        <select name="product_id" id="edit_product_id" class="form-select form-select-sm">
+                            <option value="">General Store Review</option>
+                            @foreach($products as $p)
+                                <option value="{{ $p->id }}">{{ $p->title }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-medium small text-dark">Rating</label>
+                        <select name="rating" id="edit_rating" class="form-select form-select-sm">
+                            <option value="5">★★★★★ (5 Stars - Excellent)</option>
+                            <option value="4">★★★★☆ (4 Stars - Good)</option>
+                            <option value="3">★★★☆☆ (3 Stars - Average)</option>
+                            <option value="2">★★☆☆☆ (2 Stars - Below Average)</option>
+                            <option value="1">★☆☆☆☆ (1 Star - Poor)</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-medium small text-dark">Review Message <span class="text-danger">*</span></label>
+                        <textarea name="review" id="edit_review" rows="4" class="form-control form-control-sm" required></textarea>
+                    </div>
+
+                    <div class="mb-0">
+                        <label class="form-label fw-medium small text-dark">Status</label>
+                        <select name="status" id="edit_status" class="form-select form-select-sm">
+                            <option value="published">Published</option>
+                            <option value="pending">Pending Approval</option>
+                            <option value="hidden">Hidden</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer border-top bg-light">
+                    <button type="button" class="btn btn-white btn-sm border text-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary btn-sm">Update Review</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <style>
     .hover-bg-light:hover { background-color: var(--bs-light) !important; }
     .hover-text-dark:hover { color: #212529 !important; }
@@ -230,11 +280,22 @@
 </style>
 
 <script>
-    function toggleReply(id) {
-        const el = document.getElementById(id);
-        if (el) {
-            el.classList.toggle('d-none');
-        }
+    function populateEditModal(btn) {
+        const id = btn.getAttribute('data-id');
+        const name = btn.getAttribute('data-name');
+        const productId = btn.getAttribute('data-product-id');
+        const rating = btn.getAttribute('data-rating');
+        const review = btn.getAttribute('data-review');
+        const status = btn.getAttribute('data-status');
+
+        const form = document.getElementById('editReviewForm');
+        form.action = "{{ url(session('active_tenant_id') ?? request()->attributes->get('resolved_tenant_id') ?? 1 . '/admin/reviews') }}/" + id;
+
+        document.getElementById('edit_name').value = name || '';
+        document.getElementById('edit_product_id').value = productId || '';
+        document.getElementById('edit_rating').value = rating || '5';
+        document.getElementById('edit_review').value = review || '';
+        document.getElementById('edit_status').value = status || 'published';
     }
 </script>
 @endsection
