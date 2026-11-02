@@ -11,6 +11,7 @@ class ProductVariant extends Model
 
     protected $fillable = [
         'product_id',
+        'product_image_id',
         'size',
         'price',
         'compare_at_price',
@@ -21,6 +22,19 @@ class ProductVariant extends Model
     public function product()
     {
         return $this->belongsTo(Product::class);
+    }
+
+    public function image()
+    {
+        return $this->belongsTo(ProductImage::class, 'product_image_id');
+    }
+
+    public function images()
+    {
+        return $this->belongsToMany(ProductImage::class, 'product_image_product_variant')
+            ->withPivot('order')
+            ->orderByPivot('order')
+            ->withTimestamps();
     }
 
     public function getPriceAttribute($value)

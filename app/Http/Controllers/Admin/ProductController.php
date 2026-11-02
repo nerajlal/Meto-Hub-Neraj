@@ -277,12 +277,17 @@ class ProductController extends Controller
                         $variant = $product->variants()->find($vData['id']);
                     }
                     
+                    // Support both multiple images array and primary image ID
+                    $imageIds = !empty($vData['image_ids']) ? (array) $vData['image_ids'] : [];
+                    $primaryImgId = !empty($vData['product_image_id']) ? $vData['product_image_id'] : ($imageIds[0] ?? null);
+
                     if ($variant) {
                         $variant->update([
                             'size' => $vData['size'],
                             'stock' => $vData['stock'] ?? 0,
                             'price' => $vData['price'],
                             'compare_at_price' => $vData['compare_at_price'] ?? null,
+                            'product_image_id' => $primaryImgId,
                         ]);
                     } else {
                         $variant = $product->variants()->create([
@@ -290,9 +295,24 @@ class ProductController extends Controller
                             'stock' => $vData['stock'] ?? 0,
                             'price' => $vData['price'],
                             'compare_at_price' => $vData['compare_at_price'] ?? null,
+                            'product_image_id' => $primaryImgId,
                             'sku' => Str::upper(Str::slug($product->title)) . '-' . Str::slug($vData['size']) . '-' . rand(100, 999),
                         ]);
                     }
+
+                    // Sync pivot table for multiple images
+                    if (!empty($imageIds)) {
+                        $syncData = [];
+                        foreach ($imageIds as $order => $imgId) {
+                            $syncData[$imgId] = ['order' => $order];
+                        }
+                        $variant->images()->sync($syncData);
+                    } else if ($primaryImgId) {
+                        $variant->images()->sync([$primaryImgId => ['order' => 0]]);
+                    } else {
+                        $variant->images()->detach();
+                    }
+
                     $currentVariantIds[] = $variant->id;
                 }
             }

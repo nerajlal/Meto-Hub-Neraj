@@ -20,4 +20,9 @@ class ProductImage extends Model
     {
         return $this->belongsTo(Product::class);
     }
+
+    public function variants()
+    {
+        return $this->belongsToMany(ProductVariant::class, 'product_image_product_variant');
+    }
 }

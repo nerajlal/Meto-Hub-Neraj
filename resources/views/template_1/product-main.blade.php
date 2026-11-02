@@ -295,7 +295,7 @@
                             $thumbPath = \Illuminate\Support\Facades\Storage::url($thumbPath);
                         }
                     @endphp
-                    <div class="thumb-item {{ $loop->first ? 'active' : '' }}" onclick="updateImg('{{ $thumbPath }}', this)" style="border: 2px solid {{ $loop->first ? 'var(--accent-color)' : 'var(--border-color)' }}; border-radius: 0.75rem; overflow: hidden; aspect-ratio: 1; cursor: pointer; transition: 0.2s;">
+                    <div class="thumb-item {{ $loop->first ? 'active' : '' }}" data-img-src="{{ $thumbPath }}" onclick="updateImg('{{ $thumbPath }}', this)" style="border: 2px solid {{ $loop->first ? 'var(--accent-color)' : 'var(--border-color)' }}; border-radius: 0.75rem; overflow: hidden; aspect-ratio: 1; cursor: pointer; transition: 0.2s;">
                         <img src="{{ $thumbPath }}" alt="Gallery thumbnail" style="width: 100%; height: 100%; object-fit: cover;">
                     </div>
                 @endforeach

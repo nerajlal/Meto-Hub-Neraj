@@ -276,32 +276,72 @@
             <div class="card border shadow-sm mb-4">
                 <div class="card-body p-4">
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h2 class="h6 fw-semibold text-secondary mb-0">Product Variants (Wholesale & Retail)</h2>
+                        <div>
+                            <h2 class="h6 fw-semibold text-secondary mb-0">Product Variants (Colors & Sizes)</h2>
+                            <p class="text-muted extra-small mb-0">Select multiple gallery images per variant (e.g. click to assign photos to Red, Green, or Blue).</p>
+                        </div>
                         <button type="button" class="btn btn-outline-success btn-sm fw-medium" onclick="addVariantRow()">+ Add Variant</button>
                     </div>
                     <div id="variants-container" class="vstack gap-3">
                         @foreach($product->variants as $variant)
+                        @php
+                            $assignedImgIds = $variant->images->pluck('id')->toArray();
+                            // If no specific images have been explicitly assigned yet, select all by default
+                            if (empty($assignedImgIds)) {
+                                if ($variant->product_image_id) {
+                                    $assignedImgIds = [$variant->product_image_id];
+                                } else {
+                                    $assignedImgIds = $product->images->pluck('id')->toArray();
+                                }
+                            }
+                        @endphp
                         <div class="border rounded p-3 bg-light bg-opacity-50 variant-row">
                             <input type="hidden" name="variants[{{ $loop->index }}][id]" value="{{ $variant->id }}">
-                            <div class="row g-2 align-items-end">
+                            <div class="row g-2 align-items-end mb-2">
                                 <div class="col-12 col-md-3">
-                                    <label class="form-label extra-small fw-medium text-muted mb-1">Variant Name (e.g. 1kg, Pack of 10)</label>
-                                    <input type="text" class="form-control form-control-sm shadow-sm variant-size-input" name="variants[{{ $loop->index }}][size]" value="{{ $variant->size }}" placeholder="e.g. 1kg" required>
+                                    <label class="form-label extra-small fw-medium text-muted mb-1">Variant Name (Color/Size e.g. Red, XL)</label>
+                                    <input type="text" class="form-control form-control-sm shadow-sm variant-size-input" name="variants[{{ $loop->index }}][size]" value="{{ $variant->size }}" placeholder="e.g. Red / M" required>
                                 </div>
-                                <div class="col-4 col-md-3">
+                                <div class="col-4 col-md-2">
                                     <label class="form-label extra-small fw-medium text-muted mb-1">Stock</label>
                                     <input type="number" class="form-control form-control-sm shadow-sm variant-stock-input" name="variants[{{ $loop->index }}][stock]" value="{{ $variant->stock }}" placeholder="0">
                                 </div>
-                                <div class="col-4 col-md-2">
+                                <div class="col-4 col-md-3">
                                     <label class="form-label extra-small fw-medium text-muted mb-1">Price ({{ $currentTenant->currency ?? '₹' }})</label>
                                     <input type="text" class="form-control form-control-sm shadow-sm variant-price-input" name="variants[{{ $loop->index }}][price]" value="{{ $variant->price }}" placeholder="0.00" required>
                                 </div>
-                                <div class="col-4 col-md-2">
-                                    <label class="form-label extra-small fw-medium text-muted mb-1">Compare Price ({{ $currentTenant->currency ?? '₹' }})</label>
+                                <div class="col-4 col-md-3">
+                                    <label class="form-label extra-small fw-medium text-muted mb-1">Compare ({{ $currentTenant->currency ?? '₹' }})</label>
                                     <input type="text" class="form-control form-control-sm shadow-sm variant-compare-input" name="variants[{{ $loop->index }}][compare_at_price]" value="{{ $variant->compare_at_price }}" placeholder="0.00">
                                 </div>
-                                <div class="col-12 col-md-2 text-end">
-                                    <button type="button" class="btn btn-outline-danger btn-sm w-100" onclick="removeVariantRow(this)">Remove</button>
+                                <div class="col-12 col-md-1 text-end">
+                                    <button type="button" class="btn btn-outline-danger btn-sm w-100" onclick="removeVariantRow(this)" title="Remove Variant"><i class="fas fa-trash extra-small"></i></button>
+                                </div>
+                            </div>
+
+                            <!-- Multi-image Assignment Bar -->
+                            <div class="variant-images-section pt-2 border-top">
+                                <div class="d-flex align-items-center justify-content-between mb-1.5">
+                                    <span class="extra-small fw-medium text-muted">
+                                        <i class="fas fa-images me-1 text-primary"></i> Assigned Photos for this Variant:
+                                    </span>
+                                    <span class="extra-small text-muted variant-selected-count">
+                                        {{ count($assignedImgIds) }} photo(s) selected
+                                    </span>
+                                </div>
+                                <div class="d-flex flex-wrap gap-2 align-items-center variant-image-picker" data-variant-index="{{ $loop->index }}">
+                                    @foreach($product->images as $img)
+                                    @php $isSelected = in_array($img->id, $assignedImgIds); @endphp
+                                    <label class="variant-img-chip position-relative rounded overflow-hidden cursor-pointer border {{ $isSelected ? 'border-primary shadow-sm active' : 'border-light-subtle opacity-75' }}" 
+                                           style="width: 52px; height: 52px; transition: all 0.2s;" title="Click to assign photo">
+                                        <input type="checkbox" name="variants[{{ $loop->parent->index }}][image_ids][]" value="{{ $img->id }}" 
+                                               class="d-none variant-img-checkbox" @checked($isSelected) onchange="toggleVariantImgChip(this)">
+                                        <img src="{{ asset('storage/' . $img->path) }}" class="w-100 h-100 object-fit-cover">
+                                        <div class="variant-check-indicator position-absolute top-0 end-0 m-0.5 rounded-circle bg-primary text-white d-flex align-items-center justify-content-center {{ $isSelected ? '' : 'd-none' }}" style="width: 16px; height: 16px; font-size: 9px;">
+                                            <i class="fas fa-check"></i>
+                                        </div>
+                                    </label>
+                                    @endforeach
                                 </div>
                             </div>
                         </div>
@@ -369,7 +409,17 @@
                         if (sizeInput) {
                             sizeInput.name = `variants[${index}][size]`;
                         }
-                        
+
+                        const checkboxes = row.querySelectorAll('.variant-img-checkbox');
+                        checkboxes.forEach(cb => {
+                            cb.name = `variants[${index}][image_ids][]`;
+                        });
+
+                        const picker = row.querySelector('.variant-image-picker');
+                        if (picker) {
+                            picker.setAttribute('data-variant-index', index);
+                        }
+
                         const stockInput = row.querySelector('.variant-stock-input');
                         if (stockInput) {
                             stockInput.name = `variants[${index}][stock]`;
@@ -388,111 +438,89 @@
                     updatePackVariantOptions();
                 }
 
-                function reindexPacks() {
-                    const rows = document.querySelectorAll('.pack-row');
-                    rows.forEach((row, index) => {
-                        const idInput = row.querySelector('input[type="hidden"]');
-                        if (idInput) {
-                            idInput.name = `packs[${index}][id]`;
-                        }
-                        
-                        const select = row.querySelector('.pack-variant-select');
-                        if (select) {
-                            select.name = `packs[${index}][variant_id]`;
-                        }
-                        
-                        const sizeHidden = row.querySelector('.pack-variant-size-hidden');
-                        if (sizeHidden) {
-                            sizeHidden.name = `packs[${index}][variant_size]`;
-                        }
-                        
-                        const qtyInput = row.querySelector('.pack-qty-input');
-                        if (qtyInput) {
-                            qtyInput.name = `packs[${index}][quantity]`;
-                        }
-                        
-                        const priceInput = row.querySelector('.pack-price-input');
-                        if (priceInput) {
-                            priceInput.name = `packs[${index}][pack_price]`;
-                        }
-                    });
-                }
+                function toggleVariantImgChip(checkbox) {
+                    const chip = checkbox.closest('.variant-img-chip');
+                    const indicator = chip.querySelector('.variant-check-indicator');
+                    if (checkbox.checked) {
+                        chip.classList.add('border-primary', 'shadow-sm', 'active');
+                        chip.classList.remove('border-light-subtle', 'opacity-75');
+                        if (indicator) indicator.classList.remove('d-none');
+                    } else {
+                        chip.classList.remove('border-primary', 'shadow-sm', 'active');
+                        chip.classList.add('border-light-subtle', 'opacity-75');
+                        if (indicator) indicator.classList.add('d-none');
+                    }
 
-                function updatePackVariantOptions() {
-                    const variants = [];
-                    document.querySelectorAll('.variant-row').forEach(row => {
-                        const idInput = row.querySelector('input[type="hidden"]');
-                        const idVal = idInput ? idInput.value : '';
-                        const sizeInput = row.querySelector('.variant-size-input');
-                        const sizeVal = sizeInput ? sizeInput.value.trim() : '';
-                        const priceInput = row.querySelector('.variant-price-input');
-                        const priceVal = priceInput ? priceInput.value.trim() : '';
-                        
-                        if (sizeVal) {
-                            variants.push({
-                                id: idVal,
-                                size: sizeVal,
-                                price: priceVal ? '{{ $currentTenant->currency ?? '₹' }}' + priceVal : ''
-                            });
+                    // Update selected counter text
+                    const row = checkbox.closest('.variant-row');
+                    if (row) {
+                        const checkedCount = row.querySelectorAll('.variant-img-checkbox:checked').length;
+                        const countEl = row.querySelector('.variant-selected-count');
+                        if (countEl) {
+                            countEl.textContent = `${checkedCount} photo(s) selected`;
                         }
-                    });
-
-                    document.querySelectorAll('.pack-row').forEach(row => {
-                        const select = row.querySelector('.pack-variant-select');
-                        const sizeHidden = row.querySelector('.pack-variant-size-hidden');
-                        
-                        const selectedVal = select.value;
-                        const selectedSize = select.options[select.selectedIndex]?.getAttribute('data-size') || select.getAttribute('data-temp-size');
-                        
-                        select.innerHTML = '<option value="">Choose variant...</option>';
-                        variants.forEach(v => {
-                            const option = document.createElement('option');
-                            option.value = v.id;
-                            option.setAttribute('data-size', v.size);
-                            option.text = `${v.size} (${v.price})`;
-                            
-                            if (v.id && selectedVal === v.id) {
-                                option.selected = true;
-                            } else if (v.size === selectedSize) {
-                                option.selected = true;
-                            }
-                            select.appendChild(option);
-                        });
-
-                        // Set the hidden size input
-                        if (sizeHidden) {
-                            const activeOption = select.options[select.selectedIndex];
-                            sizeHidden.value = activeOption ? (activeOption.getAttribute('data-size') || '') : '';
-                        }
-                    });
+                    }
                 }
 
                 function addVariantRow() {
                     const container = document.getElementById('variants-container');
                     const index = container.querySelectorAll('.variant-row').length;
+
+                    // Build image chips from existing images (selected by default)
+                    let imageChips = '';
+                    const totalImgs = {{ $product->images->count() }};
+                    @foreach($product->images as $img)
+                        imageChips += `
+                            <label class="variant-img-chip position-relative rounded overflow-hidden cursor-pointer border border-primary shadow-sm active" 
+                                   style="width: 52px; height: 52px; transition: all 0.2s;" title="Click to assign photo">
+                                <input type="checkbox" name="variants[${index}][image_ids][]" value="{{ $img->id }}" 
+                                       class="d-none variant-img-checkbox" checked onchange="toggleVariantImgChip(this)">
+                                <img src="{{ asset('storage/' . $img->path) }}" class="w-100 h-100 object-fit-cover">
+                                <div class="variant-check-indicator position-absolute top-0 end-0 m-0.5 rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style="width: 16px; height: 16px; font-size: 9px;">
+                                    <i class="fas fa-check"></i>
+                                </div>
+                            </label>
+                        `;
+                    @endforeach
+
                     const row = document.createElement('div');
                     row.className = 'border rounded p-3 bg-light bg-opacity-50 variant-row';
                     row.innerHTML = `
                         <input type="hidden" name="variants[${index}][id]" value="">
-                        <div class="row g-2 align-items-end">
+                        <div class="row g-2 align-items-end mb-2">
                             <div class="col-12 col-md-3">
-                                <label class="form-label extra-small fw-medium text-muted mb-1">Variant Name (e.g. 1kg, Pack of 10)</label>
-                                <input type="text" class="form-control form-control-sm shadow-sm variant-size-input" name="variants[${index}][size]" placeholder="e.g. 1kg" required>
+                                <label class="form-label extra-small fw-medium text-muted mb-1">Variant Name (Color/Size e.g. Red, XL)</label>
+                                <input type="text" class="form-control form-control-sm shadow-sm variant-size-input" name="variants[${index}][size]" placeholder="e.g. Red / M" required>
                             </div>
-                            <div class="col-4 col-md-3">
+                            <div class="col-4 col-md-2">
                                 <label class="form-label extra-small fw-medium text-muted mb-1">Stock</label>
                                 <input type="number" class="form-control form-control-sm shadow-sm variant-stock-input" name="variants[${index}][stock]" placeholder="0">
                             </div>
-                            <div class="col-4 col-md-2">
+                            <div class="col-4 col-md-3">
                                 <label class="form-label extra-small fw-medium text-muted mb-1">Price ({{ $currentTenant->currency ?? '₹' }})</label>
                                 <input type="text" class="form-control form-control-sm shadow-sm variant-price-input" name="variants[${index}][price]" placeholder="0.00" required>
                             </div>
-                            <div class="col-4 col-md-2">
-                                <label class="form-label extra-small fw-medium text-muted mb-1">Compare Price ({{ $currentTenant->currency ?? '₹' }})</label>
+                            <div class="col-4 col-md-3">
+                                <label class="form-label extra-small fw-medium text-muted mb-1">Compare ({{ $currentTenant->currency ?? '₹' }})</label>
                                 <input type="text" class="form-control form-control-sm shadow-sm variant-compare-input" name="variants[${index}][compare_at_price]" placeholder="0.00">
                             </div>
-                            <div class="col-12 col-md-2 text-end">
-                                <button type="button" class="btn btn-outline-danger btn-sm w-100" onclick="removeVariantRow(this)">Remove</button>
+                            <div class="col-12 col-md-1 text-end">
+                                <button type="button" class="btn btn-outline-danger btn-sm w-100" onclick="removeVariantRow(this)" title="Remove Variant"><i class="fas fa-trash extra-small"></i></button>
+                            </div>
+                        </div>
+
+                        <!-- Multi-image Assignment Bar -->
+                        <div class="variant-images-section pt-2 border-top">
+                            <div class="d-flex align-items-center justify-content-between mb-1.5">
+                                <span class="extra-small fw-medium text-muted">
+                                    <i class="fas fa-images me-1 text-primary"></i> Assigned Photos for this Variant:
+                                </span>
+                                <span class="extra-small text-muted variant-selected-count">
+                                    ${totalImgs} photo(s) selected
+                                </span>
+                            </div>
+                            <div class="d-flex flex-wrap gap-2 align-items-center variant-image-picker" data-variant-index="${index}">
+                                ${imageChips}
                             </div>
                         </div>
                     `;
