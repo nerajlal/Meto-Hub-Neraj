@@ -115,6 +115,7 @@
                             <button type="button" class="btn btn-link btn-sm p-0 text-primary text-decoration-none fw-semibold text-uppercase small d-flex align-items-center gap-1 hover-text-dark" 
                                 data-bs-toggle="modal" 
                                 data-bs-target="#editReviewModal"
+                                data-action="{{ route('admin.reviews.update', $item->id) }}"
                                 data-id="{{ $item->id }}"
                                 data-name="{{ $item->name }}"
                                 data-product-id="{{ $item->product_id ?? '' }}"
@@ -281,7 +282,7 @@
 
 <script>
     function populateEditModal(btn) {
-        const id = btn.getAttribute('data-id');
+        const action = btn.getAttribute('data-action');
         const name = btn.getAttribute('data-name');
         const productId = btn.getAttribute('data-product-id');
         const rating = btn.getAttribute('data-rating');
@@ -289,7 +290,7 @@
         const status = btn.getAttribute('data-status');
 
         const form = document.getElementById('editReviewForm');
-        form.action = "{{ url(session('active_tenant_id') ?? request()->attributes->get('resolved_tenant_id') ?? 1 . '/admin/reviews') }}/" + id;
+        form.action = action;
 
         document.getElementById('edit_name').value = name || '';
         document.getElementById('edit_product_id').value = productId || '';
