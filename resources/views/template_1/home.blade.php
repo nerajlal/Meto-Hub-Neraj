@@ -285,6 +285,8 @@
     @endif
 
 
+    @include('storefront.themes.components.reviews')
+
     <!-- Newsletter Section -->
     <style>
         .newsletter-input::placeholder {

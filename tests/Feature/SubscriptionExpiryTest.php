@@ -45,7 +45,7 @@ class SubscriptionExpiryTest extends TestCase
         foreach ([true, false] as $paid) {
             $tenant = $this->store(29, $paid);
             $this->get($tenant->storefrontUrl())->assertOk();
-            $this->assertSame(['cod'], app(CheckoutPaymentPolicy::class)->availableMethods($tenant));
+            $this->assertSame(['cod', 'whatsapp'], app(CheckoutPaymentPolicy::class)->availableMethods($tenant));
             $end = app(PlanAccess::class)->storefrontGraceEndsAt($tenant);
             $this->travelTo($end->copy()->subSecond());
             $this->get($tenant->storefrontUrl())->assertOk();
@@ -59,7 +59,8 @@ class SubscriptionExpiryTest extends TestCase
 
     public function test_expired_admin_sees_only_billing_and_other_routes_are_enforced_server_side(): void
     {
-        $tenant = $this->store(5);
+        // When post-paid, admin has 7 days grace. After 8 days, admin is locked to Billing.
+        $tenant = $this->store(8);
         $user = User::factory()->create(['tenant_id' => $tenant->id, 'type' => 'admin']);
         $this->actingAs($user);
         foreach (['', '/orders', '/products', '/settings', '/settings/theme', '/notifications'] as $path) {
@@ -77,9 +78,19 @@ class SubscriptionExpiryTest extends TestCase
         $this->getJson("/{$tenant->id}/admin/orders")->assertStatus(402);
     }
 
+    public function test_post_paid_subscription_retains_admin_access_for_seven_days_grace(): void
+    {
+        // Within 7 days after paid_through, admin is still accessible in grace period
+        $tenant = $this->store(3);
+        $user = User::factory()->create(['tenant_id' => $tenant->id, 'type' => 'admin']);
+        $this->actingAs($user);
+        $this->get("/{$tenant->id}/admin")->assertOk();
+        $this->get("/{$tenant->id}/admin/orders")->assertOk();
+    }
+
     public function test_login_goes_directly_to_billing_even_with_an_intended_admin_url(): void
     {
-        $tenant = $this->store(5);
+        $tenant = $this->store(8);
         $user = User::factory()->create(['tenant_id' => $tenant->id, 'type' => 'admin', 'password' => 'password']);
         $this->withSession(['url.intended' => url("/{$tenant->id}/admin/orders")])->post('/admin/login', ['email' => $user->email, 'password' => 'password'])
             ->assertRedirect(route('admin.billing', ['tenant' => $tenant->id]));

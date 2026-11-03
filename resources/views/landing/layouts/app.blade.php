@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    @include('landing.partials.google-tag')
     <title>Vespr Grocery SaaS - Premium Grocery Business Solution</title>
     <meta name="description"
         content="The ultimate e-commerce SaaS platform for grocery stores and supermarkets. Multi-theme, multi-tenant, and optimized for high-conversion grocery sales.">

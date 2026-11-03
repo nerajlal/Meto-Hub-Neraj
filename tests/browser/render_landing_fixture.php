@@ -16,7 +16,7 @@ foreach(Database\Seeders\DemoStoreDesign::profiles() as $slug=>$profile){
   $collection=App\Models\Collection::create(['tenant_id'=>$tenant->id,'name'=>$name,'slug'=>$slug.'-'.$i,'status'=>true]);
   $p=App\Models\Product::create(['tenant_id'=>$tenant->id,'title'=>$brands[$slug].' sample '.$i,'slug'=>$slug.'-product-'.$i,'collection_id'=>$collection->id,'status'=>'active']);
   $p->variants()->create(['size'=>'Standard','price'=>499+$i*100,'stock'=>10]);
-  $p->images()->create(['path'=>'../images/landing/hero.png','type'=>'image','order'=>0]);
+  $p->images()->create(['path'=>'images/landing/hero.png','type'=>'image','order'=>0]);
  }
 }
 $kernel=$app->make(Illuminate\Contracts\Http\Kernel::class);
@@ -35,5 +35,19 @@ if (($argv[2] ?? '') === '--public-pages') {
         $pageResponse = $kernel->handle($pageRequest);
         if ($pageResponse->getStatusCode() !== 200) throw new RuntimeException('Page fixture failed: '.$path);
         file_put_contents(dirname($argv[1]).'/'.str_replace('/', '-', $path).'.html', $pageResponse->getContent());
+    }
+}
+
+if (($argv[2] ?? '') === '--store-themes') {
+    $tenant = App\Models\Tenant::where('slug', 'mens-clothing')->firstOrFail();
+    $product = App\Models\Product::withoutGlobalScopes()->where('tenant_id', $tenant->id)->firstOrFail();
+    foreach (array_slice(array_keys(config('storefront_themes')), 15) as $theme) {
+        $tenant->update(['theme' => $theme]);
+        foreach (['home' => '', 'catalog' => '/all-products', 'product' => '/product?id='.$product->id] as $name => $suffix) {
+            $request = Illuminate\Http\Request::create('http://127.0.0.1:8000/store/'.$tenant->slug.$suffix);
+            $response = $kernel->handle($request);
+            if ($response->getStatusCode() !== 200) throw new RuntimeException('Theme fixture failed: '.$theme.' '.$name);
+            file_put_contents(dirname($argv[1]).'/'.$theme.'-'.$name.'.html', $response->getContent());
+        }
     }
 }

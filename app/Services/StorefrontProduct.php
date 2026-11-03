@@ -15,10 +15,16 @@ class StorefrontProduct
             $base = (float) $variant->price;
             $price = $discount ? max(0, $discount->type === 'percentage'
                 ? $base * (1 - $discount->value / 100) : $base - $discount->value) : $base;
+            $variantImgs = $variant->images->isNotEmpty() 
+                ? $variant->images->map(fn ($img) => $this->imageUrl($img->path))->values() 
+                : ($variant->image ? collect([$this->imageUrl($variant->image->path)]) : collect());
+            $variantImg = $variantImgs->first();
+            $variantImgIds = $variant->images->pluck('id')->values()->toArray();
             return ['id' => $variant->id, 'size' => $variant->size ?: '', 'price' => round($price, 2),
                 'compare' => max((float) $variant->compare_at_price, $discount ? $base : 0),
                 'stock' => (int) $variant->stock, 'available' => $variant->stock > 0 || (bool) $product->continue_selling_when_out_of_stock,
-                'sku' => $variant->sku];
+                'sku' => $variant->sku, 'image_id' => $variant->product_image_id, 'image_url' => $variantImg,
+                'image_ids' => $variantImgIds, 'image_urls' => $variantImgs];
         })->sortBy('price')->values();
         $images = $product->images->map(fn ($image) => $this->imageUrl($image->path))->values();
         return ['variants' => $variants, 'selected' => $variants->first(),

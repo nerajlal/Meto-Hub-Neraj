@@ -2004,6 +2004,8 @@
   </style>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="{{ asset('css/metohub-reference.css') }}?v={{ filemtime(public_path('css/metohub-reference.css')) }}">
+<link rel="stylesheet" href="{{ asset('css/metora-style.css') }}?v={{ filemtime(public_path('css/metora-style.css')) }}">
+<link rel="stylesheet" href="{{ asset('css/metohub-demo-custom.css') }}?v={{ filemtime(public_path('css/metohub-demo-custom.css')) }}">
 <link rel="stylesheet" href="{{ asset('css/metohub-home.css') }}?v={{ filemtime(public_path('css/metohub-home.css')) }}">
 <link rel="stylesheet" href="{{ asset('css/metohub-pages.css') }}?v={{ filemtime(public_path('css/metohub-pages.css')) }}">
 </head>

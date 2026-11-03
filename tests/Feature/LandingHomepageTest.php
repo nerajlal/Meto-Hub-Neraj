@@ -151,8 +151,8 @@ class LandingHomepageTest extends TestCase
         preg_match('/<header data-marketing-header.*?<\/header>/s', $homepage, $header);
         $normalizeHeader = fn ($html) => preg_replace('/\s+/', ' ', str_replace('data-start="" data-plan="base"', '', $html));
         foreach (['/privacy-policy', '/terms', '/refund-cancellation', '/about', '/contact', '/features', '/solutions',
-            '/pricing', '/themes', '/analytics', '/careers', '/press', '/independent-grocers', '/grocery-chains',
-            '/farmers-markets', '/help-center', '/api-docs', '/guides', '/security', '/blogs', '/blogs/7'] as $path) {
+            '/pricing', '/themes', '/analytics', '/careers',
+            '/help-center', '/api-docs', '/security', '/blogs', '/blogs/7'] as $path) {
             $html = $this->get($path)->assertOk()->getContent();
             $this->assertSame(1, preg_match_all('/<h1\\b/i', $html), $path.' needs one main page heading');
             preg_match('/<header data-marketing-header.*?<\/header>/s', $html, $pageHeader);
@@ -296,13 +296,32 @@ class LandingHomepageTest extends TestCase
 
     public function test_public_refund_policy_matches_the_seven_day_trial_and_paid_refund_window(): void
     {
-        $this->get('/refund-cancellation')->assertOk()->assertSee('7-day free trial')
+        $this->get('/refund-cancellation')->assertOk()->assertSee(config('saas.trial_days').'-day free trial')
             ->assertSee('within 7 days of your first paid')
             ->assertSee('separately from the free trial')->assertDontSee('14-day')
             ->assertDontSee('grace period of 30 days');
         $this->get('/admin/login')->assertOk()->assertHeader('X-Robots-Tag', 'noindex, nofollow')
             ->assertSee('name="robots" content="noindex, nofollow"', false)
             ->assertSee('<title>Merchant Login | MetoHub</title>', false);
+    }
+
+    public function test_public_pages_include_google_tag_analytics(): void
+    {
+        config(['marketing.analytics.google_tag' => 'G-BRLSZ74E9Y']);
+        foreach (['/', '/pricing', '/themes', '/about', '/contact', '/privacy-policy', '/terms', '/refund-cancellation'] as $path) {
+            $html = $this->get($path)->assertOk()->getContent();
+            $this->assertStringContainsString('https://www.googletagmanager.com/gtag/js?id=G-BRLSZ74E9Y', $html);
+            $this->assertStringContainsString("gtag('config', 'G-BRLSZ74E9Y');", $html);
+        }
+
+        config(['marketing.analytics.google_tag' => 'G-CUSTOM999']);
+        $html = $this->get('/')->assertOk()->getContent();
+        $this->assertStringContainsString('https://www.googletagmanager.com/gtag/js?id=G-CUSTOM999', $html);
+        $this->assertStringContainsString("gtag('config', 'G-CUSTOM999');", $html);
+
+        config(['marketing.analytics.google_tag' => null]);
+        $html = $this->get('/')->assertOk()->getContent();
+        $this->assertStringNotContainsString('googletagmanager.com/gtag/js', $html);
     }
 
 }

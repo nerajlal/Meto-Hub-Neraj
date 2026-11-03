@@ -66,13 +66,8 @@ Route::get('/privacy-policy', [App\Http\Controllers\LandingController::class, 'p
 Route::get('/terms', [App\Http\Controllers\LandingController::class, 'terms'])->name('landing.terms');
 Route::get('/refund-cancellation', [App\Http\Controllers\LandingController::class, 'refund'])->name('landing.refund');
 Route::get('/careers', [App\Http\Controllers\LandingController::class, 'careers'])->name('landing.careers');
-Route::get('/press', [App\Http\Controllers\LandingController::class, 'press'])->name('landing.press');
-Route::get('/independent-grocers', [App\Http\Controllers\LandingController::class, 'independentGrocers'])->name('landing.independent-grocers');
-Route::get('/grocery-chains', [App\Http\Controllers\LandingController::class, 'groceryChains'])->name('landing.grocery-chains');
-Route::get('/farmers-markets', [App\Http\Controllers\LandingController::class, 'farmersMarkets'])->name('landing.farmers-markets');
 Route::get('/help-center', [App\Http\Controllers\LandingController::class, 'helpCenter'])->name('landing.help-center');
 Route::get('/api-docs', [App\Http\Controllers\LandingController::class, 'apiDocs'])->name('landing.api-docs');
-Route::get('/guides', [App\Http\Controllers\LandingController::class, 'guides'])->name('landing.guides');
 Route::get('/security', [App\Http\Controllers\LandingController::class, 'security'])->name('landing.security');
 
 Route::get('/blogs', [App\Http\Controllers\LandingController::class, 'blogs'])->name('landing.blogs');
@@ -260,7 +255,11 @@ Route::prefix('{tenant}/admin')->name('admin.')->middleware(['identify_tenant', 
 
     Route::post('/products/dartpos-sync', fn () => abort(503, 'DartPOS synchronization is not available.'))->name('dartpos.sync');
 
-    Route::view('/reviews', 'admin.reviews.index')->name('reviews');
+    Route::get('/reviews', [App\Http\Controllers\Admin\ReviewController::class, 'index'])->name('reviews');
+    Route::post('/reviews', [App\Http\Controllers\Admin\ReviewController::class, 'store'])->name('reviews.store');
+    Route::put('/reviews/{id}', [App\Http\Controllers\Admin\ReviewController::class, 'update'])->name('reviews.update');
+    Route::put('/reviews/{id}/status', [App\Http\Controllers\Admin\ReviewController::class, 'updateStatus'])->name('reviews.status');
+    Route::delete('/reviews/{id}', [App\Http\Controllers\Admin\ReviewController::class, 'destroy'])->name('reviews.destroy');
 
     Route::view('/blog', 'admin.blog.index')->name('blog');
     Route::view('/blog/create', 'admin.blog.create')->name('blog.create');

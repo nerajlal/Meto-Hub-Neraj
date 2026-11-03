@@ -43,7 +43,13 @@ class PageController extends Controller
                             ->get();
         $bundles = \App\Models\Bundle::where('tenant_id', $tenantId)->where('status', 'active')->where('type', 'bundle')->with(['products.variants'])->latest()->take(4)->get();
         $reels = \App\Models\Reel::where('tenant_id', $tenantId)->where('status', true)->orderBy('order', 'asc')->get();
-        return view($this->getView('home'), compact('sliders', 'bestsellers', 'collections', 'bundles', 'reels'));
+        $reviews = \App\Models\Review::where('tenant_id', $tenantId)
+            ->where('status', 'published')
+            ->with('product')
+            ->latest()
+            ->take(8)
+            ->get();
+        return view($this->getView('home'), compact('sliders', 'bestsellers', 'collections', 'bundles', 'reels', 'reviews'));
     }
 
     public function v3Home()

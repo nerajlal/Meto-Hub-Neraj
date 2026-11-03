@@ -5,7 +5,10 @@
     $hero = app(\App\Services\StorefrontTheme::class)->hero($currentTenant, $storefrontTheme['id']);
 @endphp
 <div class="sf-home sf-home-{{ $storefrontTheme['layout'] }}" data-theme-home="{{ $storefrontTheme['layout'] }}">
-    @if(in_array($storefrontTheme['id'], ['template_13', 'template_14', 'template_15']))
+    @if(($storefrontTheme['generation'] ?? '') === 'collection')
+        @include('storefront.themes.components.collection_hero')
+        @include('storefront.themes.components.categories')
+    @elseif(in_array($storefrontTheme['id'], ['template_13', 'template_14', 'template_15']))
         @include('storefront.themes.components.premium_hero')
         @include('storefront.themes.components.categories')
     @elseif(in_array($storefrontTheme['id'], ['template_7', 'template_8', 'template_9', 'template_10', 'template_11', 'template_12', 'template_13', 'template_14', 'template_15']))
@@ -40,6 +43,7 @@
         @include('storefront.themes.components.categories')
     @endif
     @include('storefront.themes.components.shelves')
+    @include('storefront.themes.components.reviews')
     @if($storefrontTheme['id'] === 'template_4' && $currentTenant->about_text)
         <section class="sf-pantry-story"><span class="sf-kicker">BEHIND THE STORE</span><h2>{{ $currentTenant->about_title ?: 'Our story' }}</h2><p>{{ \Illuminate\Support\Str::limit(strip_tags($currentTenant->about_text), 350) }}</p><a href="{{ app(\App\Services\StorefrontTheme::class)->url('v1.about') }}">Get to know us →</a></section>
     @endif

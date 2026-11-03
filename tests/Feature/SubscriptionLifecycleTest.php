@@ -220,21 +220,22 @@ class SubscriptionLifecycleTest extends TestCase
     public function test_completed_paid_period_cannot_be_extended_by_editing_the_store(): void
     {
         $local = $this->local();
-        $this->gateway->remote['current_end'] = now()->subDay()->timestamp;
-        $this->gateway->remote['charge_at'] = now()->subDay()->timestamp;
-        $this->gateway->invoices[0]['billing_end'] = now()->subDay()->timestamp;
-        $this->store->forceFill(['created_at' => now()->subMonth()])->save();
+        $expiredTs = now()->subDays(config('saas.subscription_grace_days', 7) + 1)->timestamp;
+        $this->gateway->remote['current_end'] = $expiredTs;
+        $this->gateway->remote['charge_at'] = $expiredTs;
+        $this->gateway->invoices[0]['billing_end'] = $expiredTs;
+        $this->store->forceFill(['created_at' => now()->subMonths(3)])->save();
         app(SubscriptionBilling::class)->sync($local);
         $this->store->update(['name' => 'Changed store name']);
         $this->assertFalse(app(PlanAccess::class)->hasPaidAccess($this->store->fresh()));
-        $this->assertSame(['cod'], app(\App\Services\CheckoutPaymentPolicy::class)->availableMethods($this->store->fresh()));
+        $this->assertSame(['cod', 'whatsapp'], app(\App\Services\CheckoutPaymentPolicy::class)->availableMethods($this->store->fresh()));
         $this->get('/'.$this->store->id.'/admin/orders')->assertRedirect(route('admin.billing', ['tenant' => $this->store->id]));
         $this->postJson('/'.$this->store->id.'/admin/products', [])->assertStatus(402);
     }
 
     public function test_expired_trials_allow_only_billing_and_paid_base_still_restricts_premium_features(): void
     {
-        $this->store->forceFill(['created_at' => now()->subDays(8)])->save();
+        $this->store->forceFill(['created_at' => now()->subDays(config('saas.trial_days') + 1)])->save();
         $this->get('/'.$this->store->id.'/admin/billing')->assertOk();
         $this->get('/'.$this->store->id.'/admin/orders')->assertRedirect(route('admin.billing', ['tenant' => $this->store->id]));
         $this->postJson('/'.$this->store->id.'/admin/products', [])->assertStatus(402);

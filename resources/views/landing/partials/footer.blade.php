@@ -1,8 +1,8 @@
 <footer data-marketing-footer class="border-t border-border py-12">
 <div class="container-page flex flex-col justify-between gap-8 md:flex-row md:items-center">
 <div>
-<a class="flex items-center gap-2 text-lg font-semibold tracking-tight text-foreground" href="{{ route('landing') }}">
-<span class="grid h-8 w-8 place-items-center rounded-md bg-primary font-serif text-xl italic text-primary-foreground">M</span>MetoHub</a>
+<a class="flex items-center gap-2.5 text-lg font-semibold tracking-tight text-foreground" href="{{ route('landing') }}">
+<img src="{{ asset('images/logo.svg') }}?v={{ filemtime(public_path('images/logo.svg')) }}" alt="MetoHub" class="h-8 w-8 object-contain" width="32" height="32">MetoHub</a>
 <p class="mt-3 max-w-xs text-sm text-muted-foreground">Beautiful online stores for small businesses and independent sellers.</p>
 <address class="home-footer-contact">
 <a href="mailto:{{ config('marketing.contact.email') }}">{{ config('marketing.contact.email') }}</a>

@@ -60,6 +60,42 @@
             item.style.boxShadow = 'none';
         });
         document.getElementById('selected-variant-id').value = selected.id;
+        if (selected.image_url) {
+            const mainImg = document.getElementById('p-main-img');
+            if (mainImg) mainImg.src = selected.image_url;
+            
+            // Normalize helper for URL matching
+            const normalize = path => {
+                if (!path) return '';
+                try {
+                    const u = new URL(path, window.location.origin);
+                    return u.pathname;
+                } catch (e) {
+                    return String(path).replace(/^https?:\/\/[^\/]+/, '');
+                }
+            };
+            const targetNorm = normalize(selected.image_url);
+            const variantUrlsNorm = (selected.image_urls || []).map(normalize);
+
+            document.querySelectorAll('.thumb-item').forEach(item => {
+                const img = item.querySelector('img');
+                const rawSrc = item.getAttribute('data-img-src') || (img ? img.getAttribute('src') : '') || (img ? img.src : '');
+                const itemNorm = normalize(rawSrc);
+                const isPrimary = itemNorm === targetNorm;
+                
+                // If variant has specific assigned images, hide/fade thumbnails not in its set
+                if (variantUrlsNorm.length > 0) {
+                    const isAssigned = variantUrlsNorm.includes(itemNorm);
+                    item.style.display = isAssigned ? '' : 'none';
+                } else {
+                    item.style.display = '';
+                }
+
+                item.classList.toggle('active', isPrimary);
+                item.setAttribute('aria-pressed', isPrimary ? 'true' : 'false');
+                item.style.borderColor = isPrimary ? 'var(--accent-color)' : 'var(--border-color)';
+            });
+        }
         message('');
         syncMainProductUI();
     };

@@ -8,7 +8,27 @@ class PlanAccess
 {
     public function inTrial(Tenant $tenant): bool
     {
-        return now()->lt($tenant->created_at->copy()->addDays(config('saas.trial_days', 7)));
+        return now()->lt($tenant->created_at->copy()->addDays(config('saas.trial_days', 30)));
+    }
+
+    public function inSubscriptionGrace(Tenant $tenant): bool
+    {
+        if ($this->hasPaidAccess($tenant)) {
+            return false;
+        }
+
+        $latestPaidEnd = $tenant->subscriptions()
+            ->where('paid_count', '>', 0)
+            ->whereNotNull('paid_through')
+            ->max('paid_through');
+
+        if (! $latestPaidEnd) {
+            return false;
+        }
+
+        $paidEnd = \Carbon\Carbon::parse($latestPaidEnd);
+
+        return now()->gte($paidEnd) && now()->lt($paidEnd->copy()->addDays(config('saas.subscription_grace_days', 7)));
     }
 
     public function hasPaidAccess(Tenant $tenant): bool
@@ -24,12 +44,12 @@ class PlanAccess
 
     public function adminAvailable(Tenant $tenant): bool
     {
-        return $this->inTrial($tenant) || $this->hasPaidAccess($tenant);
+        return $this->inTrial($tenant) || $this->hasPaidAccess($tenant) || $this->inSubscriptionGrace($tenant);
     }
 
     public function expiredAt(Tenant $tenant): \Carbon\Carbon
     {
-        $end = $tenant->created_at->copy()->addDays(config('saas.trial_days', 7));
+        $end = $tenant->created_at->copy()->addDays(config('saas.trial_days', 30));
         $paidEnd = $tenant->subscriptions()->where('paid_count', '>', 0)->where('paid_from', '<=', now())->max('paid_through');
         if ($paidEnd && \Carbon\Carbon::parse($paidEnd)->gt($end)) {
             $end = \Carbon\Carbon::parse($paidEnd);
@@ -40,7 +60,16 @@ class PlanAccess
 
     public function storefrontGraceEndsAt(Tenant $tenant): \Carbon\Carbon
     {
-        return $this->expiredAt($tenant)->addDays(config('saas.storefront_grace_days', 30));
+        $latestPaidEnd = $tenant->subscriptions()
+            ->where('paid_count', '>', 0)
+            ->whereNotNull('paid_through')
+            ->max('paid_through');
+
+        if ($latestPaidEnd && \Carbon\Carbon::parse($latestPaidEnd)->gt($tenant->created_at->copy()->addDays(config('saas.trial_days', 30)))) {
+            return \Carbon\Carbon::parse($latestPaidEnd)->addDays(config('saas.post_paid_storefront_grace_days', 30));
+        }
+
+        return $tenant->created_at->copy()->addDays(config('saas.trial_days', 30) + config('saas.storefront_grace_days', 30));
     }
 
     public function storefrontAvailable(Tenant $tenant): bool

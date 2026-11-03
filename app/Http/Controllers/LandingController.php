@@ -89,13 +89,8 @@ class LandingController extends Controller
     }
 
     public function careers() { return view('landing.careers'); }
-    public function press() { return view('landing.press'); }
-    public function independentGrocers() { return view('landing.independent-grocers'); }
-    public function groceryChains() { return view('landing.grocery-chains'); }
-    public function farmersMarkets() { return view('landing.farmers-markets'); }
     public function helpCenter() { return view('landing.help-center'); }
     public function apiDocs() { return view('landing.api-docs'); }
-    public function guides() { return view('landing.guides'); }
     public function security() { return view('landing.security'); }
 
     public function handleDemoRequest(Request $request)
@@ -136,19 +131,36 @@ class LandingController extends Controller
         ], $result['state'] === 'unavailable' ? 503 : 200);
     }
 
-    public function blogShow($id, \App\Services\BlogFeed $feed)
+    public function blogShow($slug, \App\Services\BlogFeed $feed)
     {
-        abort_unless(ctype_digit((string) $id) && (int) $id > 0, 404);
-        if ((string) (int) $id !== (string) $id) {
-            return redirect()->route('landing.blog.show', ['id' => (int) $id] + request()->query(), 301);
+        $slug = (string) $slug;
+        if (ctype_digit($slug)) {
+            $id = (int) $slug;
+            if ($id <= 0) {
+                abort(404);
+            }
+            if ((string) $id !== $slug) {
+                return redirect()->route('landing.blog.show', ['id' => $id] + request()->query(), 301);
+            }
         }
         $result = $feed->load();
         if ($result['state'] === 'unavailable') {
             return response()->view('landing.blogs.index', ['blogs' => [], 'feedState' => 'unavailable'], 503);
         }
-        $blog = collect($result['blogs'])->firstWhere('id', (int) $id);
+        $blogs = collect($result['blogs']);
+        $blog = null;
+        if (ctype_digit($slug)) {
+            $id = (int) $slug;
+            $blog = $blogs->firstWhere('id', $id);
+            if ($blog && !empty($blog['slug']) && $blog['slug'] !== (string) $id) {
+                return redirect()->route('landing.blog.show', ['id' => $blog['slug']] + request()->query(), 301);
+            }
+        } else {
+            $blog = $blogs->firstWhere('slug', $slug);
+        }
+
         abort_unless($blog, 404);
-        $recentBlogs = collect($result['blogs'])->where('id', '!=', (int) $id)->take(3);
+        $recentBlogs = $blogs->where('id', '!=', $blog['id'])->take(3);
         return view('landing.blogs.show', ['blog' => $blog, 'recentBlogs' => $recentBlogs, 'feedState' => $result['state']]);
     }
 }
