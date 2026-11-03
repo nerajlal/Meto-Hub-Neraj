@@ -22,7 +22,7 @@ with Chrome(browser=args.browser) as c:
  assert c.js("document.querySelector('input[name=theme]:checked').value")=='template_15'
  c.visit(p.as_uri())
  assert c.js("document.querySelectorAll('[data-demo]').length")==7
- assert c.js("document.querySelectorAll('input[name=theme]').length")==15
+ assert c.js("document.querySelectorAll('input[name=theme]').length")==30
  assert c.js("document.documentElement.dataset.theme")== 'light'
  for width in [320,375,768,1440]:
   c.size(width);time.sleep(.2)
@@ -155,6 +155,6 @@ with Chrome(browser=args.browser) as c:
  # the fixture while still exercising the real menu's click handler.
  c.js("const link=document.querySelector('#mm a');link.addEventListener('click',e=>e.preventDefault(),{once:true});link.click()")
  assert c.js("document.getElementById('mm').hidden")
- print('PASS: seven demos, 15 themes, plan selection, required fields, server validation, network/429 handling, real-result success/failure states, resend, mobile menu. All responses mocked; no account or email created.')
+ print('PASS: seven demos, 30 themes, plan selection, required fields, server validation, network/429 handling, real-result success/failure states, resend, mobile menu. All responses mocked; no account or email created.')
 
 temporary.cleanup()

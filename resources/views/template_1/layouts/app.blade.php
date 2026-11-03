@@ -87,8 +87,9 @@
     <link rel="stylesheet" href="{{ asset('css/storefront-products.css') }}">
     @yield('styles')
     <link rel="stylesheet" href="{{ asset('css/storefront-mobile-grid.css') . '?v=' . filemtime(public_path('css/storefront-mobile-grid.css')) }}">
-    @if(in_array($storefrontTheme['id'], ['template_7', 'template_8', 'template_9', 'template_10', 'template_11', 'template_12', 'template_13', 'template_14', 'template_15']))
+    @if(in_array($storefrontTheme['id'], ['template_7', 'template_8', 'template_9', 'template_10', 'template_11', 'template_12', 'template_13', 'template_14', 'template_15']) || ($storefrontTheme['generation'] ?? '') === 'collection')
     <link rel="stylesheet" href="{{ asset('css/storefront-new-themes.css') . '?v=' . filemtime(public_path('css/storefront-new-themes.css')) }}">
+    @if(($storefrontTheme['generation'] ?? '') === 'collection')<link rel="stylesheet" href="{{ asset('css/storefront-collection-themes.css') . '?v=' . filemtime(public_path('css/storefront-collection-themes.css')) }}">@endif
     @endif
     @if($storefrontTheme['id'] !== 'template_1')
     <style>body { --theme-tone: {{ $storefrontTheme['tone'] }}; --theme-surface: {{ $storefrontTheme['background'] }}; }</style>

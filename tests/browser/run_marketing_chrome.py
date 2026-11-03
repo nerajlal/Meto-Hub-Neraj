@@ -30,7 +30,7 @@ with tempfile.TemporaryDirectory(prefix='metohub-public-qa-') as folder:
                     assert theme['background']=='rgb(251, 250, 247)', (page,theme)
                     assert 'Manrope' in theme['font'] and 'Manrope' in theme['heading'], (page,theme)
                 if page == 'themes':
-                    assert c.js("document.querySelectorAll('[data-public-theme]').length") == 15
+                    assert c.js("document.querySelectorAll('[data-public-theme]').length") == 30
                     assert c.js("Array.from(document.querySelectorAll('.public-theme-preview')).every(a=>a.href.includes('preview_theme='))")
                 if page == 'blogs-7':
                     assert c.js("Boolean(document.querySelector('[aria-label=Breadcrumb]'))")
