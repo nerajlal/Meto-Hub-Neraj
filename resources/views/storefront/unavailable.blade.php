@@ -1,4 +1,194 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Store temporarily unavailable</title>
-<style>body{margin:0;min-height:100vh;display:grid;place-items:center;background:#f5f3ff;color:#202223;font-family:system-ui,sans-serif}main{max-width:480px;margin:24px;padding:36px;background:white;border:1px solid #e5e1ed;border-radius:18px;text-align:center}h1{font-size:28px;line-height:1.2}p{color:#6d7175;line-height:1.8}a{color:#6d28d9;text-underline-offset:4px}a:focus-visible{outline:2px solid #7c3aed;outline-offset:4px}</style></head>
-<body><main><h1>Store temporarily unavailable</h1><p>This store’s subscription payment needs renewal. Please try again later.</p><p><a href="{{ rtrim(config('app.url'), '/') }}/admin/login">Store owner? Sign in to renew</a></p></main></body></html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="robots" content="noindex,nofollow">
+    <title>Store Temporarily Unavailable — MetoHub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&display=swap">
+    <style>
+        :root {
+            --paper: #FDFBF7;
+            --ink: #0F172A;
+            --muted: #64748B;
+            --amber: #D97706;
+            --card-border: rgba(15, 23, 42, 0.08);
+            --card-bg: #FFFFFF;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--paper);
+            color: var(--ink);
+            font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            padding: 24px;
+        }
+        .grain {
+            pointer-events: none;
+            position: fixed;
+            inset: 0;
+            z-index: 999;
+            opacity: 0.035;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+        .brand-header {
+            width: 100%;
+            max-width: 600px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-top: 12px;
+        }
+        .brand-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: var(--ink);
+            font-weight: 700;
+            font-size: 1.15rem;
+            letter-spacing: -0.02em;
+        }
+        .card {
+            max-width: 500px;
+            width: 100%;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 44px 36px;
+            text-align: center;
+            box-shadow: 0 16px 40px -12px rgba(15, 23, 42, 0.06);
+            position: relative;
+            z-index: 1;
+        }
+        .icon-circle {
+            width: 68px;
+            height: 68px;
+            border-radius: 20px;
+            background: rgba(217, 119, 6, 0.1);
+            color: var(--amber);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 24px;
+        }
+        .icon-circle svg {
+            width: 32px;
+            height: 32px;
+        }
+        .badge {
+            display: inline-block;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 4px 12px;
+            border-radius: 9999px;
+            background: rgba(217, 119, 6, 0.1);
+            color: #b45309;
+            border: 1px solid rgba(217, 119, 6, 0.2);
+            margin-bottom: 16px;
+        }
+        h1 {
+            font-family: 'Fraunces', serif;
+            font-size: 1.85rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            margin-bottom: 12px;
+            color: var(--ink);
+        }
+        p {
+            color: var(--muted);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 28px;
+        }
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            align-items: stretch;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 22px;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        .btn-primary {
+            background: var(--ink);
+            color: #FFFFFF;
+            border: 1px solid var(--ink);
+            box-shadow: 0 4px 14px rgba(15, 23, 42, 0.1);
+        }
+        .btn-primary:hover {
+            background: #1e293b;
+            color: #FFFFFF;
+            transform: translateY(-1px);
+        }
+        .btn-secondary {
+            background: transparent;
+            color: var(--ink);
+            border: 1px solid rgba(15, 23, 42, 0.15);
+        }
+        .btn-secondary:hover {
+            background: rgba(15, 23, 42, 0.04);
+            border-color: rgba(15, 23, 42, 0.3);
+            transform: translateY(-1px);
+        }
+        footer {
+            font-size: 0.8rem;
+            color: var(--muted);
+            padding: 16px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="grain" aria-hidden="true"></div>
+
+    <header class="brand-header">
+        <a class="brand-link" href="{{ route('landing') }}">
+            <img src="{{ asset('images/logo.svg') }}?v={{ filemtime(public_path('images/logo.svg')) }}" alt="MetoHub" width="30" height="30">
+            <span>MetoHub</span>
+        </a>
+    </header>
+
+    <main class="card">
+        <div class="icon-circle" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+        </div>
+        <div>
+            <span class="badge">Notice</span>
+        </div>
+        <h1>Store temporarily unavailable</h1>
+        <p>This store is temporarily inactive or renewing its subscription. Please check back shortly or sign in below if you manage this store.</p>
+        <div class="btn-group">
+            <a href="{{ rtrim(config('app.url'), '/') }}/admin/login" class="btn btn-primary">
+                Store owner? Sign in to renew →
+            </a>
+            <a href="{{ route('landing') }}" class="btn btn-secondary">
+                Return to MetoHub home
+            </a>
+        </div>
+    </main>
+
+    <footer>
+        <span>© {{ date('Y') }} MetoHub. All rights reserved.</span>
+    </footer>
+</body>
+</html>
