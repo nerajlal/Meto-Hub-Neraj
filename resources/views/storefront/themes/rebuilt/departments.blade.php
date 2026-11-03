@@ -1,0 +1,1 @@
+<nav class="rb-departments" aria-label="Shop collections">@foreach($collections as $department)<a href="{{ app(\App\Services\StorefrontTheme::class)->url('v1.collection', ['slug' => $department->slug]) }}"><span>{{ $department->name }}</span><span aria-hidden="true">↗</span></a>@endforeach</nav>

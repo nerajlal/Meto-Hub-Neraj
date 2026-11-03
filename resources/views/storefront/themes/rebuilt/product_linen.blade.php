@@ -1,0 +1,1 @@
+<div class="rb-linen-product" data-rebuilt-product="linen"><section class="rb-linen-product-story">@include('storefront.themes.product.identity')@include('storefront.themes.product.information')</section>@include('storefront.themes.product.gallery')<aside class="rb-linen-product-selection">@include('storefront.themes.product.purchase')</aside></div>

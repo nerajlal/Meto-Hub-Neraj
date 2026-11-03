@@ -34,6 +34,42 @@ class StorefrontThemesTest extends TestCase
         $this->assertSame('#ffffff', app(StorefrontTheme::class)->contrastText('#000000'));
     }
 
+    public function test_theme_page_edits_shared_storefront_colors_without_changing_theme(): void
+    {
+        $tenant = $this->store();
+        $tenant->update(['primary_color' => '#123456', 'dark_color' => '#234567', 'accent_color' => '#abcdef']);
+        $other = Tenant::create(['name' => 'Other']);
+        $this->actingAs(User::factory()->create(['tenant_id' => $tenant->id, 'type' => 'admin']));
+        $base = '/'.$tenant->id.'/admin/settings';
+        $this->get($base.'/theme')->assertOk()->assertSee('value="#123456"', false)->assertSee('Save theme colors');
+        $colors = ['primary_color' => '#654321', 'dark_color' => '#345678', 'accent_color' => '#fedcba'];
+        $this->post($base.'/theme/colors', $colors + ['theme' => 'template_30', 'tenant_id' => $other->id])->assertRedirect();
+        $this->assertSame('template_1', $tenant->fresh()->theme);
+        foreach ($colors as $field => $value) $this->assertSame($value, $tenant->fresh()->$field);
+        $this->get($base.'/storefront')->assertOk()->assertSee('value="#654321"', false);
+        $this->post($base.'/theme', ['theme' => 'template_30'])->assertRedirect();
+        $this->assertSame('#654321', $tenant->fresh()->primary_color);
+        $this->postJson($base.'/theme/colors', array_replace($colors, ['primary_color' => 'red']))->assertUnprocessable();
+        $this->post('/'.$other->id.'/admin/settings/theme/colors', $colors)->assertForbidden();
+        $this->assertNotSame('#654321', $other->fresh()->primary_color);
+    }
+
+    public function test_rebuilt_themes_have_different_compositions_with_identical_store_colors(): void
+    {
+        $tenant = $this->store();
+        $product = $this->catalog($tenant);
+        $product->update(['description' => 'Store supplied product details', 'vendor' => 'Merchant brand']);
+        $tenant->update(['primary_color' => '#123456', 'dark_color' => '#123456', 'accent_color' => '#eeeeee']);
+        foreach (['template_16' => 'urban', 'template_19' => 'circuit', 'template_21' => 'harvest', 'template_22' => 'timepiece', 'template_28' => 'linen', 'template_17' => 'petal', 'template_25' => 'district', 'template_26' => 'velvetroom', 'template_29' => 'prism'] as $theme => $layout) {
+            $tenant->update(['theme' => $theme]);
+            $this->withSession(['active_tenant_id' => $tenant->id]);
+            $this->get('/v1')->assertOk()->assertSee('data-rebuilt-home="'.$layout.'"', false)
+                ->assertSee('storefront-rebuilt-themes.css')->assertSee('#123456')->assertDontSee('class="sf-collection-hero ', false);
+            $this->get('/v1/product?id='.$product->id)->assertOk()->assertSee('data-rebuilt-product="'.$layout.'"', false)
+                ->assertSee('Store supplied product details')->assertSee('Merchant brand');
+        }
+    }
+
     private function store(): Tenant
     {
         return Tenant::create(['name' => 'Neighbourhood Grocer', 'theme' => 'template_1']);

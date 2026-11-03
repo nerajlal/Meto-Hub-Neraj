@@ -1,0 +1,2 @@
+<section class="rb-urban-cover" data-rebuilt-home="urban"><div class="rb-urban-title"><span class="sf-kicker">{{ $hero['eyebrow'] }}</span><h1>{{ $hero['heading'] }}</h1></div><div class="rb-urban-photo">@include('storefront.themes.rebuilt.media')</div><div class="rb-urban-caption"><p>{{ $hero['description'] }}</p><a class="sf-primary-button" href="{{ app(\App\Services\StorefrontTheme::class)->url('v1.all-products') }}">{{ $hero['button_label'] }} ↗</a></div></section>
+@include('storefront.themes.rebuilt.departments')

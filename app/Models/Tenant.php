@@ -68,6 +68,7 @@ class Tenant extends Model
     ];
 
     protected $casts = [
+        'trial_ends_at' => 'datetime',
         'search_indexable' => 'boolean',
         'maintenance_mode' => 'boolean',
         'deletion_requested_at' => 'datetime',

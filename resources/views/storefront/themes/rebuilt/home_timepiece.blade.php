@@ -1,0 +1,2 @@
+<section class="rb-timepiece-salon" data-rebuilt-home="timepiece"><div class="rb-salon-heading"><span class="sf-kicker">{{ $hero['eyebrow'] }}</span><h1>{{ $hero['heading'] }}</h1></div><div class="rb-salon-stage">@include('storefront.themes.rebuilt.media')</div><div class="rb-salon-caption"><p>{{ $hero['description'] }}</p><a href="{{ app(\App\Services\StorefrontTheme::class)->url('v1.all-products') }}">{{ $hero['button_label'] }} →</a></div></section>
+@include('storefront.themes.rebuilt.departments')

@@ -144,6 +144,7 @@ Route::prefix('superadmin')->name('super_admin.')->group(function () {
     Route::middleware([\App\Http\Middleware\SuperAdminMiddleware::class])->group(function () {
         Route::get('/', [App\Http\Controllers\SuperAdmin\DashboardController::class, 'index'])->name('dashboard');
         Route::get('/subscriptions', [App\Http\Controllers\SuperAdmin\DashboardController::class, 'subscriptions'])->name('subscriptions');
+        Route::patch('/tenants/{id}/trial', [App\Http\Controllers\SuperAdmin\DashboardController::class, 'updateTrial'])->middleware('throttle:20,1')->name('tenants.trial.update');
         Route::get('/tenants', [App\Http\Controllers\SuperAdmin\DashboardController::class, 'tenants'])->name('tenants');
         Route::post('/tenants/{id}/billing/refresh', [App\Http\Controllers\SuperAdmin\DashboardController::class, 'refreshBilling'])->middleware('throttle:10,1')->name('tenants.billing.refresh');
         Route::get('/tenants/{id}', [App\Http\Controllers\SuperAdmin\DashboardController::class, 'showTenant'])->name('tenants.show');
@@ -342,6 +343,7 @@ Route::prefix('{tenant}/admin')->name('admin.')->middleware(['identify_tenant', 
         'names' => 'settings.delivery-partners',
     ])->except(['show', 'create', 'edit']);
 
+    Route::post('/settings/theme/colors', [App\Http\Controllers\Admin\ThemeSettingsController::class, 'updateColors'])->name('settings.theme.colors');
     Route::get('/settings/theme', [App\Http\Controllers\Admin\ThemeSettingsController::class, 'index'])->name('settings.theme');
     Route::post('/settings/theme', [App\Http\Controllers\Admin\ThemeSettingsController::class, 'update'])->name('settings.theme.update');
 

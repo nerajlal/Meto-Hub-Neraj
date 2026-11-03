@@ -12,6 +12,29 @@
     @if($errors->any())
         <div class="alert alert-danger" role="alert">{{ $errors->first() }}</div>
     @endif
+    <details class="card mb-4 theme-colors-disclosure" @if($errors->hasAny(['primary_color', 'dark_color', 'accent_color'])) open @endif>
+        <summary class="p-3 fw-semibold">Theme Colors <span class="small text-muted fw-normal ms-2">Expand to edit your store colors</span></summary>
+    <form method="POST" action="{{ route('admin.settings.theme.colors') }}" class="card-body border-top" id="theme-colors-form">
+        @csrf
+        <p class="small text-muted">These are your saved Storefront colors, shared across every theme. Save colors before opening a live preview. Changing a theme keeps these colors.</p>
+        <div class="row g-3">
+        @foreach(['primary_color' => ['Primary color', '#10b981'], 'dark_color' => ['Navy color (dark)', '#0f172a'], 'accent_color' => ['Accent color (light)', '#ecfdf5']] as $field => [$label, $fallback])
+            @php
+                $value = old($field, $tenant->$field ?? $fallback);
+            @endphp
+            <div class="col-12 col-md-4">
+                <label for="theme-{{ $field }}" class="form-label small">{{ $label }}</label>
+                <div class="input-group">
+                    <input type="color" class="form-control form-control-color" data-color-picker="{{ $field }}" aria-label="Choose {{ strtolower($label) }}" value="{{ preg_match('/^#[0-9a-f]{6}$/i', $value) ? $value : $fallback }}">
+                    <input type="text" class="form-control" id="theme-{{ $field }}" name="{{ $field }}" value="{{ $value }}" pattern="#[0-9A-Fa-f]{6}" maxlength="7" required aria-describedby="theme-color-help">
+                </div>
+            </div>
+        @endforeach
+        </div>
+        <p class="small text-muted mt-2" id="theme-color-help">Use a six-digit hex color, for example #7c3aed.</p>
+        <div><button class="btn btn-primary" type="submit">Save theme colors</button> <a class="btn btn-link" href="{{ route('admin.settings.storefront') }}">Storefront settings</a></div>
+    </form>
+    </details>
     <div class="theme-settings-note"><i class="fas fa-sliders" aria-hidden="true"></i><span>Your store’s logo, products, categories, brand colours, cart, and checkout work across every theme.</span></div>
     <div class="theme-selection-grid">
         @foreach($themes as $theme)
@@ -61,6 +84,8 @@
 .theme-settings-heading {display:flex;align-items:center;justify-content:space-between;gap:2rem;margin-bottom:1.75rem;}
 .theme-settings-kicker {font-size:.65rem;font-weight:800;letter-spacing:.15em;color:#778578;}
 .theme-settings h1 {font-size:clamp(1.75rem,2.6vw,2.65rem);font-weight:750;letter-spacing:-.04em;margin:.65rem 0;}
+.theme-colors-disclosure > summary {cursor:pointer;border-radius:inherit;}
+.theme-colors-disclosure > summary:focus-visible {outline:2px solid var(--sf-accent,#7c3aed);outline-offset:2px;}
 .theme-settings-heading p {font-size:.9rem;line-height:1.7;color:#68736c;max-width:600px;margin:0;}
 .theme-settings-heading>a {flex-shrink:0;font-size:.8rem;}
 .theme-settings-note {display:flex;align-items:center;gap:.8rem;border:1px solid #e0e6df;background:#f3f7f1;border-radius:12px;padding:1rem 1.2rem;margin-bottom:1.75rem;font-size:.8rem;color:#53654c;}
@@ -99,6 +124,11 @@
 @push('scripts')
 <script>
 (() => {
+    document.querySelectorAll('[data-color-picker]').forEach(picker => {
+        const text = document.getElementById('theme-' + picker.dataset.colorPicker);
+        picker.addEventListener('input', () => { text.value = picker.value; });
+        text.addEventListener('input', () => { if (/^#[0-9a-f]{6}$/i.test(text.value)) picker.value = text.value; });
+    });
     const dialog = document.getElementById('theme-preview-dialog');
     const frame = document.getElementById('theme-preview-frame');
     document.querySelectorAll('[data-preview-url]').forEach(button => {

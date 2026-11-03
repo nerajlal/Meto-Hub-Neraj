@@ -1,0 +1,1 @@
+<div class="sf-card-visual">@include('storefront.themes.cards.image')@if(!empty($product->tags))<div class="sf-new-card-tag"><span class="sf-product-tag">{{ last($product->tags) }}</span></div>@endif</div>

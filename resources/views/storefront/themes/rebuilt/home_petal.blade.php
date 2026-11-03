@@ -1,0 +1,2 @@
+<section class="rb-petal-welcome" data-rebuilt-home="petal"><div><span class="sf-kicker">{{ $hero['eyebrow'] }}</span><h1>{{ $hero['heading'] }}</h1><p>{{ $hero['description'] }}</p><a class="sf-primary-button" href="{{ app(\App\Services\StorefrontTheme::class)->url('v1.all-products') }}">{{ $hero['button_label'] }} →</a></div><div class="rb-petal-media">@include('storefront.themes.rebuilt.media')</div></section>
+<section class="rb-petal-collections"><h2>Find your everyday favourites</h2>@include('storefront.themes.components.categories')</section>

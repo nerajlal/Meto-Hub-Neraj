@@ -15,7 +15,7 @@
         <div class="col-md-3"><dt class="small text-muted">Outstanding invoiced amount</dt><dd>@if($subscription?->invoices_synced_at)@forelse($subscription->invoices()->whereIn('status', ['issued', 'partially_paid'])->get()->groupBy('currency') as $currency => $invoices){{ $currency }} {{ number_format($invoices->sum('amount_due') / 100, 2) }}@empty 0.00 @endforelse @else Not recorded @endif</dd></div>
         <div class="col-md-6"><dt class="small text-muted">Last provider synchronization</dt><dd>{{ $subscription?->synced_at?->format('d M Y, H:i') ?: 'Not recorded' }}</dd></div>
         <div class="col-12"><dt class="small text-muted">Storefront</dt><dd><a href="{{ $tenant->storefrontUrl() }}" target="_blank" rel="noopener">{{ $tenant->storefrontUrl() }}</a></dd></div>
-    </dl><p class="small text-muted border-top pt-3 mt-3 mb-0">Trials use the platform’s {{ config('saas.trial_days') }}-day policy from registration. Plan prices are reference prices, not amounts paid or due. Provider synchronization supplies dates, invoices and payments. Historical records remain unknown until imported.</p></div>
+    </dl><p class="small text-muted border-top pt-3 mt-3 mb-0">Trials use a superadmin end-date override when set; otherwise the platform’s {{ config('saas.trial_days') }}-day policy from registration. Plan prices are reference prices, not amounts paid or due. Provider synchronization supplies dates, invoices and payments. Historical records remain unknown until imported.</p></div>
 </div>
 
 @include('super_admin.partials.payment_history')

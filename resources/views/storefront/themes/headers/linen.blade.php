@@ -1,4 +1,4 @@
-<header class="sf-header sf-header-new sf-header-linen" data-theme-header="linen"><div class="sf-header-row">@include('storefront.themes.components.brand') @include('storefront.themes.components.actions')</div><div class="sf-new-navigation">@include('storefront.themes.components.navigation') @include('storefront.themes.components.search')</div></header>
+<header class="sf-header sf-header-new sf-header-linen" data-theme-header="linen"><div class="sf-header-row">@include('storefront.themes.components.brand')@include('storefront.themes.components.actions')</div><div class="sf-new-navigation">@include('storefront.themes.components.search')@include('storefront.themes.components.navigation')</div></header>
 <script>
 (() => {
     const header = document.querySelector('.sf-header-new');

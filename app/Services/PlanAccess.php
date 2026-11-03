@@ -6,9 +6,14 @@ use App\Models\Tenant;
 
 class PlanAccess
 {
+    public function trialEndsAt(Tenant $tenant): \Carbon\Carbon
+    {
+        return $tenant->trial_ends_at?->copy() ?? $tenant->created_at->copy()->addDays(config('saas.trial_days', 7));
+    }
+
     public function inTrial(Tenant $tenant): bool
     {
-        return now()->lt($tenant->created_at->copy()->addDays(config('saas.trial_days', 30)));
+        return now()->lt($this->trialEndsAt($tenant));
     }
 
     public function inSubscriptionGrace(Tenant $tenant): bool
@@ -49,7 +54,7 @@ class PlanAccess
 
     public function expiredAt(Tenant $tenant): \Carbon\Carbon
     {
-        $end = $tenant->created_at->copy()->addDays(config('saas.trial_days', 30));
+        $end = $this->trialEndsAt($tenant);
         $paidEnd = $tenant->subscriptions()->where('paid_count', '>', 0)->where('paid_from', '<=', now())->max('paid_through');
         if ($paidEnd && \Carbon\Carbon::parse($paidEnd)->gt($end)) {
             $end = \Carbon\Carbon::parse($paidEnd);
@@ -65,11 +70,11 @@ class PlanAccess
             ->whereNotNull('paid_through')
             ->max('paid_through');
 
-        if ($latestPaidEnd && \Carbon\Carbon::parse($latestPaidEnd)->gt($tenant->created_at->copy()->addDays(config('saas.trial_days', 30)))) {
+        if ($latestPaidEnd && \Carbon\Carbon::parse($latestPaidEnd)->gt($this->trialEndsAt($tenant))) {
             return \Carbon\Carbon::parse($latestPaidEnd)->addDays(config('saas.post_paid_storefront_grace_days', 30));
         }
 
-        return $tenant->created_at->copy()->addDays(config('saas.trial_days', 30) + config('saas.storefront_grace_days', 30));
+        return $this->trialEndsAt($tenant)->addDays(config('saas.storefront_grace_days', 30));
     }
 
     public function storefrontAvailable(Tenant $tenant): bool

@@ -1,0 +1,1 @@
+<div class="rb-district-product" data-rebuilt-product="district"><header>@include('storefront.themes.product.identity')</header><div class="rb-district-stage">@include('storefront.themes.product.gallery')<aside>@include('storefront.themes.product.purchase')</aside></div><div class="rb-district-story">@include('storefront.themes.product.information')</div></div>

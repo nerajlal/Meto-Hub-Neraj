@@ -19,7 +19,7 @@ class SettingsOverviewController extends Controller
             : $tenant->subscriptions()->latest('id')->first();
         $paid = $access->hasPaidAccess($tenant);
         $trial = $access->inTrial($tenant);
-        $trialEnds = $tenant->created_at->copy()->addDays(config('saas.trial_days'));
+        $trialEnds = app(\App\Services\PlanAccess::class)->trialEndsAt($tenant);
         $pending = in_array($subscription?->status ?? $tenant->subscription_status, ['creating', 'created', 'authenticated', 'pending'], true);
         $status = $paid ? 'Paid access active' : ($trial ? 'Free trial active' : ($pending ? 'Payment pending' : 'Subscription required'));
         $statusTone = $paid ? 'success' : ($trial ? 'trial' : 'attention');

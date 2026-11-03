@@ -140,7 +140,7 @@
     step = number;
     $$('.pane', form).forEach(pane => pane.classList.toggle('active', Number(pane.dataset.step) === number));
     $('#wBar').style.width = `${number / 3 * 100}%`;
-    $('#wLabel').textContent = `Step ${number} of 3: ${['About you', 'Your business', 'Account and theme'][number - 1]}`;
+    $('#wLabel').textContent = `Step ${number} of 3: ${['About you', 'Your business', 'Secure your account'][number - 1]}`;
     back.hidden = number === 1;
     next.textContent = number === 3 ? 'Create my store' : 'Continue';
     if (dialog.open) $('.pane.active input,.pane.active select', form)?.focus({preventScroll: true});
@@ -170,7 +170,6 @@
     if (number === 3) {
       if (fields.password.value.length < 8) errors.password = 'Use at least 8 characters.';
       if (!fields.password_confirmation.value || fields.password.value !== fields.password_confirmation.value) errors.password_confirmation = 'Passwords do not match.';
-      if (!$('input[name="theme"]:checked', form)) errors.theme = 'Choose a starting theme.';
     }
     Object.keys(steps).filter(name => steps[name] === number).forEach(name => fieldError(name, errors[name] || ''));
     const first = Object.keys(errors)[0];
@@ -242,7 +241,7 @@
     for (const number of [1, 2]) if (!validate(number)) { showStep(number); return; }
     const payload = Object.fromEntries(Object.entries(fields).map(([key, field]) => [key, key.startsWith('password') ? field.value : field.value.trim()]));
     payload.plan = planSelect.value;
-    payload.theme = $('input[name="theme"]:checked', form).value;
+    payload.theme = $('input[name="theme"]', form).value;
     pending = true;
     next.disabled = true;
     back.disabled = true;
@@ -302,10 +301,10 @@
   });
   const parameters = new URLSearchParams(location.search);
   if (parameters.has('get_started')) {
-    const selectedTheme = $$('input[name="theme"]', form).find(input => input.value === parameters.get('theme'));
-    if (selectedTheme) {
-      selectedTheme.checked = true;
-      selectedTheme.dispatchEvent(new Event('change', {bubbles: true}));
+    const selectedTheme = parameters.get('theme');
+    if (Object.hasOwn(config.signupThemes, selectedTheme)) {
+      $('input[name="theme"]', form).value = selectedTheme;
+      $('#signupThemeNote').textContent = `Your store starts with ${config.signupThemes[selectedTheme]}, selected from our Themes page. You can preview and change it later in Dashboard → Settings → Theme.`;
     }
     open(parameters.get('plan') || 'base');
   }

@@ -33,7 +33,7 @@ class IdentifyTenant
             // Calculate trial remaining days accurately by exact date and time
             $access = app(\App\Services\PlanAccess::class);
             $isPaid = $access->hasPaidAccess($tenant);
-            $trialEndsAt = $tenant->created_at->copy()->addDays(config('saas.trial_days', 7));
+            $trialEndsAt = $access->trialEndsAt($tenant);
             $isTrialExpired = !$isPaid && now()->greaterThanOrEqualTo($trialEndsAt);
             $daysRemaining = !$isPaid && !$isTrialExpired ? (int) ceil(now()->diffInSeconds($trialEndsAt) / 86400) : 0;
             $record = $tenant->subscriptions()->where('gateway_id', $tenant->razorpay_subscription_id)->first();

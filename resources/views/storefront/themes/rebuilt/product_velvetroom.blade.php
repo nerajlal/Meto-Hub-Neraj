@@ -1,0 +1,1 @@
+<div class="rb-velvet-product" data-rebuilt-product="velvetroom">@include('storefront.themes.product.gallery')<div class="rb-velvet-selection">@include('storefront.themes.product.identity')@include('storefront.themes.product.purchase')@include('storefront.themes.product.information')</div></div>

@@ -96,6 +96,27 @@ class DashboardController extends Controller
         return redirect()->route('super_admin.dashboard')->with('success', 'Tenant Admin and store catalog created successfully.');
     }
 
+    public function updateTrial(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'trial_ends_at' => ['required', 'date_format:Y-m-d\TH:i'],
+            'reason' => ['required', 'string', 'max:500'],
+        ]);
+        \Illuminate\Support\Facades\DB::transaction(function () use ($id, $validated, $request) {
+            $tenant = \App\Models\Tenant::lockForUpdate()->findOrFail($id);
+            $end = \Carbon\Carbon::createFromFormat('Y-m-d\TH:i', $validated['trial_ends_at'], config('app.timezone'))->second(0);
+            abort_if($end->lt($tenant->created_at), 422, 'Trial end cannot be before store registration.');
+            $previous = app(\App\Services\PlanAccess::class)->trialEndsAt($tenant);
+            \Illuminate\Support\Facades\DB::table('tenant_trial_changes')->insert([
+                'tenant_id' => $tenant->id, 'changed_by' => $request->user()->id,
+                'previous_ends_at' => $previous, 'new_ends_at' => $end,
+                'reason' => $validated['reason'], 'created_at' => now(),
+            ]);
+            $tenant->forceFill(['trial_ends_at' => $end])->save();
+        });
+        return back()->with('success', 'Store trial end updated. Subscription billing dates are unchanged.');
+    }
+
     public function tenants(Request $request, \App\Services\SuperAdminStoreOverview $overview)
     {
         $filters = $this->storeFilters($request);

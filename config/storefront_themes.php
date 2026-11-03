@@ -88,13 +88,13 @@ return [
     ],
     'template_16' => [
         'name' => 'Urban Drop', 'version' => 'Premium collection',
-        'description' => 'Bold streetwear with a typographic launch cover, hard-edged cards and oversized product photography.',
+        'description' => 'Fashion launch storefront with a full-width runway cover, oversized product tiles, horizontal catalog filters and a gallery-led product stage.',
         'tone' => '#db492c', 'background' => '#f4f1e9', 'layout' => 'urban',
         'generation' => 'collection',
     ],
     'template_17' => [
         'name' => 'Petal Studio', 'version' => 'Premium collection',
-        'description' => 'Airy beauty boutique with pill navigation, softly framed imagery and a rounded purchase panel.',
+        'description' => 'Beauty storefront with compact square product cards, a collection-focused welcome and centered product identity above a soft purchase layout.',
         'tone' => '#88645d', 'background' => '#faf3f0', 'layout' => 'petal',
         'generation' => 'collection',
     ],
@@ -106,7 +106,7 @@ return [
     ],
     'template_19' => [
         'name' => 'Circuit Lab', 'version' => 'Premium collection',
-        'description' => 'Technical retail with a search-first header, numbered product tiles and a structured selection panel.',
+        'description' => 'Search-first catalog with a three-zone console, factual product cards, sidebar filters and gallery, information and purchase columns.',
         'tone' => '#2857ae', 'background' => '#eef2f8', 'layout' => 'circuit',
         'generation' => 'collection',
     ],
@@ -118,13 +118,13 @@ return [
     ],
     'template_21' => [
         'name' => 'Daily Harvest', 'version' => 'Premium collection',
-        'description' => 'Compact fresh market with horizontal shopping cards, department strips and practical product details.',
+        'description' => 'Quick shopping market with a department sidebar, compact horizontal cards on desktop and mobile, and a practical product purchase layout.',
         'tone' => '#427147', 'background' => '#f2f6e9', 'layout' => 'harvest',
         'generation' => 'collection',
     ],
     'template_22' => [
         'name' => 'Timepiece House', 'version' => 'Premium collection',
-        'description' => 'Precision-inspired watch gallery with framed square images, measured typography and a split product stage.',
+        'description' => 'Watch showroom with a centered masthead, symmetrical display stage, brand-led product cards and a separate selection and information panel.',
         'tone' => '#555e68', 'background' => '#f2f3f4', 'layout' => 'timepiece',
         'generation' => 'collection',
     ],
@@ -142,13 +142,13 @@ return [
     ],
     'template_25' => [
         'name' => 'Pop District', 'version' => 'Premium collection',
-        'description' => 'Expressive accessories shop with graphic outlines, offset shadows and playful framed product panels.',
+        'description' => 'Accessories poster shop with alternating oversized tiles, a separate caption block and an expressive product purchase stage.',
         'tone' => '#9042a0', 'background' => '#fcf2ff', 'layout' => 'district',
         'generation' => 'collection',
     ],
     'template_26' => [
         'name' => 'Velvet Room', 'version' => 'Premium collection',
-        'description' => 'A boutique salon with a portrait-led cover, rounded inset cards and an elegant reversed product stage.',
+        'description' => 'Fashion boutique with an immersive photographic cover, portrait product cards and a large gallery beside the purchase and story column.',
         'tone' => '#7c354c', 'background' => '#faf1f0', 'layout' => 'velvetroom', 'generation' => 'collection',
     ],
     'template_27' => [
@@ -158,12 +158,12 @@ return [
     ],
     'template_28' => [
         'name' => 'Linen & Form', 'version' => 'Premium collection',
-        'description' => 'A quiet linen-inspired shop with an offset editorial cover, inset portrait cards and a spacious product gallery.',
+        'description' => 'Editorial lookbook with asymmetric imagery, staggered two-column product stories and a narrative-first product detail composition.',
         'tone' => '#75634d', 'background' => '#f7f4ec', 'layout' => 'linen', 'generation' => 'collection',
     ],
     'template_29' => [
         'name' => 'Prism Studio', 'version' => 'Premium collection',
-        'description' => 'A modern graphic storefront with a stacked cover, geometric cards and a framed purchase stage.',
+        'description' => 'Modular design storefront with a collection directory board, contiguous product grid and structured product-information panels.',
         'tone' => '#5057b6', 'background' => '#f3f2fc', 'layout' => 'prism', 'generation' => 'collection',
     ],
     'template_30' => [

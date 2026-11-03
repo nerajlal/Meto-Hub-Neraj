@@ -57,5 +57,11 @@ class Chrome:
   if self.sock:self.sock.close()
   self.process.terminate()
   try:self.process.wait(timeout=5)
-  except subprocess.TimeoutExpired:self.process.kill()
-  self.folder.cleanup()
+  except subprocess.TimeoutExpired:
+   self.process.kill();self.process.wait(timeout=5)
+  # Chrome children may finish writing their profile just after the parent exits.
+  for attempt in range(5):
+   try:self.folder.cleanup();break
+   except OSError as error:
+    if error.errno not in (39,66) or attempt==4:raise
+    time.sleep(.2)

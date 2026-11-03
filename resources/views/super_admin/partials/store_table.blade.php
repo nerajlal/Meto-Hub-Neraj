@@ -12,7 +12,15 @@
             </td>
             <td><span class="fw-semibold">{{ $state['plan_name'] }}</span><span class="small text-muted d-block">{{ $state['theme_name'] }}</span></td>
             <td><span class="badge text-bg-{{ $state['badge'] }}">{{ $state['label'] }}</span><span class="small text-muted d-block mt-1">Provider: {{ $state['raw_status'] }}</span>@if($store->razorpay_subscription_id)<code class="small sa-reference">{{ $store->razorpay_subscription_id }}</code>@endif</td>
-            <td><span class="small">{{ $state['trial_label'] }}</span><span class="small text-muted d-block">Ends {{ $state['trial_ends_at']->format('d M Y, H:i') }}</span></td>
+            <td><span class="small">{{ $state['trial_label'] }}</span><span class="small text-muted d-block">Ends {{ $state['trial_ends_at']->format('d M Y, H:i') }} ({{ config('app.timezone') }})</span>
+                <details class="mt-2"><summary class="small text-primary">Edit trial</summary>
+                    <form method="POST" action="{{ route('super_admin.tenants.trial.update', $store->id) }}" class="mt-2" style="min-width:220px">@csrf @method('PATCH')
+                        <label class="small" for="trial-{{ $store->id }}">Trial ends ({{ config('app.timezone') }})</label>
+                        <input id="trial-{{ $store->id }}" type="datetime-local" name="trial_ends_at" value="{{ $state['trial_ends_at']->format('Y-m-d\TH:i') }}" class="form-control form-control-sm mb-2" required>
+                        <label class="small" for="trial-reason-{{ $store->id }}">Reason</label><input id="trial-reason-{{ $store->id }}" name="reason" maxlength="500" class="form-control form-control-sm mb-2" required>
+                        <button class="btn btn-sm btn-primary">Save trial</button>
+                    </form>
+                </details></td>
             <td class="small">{{ $store->created_at->format('d M Y') }}</td>
             <td><a class="btn btn-sm btn-outline-primary" href="{{ route('super_admin.tenants.show', $store->id) }}">View store</a></td>
         </tr>

@@ -24,6 +24,16 @@ class LaunchReadinessTest extends TestCase
             'password' => 'secure-password', 'plan' => 'tree', 'theme' => 'template_6'];
     }
 
+    public function test_signup_defaults_to_classic_and_rejects_unknown_themes(): void
+    {
+        Mail::fake();
+        $data = $this->signup();
+        unset($data['theme']);
+        $this->postJson('/saas/register', $data + ['theme' => 'not-a-theme'])->assertUnprocessable();
+        $this->postJson('/saas/register', $data)->assertCreated();
+        $this->assertSame('template_1', Tenant::firstOrFail()->theme);
+    }
+
     private function verificationUrl(): string
     {
         $url = '';

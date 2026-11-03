@@ -1,0 +1,2 @@
+<section class="rb-velvet-cover" data-rebuilt-home="velvetroom"><div class="rb-velvet-media">@include('storefront.themes.rebuilt.media')</div><div class="rb-velvet-overlay"><span class="sf-kicker">{{ $hero['eyebrow'] }}</span><h1>{{ $hero['heading'] }}</h1><p>{{ $hero['description'] }}</p><a class="sf-primary-button" href="{{ app(\App\Services\StorefrontTheme::class)->url('v1.all-products') }}">{{ $hero['button_label'] }} →</a></div></section>
+@include('storefront.themes.components.categories')

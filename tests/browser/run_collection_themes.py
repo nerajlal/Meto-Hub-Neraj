@@ -10,13 +10,15 @@ with tempfile.TemporaryDirectory(prefix='metohub-themes-') as directory:
     for page in folder.glob('*.html'):
         page.write_text(re.sub(r'https?://127\.0\.0\.1:8000/', (project/'public').as_uri()+'/', page.read_text()))
     with Chrome() as c:
-        for number in range(int(sys.argv[1]) if len(sys.argv)>1 else 16,31):
+        for number in ([int(value) for value in sys.argv[1].split(',')] if len(sys.argv)>1 and ',' in sys.argv[1] else range(int(sys.argv[1]) if len(sys.argv)>1 else 16,31)):
             for name in ['home','catalog','product']:
                 c.visit((folder/f'template_{number}-{name}.html').as_uri())
                 for width in [375,1440]:
                     c.size(width);time.sleep(.1)
                     assert not c.js('document.documentElement.scrollWidth>innerWidth+1'), (number,name,width,c.js('document.documentElement.scrollWidth'))
                     assert c.js('document.querySelectorAll("h1").length') == 1,(number,name)
+                    if number==21 and name in ['home','catalog'] and width==375:
+                        assert c.js('document.querySelector(".sf-product").getBoundingClientRect().width')>300, 'Harvest cards must be full-width shopping rows'
                     c.js('scrollTo(0,700)');time.sleep(.05)
                     assert abs(c.js('document.querySelector(".sf-header-row").getBoundingClientRect().top')) < 1,(number,name,width)
                     if name=='product' and width==375:

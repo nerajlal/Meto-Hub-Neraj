@@ -9,7 +9,9 @@
 @endphp
 <article class="pd-page pd-{{ $storefrontTheme['layout'] }}" data-product-detail="{{ $storefrontTheme['layout'] }}">
     <nav class="pd-breadcrumb" aria-label="Breadcrumb"><a href="{{ app(\App\Services\StorefrontTheme::class)->url('v1.home') }}">Home</a><span>/</span><a href="{{ app(\App\Services\StorefrontTheme::class)->url('v1.all-products') }}">Shop</a>@if($product->collection)<span>/</span><a href="{{ app(\App\Services\StorefrontTheme::class)->url('v1.collection', ['slug' => $product->collection->slug]) }}">{{ $product->collection->name }}</a>@endif</nav>
-    @if(($storefrontTheme['generation'] ?? '') === 'collection')
+    @if(in_array($storefrontTheme['layout'], ['urban', 'harvest', 'timepiece', 'linen', 'circuit', 'district', 'velvetroom', 'prism', 'petal']))
+        @include('storefront.themes.rebuilt.product_'.$storefrontTheme['layout'])
+    @elseif(($storefrontTheme['generation'] ?? '') === 'collection')
         @include('storefront.themes.product.collection')
     @elseif($storefrontTheme['id'] === 'template_13')
         <div class="pd-maison-layout">@include('storefront.themes.product.gallery')<div class="pd-new-summary">@include('storefront.themes.product.identity') @include('storefront.themes.product.purchase')</div></div>

@@ -93,7 +93,7 @@ class LandingHomepageTest extends TestCase
         Tenant::create(['name' => 'Private Merchant']);
         $this->get('/')->assertOk()->assertSee($tenant->storefrontUrl(), false)->assertDontSee('/store/grocery')->assertDontSee('Private Merchant')->assertSee('data-plan="base"', false)->assertSee('data-plan="pro"', false)->assertSee('data-plan="enterprise"', false)->assertSee('Explore stores')->assertSee('No coding needed')->assertSee('monthly subscriptions')->assertDontSee('Watch Demo');
     }
-    public function test_signup_uses_existing_saas_routes_and_all_configured_themes(): void
+    public function test_signup_uses_existing_saas_routes_without_a_theme_picker(): void
     {
         $response = $this->get('/')->assertOk()
             ->assertSee('action="'.route('saas.register').'"', false)
@@ -105,9 +105,9 @@ class LandingHomepageTest extends TestCase
         $configuration = json_decode($matches[1], true, 512, JSON_THROW_ON_ERROR);
         $this->assertSame(route('saas.verification.resend'), $configuration['resend']);
         $this->assertSame(route('saas.register'), $configuration['register']);
-        foreach (array_keys(config('storefront_themes')) as $theme) {
-            $response->assertSee('value="'.$theme.'"', false);
-        }
+        $response->assertSee('type="hidden" name="theme" value="template_1"', false)
+            ->assertDontSee('type="radio" name="theme"', false)->assertSee('preview and change your theme');
+        $this->assertSame(array_keys(config('storefront_themes')), array_keys($configuration['signupThemes']));
     }
 
     public function test_trial_and_upgrade_prices_follow_configuration(): void

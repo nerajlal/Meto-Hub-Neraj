@@ -1,0 +1,1 @@
+@if($sliders->isNotEmpty())@include('storefront.themes.components.banner')@elseif($collections->first()?->image)<img src="{{ Storage::url($collections->first()->image) }}" alt="{{ $collections->first()->name }}">@else<div class="rb-monogram" aria-hidden="true">{{ mb_substr($currentTenant->name, 0, 1) }}</div>@endif

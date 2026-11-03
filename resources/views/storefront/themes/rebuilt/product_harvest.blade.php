@@ -1,0 +1,1 @@
+<div class="rb-harvest-product" data-rebuilt-product="harvest">@include('storefront.themes.product.gallery')<div>@include('storefront.themes.product.identity')@include('storefront.themes.product.purchase')</div><div class="rb-harvest-product-notes">@include('storefront.themes.product.information')</div></div>

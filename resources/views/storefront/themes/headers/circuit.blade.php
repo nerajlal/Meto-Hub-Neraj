@@ -1,4 +1,4 @@
-<header class="sf-header sf-header-new sf-header-circuit" data-theme-header="circuit"><div class="sf-header-row">@include('storefront.themes.components.brand') @include('storefront.themes.components.search') @include('storefront.themes.components.actions')</div><div class="sf-new-navigation">@include('storefront.themes.components.navigation')</div></header>
+<header class="sf-header sf-header-new sf-header-circuit" data-theme-header="circuit"><div class="sf-header-row">@include('storefront.themes.components.brand')@include('storefront.themes.components.search')@include('storefront.themes.components.actions')</div><div class="sf-new-navigation">@include('storefront.themes.components.navigation')<a class="rb-header-catalog" href="{{ app(\App\Services\StorefrontTheme::class)->url('v1.all-products') }}">Full catalog ↗</a></div></header>
 <script>
 (() => {
     const header = document.querySelector('.sf-header-new');

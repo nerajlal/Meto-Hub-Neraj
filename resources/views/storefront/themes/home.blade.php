@@ -5,7 +5,9 @@
     $hero = app(\App\Services\StorefrontTheme::class)->hero($currentTenant, $storefrontTheme['id']);
 @endphp
 <div class="sf-home sf-home-{{ $storefrontTheme['layout'] }}" data-theme-home="{{ $storefrontTheme['layout'] }}">
-    @if(($storefrontTheme['generation'] ?? '') === 'collection')
+    @if(in_array($storefrontTheme['layout'], ['urban', 'harvest', 'timepiece', 'linen', 'circuit', 'district', 'velvetroom', 'prism', 'petal']))
+        @include('storefront.themes.rebuilt.home_'.$storefrontTheme['layout'])
+    @elseif(($storefrontTheme['generation'] ?? '') === 'collection')
         @include('storefront.themes.components.collection_hero')
         @include('storefront.themes.components.categories')
     @elseif(in_array($storefrontTheme['id'], ['template_13', 'template_14', 'template_15']))

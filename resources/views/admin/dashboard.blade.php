@@ -54,7 +54,7 @@
                     <i class="fas fa-chevron-right text-muted extra-small"></i>
                 </a>
 
-                <!-- Step 3: Try customising your website -->
+                <!-- Step 3: Customize your store -->
                 <a href="{{ route('admin.settings.theme') }}" class="text-decoration-none d-flex align-items-center justify-content-between p-3 rounded-3 border transition-all"
                    style="{{ $hasCustomTheme ? 'background: #ffffff; border-color: #e5e7eb;' : 'background: #ffffff; border-color: #f1f1f1;' }}">
                     <div class="d-flex align-items-center gap-2">
@@ -64,7 +64,7 @@
                             </span>
                         @endif
                         <span class="text-secondary fw-normal">Step 3:</span>
-                        <span class="fw-semibold text-dark">Try customising your website</span>
+                        <span class="fw-semibold text-dark">Customize your store</span>
                     </div>
                     <i class="fas fa-chevron-right text-muted extra-small"></i>
                 </a>

@@ -1,0 +1,1 @@
+<div class="rb-urban-product" data-rebuilt-product="urban"><header>@include('storefront.themes.product.identity')</header><div class="rb-urban-product-stage">@include('storefront.themes.product.gallery')<aside>@include('storefront.themes.product.purchase')@include('storefront.themes.product.information')</aside></div></div>

@@ -14,7 +14,7 @@ class ThemeSettingsController extends Controller
      */
     public function index()
     {
-        $tenantId = auth()->user()->tenant_id ?? session('active_tenant_id') ?? 1;
+        $tenantId = request()->attributes->get('resolved_tenant_id');
         $tenant = Tenant::findOrFail($tenantId);
 
         $themes = collect(app(\App\Services\StorefrontTheme::class)->all())
@@ -22,6 +22,17 @@ class ThemeSettingsController extends Controller
                 'preview_img' => '/images/themes/'.$id.'.svg'] + $theme)->values()->all();
 
         return view('admin.settings.theme', compact('tenant', 'themes'));
+    }
+
+    public function updateColors(Request $request)
+    {
+        $colors = $request->validate(array_fill_keys(
+            ['primary_color', 'dark_color', 'accent_color'],
+            ['required', 'string', 'regex:/^#[0-9A-Fa-f]{6}$/']
+        ));
+        $tenant = Tenant::findOrFail($request->attributes->get('resolved_tenant_id'));
+        $tenant->update($colors);
+        return back()->with('success', 'Theme colors saved. These are the same colors used in Storefront settings and all theme previews.');
     }
 
     /**
@@ -36,7 +47,7 @@ class ThemeSettingsController extends Controller
             ]
         ]);
 
-        $tenantId = auth()->user()->tenant_id ?? session('active_tenant_id') ?? 1;
+        $tenantId = request()->attributes->get('resolved_tenant_id');
         $tenant = Tenant::findOrFail($tenantId);
         
         $tenant->theme = $request->theme;

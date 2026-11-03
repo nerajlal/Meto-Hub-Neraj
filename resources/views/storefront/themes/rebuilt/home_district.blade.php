@@ -1,0 +1,2 @@
+<section class="rb-district-launch" data-rebuilt-home="district"><div class="rb-district-intro"><span class="sf-kicker">{{ $hero['eyebrow'] }}</span><h1>{{ $hero['heading'] }}</h1></div><div class="rb-district-window">@include('storefront.themes.rebuilt.media')</div><div class="rb-district-caption"><p>{{ $hero['description'] }}</p><a class="sf-primary-button" href="{{ app(\App\Services\StorefrontTheme::class)->url('v1.all-products') }}">{{ $hero['button_label'] }} ↗</a></div></section>
+@include('storefront.themes.rebuilt.departments')

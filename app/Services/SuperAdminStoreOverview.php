@@ -16,7 +16,7 @@ class SuperAdminStoreOverview
     public function describe(Tenant $tenant): array
     {
         $raw = $tenant->subscription_status;
-        $trialEnd = $tenant->created_at->copy()->addDays(config('saas.trial_days', 7));
+        $trialEnd = app(PlanAccess::class)->trialEndsAt($tenant);
         $active = $raw === 'active';
         $days = ! $active && now()->lt($trialEnd) ? (int) ceil(now()->diffInSeconds($trialEnd) / 86400) : 0;
         $status = match ($raw) {
@@ -66,8 +66,8 @@ class SuperAdminStoreOverview
         }
         if (($filters['trial_ending'] ?? '') === '1') {
             $this->unpaid($query);
-            $query->where('created_at', '>', now()->subDays(config('saas.trial_days', 7)))
-                ->where('created_at', '<=', now()->addDays(2)->subDays(config('saas.trial_days', 7)));
+            $this->trialBoundary($query, '>', now());
+            $this->trialBoundary($query, '<=', now()->addDays(2));
         }
 
         return $query;
@@ -76,8 +76,8 @@ class SuperAdminStoreOverview
     public function statusFilter(Builder $query, string $status): void
     {
         if (in_array($status, ['trial', 'trial_expired'], true)) {
-            $query->where(fn ($q) => $q->whereNull('subscription_status')->orWhere('subscription_status', ''))
-                ->where('created_at', $status === 'trial' ? '>' : '<=', now()->subDays(config('saas.trial_days', 7)));
+            $query->where(fn ($q) => $q->whereNull('subscription_status')->orWhere('subscription_status', ''));
+            $this->trialBoundary($query, $status === 'trial' ? '>' : '<=', now());
         } elseif ($status === 'pending') {
             $query->whereIn('subscription_status', ['pending', 'created', 'authenticated']);
         } elseif ($status === 'unknown') {
@@ -85,6 +85,13 @@ class SuperAdminStoreOverview
         } else {
             $query->where('subscription_status', $status);
         }
+    }
+
+    private function trialBoundary(Builder $query, string $operator, \Carbon\Carbon $date): void
+    {
+        $query->where(fn ($q) => $q->where('trial_ends_at', $operator, $date)
+            ->orWhere(fn ($fallback) => $fallback->whereNull('trial_ends_at')
+                ->where('created_at', $operator, $date->copy()->subDays(config('saas.trial_days', 7)))));
     }
 
     private function unpaid(Builder $query): void

@@ -16,6 +16,7 @@ class LandingController extends Controller
             return $tenant ? $profile + ['tenant' => $tenant] : null;
         })->filter();
         $landingConfig = [
+            'signupThemes' => collect(config('storefront_themes'))->map(fn ($theme) => $theme['name'])->all(),
             'plans' => config('saas.plans'), 'trialDays' => config('saas.trial_days'),
             'register' => route('saas.register'), 'resend' => route('saas.verification.resend'),
         ];

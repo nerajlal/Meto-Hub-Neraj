@@ -699,9 +699,9 @@
           <div class="signup-field"><label for="f_pw">Password</label><input id="f_pw" name="password" type="password" autocomplete="new-password" required minlength="8" aria-describedby="err_password"><div class="err" id="err_password"></div></div>
           <div class="signup-field"><label for="f_pw2">Confirm password</label><input id="f_pw2" name="password_confirmation" type="password" autocomplete="new-password" required aria-describedby="err_password_confirmation"><div class="err" id="err_password_confirmation"></div></div>
         </div>
-        <fieldset style="border:0"><legend style="font-size:.9375rem;font-weight:500;color:var(--text);margin-bottom:8px">Pick a starting theme. You can change it later.</legend>
-          <div class="themes">@foreach(config('storefront_themes') as $id=>$theme)<label><input type="radio" name="theme" value="{{ $id }}" {{ $id==='template_7'?'checked':'' }}> {{ $theme['name'] }}</label>@endforeach</div><p id="err_theme" class="theme-errors" role="alert"></p>
-        </fieldset>
+        <input type="hidden" name="theme" value="template_1">
+        <p class="fine" id="signupThemeNote">Your store starts with Classic Grocery. After verification, preview and change your theme in Dashboard → Settings → Theme.</p>
+        <p id="err_theme" class="theme-errors" role="alert"></p>
         <p class="fine">After your account is created, verify your email to open your dashboard. <a href="{{ route('landing.terms') }}" target="_blank" rel="noopener">Terms</a> · <a href="{{ route('landing.privacy') }}" target="_blank" rel="noopener">Privacy</a></p>
       </div>
       <div class="w-foot"><button class="btn btn-ghost" type="button" id="wBack" hidden>Back</button><button class="btn btn-primary" type="submit" id="wNext" style="margin-left:auto">Continue</button></div>
