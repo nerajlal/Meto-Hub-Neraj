@@ -4,6 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  @include('landing.partials.google-tag')
   <title>MetoHub — The Platform Behind Grocery Stores That Sell Online</title>
   <meta name="description"
     content="MetoHub is the SaaS platform grocery businesses use to build, price, promote, and run their own online stores — pricing engine, promotions, themes, analytics, and payments in one place.">

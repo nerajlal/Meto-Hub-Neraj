@@ -305,4 +305,23 @@ class LandingHomepageTest extends TestCase
             ->assertSee('<title>Merchant Login | MetoHub</title>', false);
     }
 
+    public function test_public_pages_include_google_tag_analytics(): void
+    {
+        config(['marketing.analytics.google_tag' => 'G-BRLSZ74E9Y']);
+        foreach (['/', '/pricing', '/themes', '/about', '/contact', '/privacy-policy', '/terms', '/refund-cancellation'] as $path) {
+            $html = $this->get($path)->assertOk()->getContent();
+            $this->assertStringContainsString('https://www.googletagmanager.com/gtag/js?id=G-BRLSZ74E9Y', $html);
+            $this->assertStringContainsString("gtag('config', 'G-BRLSZ74E9Y');", $html);
+        }
+
+        config(['marketing.analytics.google_tag' => 'G-CUSTOM999']);
+        $html = $this->get('/')->assertOk()->getContent();
+        $this->assertStringContainsString('https://www.googletagmanager.com/gtag/js?id=G-CUSTOM999', $html);
+        $this->assertStringContainsString("gtag('config', 'G-CUSTOM999');", $html);
+
+        config(['marketing.analytics.google_tag' => null]);
+        $html = $this->get('/')->assertOk()->getContent();
+        $this->assertStringNotContainsString('googletagmanager.com/gtag/js', $html);
+    }
+
 }

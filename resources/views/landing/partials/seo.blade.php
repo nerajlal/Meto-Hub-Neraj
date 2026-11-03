@@ -8,6 +8,7 @@
         'article' => request()->routeIs('landing.blog.show') ? ($blog ?? null) : null,
     ]);
 @endphp
+@include('landing.partials.google-tag')
 <title>{{ $metadata['title'] }}</title>
 <meta name="description" content="{{ $metadata['description'] }}">
 <meta name="robots" content="{{ $metadata['robots'] }}">

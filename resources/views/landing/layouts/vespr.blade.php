@@ -4,6 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  @include('landing.partials.google-tag')
   <title>@yield('title', 'Vespr — The Ultimate Grocery Platform')</title>
   <meta name="description"
     content="@yield('meta_description', 'Vespr gives independent supermarkets and grocery stores everything they need to sell online — beautiful stores, smart tools, and zero complexity.')">
