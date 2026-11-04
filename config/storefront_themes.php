@@ -112,7 +112,7 @@ return [
     ],
     'template_20' => [
         'name' => 'Scent Atelier', 'version' => 'Premium collection',
-        'description' => 'Perfume editorial with an asymmetric cover, portrait imagery and a quiet product story.',
+        'description' => 'Fragrance editorial with a tall portrait cover, family-led cards and a product page showing merchant-supplied fragrance notes.',
         'tone' => '#6f5062', 'background' => '#f6f0f4', 'layout' => 'scent',
         'generation' => 'collection',
     ],
@@ -130,13 +130,13 @@ return [
     ],
     'template_23' => [
         'name' => 'Crafted Stories', 'version' => 'Premium collection',
-        'description' => 'Artisan storefront with paper textures, offset frames and story-first product details.',
+        'description' => 'Makers journal with captioned imagery, horizontal story cards and a narrative-first product detail layout.',
         'tone' => '#9b593e', 'background' => '#f7eee1', 'layout' => 'crafted',
         'generation' => 'collection',
     ],
     'template_24' => [
         'name' => 'Coastal Living', 'version' => 'Premium collection',
-        'description' => 'Relaxed home collection with panoramic imagery, borderless cards and an open gallery layout.',
+        'description' => 'Lifestyle gallery with a panoramic cover, wide image cards and a full-width product stage above selection and details.',
         'tone' => '#366f81', 'background' => '#edf5f6', 'layout' => 'coastal',
         'generation' => 'collection',
     ],
@@ -153,7 +153,7 @@ return [
     ],
     'template_27' => [
         'name' => 'Forma Objects', 'version' => 'Premium collection',
-        'description' => 'An architectural design shop with a ruled editorial cover, landscape cards and a structured product gallery.',
+        'description' => 'Architectural object shop with a collection index, title-first square cards and reversed product selection beside a structured gallery.',
         'tone' => '#425d56', 'background' => '#f1f3ed', 'layout' => 'forma', 'generation' => 'collection',
     ],
     'template_28' => [
@@ -168,7 +168,7 @@ return [
     ],
     'template_30' => [
         'name' => 'Orchard Lane', 'version' => 'Premium collection',
-        'description' => 'A welcoming country market with a compact split hero, soft landscape tiles and a practical product panel.',
+        'description' => 'Country market with a centered welcome, framed feature image, dense square shopping tiles and a separate quick-order panel.',
         'tone' => '#517044', 'background' => '#f3f6eb', 'layout' => 'orchard', 'generation' => 'collection',
     ],
 ];

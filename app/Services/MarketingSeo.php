@@ -13,6 +13,7 @@ class MarketingSeo
             '/admin/login' => ['Merchant Login | MetoHub', 'Sign in to your MetoHub merchant dashboard to manage your store, products and orders.'],
             '/features' => ['Online Store Features for Small Brands | MetoHub', 'Explore storefront themes, products, collections, discounts and order tools for your small business with MetoHub.'],
             '/pricing' => ['Online Store Pricing & Free Trial | MetoHub', 'Compare Base, Pro and Enterprise. Plans start at ₹'.config('saas.plans.base.monthly_price').'/month with a '.config('saas.trial_days').'-day free trial. Connect your own domain on Pro.'],
+            '/demo' => ['Explore Demo Stores | MetoHub', 'Browse sample MetoHub stores for clothing, grocery, gadgets, jewelry, watches and perfume. Explore storefronts before creating your own.'],
             '/themes' => ['Online Store Themes for Your Brand | MetoHub', 'Explore customizable storefront themes for clothing, jewelry, grocery, gadgets and more. Build a store that feels like your brand.'],
             '/about' => ['About MetoHub | Online Stores for Independent Brands', 'Learn about MetoHub, the platform helping independent sellers create and manage their own branded online stores.'],
             '/contact' => ['Contact MetoHub | Store Setup & Support', 'Contact MetoHub at '.config('marketing.contact.email').' or '.config('marketing.contact.phone').'. Based in '.config('marketing.contact.location').'.'],

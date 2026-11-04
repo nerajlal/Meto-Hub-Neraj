@@ -1,0 +1,1 @@
+<div class="rb-scent-product" data-rebuilt-product="scent">@include('storefront.themes.product.gallery')<div class="rb-scent-selection">@include('storefront.themes.product.identity')@include('storefront.themes.product.purchase')</div><div class="rb-scent-notes">@include('storefront.themes.rebuilt.fragrance_notes')@include('storefront.themes.product.information')</div></div>

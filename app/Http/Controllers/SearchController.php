@@ -105,6 +105,7 @@ class SearchController extends Controller
                 '/solutions',
                 '/pricing',
                 '/themes',
+                '/demo',
                 '/about',
                 '/contact',
                 '/analytics',

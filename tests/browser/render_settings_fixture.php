@@ -12,6 +12,8 @@ $tenant = App\Models\Tenant::create(['name' => 'The Very Lovely Collection & Eve
 $user = App\Models\User::factory()->create(['tenant_id' => $tenant->id, 'type' => 'admin', 'email' => 'long.merchant.email.for.layout@example.test']);
 App\Models\StoreIntegration::create(['tenant_id' => $tenant->id, 'mode' => 'gtm', 'ga4_id' => 'G-EXAMPLE', 'ga4_enabled' => true]);
 $mode = $argv[2] ?? '';
+// Fixtures must never inherit real provider credentials from the developer environment.
+config(['services.razorpay.key' => null, 'services.razorpay.secret' => null, 'services.razorpay.webhook_secret' => null]);
 if (in_array($mode, ['--billing', '--billing-resume'], true)) {
     config(['services.razorpay.key' => 'rzp_test_fixture', 'services.razorpay.secret' => 'fixture-api-secret', 'services.razorpay.webhook_secret' => 'fixture-webhook-secret']);
     if ($mode === '--billing-resume') {

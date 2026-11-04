@@ -60,7 +60,7 @@ class StorefrontThemesTest extends TestCase
         $product = $this->catalog($tenant);
         $product->update(['description' => 'Store supplied product details', 'vendor' => 'Merchant brand']);
         $tenant->update(['primary_color' => '#123456', 'dark_color' => '#123456', 'accent_color' => '#eeeeee']);
-        foreach (['template_16' => 'urban', 'template_19' => 'circuit', 'template_21' => 'harvest', 'template_22' => 'timepiece', 'template_28' => 'linen', 'template_17' => 'petal', 'template_25' => 'district', 'template_26' => 'velvetroom', 'template_29' => 'prism'] as $theme => $layout) {
+        foreach (['template_16' => 'urban', 'template_19' => 'circuit', 'template_21' => 'harvest', 'template_22' => 'timepiece', 'template_28' => 'linen', 'template_17' => 'petal', 'template_25' => 'district', 'template_26' => 'velvetroom', 'template_29' => 'prism', 'template_20' => 'scent', 'template_23' => 'crafted', 'template_24' => 'coastal', 'template_27' => 'forma', 'template_30' => 'orchard'] as $theme => $layout) {
             $tenant->update(['theme' => $theme]);
             $this->withSession(['active_tenant_id' => $tenant->id]);
             $this->get('/v1')->assertOk()->assertSee('data-rebuilt-home="'.$layout.'"', false)

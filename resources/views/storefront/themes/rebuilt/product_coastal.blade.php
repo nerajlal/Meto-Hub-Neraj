@@ -1,0 +1,1 @@
+<div class="rb-coastal-product" data-rebuilt-product="coastal"><div class="rb-coastal-stage">@include('storefront.themes.product.gallery')</div><div class="rb-coastal-product-caption">@include('storefront.themes.product.identity')@include('storefront.themes.product.purchase')</div><div class="rb-coastal-product-story">@include('storefront.themes.product.information')</div></div>

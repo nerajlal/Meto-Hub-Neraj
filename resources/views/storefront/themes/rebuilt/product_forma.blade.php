@@ -1,0 +1,1 @@
+<div class="rb-forma-product" data-rebuilt-product="forma"><header>@include('storefront.themes.product.identity')</header><aside>@include('storefront.themes.product.purchase')</aside>@include('storefront.themes.product.gallery')<div class="rb-forma-product-data">@include('storefront.themes.rebuilt.specifications')@include('storefront.themes.product.information')</div></div>

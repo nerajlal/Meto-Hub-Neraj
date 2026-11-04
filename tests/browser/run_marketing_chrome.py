@@ -15,7 +15,7 @@ with tempfile.TemporaryDirectory(prefix='metohub-public-qa-') as folder:
         for width in [375, 1440]:
             c.size(width)
             baseline = None
-            for page in ['home', 'features', 'security', 'pricing', 'privacy-policy', 'terms', 'refund-cancellation', 'about', 'contact', 'themes', 'blogs', 'blogs-7']:
+            for page in (sys.argv[1:] or ['home', 'demo', 'features', 'security', 'pricing', 'privacy-policy', 'terms', 'refund-cancellation', 'about', 'contact', 'themes', 'blogs', 'blogs-7']):
                 c.visit((folder/(page+'.html')).as_uri())
                 metrics = c.js("""(()=>{const h=document.querySelector('[data-marketing-header]'),f=document.querySelector('[data-marketing-footer]');const properties=e=>{const s=getComputedStyle(e),b=e.getBoundingClientRect();return {height:b.height,font:s.fontFamily,color:s.color,background:s.backgroundColor,padding:s.padding}};return {header:properties(h),footer:properties(f),overflow:document.documentElement.scrollWidth>innerWidth+1,errors:window.__pageErrors};})()""")
                 assert not metrics['overflow'], (width,page,'horizontal overflow')
@@ -24,11 +24,15 @@ with tempfile.TemporaryDirectory(prefix='metohub-public-qa-') as folder:
                 else:
                     assert metrics['header']==baseline['header'], (width,page,'header mismatch',metrics['header'],baseline['header'])
                     assert metrics['footer']==baseline['footer'], (width,page,'footer mismatch',metrics['footer'],baseline['footer'])
-                if page != 'home':
+                if page not in ['home', 'demo']:
                     theme = c.js("""(()=>{const p=document.querySelector('.page-content'),s=getComputedStyle(p);return {primary:s.getPropertyValue('--primary').trim(),background:s.backgroundColor,font:s.fontFamily,heading:getComputedStyle(p.querySelector('h1,h2')).fontFamily};})()""")
                     assert theme['primary']=='#244a3b', (page,theme)
                     assert theme['background']=='rgb(251, 250, 247)', (page,theme)
                     assert 'Manrope' in theme['font'] and 'Manrope' in theme['heading'], (page,theme)
+                if page == 'demo':
+                    assert c.js("document.querySelectorAll('[data-demo-store]').length") == 7
+                    assert c.js("document.querySelectorAll('h1').length") == 1
+                    assert c.js("Array.from(document.querySelectorAll('.demo-directory-visit')).every(a=>a.target==='_blank')")
                 if page == 'themes':
                     assert c.js("document.querySelectorAll('[data-public-theme]').length") == 30
                     assert c.js("Array.from(document.querySelectorAll('.public-theme-preview')).every(a=>a.href.includes('preview_theme='))")
@@ -54,7 +58,7 @@ with tempfile.TemporaryDirectory(prefix='metohub-public-qa-') as folder:
                     assert c.js("document.getElementById('mm').hidden"), page
                 c.js('scrollTo(0,400)');time.sleep(.15)
                 assert abs(c.js("document.querySelector('[data-marketing-header]').getBoundingClientRect().top"))<1, (width,page,'header not sticky')
-                if page in ['themes','privacy-policy','about','contact','blogs-7']:
+                if page in ['demo','themes','privacy-policy','about','contact','blogs-7']:
                     c.js('scrollTo(0,0)');time.sleep(.15)
                     c.screenshot('/private/tmp/metohub-shared-'+page+'-'+str(width)+'.png')
                 print(width,page,'shared header/footer, navigation and sticky position pass',flush=True)

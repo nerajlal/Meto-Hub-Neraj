@@ -1,0 +1,1 @@
+@include('storefront.themes.rebuilt.card_visual')<div class="rb-crafted-card">@include('storefront.themes.cards.info')@if($product->description)<p>{{ Str::limit(strip_tags($product->description), 100) }}</p>@endif<a href="{{ $productUrl }}">Meet this piece ↗</a>@include('storefront.themes.cards.actions')</div>

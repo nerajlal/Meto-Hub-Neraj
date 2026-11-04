@@ -57,6 +57,7 @@ Route::get('/templates', [App\Http\Controllers\LandingController::class, 'templa
 Route::get('/features', [App\Http\Controllers\LandingController::class, 'features'])->name('landing.features');
 Route::get('/solutions', [App\Http\Controllers\LandingController::class, 'solutions'])->name('landing.solutions');
 Route::get('/pricing', [App\Http\Controllers\LandingController::class, 'pricing'])->name('landing.pricing');
+Route::get('/demo', [App\Http\Controllers\LandingController::class, 'demos'])->name('landing.demos');
 Route::get('/themes', [App\Http\Controllers\LandingController::class, 'themes'])->name('landing.themes');
 Route::get('/analytics', [App\Http\Controllers\LandingController::class, 'analytics'])->name('landing.analytics');
 Route::post('/contact', [App\Http\Controllers\ContactController::class, 'store'])->middleware('throttle:3,1')->name('landing.contact.submit');

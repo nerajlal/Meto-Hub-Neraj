@@ -1,0 +1,1 @@
+@include('storefront.themes.rebuilt.card_visual')<div class="rb-coastal-card"><div>@include('storefront.themes.cards.info')</div><div class="rb-coastal-action">@include('storefront.themes.cards.actions')</div></div>

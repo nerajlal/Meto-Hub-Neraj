@@ -12,6 +12,7 @@
 </div>
 <nav class="flex flex-wrap gap-x-6 gap-y-2 text-sm text-muted-foreground" aria-label="Footer navigation">
 <a href="{{ route('landing.features') }}" class="hover:text-foreground">Features</a>
+<a href="{{ route('landing.demos') }}" class="hover:text-foreground">Demo stores</a>
 <a href="{{ route('landing.themes') }}" class="hover:text-foreground">Themes</a>
 <a href="{{ route('landing.pricing') }}" class="hover:text-foreground">Pricing</a>
 <a href="{{ route('landing') }}#faq" class="hover:text-foreground">Help</a>

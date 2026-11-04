@@ -1,0 +1,1 @@
+<div class="rb-forma-card-heading">@include('storefront.themes.cards.info')</div>@include('storefront.themes.rebuilt.card_visual')<div class="rb-forma-card-footer"><a href="{{ $productUrl }}">View object ↗</a>@include('storefront.themes.cards.actions')</div>

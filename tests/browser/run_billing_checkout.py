@@ -33,6 +33,14 @@ with tempfile.TemporaryDirectory(prefix='metohub-billing-qa-') as folder:
         for width in [320,375,768,1440]:
             c.size(width);time.sleep(.15)
             assert not c.js('document.documentElement.scrollWidth>innerWidth+1'),width
+        assert c.js("document.getElementById('billing-cycle').value")=='monthly'
+        c.js("document.querySelector('[data-tier=base]').click()")
+        time.sleep(.2)
+        assert c.js("__calls.find(c=>c.url.endsWith('/subscribe')).body.cycle")=='monthly'
+        assert c.js("__calls.find(c=>c.url.endsWith('/subscribe')).body.plan_tier")=='base'
+        assert 'monthly' in c.js('__checkout.options.description')
+        c.js("__checkout.options.modal.ondismiss()")
+        c.visit(fixtures['billing'])
         c.js("document.getElementById('billing-cycle').value='yearly';const b=document.querySelector('[data-tier=pro]');b.click();b.click()")
         time.sleep(.2)
         assert c.js("__calls.filter(c=>c.url.endsWith('/subscribe')).length")==1, c.js("JSON.stringify({calls:__calls,configured:document.getElementById('billing-config').textContent,feedback:document.getElementById('billing-feedback').textContent})")

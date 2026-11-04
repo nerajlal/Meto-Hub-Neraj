@@ -52,6 +52,17 @@ class LandingController extends Controller
     {
         return view('landing.pricing');
     }
+    public function demos()
+    {
+        $profiles = config('demo_storefronts', []);
+        $tenants = \App\Models\Tenant::whereIn('slug', array_keys($profiles))->get()->keyBy('slug');
+        $demos = collect($profiles)->map(function ($profile, $slug) use ($tenants) {
+            $tenant = $tenants->get($slug);
+            return $tenant ? $profile + ['tenant' => $tenant] : null;
+        })->filter();
+        return view('landing.demos', compact('demos'));
+    }
+
     public function themes()
     {
         $demos = \App\Models\Tenant::whereIn('slug', array_keys(config('demo_storefronts', [])))->orderBy('id')->get();

@@ -36,7 +36,7 @@ class MarketingContent
         $text .= "Razorpay processes platform subscriptions, separately from customer orders. Custom domains are available on Pro and Enterprise; domain purchase is separate.\n\n";
         $text .= 'The '.config('saas.trial_days').'-day free trial is separate from the '.config('marketing.policies.refund_days')."-day first paid subscription refund request window; see the refund policy for conditions.\n\n";
         $text .= 'Contact: '.config('marketing.contact.email').', '.config('marketing.contact.phone').', '.config('marketing.contact.location').".\n\n## Platform\n\n";
-        foreach (['' => 'Home', '/features' => 'Features', '/pricing' => 'Pricing', '/themes' => 'Themes', '/about' => 'About', '/contact' => 'Contact', '/blogs' => 'Blog', '/sitemap.xml' => 'Sitemap index'] as $path => $label) {
+        foreach (['' => 'Home', '/features' => 'Features', '/pricing' => 'Pricing', '/themes' => 'Themes', '/demo' => 'Demo stores', '/about' => 'About', '/contact' => 'Contact', '/blogs' => 'Blog', '/sitemap.xml' => 'Sitemap index'] as $path => $label) {
             $text .= "- [$label]($base$path)\n";
         }
         $text .= "\n## Policies\n\n";

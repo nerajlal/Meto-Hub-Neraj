@@ -1,0 +1,1 @@
+@include('storefront.themes.rebuilt.card_visual')<div class="rb-scent-card">@include('storefront.themes.cards.info')@if($product->olfactory_family)<span class="rb-scent-family">{{ $product->olfactory_family }}</span>@endif@include('storefront.themes.cards.actions')</div>

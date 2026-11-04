@@ -1,0 +1,1 @@
+<div class="rb-crafted-product" data-rebuilt-product="crafted"><header>@include('storefront.themes.product.identity')</header><div class="rb-crafted-detail-story">@include('storefront.themes.product.information')</div>@include('storefront.themes.product.gallery')<aside>@include('storefront.themes.product.purchase')</aside></div>

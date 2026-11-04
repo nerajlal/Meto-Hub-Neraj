@@ -10,6 +10,26 @@ class LandingHomepageTest extends TestCase
 {
     use DatabaseMigrations;
 
+    public function test_demo_directory_lists_only_existing_curated_stores_and_is_indexable(): void
+    {
+        config(['search.indexable' => true, 'app.url' => 'https://metohub.cloud']);
+        $this->get('/demo')->assertOk()->assertSee('Our demo stores are getting ready.');
+        $demo = Tenant::create(['name' => 'Sample Boutique', 'theme' => 'template_26']);
+        $demo->forceFill(['slug' => 'mens-clothing'])->save();
+        $private = Tenant::create(['name' => 'Private Merchant Name']);
+        $response = $this->get('/demo')->assertOk()->assertSee('Sample Boutique')->assertSee('Velvet Room')
+            ->assertSee('data-demo-store="mens-clothing"', false)->assertSee($demo->storefrontUrl(), false)
+            ->assertDontSee('Private Merchant Name')->assertDontSee($private->storefrontUrl(), false)
+            ->assertSee('demonstration stores')->assertSee('target="_blank"', false)
+            ->assertSee('Explore Demo Stores | MetoHub');
+        $this->assertNull($response->headers->get('X-Robots-Tag'));
+        $sitemap = $this->get('/sitemap-platform.xml')->assertOk();
+        $this->assertStringContainsString('https://metohub.cloud/demo', $sitemap->streamedContent());
+        $this->get('/')->assertOk()->assertSee(route('landing.demos'), false);
+        $demo->delete();
+        $this->get('/demo')->assertOk()->assertDontSee('Sample Boutique');
+    }
+
     public function test_public_themes_match_admin_catalog_and_do_not_link_missing_demos(): void
     {
         $response = $this->get('/themes')->assertOk()->assertDontSee('tenant_id=2')->assertDontSee('Market Basic')

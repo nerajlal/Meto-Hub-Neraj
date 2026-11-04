@@ -4,7 +4,7 @@
 <a class="flex items-center gap-2.5 text-lg font-semibold tracking-tight text-foreground" href="{{ route('landing') }}">
 <img src="{{ asset('images/logo.svg') }}?v={{ filemtime(public_path('images/logo.svg')) }}" alt="MetoHub" class="h-8 w-8 object-contain" width="32" height="32">MetoHub</a>
 <nav class="hidden items-center gap-8 text-sm text-muted-foreground lg:flex">
-<a href="{{ route('landing') }}#demos" class="transition hover:text-foreground">Explore stores</a>
+<a href="{{ route('landing.demos') }}" class="transition hover:text-foreground">Explore stores</a>
 <a href="{{ route('landing') }}#how-it-works" class="transition hover:text-foreground">How it works</a>
 <a href="{{ route('landing.pricing') }}" class="transition hover:text-foreground">Pricing</a>
 <a href="{{ route('landing') }}#faq" class="transition hover:text-foreground">FAQ</a>
@@ -25,7 +25,7 @@
 </div>
 </div>
 <nav id="mm" class="mobile-menu" aria-label="Mobile navigation" hidden="">
-<a href="{{ route('landing') }}#demos">Explore stores</a>
+<a href="{{ route('landing.demos') }}">Explore stores</a>
 <a href="{{ route('landing') }}#how-it-works">How it works</a>
 <a href="{{ route('landing.pricing') }}">Pricing</a>
 <a href="{{ route('landing') }}#faq">FAQ</a>
