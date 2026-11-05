@@ -13,8 +13,10 @@ trait BelongsToTenant
         static::addGlobalScope(new TenantScope);
 
         static::creating(function ($model) {
-            if (empty($model->tenant_id) && auth()->check() && auth()->user()->tenant_id) {
-                $model->tenant_id = auth()->user()->tenant_id;
+            if (empty($model->tenant_id)) {
+                // Reads use the validated route context; new records must use it too.
+                $tenantId = request()->attributes->get('resolved_tenant_id') ?? auth()->user()?->tenant_id;
+                if ($tenantId) $model->tenant_id = $tenantId;
             }
         });
     }
