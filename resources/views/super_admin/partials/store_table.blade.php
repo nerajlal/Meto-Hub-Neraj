@@ -22,7 +22,7 @@
                     </form>
                 </details></td>
             <td class="small">{{ $store->created_at->format('d M Y') }}</td>
-            <td><a class="btn btn-sm btn-outline-primary" href="{{ route('super_admin.tenants.show', $store->id) }}">View store</a></td>
+            <td><div class="d-flex flex-column gap-2 align-items-start"><a class="btn btn-sm btn-outline-primary" href="{{ route('super_admin.tenants.show', $store->id) }}">View store</a><a class="btn btn-sm btn-primary" href="{{ route('admin.dashboard', ['tenant' => $store->id]) }}" target="_blank" rel="noopener noreferrer" aria-label="Open {{ $store->name }} admin in a new tab">Open store admin ↗</a></div></td>
         </tr>
     @empty
         <tr><td colspan="6" class="text-center text-muted py-5">No stores match these filters.</td></tr>

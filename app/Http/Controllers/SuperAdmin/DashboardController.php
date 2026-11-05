@@ -120,7 +120,7 @@ class DashboardController extends Controller
     public function tenants(Request $request, \App\Services\SuperAdminStoreOverview $overview)
     {
         $filters = $this->storeFilters($request);
-        $tenants = $overview->filter($overview->query(), $filters)->latest()->orderByDesc('id')->paginate(15)->withQueryString();
+        $tenants = $overview->filter($overview->query(), $filters)->reorder('tenants.id', 'desc')->paginate(15)->withQueryString();
         $counts = $overview->counts();
         $planOptions = \App\Models\Tenant::select('plan')->distinct()->orderBy('plan')->pluck('plan')->filter();
 

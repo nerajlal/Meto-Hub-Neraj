@@ -7,5 +7,5 @@
 <p class="small text-muted">Edit trial to extend or shorten a store’s access. Changes are recorded with your account and reason; paid subscription dates are unchanged.</p>
 @include('super_admin.partials.billing_metrics')
 @include('super_admin.partials.store_filters')
-<div class="card border"><div class="card-header bg-white p-3">{{ number_format($tenants->total()) }} matching stores</div>@include('super_admin.partials.store_table')<div class="p-3">{{ $tenants->links('pagination::bootstrap-5') }}</div></div>
+<div class="card border"><div class="card-header bg-white p-3">{{ number_format($tenants->total()) }} matching stores <span class="small text-muted ms-2">Newest stores first</span></div>@include('super_admin.partials.store_table')<div class="p-3">{{ $tenants->links('pagination::bootstrap-5') }}</div></div>
 @endsection
