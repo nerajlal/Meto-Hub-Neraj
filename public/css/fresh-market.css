@@ -4,8 +4,8 @@
 @media(min-width:1441px){.storefront-theme.template_2 .sf-header-market>.sf-header-row{padding-inline:calc((100% - 1440px)/2 + 2.5rem)}}
 
 /* Merchant brand color, shared with Settings > Storefront > Theme Colors. */
-.storefront-theme.template_2 .sf-market-topline,
-.storefront-theme.template_2 .sf-footer-market{background:var(--accent-color);color:var(--store-brand-fg)}
+.storefront-theme.template_2 .sf-market-topline{background:var(--accent-color);color:var(--store-brand-fg)}
+.storefront-theme.template_2 .sf-footer-market{background:var(--primary-color);color:var(--store-stock-fg)}
 .storefront-theme.template_2 .sf-market-topline a,
 .storefront-theme.template_2 .sf-footer-market a,
 .storefront-theme.template_2 .sf-footer-market .sf-brand{color:inherit}

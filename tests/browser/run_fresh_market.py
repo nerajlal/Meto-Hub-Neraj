@@ -18,11 +18,15 @@ with tempfile.TemporaryDirectory(prefix='fresh-market-qa-') as directory:
             assert abs(bounds['left'])<1 and abs(bounds['right']-bounds['width'])<1, (width,bounds)
             c.js('scrollTo(0,0)')
         for brand, foreground, expected in [('#48a51c','#000000','rgb(72, 165, 28)'),('#183a14','#ffffff','rgb(24, 58, 20)')]:
-            c.js(f"document.documentElement.style.setProperty('--accent-color','{brand}');document.documentElement.style.setProperty('--store-brand-fg','{foreground}')")
+            c.js(f"document.documentElement.style.setProperty('--accent-color','{brand}');document.documentElement.style.setProperty('--store-brand-fg','{foreground}');document.documentElement.style.setProperty('--primary-color','{brand}');document.documentElement.style.setProperty('--store-stock-fg','{foreground}')")
             time.sleep(.5)
             for selector in ['.sf-market-topline','.sf-footer-market']:
                 assert c.js(f"getComputedStyle(document.querySelector('{selector}')).backgroundColor")==expected
                 assert c.js(f"getComputedStyle(document.querySelector('{selector} a')).color")==('rgb(0, 0, 0)' if foreground=='#000000' else 'rgb(255, 255, 255)'), (selector, c.js(f"getComputedStyle(document.querySelector('{selector} a')).color"))
+        c.js("document.documentElement.style.setProperty('--accent-color','#48a51c');document.documentElement.style.setProperty('--primary-color','#183a14')")
+        time.sleep(.5)
+        assert c.js("getComputedStyle(document.querySelector('.sf-market-topline')).backgroundColor")=='rgb(72, 165, 28)'
+        assert c.js("getComputedStyle(document.querySelector('.sf-footer-market')).backgroundColor")=='rgb(24, 58, 20)'
         current = "document.querySelector('[data-slide-dot][aria-current=true]').dataset.slideDot"
         assert c.js("document.querySelectorAll('[data-slide-dot]').length")==2
         assert not c.js("!!document.querySelector('[data-slide-next],[data-slide-prev],[data-slide-pause],[data-slide-status]')")
