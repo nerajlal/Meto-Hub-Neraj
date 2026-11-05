@@ -22,7 +22,7 @@
     @elseif($storefrontTheme['id'] === 'template_2')
         <section class="sf-market-intro">
             <div class="sf-market-copy"><span class="sf-kicker">{{ $hero['eyebrow'] }}</span><h1>{{ $hero['heading'] }}</h1><p>{{ $hero['description'] }}</p><a class="sf-primary-button" href="{{ app(\App\Services\StorefrontTheme::class)->url('v1.all-products') }}">{{ $hero['button_label'] }} <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a><div class="sf-market-stat"><strong>{{ $collections->count() }}</strong><span>departments to discover</span></div></div>
-            <div class="sf-market-feature">@if($sliders->isNotEmpty())@include('storefront.themes.components.banner')@elseif($collections->first()?->image)<img src="{{ Storage::url($collections->first()->image) }}" alt="{{ $collections->first()->name }}">@else<div class="sf-store-monogram">{{ mb_substr($currentTenant->name, 0, 1) }}<span>{{ $currentTenant->name }}</span></div>@endif</div>
+            <div class="sf-market-feature">@if($sliders->isNotEmpty())@include('storefront.themes.components.market_carousel')@elseif($collections->first()?->image)<img src="{{ Storage::url($collections->first()->image) }}" alt="{{ $collections->first()->name }}">@else<div class="sf-store-monogram">{{ mb_substr($currentTenant->name, 0, 1) }}<span>{{ $currentTenant->name }}</span></div>@endif</div>
         </section>
         @include('storefront.themes.components.categories')
     @elseif($storefrontTheme['id'] === 'template_3')
@@ -46,8 +46,15 @@
     @endif
     @include('storefront.themes.components.shelves')
     @include('storefront.themes.components.reviews')
+    @if($storefrontTheme['id'] === 'template_2')
+        <section class="sf-market-story" aria-labelledby="market-story-heading"><div><span class="sf-kicker">{{ $currentTenant->name }}</span><h2 id="market-story-heading">{{ $currentTenant->about_title ?: 'Find your next favourite.' }}</h2><p>{{ $currentTenant->about_text ? Str::limit(strip_tags($currentTenant->about_text), 400) : 'Explore our collections and discover more from '.$currentTenant->name.'. Have a question about a product? Get in touch with the store.' }}</p></div><div class="sf-market-story-links"><a class="sf-primary-button" href="{{ app(\App\Services\StorefrontTheme::class)->url('v1.all-products') }}">Browse the store →</a><a href="{{ app(\App\Services\StorefrontTheme::class)->url('v1.about') }}">Our story ↗</a><a href="{{ app(\App\Services\StorefrontTheme::class)->url('v1.contact') }}">Contact the store</a></div></section>
+    @endif
     @if($storefrontTheme['id'] === 'template_4' && $currentTenant->about_text)
         <section class="sf-pantry-story"><span class="sf-kicker">BEHIND THE STORE</span><h2>{{ $currentTenant->about_title ?: 'Our story' }}</h2><p>{{ \Illuminate\Support\Str::limit(strip_tags($currentTenant->about_text), 350) }}</p><a href="{{ app(\App\Services\StorefrontTheme::class)->url('v1.about') }}">Get to know us →</a></section>
     @endif
 </div>
+@endsection
+
+@section('scripts')
+@if($storefrontTheme['id'] === 'template_2')<script src="{{ asset('js/fresh-market.js').'?v='.filemtime(public_path('js/fresh-market.js')) }}" defer></script>@endif
 @endsection

@@ -41,8 +41,11 @@ if (($argv[2] ?? '') === '--public-pages') {
 if (($argv[2] ?? '') === '--store-themes') {
     $tenant = App\Models\Tenant::where('slug', 'mens-clothing')->firstOrFail();
     $product = App\Models\Product::withoutGlobalScopes()->where('tenant_id', $tenant->id)->firstOrFail();
-    foreach (array_slice(array_keys(config('storefront_themes')), 15) as $theme) {
+    foreach (array_keys(config('storefront_themes')) as $theme) {
         $tenant->update(['theme' => $theme]);
+        if ($theme === 'template_2') {
+            foreach ([1, 2] as $number) App\Models\Slider::create(['tenant_id' => $tenant->id, 'title' => 'Market banner '.$number, 'image_desktop' => 'images/landing/hero.png', 'image_mobile' => 'images/landing/hero.png', 'status' => true, 'order' => $number]);
+        }
         foreach (['home' => '', 'catalog' => '/all-products', 'product' => '/product?id='.$product->id] as $name => $suffix) {
             $request = Illuminate\Http\Request::create('http://127.0.0.1:8000/store/'.$tenant->slug.$suffix);
             $response = $kernel->handle($request);

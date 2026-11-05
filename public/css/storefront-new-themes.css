@@ -293,3 +293,5 @@ body:is(.template_7,.template_8,.template_9,.template_10,.template_11,.template_
  .pd-riviera-layout .pd-gallery {grid-row:1;}
  .template_15 .pd-new-summary {padding:1rem;}
 }
+.storefront-theme .sf-header-new>.sf-header-row{max-width:none;width:100%;box-sizing:border-box}
+@media(min-width:1441px){.storefront-theme .sf-header-new>.sf-header-row{padding-inline:calc((100% - 1440px)/2 + 2.5rem)}}

@@ -85,6 +85,7 @@
     <link rel="stylesheet" href="{{ asset('css/storefront-themes.css') }}">
     <link rel="stylesheet" href="{{ asset('css/storefront-premium.css') }}">
     <link rel="stylesheet" href="{{ asset('css/storefront-products.css') }}">
+    @if($storefrontTheme['id'] === 'template_2')<link rel="stylesheet" href="{{ asset('css/fresh-market.css').'?v='.filemtime(public_path('css/fresh-market.css')) }}">@endif
     @yield('styles')
     <link rel="stylesheet" href="{{ asset('css/storefront-mobile-grid.css') . '?v=' . filemtime(public_path('css/storefront-mobile-grid.css')) }}">
     @if(in_array($storefrontTheme['id'], ['template_7', 'template_8', 'template_9', 'template_10', 'template_11', 'template_12', 'template_13', 'template_14', 'template_15']) || ($storefrontTheme['generation'] ?? '') === 'collection')

@@ -836,3 +836,6 @@ body.storefront-theme.template_4 {
 .storefront-theme .sf-quick-greeting>div {flex:1 1 220px;min-width:0;}
 .storefront-theme .sf-quick-greeting>a {white-space:normal;overflow-wrap:anywhere;max-width:100%;}
 .storefront-theme .sf-corner-welcome>div {min-width:0;}
+/* Fixed theme mastheads must paint edge-to-edge on wide screens. */
+.storefront-theme:not(.template_1) .sf-header>.sf-header-row{max-width:none;width:100%;box-sizing:border-box}
+@media(min-width:1441px){.storefront-theme:not(.template_1) .sf-header>.sf-header-row{padding-inline:calc((100% - 1440px)/2 + 2.5rem)}}
