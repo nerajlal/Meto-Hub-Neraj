@@ -5,8 +5,7 @@
     const controls = carousel.querySelector('.sf-market-carousel-controls');
     if (slides.length < 2 || !controls) return;
     const reduced = matchMedia('(prefers-reduced-motion: reduce)');
-    const pause = controls.querySelector('[data-slide-pause]');
-    const status = controls.querySelector('[data-slide-status]');
+    const dots = [...controls.querySelectorAll('[data-slide-dot]')];
     let index = 0, timer, paused = reduced.matches;
     const show = next => {
       index = (next + slides.length) % slides.length;
@@ -16,20 +15,16 @@
         slide.setAttribute('aria-roledescription', 'slide');
         slide.setAttribute('aria-label', `${i + 1} of ${slides.length}`);
       });
-      status.textContent = `${index + 1} / ${slides.length}`;
+      dots.forEach((dot, i) => dot.setAttribute('aria-current', String(i === index)));
     };
     const schedule = () => {
       clearInterval(timer);
-      pause.textContent = paused ? 'Play' : 'Pause';
-      pause.setAttribute('aria-label', paused ? 'Start automatic slideshow' : 'Pause automatic slideshow');
       if (!paused && !document.hidden && !carousel.matches(':hover') && !carousel.contains(document.activeElement)) timer = setInterval(() => show(index + 1), 5000);
     };
     controls.hidden = false;
     carousel.classList.add('is-enhanced');
     show(0);
-    controls.querySelector('[data-slide-next]').addEventListener('click', () => { show(index + 1); schedule(); });
-    controls.querySelector('[data-slide-prev]').addEventListener('click', () => { show(index - 1); schedule(); });
-    pause.addEventListener('click', () => { paused = !paused; schedule(); });
+    dots.forEach((dot, i) => dot.addEventListener('click', () => { show(i); schedule(); }));
     carousel.addEventListener('mouseenter', schedule);
     carousel.addEventListener('mouseleave', schedule);
     carousel.addEventListener('focusin', schedule);

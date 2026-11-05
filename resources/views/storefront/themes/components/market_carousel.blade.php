@@ -2,10 +2,9 @@
     @include('storefront.themes.components.banner')
     @if($sliders->count() > 1)
     <div class="sf-market-carousel-controls" hidden>
-        <button type="button" data-slide-prev aria-label="Previous store banner">←</button>
-        <span data-slide-status aria-live="off">1 / {{ $sliders->count() }}</span>
-        <button type="button" data-slide-next aria-label="Next store banner">→</button>
-        <button type="button" data-slide-pause aria-label="Pause automatic slideshow">Pause</button>
+        @foreach($sliders as $slider)
+        <button type="button" data-slide-dot="{{ $loop->index }}" aria-label="Show store banner {{ $loop->iteration }}" aria-current="{{ $loop->first ? 'true' : 'false' }}"><span></span></button>
+        @endforeach
     </div>
     @endif
 </div>

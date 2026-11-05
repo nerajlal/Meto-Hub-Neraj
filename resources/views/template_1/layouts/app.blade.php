@@ -38,6 +38,7 @@
             --text-muted: #64748b;
             --store-badge-bg: var(--accent-color);
             --store-badge-fg: {{ app(\App\Services\StorefrontTheme::class)->contrastText($currentTenant->primary_color ?? '#10b981') }};
+            --store-brand-fg: {{ app(\App\Services\StorefrontTheme::class)->contrastText($currentTenant->primary_color ?? '#10b981') }};
             --store-stock-bg: var(--primary-color);
             --store-stock-fg: {{ app(\App\Services\StorefrontTheme::class)->contrastText($currentTenant->dark_color ?? '#0f172a') }};
         }

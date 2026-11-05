@@ -14,7 +14,7 @@
                 <details class="sidebar-catalog" @if($catalogActive) open @endif>
                     <summary class="sidebar-item {{ $catalogActive ? 'active' : '' }}"><i class="fa-solid fa-tags" aria-hidden="true"></i><span>Products</span><span class="sidebar-catalog-chevron ms-auto" aria-hidden="true">⌄</span></summary>
                     <ul class="sidebar-catalog-links list-unstyled">
-                    @foreach(['admin.products' => 'All products', 'admin.collections' => 'Collections', 'admin.bundles' => 'Bundles'] as $destination => $label)
+                    @foreach(['admin.collections' => 'Collections', 'admin.products' => 'All products', 'admin.bundles' => 'Bundles'] as $destination => $label)
                         <li><a href="{{ route($destination) }}" class="{{ request()->routeIs($destination.'*') ? 'active' : '' }}" @if(request()->routeIs($destination.'*')) aria-current="page" @endif>{{ $label }}</a></li>
                     @endforeach
                     </ul>
