@@ -25,8 +25,17 @@ if (in_array($mode, ['--billing', '--billing-resume'], true)) {
 if ($mode === '--expired' || $mode === '--unavailable') {
     $tenant->forceFill(['created_at' => now()->subDays(config('saas.trial_days') + ($mode === '--expired' ? 10 : 31))])->save();
 }
+if ($mode === '--bundle-create' || $mode === '--bundle-edit') {
+    $product = App\Models\Product::create(['tenant_id' => $tenant->id, 'title' => 'Chips <special>', 'status' => 'active']);
+    $product->variants()->create(['size' => '100g', 'price' => 100, 'stock' => 10]);
+    $large = $product->variants()->create(['size' => '250g', 'price' => 200, 'stock' => 10]);
+    $bundle = App\Models\Bundle::create(['tenant_id' => $tenant->id, 'title' => 'Snack Duo', 'slug' => 'snack-duo', 'type' => 'bundle', 'status' => 'active', 'discount_type' => 'fixed', 'discount_value' => 50]);
+    $bundle->products()->attach($product->id, ['product_variant_id' => $large->id, 'quantity' => 2]);
+}
 Illuminate\Support\Facades\Auth::login($user);
 $path = $mode === '--unavailable' ? '/store/'.$tenant->slug : '/'.$tenant->id.'/admin/'.(in_array($mode, ['--expired', '--billing', '--billing-resume'], true) ? 'billing' : 'settings');
+if ($mode === '--bundle-create') $path = '/'.$tenant->id.'/admin/bundles/create';
+if ($mode === '--bundle-edit') $path = '/'.$tenant->id.'/admin/bundles/'.$bundle->id.'/edit';
 $response = $app->make(Illuminate\Contracts\Http\Kernel::class)->handle(Illuminate\Http\Request::create('http://127.0.0.1:8000'.$path));
 if ($response->getStatusCode() !== ($mode === '--unavailable' ? 503 : 200) || empty($argv[1])) throw new RuntimeException('Settings fixture failed');
 file_put_contents($argv[1], $response->getContent());

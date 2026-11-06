@@ -78,11 +78,16 @@ class Bundle extends Model
 
     public function getIsOutOfStockAttribute()
     {
+        if ($this->products->isEmpty()) return true;
+        $required = [];
         foreach ($this->products as $product) {
-            // Check if any product in the bundle has zero total stock across all variants
-            if ($product->variants->sum('stock') <= 0) {
-                return true;
-            }
+            if ($product->status !== 'active') return true;
+            $variant = $product->pivot->product_variant_id
+                ? $product->variants->firstWhere('id', $product->pivot->product_variant_id)
+                : $product->variants->sortBy('price')->first();
+            if (!$variant) return true;
+            $required[$variant->id] = ($required[$variant->id] ?? 0) + ($product->pivot->quantity ?? 1);
+            if (!$product->continue_selling_when_out_of_stock && $variant->stock < $required[$variant->id]) return true;
         }
         return false;
     }

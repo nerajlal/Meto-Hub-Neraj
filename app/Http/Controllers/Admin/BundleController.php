@@ -8,6 +8,8 @@ use App\Models\Product;
 use App\Models\ProductVariant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 class BundleController extends Controller
 {
@@ -63,13 +65,13 @@ class BundleController extends Controller
 
     public function create()
     {
-        $products = Product::where('status', 'active')->get();
+        $products = Product::with(['variants', 'images'])->where('status', 'active')->get();
         return view('admin.bundles.create', compact('products'));
     }
 
     public function createPool()
     {
-        $products = Product::where('status', 'active')->get();
+        $products = Product::with(['variants', 'images'])->where('status', 'active')->get();
         return view('admin.bundles.create_pool', compact('products'));
     }
 
@@ -80,11 +82,17 @@ class BundleController extends Controller
             'discount_type' => 'required|in:percentage,fixed',
             'discount_value' => 'required|numeric|min:0',
             'products' => 'required|array|min:1',
-            'products.*' => 'exists:products,id',
+            'products.*' => 'required|integer|exists:products,id',
+            'variant_ids' => 'nullable|array',
+            'variant_ids.*' => 'nullable|integer',
+            'quantities' => 'nullable|array',
+            'quantities.*' => 'required|integer|min:1|max:10000',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
             'min_order_qty' => 'nullable|integer|min:1',
             'max_order_qty' => 'nullable|integer|min:1' . ($request->filled('min_order_qty') ? '|gte:min_order_qty' : ''),
         ]);
+
+        $items = $this->bundleItems($request);
 
         $slug = Str::slug($request->title);
         // Ensure unique slug
@@ -98,28 +106,31 @@ class BundleController extends Controller
             $imagePath = $request->file('image')->store('bundles', 'public');
         }
 
-        $bundle = Bundle::create([
-            'title' => $request->title,
-            'slug' => $slug,
-            'type' => 'bundle',
-            'description' => $request->description,
-            'image' => $imagePath,
-            'status' => $request->status ?? 'draft',
-            'discount_type' => $request->discount_type,
-            'discount_value' => $request->discount_value,
-            'min_order_qty' => $request->min_order_qty,
-            'max_order_qty' => $request->max_order_qty,
-        ]);
+        DB::transaction(function () use ($request, $slug, $imagePath, $items) {
+            $bundle = Bundle::create([
+                'title' => $request->title,
+                'slug' => $slug,
+                'type' => 'bundle',
+                'description' => $request->description,
+                'image' => $imagePath,
+                'status' => $request->status ?? 'draft',
+                'discount_type' => $request->discount_type,
+                'discount_value' => $request->discount_value,
+                'min_order_qty' => $request->min_order_qty,
+                'max_order_qty' => $request->max_order_qty,
+            ]);
 
-        $bundle->products()->attach($request->products);
+            foreach ($items as $item) $bundle->products()->attach($item['product_id'], $item['pivot']);
+        });
 
         return redirect()->route('admin.bundles')->with('success', 'Bundle created successfully.');
     }
 
     public function edit($id)
     {
-        $bundle = Bundle::with('products')->findOrFail($id);
-        $products = Product::where('status', 'active')->get();
+        $bundle = Bundle::with(['products.variants', 'products.images'])->findOrFail($id);
+        $products = Product::with(['variants', 'images'])->where('status', 'active')->get();
+        $products = $products->concat($bundle->products)->unique('id')->values();
         
         if ($bundle->type == 'pool') {
             return view('admin.bundles.edit_pool', compact('bundle', 'products'));
@@ -158,13 +169,17 @@ class BundleController extends Controller
             'discount_type' => 'required|in:percentage,fixed',
             'discount_value' => 'required|numeric|min:0',
             'products' => 'required|array|min:1',
-            'products.*' => 'exists:products,id',
+            'products.*' => 'required|integer|exists:products,id',
+            'variant_ids' => 'nullable|array',
+            'variant_ids.*' => 'nullable|integer',
+            'quantities' => 'nullable|array',
+            'quantities.*' => 'required|integer|min:1|max:10000',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
             'min_order_qty' => 'nullable|integer|min:1',
             'max_order_qty' => 'nullable|integer|min:1' . ($request->filled('min_order_qty') ? '|gte:min_order_qty' : ''),
         ]);
 
-        $bundle = Bundle::findOrFail($id);
+        $items = $bundle->type === 'pack' ? [] : $this->bundleItems($request);
 
         $slug = Str::slug($request->title);
         if ($slug !== $bundle->slug) {
@@ -191,20 +206,30 @@ class BundleController extends Controller
             $data['image'] = $request->file('image')->store('bundles', 'public');
         }
 
-        $bundle->update($data);
-
-        // For "Pack" type, we don't want to lose the quantity and variant_id during simple edits
-        if ($bundle->type == 'pack') {
-            // Keep the same product connection but update basic info
-            // (The products array in request will only have the one product ID)
-            // No changes needed to the pivot for simple edits (title/status/price)
-        } else {
-            // Standard bundle update: Use detach and attach to allow duplicate products
-            $bundle->products()->detach();
-            $bundle->products()->attach($request->products);
-        }
+        DB::transaction(function () use ($bundle, $data, $items) {
+            $bundle->update($data);
+            if ($bundle->type !== 'pack') {
+                $bundle->products()->detach();
+                foreach ($items as $item) $bundle->products()->attach($item['product_id'], $item['pivot']);
+            }
+        });
 
         return redirect()->route('admin.bundles')->with('success', 'Bundle updated successfully.');
+    }
+
+    private function bundleItems(Request $request): array
+    {
+        $items = [];
+        foreach (array_values($request->input('products', [])) as $index => $productId) {
+            // Product scope uses the authorized store, including superadmin store access.
+            $product = Product::with('variants')->where('status', 'active')->find($productId);
+            if (!$product) throw ValidationException::withMessages(['products' => 'Choose active products from this store.']);
+            $variantId = $request->input("variant_ids.$index");
+            $variant = $variantId ? $product->variants->firstWhere('id', $variantId) : ($product->variants->count() === 1 ? $product->variants->first() : null);
+            if (!$variant) throw ValidationException::withMessages(["variant_ids.$index" => "Choose a valid variant for {$product->title}."]);
+            $items[] = ['product_id' => $product->id, 'pivot' => ['product_variant_id' => $variant->id, 'quantity' => (int) $request->input("quantities.$index", 1)]];
+        }
+        return $items;
     }
 
     public function destroy($id)

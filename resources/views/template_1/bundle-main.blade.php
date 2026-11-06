@@ -52,9 +52,7 @@
             <div class="p-price-row" style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem;">
                 <span class="p-current-price" style="font-size: 2rem; font-weight: 800; color: var(--accent-color);">{{ $currentTenant->currency ?? '₹' }}{{ number_format($bundle->total_price, 2) }}</span>
                 @php
-                    $originalPrice = $bundle->products->sum(function($p) {
-                        return $p->variants->min('price') ?? 0;
-                    });
+                    $originalPrice = $bundle->base_price;
                 @endphp
                 @if($originalPrice > $bundle->total_price)
                     <div style="display: flex; align-items: center; gap: 0.5rem;">
@@ -89,10 +87,10 @@
                                     @php
                                         $v = $product->pivot->product_variant_id 
                                             ? $product->variants->firstWhere('id', $product->pivot->product_variant_id) 
-                                            : $product->variants->first();
+                                            : $product->variants->sortBy('price')->first();
                                     @endphp
                                     @if($v && $v->size)
-                                        Size: {{ $v->size }}
+                                        Option: {{ $v->size }}
                                     @else
                                         Category: {{ $product->type ?? 'Category' }}
                                     @endif
