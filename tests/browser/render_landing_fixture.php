@@ -16,6 +16,11 @@ foreach(Database\Seeders\DemoStoreDesign::profiles() as $slug=>$profile){
   $collection=App\Models\Collection::create(['tenant_id'=>$tenant->id,'name'=>$name,'slug'=>$slug.'-'.$i,'status'=>true]);
   $p=App\Models\Product::create(['tenant_id'=>$tenant->id,'title'=>$brands[$slug].' sample '.$i,'slug'=>$slug.'-product-'.$i,'collection_id'=>$collection->id,'status'=>'active']);
   $p->variants()->create(['size'=>'Standard','price'=>499+$i*100,'stock'=>10]);
+  if (($argv[2] ?? '') === '--store-themes') {
+   $p->variants()->create(['size'=>'Large-Pack','price'=>799,'compare_at_price'=>899,'stock'=>5]);
+   $p->variants()->create(['size'=>'Sold out','price'=>999,'stock'=>0]);
+   $p->variants()->create(['size'=>'Family','price'=>1299,'stock'=>5]);
+  }
   $p->images()->create(['path'=>'images/landing/hero.png','type'=>'image','order'=>0]);
  }
 }
@@ -46,7 +51,7 @@ if (($argv[2] ?? '') === '--store-themes') {
         if ($theme === 'template_2') {
             foreach ([1, 2] as $number) App\Models\Slider::create(['tenant_id' => $tenant->id, 'title' => 'Market banner '.$number, 'image_desktop' => 'images/landing/hero.png', 'image_mobile' => 'images/landing/hero.png', 'status' => true, 'order' => $number]);
         }
-        foreach (['home' => '', 'catalog' => '/all-products', 'product' => '/product?id='.$product->id] as $name => $suffix) {
+        foreach (['home' => '', 'catalog' => '/all-products', 'product' => '/product?id='.$product->id, 'about' => '/about'] as $name => $suffix) {
             $request = Illuminate\Http\Request::create('http://127.0.0.1:8000/store/'.$tenant->slug.$suffix);
             $response = $kernel->handle($request);
             if ($response->getStatusCode() !== 200) throw new RuntimeException('Theme fixture failed: '.$theme.' '.$name);

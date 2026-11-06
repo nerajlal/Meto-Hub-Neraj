@@ -27,6 +27,18 @@ with tempfile.TemporaryDirectory(prefix='fresh-market-qa-') as directory:
         time.sleep(.5)
         assert c.js("getComputedStyle(document.querySelector('.sf-market-topline')).backgroundColor")=='rgb(72, 165, 28)'
         assert c.js("getComputedStyle(document.querySelector('.sf-footer-market')).backgroundColor")=='rgb(24, 58, 20)'
+        assert c.js("document.querySelector('.sf-product-market').querySelectorAll('[data-market-variant]').length")==3
+        assert c.js("document.querySelector('.sf-product-market .sf-market-variants a').textContent")=='+1 more'
+        assert c.js("document.querySelectorAll('.sf-product-market [data-market-variant]:disabled').length")>0
+        c.js("window.variantCartCalls=[];window.updateInlineCart=(key,delta)=>variantCartCalls.push({key,delta});window.cartItemsMap={};")
+        c.js("document.querySelector('.sf-product-market [data-market-variant]:nth-child(2)').click()")
+        assert c.js("document.querySelector('.sf-product-market .p-price').textContent").endswith('799.00')
+        assert c.js("document.querySelector('.sf-product-market .sf-product-price del').textContent").endswith('899.00')
+        c.js("document.querySelector('.sf-product-market .inline-add-btn').click()")
+        assert c.js("variantCartCalls[0].key.endsWith('-Large-Pack')")
+        c.js("document.querySelector('.sf-product-market [data-market-variant]').click();document.querySelector('.sf-product-market .inline-add-btn').click()")
+        assert c.js("variantCartCalls[1].key.endsWith('-Standard')")
+        assert not c.js("!!document.querySelector('.sf-product-market .sf-product-price del')")
         current = "document.querySelector('[data-slide-dot][aria-current=true]').dataset.slideDot"
         assert c.js("document.querySelectorAll('[data-slide-dot]').length")==2
         assert not c.js("!!document.querySelector('[data-slide-next],[data-slide-prev],[data-slide-pause],[data-slide-status]')")

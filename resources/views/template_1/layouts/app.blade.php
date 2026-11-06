@@ -371,6 +371,7 @@
     @include('template_1.partials.floating_cart_summary')
     @include('partials.customer_auth_modal')
     @include('storefront.integrations.runtime')
+    @if($storefrontTheme['id'] === 'template_2')<script src="{{ asset('js/fresh-market-variants.js').'?v='.filemtime(public_path('js/fresh-market-variants.js')) }}" defer></script>@endif
     @yield('scripts')
 </body>
 

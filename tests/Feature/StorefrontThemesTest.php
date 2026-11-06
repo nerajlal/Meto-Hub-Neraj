@@ -14,6 +14,27 @@ class StorefrontThemesTest extends TestCase
 {
     use RefreshDatabase;
 
+    public function test_store_about_uses_merchant_content_without_grocery_claims(): void
+    {
+        $tenant = $this->store();
+        $tenant->forceFill(['slug' => 'jewelry'])->save();
+        $tenant->update([ 'name' => 'Jewelry Studio', 'about_title' => 'Our jewelry story', 'about_text' => 'Handmade designs <script>alert(1)</script>', 'contact_email' => 'hello@example.com']);
+        foreach (['template_1', 'template_2', 'template_7', 'template_30'] as $theme) {
+            $tenant->update(['theme' => $theme]);
+            $this->get('/store/jewelry/about')->assertOk()
+                ->assertSee('Our jewelry story')->assertSee('Handmade designs &lt;script&gt;', false)
+                ->assertSee('hello@example.com')->assertSee('/store/jewelry/all-products', false)
+                ->assertDontSee('Organic Certified')->assertDontSee('Farm')
+                ->assertDontSee('Express')->assertDontSee('no-questions-asked')
+                ->assertDontSee('images.unsplash.com/photo-1542838132', false)
+                ->assertDontSee('<script>alert(1)</script>', false);
+        }
+        $tenant->update(['about_title' => 'Cultivating Health & Happiness', 'about_text' => null]);
+        $this->get('/store/jewelry/about')->assertOk()->assertSee('Welcome to Jewelry Studio')->assertDontSee('Cultivating Health');
+        $tenant->update(['about_title' => '', 'about_text' => '', 'contact_email' => null, 'contact_phone' => null, 'contact_address' => null]);
+        $this->get('/store/jewelry/about')->assertOk()->assertSee('Welcome to Jewelry Studio')->assertSee('Browse our products online')->assertDontSee('store-about-contact-title');
+    }
+
     public function test_product_tags_use_admin_branding_with_readable_text_in_every_theme(): void
     {
         $tenant = $this->store();

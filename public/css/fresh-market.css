@@ -9,3 +9,12 @@
 .storefront-theme.template_2 .sf-market-topline a,
 .storefront-theme.template_2 .sf-footer-market a,
 .storefront-theme.template_2 .sf-footer-market .sf-brand{color:inherit}
+
+.storefront-theme.template_2 .sf-product-size[hidden]{display:none!important}
+.sf-market-variants{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.sf-market-variants button{font:inherit;font-size:.75rem;padding:7px 9px;border:1px solid var(--border-color);border-radius:6px;background:transparent;color:var(--primary-color);cursor:pointer;overflow-wrap:anywhere;max-width:100%}
+.sf-market-variants button[aria-pressed="true"]{background:var(--accent-color);color:var(--store-brand-fg);border-color:var(--accent-color)}
+.sf-market-variants button:disabled{opacity:.45;text-decoration:line-through;cursor:not-allowed}
+.sf-market-variants button:focus-visible{outline:2px solid var(--primary-color);outline-offset:2px}
+.sf-market-variants a{font-size:.75rem;align-self:center}
+.sf-product-market .inline-add-btn:disabled{opacity:.5;cursor:not-allowed}

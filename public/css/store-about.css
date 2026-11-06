@@ -1,0 +1,31 @@
+/* Store story: merchant content, shared across storefront themes. */
+.store-about{max-width:1240px;margin:0 auto;padding:2rem clamp(1rem,3vw,3rem) 4rem;color:var(--primary-color);overflow-wrap:anywhere}
+.store-about-breadcrumb{display:flex;gap:.8rem;font-size:.75rem;align-items:center;margin-bottom:2.5rem}
+.store-about a{color:inherit;text-decoration:none}
+.store-about a:focus-visible{outline:2px solid var(--primary-color);outline-offset:5px}
+.store-about-breadcrumb a{opacity:.65}
+.store-about-hero{display:grid;grid-template-columns:1.15fr 1fr;gap:clamp(2rem,5vw,5rem);align-items:start;padding-bottom:3.5rem}
+.store-about-intro{padding:1.5rem 0}
+.store-about-eyebrow{font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;margin:0 0 1.25rem;font-weight:600}
+.store-about h1{font-family:Georgia,serif;font-weight:400;font-size:clamp(2.4rem,5vw,4.5rem);letter-spacing:-.045em;line-height:1.08;margin:0 0 1.7rem}
+.store-about-rule{width:48px;height:3px;background:var(--accent-color);margin-bottom:1.5rem}
+.store-about-copy{font-size:.98rem;line-height:1.9;max-width:58ch}
+.store-about-copy p{margin:0}
+.store-about-links{display:flex;flex-wrap:wrap;gap:1.2rem;align-items:center;margin-top:2rem;font-size:.8rem;font-weight:600}
+.store-about-links a{padding:.9rem 0;border-bottom:1px solid currentColor}
+.store-about-links a:first-child{padding:1rem 1.4rem;border:0;border-radius:4px;background:var(--accent-color);color:var(--store-brand-fg)}
+.store-about-brand{background:var(--bg-light);border-radius:4px;padding:1.5rem;min-width:0}
+.store-about-brand-art{aspect-ratio:1;display:grid;place-items:center;position:relative;border:1px solid color-mix(in srgb,var(--primary-color) 15%,transparent);overflow:hidden}
+.store-about-brand-art:before{content:"";position:absolute;inset:9%;border:1px solid color-mix(in srgb,var(--primary-color) 10%,transparent);border-radius:50%;pointer-events:none}
+.store-about-brand-art img{width:58%;height:auto;aspect-ratio:1;object-fit:contain;position:relative}
+.store-about-monogram{font-family:Georgia,serif;font-size:clamp(6rem,14vw,13rem);line-height:1;position:relative}
+.store-about-brand-caption{display:flex;justify-content:space-between;gap:1rem;margin-top:1.2rem;font-size:.7rem}
+.store-about-brand-caption>span:last-child{opacity:.65;white-space:nowrap}
+.store-about-brand-caption i{margin-left:.4rem}
+.store-about-bottom{border-top:1px solid var(--border-color);padding-top:2.5rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,290px),1fr));gap:3rem}
+.store-about-bottom h2{font-family:Georgia,serif;font-weight:400;font-size:1.8rem;letter-spacing:-.02em;margin:0 0 1.4rem}
+.store-about-contact address{font-style:normal;white-space:pre-line;font-size:.9rem;line-height:1.7;margin-bottom:1rem}
+.store-about-contact a{display:block;margin:.8rem 0;font-size:.9rem}
+.store-about-help a{display:flex;justify-content:space-between;gap:1rem;padding:.9rem 0;border-bottom:1px solid var(--border-color);font-size:.85rem}
+.store-about-help a:hover span:first-child{text-decoration:underline;text-underline-offset:4px}
+@media(max-width:767px){.store-about{padding-top:1.5rem;padding-bottom:2.5rem}.store-about-breadcrumb{margin-bottom:1.5rem}.store-about-hero{grid-template-columns:minmax(0,1fr);gap:1.5rem;padding-bottom:2rem}.store-about-intro{padding:0}.store-about-brand{padding:1rem}.store-about-brand-art{aspect-ratio:1.25}.store-about-brand-art img{width:45%}.store-about-monogram{font-size:7rem}.store-about-bottom{gap:2rem;padding-top:2rem}.store-about-copy{font-size:.9rem}}
