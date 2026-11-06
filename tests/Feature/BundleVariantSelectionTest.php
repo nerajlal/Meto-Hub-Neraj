@@ -21,6 +21,20 @@ class BundleVariantSelectionTest extends TestCase
         return [$tenant, $product, $small, $large];
     }
 
+    public function test_homepage_bundle_shelf_includes_active_combos_and_packs_only(): void
+    {
+        [$tenant, $product, $small, $large] = $this->setupStore();
+        $tenant->update(['theme' => 'template_2']);
+        foreach (['bundle' => 'Combo selection', 'pack' => 'Three large packs', 'pool' => 'Hidden pool', 'draft' => 'Hidden draft'] as $type => $title) {
+            $bundle = Bundle::create(['tenant_id' => $tenant->id, 'title' => $title, 'slug' => str_replace(' ', '-', strtolower($title)), 'type' => $type === 'draft' ? 'pack' : $type, 'status' => $type === 'draft' ? 'draft' : 'active', 'discount_type' => 'fixed', 'discount_value' => 50]);
+            $bundle->products()->attach($product->id, ['product_variant_id' => $large->id, 'quantity' => 3]);
+        }
+        $this->get('/v1?tenant_id='.$tenant->id)->assertOk()
+            ->assertSee('Discover our bundles')->assertSee('Combo selection')->assertSee('Three large packs')
+            ->assertSee('Pack of 3')->assertSee('600.00')->assertSee('550.00')
+            ->assertDontSee('Hidden pool')->assertDontSee('Hidden draft');
+    }
+
     public function test_selected_variants_and_quantities_survive_create_edit_and_checkout(): void
     {
         [$tenant, $product, $small, $large] = $this->setupStore();
