@@ -41,6 +41,22 @@
         </div>
     @endif
 
+    @if($paymentIssues->isNotEmpty())
+    <div class="alert alert-warning">
+        <h2 class="h6">Customer payments needing attention</h2>
+        <p class="small">Payments below must be checked and resolved before asking the customer to pay again. If stock changed, restore stock and let reconciliation retry; otherwise issue a refund from the payment provider. PhonePe payments under review require an explicit retry after checking that no refund was issued. Refunds and courier booking are not performed here.</p>
+        <div class="table-responsive"><table class="table table-sm"><thead><tr><th>Checkout reference</th><th>Gateway</th><th>Amount</th><th>State</th><th>Provider payment</th><th>Review action</th></tr></thead><tbody>
+        @foreach($paymentIssues as $issue)<tr><td>{{ $issue->id }}<br><small>{{ $issue->provider_order_id }}</small></td><td>{{ ucfirst($issue->gateway) }}</td><td>₹{{ number_format($issue->amount / 100, 2) }}</td><td>{{ $issue->status }}<br><small>{{ $issue->review_reason }}</small></td><td>{{ $issue->provider_payment_id ?: 'Check provider order history' }}</td><td>
+            @if($issue->gateway === 'phonepe' && $issue->status === 'review')
+                <form method="POST" action="{{ route('admin.settings.payment.retry', ['checkout' => $issue->id]) }}">@csrf
+                    <label class="small"><input type="checkbox" name="confirm_not_refunded" value="1" required> I checked PhonePe: this payment has not been refunded.</label>
+                    <button class="btn btn-sm btn-outline-primary mt-1" type="submit">Verify &amp; retry order</button>
+                </form>
+            @else — @endif
+            </td></tr>@endforeach
+        </tbody></table></div>
+    </div>
+    @endif
     <form action="{{ route('admin.settings.payment.update') }}" method="POST">
         @csrf
 
@@ -75,7 +91,7 @@
                             </div>
                             <div>
                                 <h4 class="h6 fw-bold mb-1 text-primary" style="font-family: 'Playfair Display', serif;">WhatsApp Checkout</h4>
-                                <p class="text-muted small mb-0">Allow customers to confirm orders directly via WhatsApp chat with the store.</p>
+                                <p class="text-muted small mb-0">Saves an unpaid order and opens a prepared WhatsApp message. The customer must send it; payment and confirmation are arranged with the store.</p>
                             </div>
                         </div>
                         <div class="form-check form-switch">
@@ -85,43 +101,8 @@
                 </div>
             </div>
 
-            <!-- Stripe Checkout -->
-            <div class="col-lg-4 col-md-6 col-12">
-                <div class="card border-0 rounded-4 shadow-sm p-4 h-100" style="background: #ffffff;">
-                    <div class="d-flex align-items-center justify-content-between mb-4">
-                        <div class="d-flex align-items-center gap-3">
-                            <div class="p-2.5 bg-primary-subtle text-primary rounded-3" style="font-size: 22px;">
-                                <i class="fa-brands fa-stripe"></i>
-                            </div>
-                            <h4 class="h6 fw-bold mb-0 text-dark" style="font-family: 'Playfair Display', serif;">Stripe Checkout</h4>
-                        </div>
-                        <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" name="stripe_enabled" id="stripe_enabled" value="1" {{ $paymentSetting->stripe_enabled ? 'checked' : '' }} style="width: 40px; height: 20px; cursor: pointer;">
-                        </div>
-                    </div>
-
-                    <div class="form-group mb-3">
-                        <label for="stripe_key" class="form-label fw-semibold text-dark small">Stripe Publishable Key</label>
-                        <input type="text" name="stripe_key" id="stripe_key" class="form-control rounded-3 py-2 px-3 @error('stripe_key') is-invalid @enderror" value="{{ old('stripe_key', $paymentSetting->stripe_key) }}" placeholder="pk_test_...">
-                        @error('stripe_key')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="form-group mb-3">
-                        <label for="stripe_secret" class="form-label fw-semibold text-dark small">Stripe Secret Key</label>
-                        <input type="password" name="stripe_secret" id="stripe_secret" class="form-control rounded-3 py-2 px-3 @error('stripe_secret') is-invalid @enderror" value="{{ old('stripe_secret', $paymentSetting->stripe_secret) }}" placeholder="sk_test_...">
-                        <small class="text-muted" style="font-size: 11px;">Leave blank if not changing saved secret.</small>
-                        @error('stripe_secret')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="p-2.5 rounded-3 bg-light mt-auto">
-                        <small class="text-muted d-block" style="font-size: 11px;">Supports International Credit/Debit cards & Apple Pay.</small>
-                    </div>
-                </div>
-            </div>
+            <div class="col-12"><div class="alert alert-info">Online payments go to each store’s own activated merchant account. An in-store QR code or Soundbox alone does not enable website payments. Start in Test mode, configure the webhook and complete a test order before switching to Live.</div></div>
+            @include('admin.settings.partials.paytm-settings')
 
             <!-- Razorpay Gateway -->
             <div class="col-lg-4 col-md-6 col-12">
@@ -148,64 +129,29 @@
 
                     <div class="form-group mb-3">
                         <label for="razorpay_secret" class="form-label fw-semibold text-dark small">Razorpay Key Secret</label>
-                        <input type="password" name="razorpay_secret" id="razorpay_secret" class="form-control rounded-3 py-2 px-3 @error('razorpay_secret') is-invalid @enderror" value="{{ old('razorpay_secret', $paymentSetting->razorpay_secret) }}" placeholder="Secret Key">
+                        <input type="password" name="razorpay_secret" id="razorpay_secret" class="form-control rounded-3 py-2 px-3 @error('razorpay_secret') is-invalid @enderror" value="" autocomplete="new-password" placeholder="Secret Key">
                         <small class="text-muted" style="font-size: 11px;">Leave blank if not changing saved secret.</small>
                         @error('razorpay_secret')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
 
+                    <div class="form-group mb-3">
+                        <label for="razorpay_webhook_secret" class="form-label fw-semibold small">Customer payment webhook secret</label>
+                        <input type="password" name="razorpay_webhook_secret" id="razorpay_webhook_secret" value="" autocomplete="new-password" class="form-control" placeholder="Leave blank to keep the saved secret">
+                        <small class="text-muted">Use the same secret (at least 16 characters) in Razorpay Dashboard → Webhooks. Keep this separate from MetoHub subscription billing.</small>
+                        <p class="small mt-2 mb-1">Webhook URL:</p>
+                        <code class="d-block text-break">{{ route('payment.razorpay.webhook', ['tenant' => $paymentSetting->tenant_id]) }}</code>
+                        <p class="small text-muted mt-2">Subscribe to <strong>payment.captured</strong> and <strong>order.paid</strong>. Enable automatic payment capture in Razorpay. Test the full payment flow before using live keys.</p>
+                        <p class="small text-muted">{{ str_starts_with((string) $paymentSetting->razorpay_key, 'rzp_live_') ? 'Live key saved' : 'Test key or no key saved' }} · Saving credentials does not verify your gateway account. Store currency must be INR.</p>
+                    </div>
                     <div class="p-2.5 rounded-3 bg-light mt-auto">
                         <small class="text-muted d-block" style="font-size: 11px;">Accepts UPI (GPay, PhonePe, Paytm), Cards, NetBanking, and Wallets.</small>
                     </div>
                 </div>
             </div>
 
-            <!-- PhonePe Gateway -->
-            <div class="col-lg-4 col-12">
-                <div class="card border-0 rounded-4 shadow-sm p-4 h-100" style="background: #ffffff;">
-                    <div class="d-flex align-items-center justify-content-between mb-4">
-                        <div class="d-flex align-items-center gap-3">
-                            <div class="p-2.5 bg-success-subtle text-success rounded-3" style="font-size: 22px;">
-                                <i class="fa-solid fa-mobile-screen-button"></i>
-                            </div>
-                            <h4 class="h6 fw-bold mb-0 text-dark" style="font-family: 'Playfair Display', serif;">PhonePe Payment</h4>
-                        </div>
-                        <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" name="phonepe_enabled" id="phonepe_enabled" value="1" {{ $paymentSetting->phonepe_enabled ? 'checked' : '' }} style="width: 40px; height: 20px; cursor: pointer;">
-                        </div>
-                    </div>
-
-                    <div class="form-group mb-3">
-                        <label for="phonepe_merchant_id" class="form-label fw-semibold text-dark small">Merchant ID</label>
-                        <input type="text" name="phonepe_merchant_id" id="phonepe_merchant_id" class="form-control rounded-3 py-2 px-3 @error('phonepe_merchant_id') is-invalid @enderror" value="{{ old('phonepe_merchant_id', $paymentSetting->phonepe_merchant_id) }}" placeholder="MID...">
-                        @error('phonepe_merchant_id')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="form-group mb-3">
-                        <label for="phonepe_salt_key" class="form-label fw-semibold text-dark small">Salt Key</label>
-                        <input type="password" name="phonepe_salt_key" id="phonepe_salt_key" class="form-control rounded-3 py-2 px-3 @error('phonepe_salt_key') is-invalid @enderror" value="{{ old('phonepe_salt_key', $paymentSetting->phonepe_salt_key) }}" placeholder="Salt Key">
-                        <small class="text-muted" style="font-size: 11px;">Leave blank if not changing saved salt key.</small>
-                        @error('phonepe_salt_key')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="form-group mb-3">
-                        <label for="phonepe_salt_index" class="form-label fw-semibold text-dark small">Salt Index</label>
-                        <input type="text" name="phonepe_salt_index" id="phonepe_salt_index" class="form-control rounded-3 py-2 px-3 @error('phonepe_salt_index') is-invalid @enderror" value="{{ old('phonepe_salt_index', $paymentSetting->phonepe_salt_index) }}" placeholder="e.g. 1">
-                        @error('phonepe_salt_index')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="p-2.5 rounded-3 bg-light mt-auto">
-                        <small class="text-muted d-block" style="font-size: 11px;">Seamless UPI direct payments for Indian customers.</small>
-                    </div>
-                </div>
-            </div>
+            @include('admin.settings.partials.phonepe-settings')
         </div>
 
         <div class="mt-4 pt-3 border-top d-flex justify-content-end">
@@ -221,9 +167,8 @@
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     // Check if gateway has saved credentials from database
-    const hasSavedStripeSecret = {{ !empty($paymentSetting->stripe_secret) ? 'true' : 'false' }};
+    const hasSavedWebhookSecret = {{ !empty($paymentSetting->razorpay_webhook_secret) ? 'true' : 'false' }};
     const hasSavedRazorpaySecret = {{ !empty($paymentSetting->razorpay_secret) ? 'true' : 'false' }};
-    const hasSavedPhonepeSalt = {{ !empty($paymentSetting->phonepe_salt_key) ? 'true' : 'false' }};
 
     function updateGatewayState(config) {
         const canEnable = config.isFilled();
@@ -244,60 +189,27 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Stripe
-    const stripeKeyInput = document.getElementById('stripe_key');
-    const stripeSecretInput = document.getElementById('stripe_secret');
-    function checkStripe() {
-        updateGatewayState({
-            toggleId: 'stripe_enabled',
-            disabledMessage: 'Fill in Stripe Publishable Key and Secret Key to enable.',
-            isFilled: function () {
-                const key = stripeKeyInput ? stripeKeyInput.value.trim() : '';
-                const secret = stripeSecretInput ? stripeSecretInput.value.trim() : '';
-                return key.length > 0 && (secret.length > 0 || hasSavedStripeSecret);
-            }
-        });
-    }
-
     // Razorpay
     const razorpayKeyInput = document.getElementById('razorpay_key');
     const razorpaySecretInput = document.getElementById('razorpay_secret');
+    const webhookSecretInput = document.getElementById('razorpay_webhook_secret');
     function checkRazorpay() {
         updateGatewayState({
             toggleId: 'razorpay_enabled',
-            disabledMessage: 'Fill in Razorpay Key ID and Key Secret to enable.',
+            disabledMessage: 'Set the Razorpay Key ID, Key Secret and webhook secret to enable.',
             isFilled: function () {
                 const key = razorpayKeyInput ? razorpayKeyInput.value.trim() : '';
                 const secret = razorpaySecretInput ? razorpaySecretInput.value.trim() : '';
-                return key.length > 0 && (secret.length > 0 || hasSavedRazorpaySecret);
-            }
-        });
-    }
-
-    // PhonePe
-    const phonepeMidInput = document.getElementById('phonepe_merchant_id');
-    const phonepeSaltInput = document.getElementById('phonepe_salt_key');
-    function checkPhonepe() {
-        updateGatewayState({
-            toggleId: 'phonepe_enabled',
-            disabledMessage: 'Fill in Merchant ID and Salt Key to enable.',
-            isFilled: function () {
-                const mid = phonepeMidInput ? phonepeMidInput.value.trim() : '';
-                const salt = phonepeSaltInput ? phonepeSaltInput.value.trim() : '';
-                return mid.length > 0 && (salt.length > 0 || hasSavedPhonepeSalt);
+                return key.length > 0 && (secret.length > 0 || hasSavedRazorpaySecret) && (webhookSecretInput.value.length >= 16 || hasSavedWebhookSecret);
             }
         });
     }
 
     // Attach real-time input listeners
-    [stripeKeyInput, stripeSecretInput].forEach(el => el && el.addEventListener('input', checkStripe));
-    [razorpayKeyInput, razorpaySecretInput].forEach(el => el && el.addEventListener('input', checkRazorpay));
-    [phonepeMidInput, phonepeSaltInput].forEach(el => el && el.addEventListener('input', checkPhonepe));
+    [razorpayKeyInput, razorpaySecretInput, webhookSecretInput].forEach(el => el && el.addEventListener('input', checkRazorpay));
 
     // Run on initial load
-    checkStripe();
     checkRazorpay();
-    checkPhonepe();
 });
 </script>
 @endsection

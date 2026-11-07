@@ -75,6 +75,14 @@ Route::get('/blogs', [App\Http\Controllers\LandingController::class, 'blogs'])->
 Route::get('/blogs/{id}', [App\Http\Controllers\LandingController::class, 'blogShow'])->name('landing.blog.show');
 Route::post('/demo-request', [App\Http\Controllers\LandingController::class, 'handleDemoRequest'])->middleware('throttle:3,1')->name('demo.request');
 
+Route::post('/payments/razorpay/{tenant}/webhook', App\Http\Controllers\CustomerPaymentWebhookController::class)
+    ->whereNumber('tenant')->middleware('throttle:120,1')->name('payment.razorpay.webhook');
+
+Route::post('/payments/paytm/{checkout}/callback', [App\Http\Controllers\AlternativePaymentCallbackController::class, 'paytmCallback'])->whereUuid('checkout')->middleware('throttle:60,1')->name('payment.paytm.callback');
+Route::post('/payments/paytm/{tenant}/webhook', [App\Http\Controllers\AlternativePaymentCallbackController::class, 'paytmWebhook'])->whereNumber('tenant')->middleware('throttle:120,1')->name('payment.paytm.webhook');
+Route::post('/payments/phonepe/{tenant}/webhook', [App\Http\Controllers\AlternativePaymentCallbackController::class, 'phonepeWebhook'])->whereNumber('tenant')->middleware('throttle:120,1')->name('payment.phonepe.webhook');
+Route::get('/payments/return/{checkout}', [App\Http\Controllers\AlternativePaymentCallbackController::class, 'returnPage'])->whereUuid('checkout')->middleware('throttle:30,1')->name('payment.return');
+
 // Shared Actions (Global)
 Route::middleware([\App\Http\Middleware\IdentifyStorefrontTenant::class, \App\Http\Middleware\TrackStorefrontCart::class])->group(function () {
     Route::post('/cart/add', [App\Http\Controllers\CartController::class, 'add'])->name('cart.add');
@@ -83,9 +91,9 @@ Route::middleware([\App\Http\Middleware\IdentifyStorefrontTenant::class, \App\Ht
     Route::get('/cart/fetch', [App\Http\Controllers\CartController::class, 'fetch'])->name('cart.fetch');
     Route::get('/cart/state', [App\Http\Controllers\CartController::class, 'state'])->name('cart.state');
     Route::post('/order/place', [App\Http\Controllers\OrderController::class, 'store'])->name('order.place');
-    Route::post('/payment/initiate', [App\Http\Controllers\OnlinePaymentController::class, 'initiate'])->name('payment.initiate');
-    Route::post('/payment/verify', [App\Http\Controllers\OnlinePaymentController::class, 'verify'])->name('payment.verify');
-    Route::post('/payment/phonepe/callback', [App\Http\Controllers\OnlinePaymentController::class, 'verify'])->name('payment.phonepe.callback');
+    Route::post('/payment/initiate', [App\Http\Controllers\OnlinePaymentController::class, 'initiate'])->middleware('throttle:10,1')->name('payment.initiate');
+    Route::post('/payment/verify', [App\Http\Controllers\OnlinePaymentController::class, 'verify'])->middleware('throttle:30,1')->name('payment.verify');
+    Route::post('/payment/status', [App\Http\Controllers\OnlinePaymentController::class, 'status'])->middleware('throttle:20,1')->name('payment.status');
 });
 
 // v1 Nurah Theme Routes
@@ -355,6 +363,7 @@ Route::prefix('{tenant}/admin')->name('admin.')->middleware(['identify_tenant', 
     Route::post('/settings/domain', [App\Http\Controllers\Admin\SettingController::class, 'domainUpdate'])->name('settings.domain.update');
 
     Route::get('/settings/payment', [App\Http\Controllers\Admin\SettingController::class, 'paymentIndex'])->name('settings.payment');
+    Route::post('/settings/payment/review/{checkout}', [App\Http\Controllers\Admin\SettingController::class, 'retryCustomerPayment'])->whereUuid('checkout')->name('settings.payment.retry');
     Route::post('/settings/payment', [App\Http\Controllers\Admin\SettingController::class, 'paymentUpdate'])->name('settings.payment.update');
 
     Route::get('/settings/integrations', [App\Http\Controllers\Admin\IntegrationSettingsController::class, 'index'])->name('settings.integrations');

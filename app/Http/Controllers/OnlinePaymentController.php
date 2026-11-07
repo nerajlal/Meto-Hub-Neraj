@@ -2,171 +2,83 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\{CustomerPayment, Order, Tenant};
+use App\Services\CustomerPayments;
 use Illuminate\Http\Request;
-use App\Models\Tenant;
-use App\Models\TenantPaymentSetting;
-use Illuminate\Support\Facades\Log;
 
 class OnlinePaymentController extends Controller
 {
-    /**
-     * Create an online payment order/session for the customer.
-     */
-    public function initiate(Request $request)
+    public function initiate(Request $request, CustomerPayments $payments)
     {
-        $tenantId = $request->attributes->get('resolved_tenant_id') ?? session('active_tenant_id');
-        $tenant = Tenant::findOrFail($tenantId);
-        $settings = TenantPaymentSetting::withoutGlobalScopes()->where('tenant_id', $tenant->id)->first();
-
-        $request->validate([
-            'gateway' => 'required|string|in:razorpay,stripe,phonepe',
-            'amount' => 'required|numeric|min:1',
-            'currency' => 'nullable|string',
-            'customer_name' => 'nullable|string',
-            'customer_email' => 'nullable|email',
-            'customer_phone' => 'nullable|string',
-        ]);
-
-        $gateway = $request->gateway;
-        $amount = (float) $request->amount;
-        $currency = strtoupper($tenant->currency ?? 'INR');
-
-        if ($gateway === 'razorpay') {
-            if (!$settings?->razorpay_enabled || empty($settings->razorpay_key) || empty($settings->razorpay_secret)) {
-                return response()->json(['success' => false, 'message' => 'Razorpay is not configured for this store.'], 422);
-            }
-
-            try {
-                $api = new \Razorpay\Api\Api($settings->razorpay_key, $settings->razorpay_secret);
-                $razorpayOrder = $api->order->create([
-                    'receipt' => 'rcpt_' . uniqid(),
-                    'amount' => (int) round($amount * 100), // in paise
-                    'currency' => $currency === '₹' ? 'INR' : $currency,
-                    'notes' => [
-                        'tenant_id' => (string) $tenant->id,
-                        'store_name' => $tenant->name,
-                    ],
-                ]);
-
-                return response()->json([
-                    'success' => true,
-                    'gateway' => 'razorpay',
-                    'key' => $settings->razorpay_key,
-                    'order_id' => $razorpayOrder['id'],
-                    'amount' => $razorpayOrder['amount'],
-                    'currency' => $razorpayOrder['currency'],
-                    'store_name' => $tenant->name,
-                ]);
-            } catch (\Throwable $e) {
-                Log::error('Razorpay Order Creation Failed: ' . $e->getMessage());
-                return response()->json(['success' => false, 'message' => 'Failed to initialize Razorpay payment. ' . $e->getMessage()], 500);
-            }
+        $tenant = Tenant::findOrFail($request->attributes->get('resolved_tenant_id'));
+        $payment = $payments->initiate($request, $tenant);
+        if (in_array($payment->status, ['completed', 'creation_failed', 'failed'], true)) return $this->result($payment, $request);
+        if ($payment->status !== 'ready') return response()->json(['success' => false, 'checkout_id' => $payment->id,
+            'message' => 'Checkout is awaiting payment reconciliation. Check payment status before trying again.'], 409);
+        if ($payment->gateway !== 'razorpay') {
+            return response()->json(['success' => true, 'gateway' => $payment->gateway, 'checkout_id' => $payment->id,
+                'order_id' => $payment->provider_order_id, 'amount' => $payment->amount, 'currency' => $payment->currency]
+                + app(\App\Services\AlternativeCustomerGateways::class)->checkoutData($payment));
         }
-
-        if ($gateway === 'stripe') {
-            if (!$settings?->stripe_enabled || empty($settings->stripe_secret)) {
-                return response()->json(['success' => false, 'message' => 'Stripe is not configured for this store.'], 422);
-            }
-
-            try {
-                \Stripe\Stripe::setApiKey($settings->stripe_secret);
-                $intent = \Stripe\PaymentIntent::create([
-                    'amount' => (int) round($amount * 100),
-                    'currency' => strtolower($currency === '₹' ? 'inr' : $currency),
-                    'metadata' => [
-                        'tenant_id' => (string) $tenant->id,
-                        'store_name' => $tenant->name,
-                    ],
-                ]);
-
-                return response()->json([
-                    'success' => true,
-                    'gateway' => 'stripe',
-                    'client_secret' => $intent->client_secret,
-                    'publishable_key' => $settings->stripe_key,
-                ]);
-            } catch (\Throwable $e) {
-                Log::error('Stripe Intent Creation Failed: ' . $e->getMessage());
-                return response()->json(['success' => false, 'message' => 'Failed to initialize Stripe payment. ' . $e->getMessage()], 500);
-            }
-        }
-
-        if ($gateway === 'phonepe') {
-            if (!$settings?->phonepe_enabled || empty($settings->phonepe_merchant_id) || empty($settings->phonepe_salt_key)) {
-                return response()->json(['success' => false, 'message' => 'PhonePe is not configured for this store.'], 422);
-            }
-
-            try {
-                $merchantId = $settings->phonepe_merchant_id;
-                $saltKey = $settings->phonepe_salt_key;
-                $saltIndex = $settings->phonepe_salt_index ?: '1';
-                $transactionId = 'MT_' . time() . '_' . rand(1000, 9999);
-
-                $payload = [
-                    'merchantId' => $merchantId,
-                    'merchantTransactionId' => $transactionId,
-                    'merchantUserId' => 'CUST_' . ($request->customer_phone ?: 'GUEST'),
-                    'amount' => (int) round($amount * 100),
-                    'redirectUrl' => url('/'),
-                    'redirectMode' => 'POST',
-                    'callbackUrl' => route('payment.phonepe.callback'),
-                    'paymentInstrument' => [
-                        'type' => 'PAY_PAGE',
-                    ],
-                ];
-
-                $base64Payload = base64_encode(json_encode($payload));
-                $checksum = hash('sha256', $base64Payload . '/pg/v1/pay' . $saltKey) . '###' . $saltIndex;
-
-                return response()->json([
-                    'success' => true,
-                    'gateway' => 'phonepe',
-                    'transaction_id' => $transactionId,
-                    'base64_payload' => $base64Payload,
-                    'checksum' => $checksum,
-                    'message' => 'PhonePe payload prepared successfully.',
-                ]);
-            } catch (\Throwable $e) {
-                Log::error('PhonePe Payload Creation Failed: ' . $e->getMessage());
-                return response()->json(['success' => false, 'message' => 'Failed to initialize PhonePe payment. ' . $e->getMessage()], 500);
-            }
-        }
-
-        return response()->json(['success' => false, 'message' => 'Unknown gateway selected.'], 422);
+        return response()->json(['success' => true, 'gateway' => 'razorpay', 'checkout_id' => $payment->id,
+            'key' => $payment->credentials['key'], 'order_id' => $payment->provider_order_id,
+            'amount' => $payment->amount, 'currency' => $payment->currency, 'store_name' => $tenant->name]);
     }
 
-    /**
-     * Verify payment signature (e.g. Razorpay).
-     */
-    public function verify(Request $request)
+    public function verify(Request $request, CustomerPayments $payments)
     {
-        $tenantId = $request->attributes->get('resolved_tenant_id') ?? session('active_tenant_id');
-        $tenant = Tenant::findOrFail($tenantId);
-        $settings = TenantPaymentSetting::withoutGlobalScopes()->where('tenant_id', $tenant->id)->first();
-
-        $gateway = $request->gateway;
-
-        if ($gateway === 'razorpay') {
-            $request->validate([
-                'razorpay_payment_id' => 'required|string',
-                'razorpay_order_id' => 'required|string',
-                'razorpay_signature' => 'required|string',
-            ]);
-
-            try {
-                $api = new \Razorpay\Api\Api($settings->razorpay_key, $settings->razorpay_secret);
-                $api->utility->verifyPaymentSignature([
-                    'razorpay_payment_id' => $request->razorpay_payment_id,
-                    'razorpay_order_id' => $request->razorpay_order_id,
-                    'razorpay_signature' => $request->razorpay_signature,
-                ]);
-
-                return response()->json(['success' => true, 'verified' => true]);
-            } catch (\Throwable $e) {
-                return response()->json(['success' => false, 'message' => 'Signature verification failed: ' . $e->getMessage()], 422);
-            }
+        $request->validate(['gateway' => 'required|in:razorpay', 'razorpay_payment_id' => 'required|string|max:100',
+            'razorpay_order_id' => 'required|string|max:100', 'razorpay_signature' => 'required|string|size:64']);
+        $payment = $payments->owned($request);
+        abort_unless($payment->gateway === 'razorpay' && $payment->provider_order_id && hash_equals($payment->provider_order_id, $request->razorpay_order_id), 422, 'Payment order mismatch.');
+        try {
+            $payment = $payments->verify($payment, $request->razorpay_payment_id, $request->razorpay_signature);
+        } catch (\Illuminate\Validation\ValidationException $e) { throw $e; }
+        catch (\Throwable $e) {
+            return response()->json(['success' => false, 'message' => 'Payment could not be checked. Use Check payment status; do not pay again.'], 503);
         }
+        return $this->result($payment, $request);
+    }
 
-        return response()->json(['success' => true]);
+    public function status(Request $request, CustomerPayments $payments)
+    {
+        $payment = $payments->owned($request);
+        try { $payment = $payments->reconcile($payment); }
+        catch (\Throwable $e) {
+            return response()->json(['success' => false, 'message' => 'Payment status is temporarily unavailable. Do not pay again; check again shortly.'], 503);
+        }
+        return $this->result($payment, $request);
+    }
+
+    public function result(CustomerPayment $payment, Request $request)
+    {
+        if ($payment->status !== 'completed') return response()->json(['success' => false, 'checkout_id' => $payment->id,
+            'status' => $payment->status, 'restart_allowed' => in_array($payment->status, ['creation_failed', 'failed'], true),
+            'message' => in_array($payment->status, ['creation_failed', 'failed'], true) ? 'No usable checkout was created, or the provider reports failure/expiry. Check the store settings before starting again.' : ($payment->status === 'refunded' ? 'This payment was refunded. Contact the store before starting a new checkout.' : ($payment->status === 'review'
+                ? 'Your payment needs store review. Do not pay again. Reference: '.$payment->id
+                : 'Payment is not confirmed yet. Check payment status before paying again.'))], 202);
+        // Only clear the cart that was paid, never a different/new cart created after checkout started.
+        if (!$request->session()->get('customer_payment_carts_cleared.'.$payment->id)) {
+            $snapshot = $payment->snapshot;
+            if (!$request->user() && $request->session()->get('cart', []) === $snapshot['raw_cart']) $request->session()->forget('cart');
+            if ($request->user()) {
+                foreach ($snapshot['raw_cart'] as $row) {
+                    \App\Models\Cart::where('tenant_id', $payment->tenant_id)->where('user_id', $payment->user_id)
+                        ->whereKey($row['cart_row_id'] ?? 0)->where('product_id', $row['product_id'])->where('bundle_id', $row['bundle_id'])
+                        ->where('product_variant_id', $row['variant_id'])->where('size', $row['size'])
+                        ->where('quantity', $row['quantity'])->delete();
+                }
+            }
+            $request->session()->put('customer_payment_carts_cleared.'.$payment->id, true);
+        }
+        $order = Order::withoutGlobalScopes()->where('tenant_id', $payment->tenant_id)->findOrFail($payment->order_id);
+        $tracking = null;
+        try { $tracking = ['tenant' => (string) $payment->tenant_id,
+            'events' => [app(\App\Services\StorefrontTracking::class)->order($order, Tenant::findOrFail($payment->tenant_id))]]; }
+        catch (\Throwable $e) { report($e); }
+        $url = $request->user() ? app(\App\Services\StorefrontTheme::class)->url('account.orders')
+            : app(\App\Services\StorefrontTheme::class)->url('v1.home', ['order_success' => 1]);
+        return response()->json(['success' => true, 'verified' => true, 'checkout_id' => $payment->id,
+            'order_id' => $order->order_number, 'redirect_url' => $url, 'tracking' => $tracking]);
     }
 }

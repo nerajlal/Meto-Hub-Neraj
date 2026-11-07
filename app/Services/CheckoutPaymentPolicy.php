@@ -24,19 +24,13 @@ class CheckoutPaymentPolicy
             $methods[] = 'whatsapp';
         }
 
-        if ($settings) {
-            if ($settings->razorpay_enabled && !empty($settings->razorpay_key) && !empty($settings->razorpay_secret)) {
-                $methods[] = 'razorpay';
-                $methods[] = 'online';
-            }
-            if ($settings->stripe_enabled && !empty($settings->stripe_secret)) {
-                $methods[] = 'stripe';
-                $methods[] = 'online';
-            }
-            if ($settings->phonepe_enabled && !empty($settings->phonepe_merchant_id) && !empty($settings->phonepe_salt_key)) {
-                $methods[] = 'phonepe';
-                $methods[] = 'online';
-            }
+        if ($settings && in_array(strtoupper($tenant->currency ?? 'INR'), ['INR', '₹'], true)) {
+            if ($settings->razorpay_enabled && $settings->razorpay_key && $settings->razorpay_secret && $settings->razorpay_webhook_secret) $methods[] = 'razorpay';
+            if ($settings->paytm_enabled && $settings->paytm_mid && $settings->paytm_merchant_key && $settings->paytm_website_name
+                && in_array($settings->paytm_environment, ['test', 'live'], true)) $methods[] = 'paytm';
+            if ($settings->phonepe_enabled && $settings->phonepe_client_id && $settings->phonepe_client_secret && $settings->phonepe_client_version
+                && $settings->phonepe_webhook_username && $settings->phonepe_webhook_password
+                && in_array($settings->phonepe_environment, ['test', 'live'], true)) $methods[] = 'phonepe';
         }
 
         return array_values(array_unique($methods));

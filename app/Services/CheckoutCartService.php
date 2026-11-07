@@ -9,7 +9,7 @@ use Illuminate\Validation\ValidationException;
 class CheckoutCartService
 {
     /** Refresh prices and reserve stock while the caller holds a transaction. */
-    public function prepare(array $cart): array
+    public function prepare(array $cart, bool $reserve = true): array
     {
         foreach ($cart as &$item) {
             $quantity = filter_var($item['quantity'] ?? null, FILTER_VALIDATE_INT);
@@ -27,7 +27,9 @@ class CheckoutCartService
                 }
                 $this->checkLimits($product, $quantity);
                 $variant = $this->variant($product, $item['variant_id'] ?? null, $item['size'] ?? null);
-                $this->reserve($product, $variant, $quantity);
+                $item['_reservations'] = [['product_id' => $product->id, 'variant_id' => $variant->id, 'quantity' => $quantity]];
+                if ($reserve) $this->reserve($product, $variant, $quantity);
+                elseif (!$product->continue_selling_when_out_of_stock && $variant->stock < $quantity) $this->invalid('A selected item has insufficient stock.');
                 $item['price'] = $variant->price;
                 $item['original_price'] = $variant->price;
                 $item['name'] = $product->title;
@@ -41,17 +43,21 @@ class CheckoutCartService
                     $this->invalid('A bundle in your cart is no longer available.');
                 }
                 $this->checkLimits($bundle, $quantity);
+                $item['_reservations'] = [];
                 foreach ($bundle->products as $product) {
                     if ($product->status !== 'active') {
                         $this->invalid('A bundle product is no longer available.');
                     }
                     $variant = $this->variant($product, $product->pivot->product_variant_id);
-                    $this->reserve($product, $variant, $quantity * ($product->pivot->quantity ?? 1));
+                    $units = $quantity * ($product->pivot->quantity ?? 1);
+                    $item['_reservations'][] = ['product_id' => $product->id, 'variant_id' => $variant->id, 'quantity' => $units];
+                    if ($reserve) $this->reserve($product, $variant, $units);
+                    elseif (!$product->continue_selling_when_out_of_stock && $variant->stock < $units) $this->invalid('A bundle item has insufficient stock.');
                 }
                 $item['price'] = $bundle->total_price;
                 $item['original_price'] = $item['price'];
                 $item['name'] = $bundle->title;
-                $bundle->increment('total_sales', $quantity);
+                if ($reserve) $bundle->increment('total_sales', $quantity);
             } else {
                 $this->invalid('Invalid cart item.');
             }

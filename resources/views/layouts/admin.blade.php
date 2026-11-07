@@ -238,6 +238,17 @@
                     @if(!($billingOnly ?? false) && auth()->user()?->type === 'admin' && request()->routeIs('admin.settings.*', 'admin.delivery-staff.*', 'admin.billing*', 'admin.notifications.*') && !request()->routeIs('admin.settings.index'))
                         <nav aria-label="Settings navigation" class="mb-3 px-2"><a href="{{ route('admin.settings.index') }}" class="small text-decoration-none fw-medium">← Settings overview</a></nav>
                     @endif
+                    @if(isset($currentTenant) && in_array(auth()->user()?->type, ['admin', 'super_admin'], true))
+                        @php
+                            $customerPaymentReviewCount = \App\Models\CustomerPayment::where('tenant_id', $currentTenant->id)->whereIn('status', ['captured', 'review'])->count();
+                        @endphp
+                        @if($customerPaymentReviewCount)
+                            <div class="alert alert-warning" role="alert">
+                                {{ $customerPaymentReviewCount }} customer payment(s) need order review.
+                                <a href="{{ route('admin.settings.payment', ['tenant' => $currentTenant->id]) }}">Review payments</a>. Do not ask these customers to pay again.
+                            </div>
+                        @endif
+                    @endif
                     @yield('content')
 
                     <div class="mt-5 pt-4 border-top text-center small text-primary fw-medium">

@@ -12,7 +12,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->trustProxies(at: '*');
-        $middleware->validateCsrfTokens(except: ['billing/razorpay/webhook']);
+        $middleware->validateCsrfTokens(except: ['billing/razorpay/webhook', 'payments/razorpay/*/webhook', 'payments/paytm/*/callback', 'payments/paytm/*/webhook', 'payments/phonepe/*/webhook']);
         $middleware->web(append: [
             \App\Http\Middleware\ResolveStoreSubdomain::class,
             \App\Http\Middleware\FormatCurrencyResponse::class,
@@ -25,6 +25,7 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
+        $exceptions->dontFlash(['razorpay_secret', 'razorpay_webhook_secret', 'stripe_secret', 'phonepe_salt_key', 'paytm_merchant_key', 'phonepe_client_secret', 'phonepe_webhook_password']);
         $exceptions->render(function (\Symfony\Component\HttpKernel\Exception\HttpExceptionInterface $e, \Illuminate\Http\Request $request) {
             $view = 'nurah.errors.' . $e->getStatusCode();
             if (view()->exists($view)) {

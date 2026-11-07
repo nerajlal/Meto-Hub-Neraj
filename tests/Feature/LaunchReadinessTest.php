@@ -172,6 +172,7 @@ class LaunchReadinessTest extends TestCase
             'razorpay_enabled' => '1',
             'razorpay_key' => 'rzp_test_12345',
             'razorpay_secret' => 'rzp_secret_67890',
+            'razorpay_webhook_secret' => 'test-customer-webhook-secret',
         ])->assertRedirect();
         $this->assertDatabaseHas('tenant_payment_settings', [
             'tenant_id' => $tenant->id,

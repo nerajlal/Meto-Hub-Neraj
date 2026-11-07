@@ -24,3 +24,5 @@ Artisan::command('notifications:deliver-shipments', function () {
 })->purpose('Queue pending customer shipment emails');
 
 \Illuminate\Support\Facades\Schedule::command('notifications:deliver-shipments')->everyMinute()->withoutOverlapping();
+
+\Illuminate\Support\Facades\Schedule::command('payments:reconcile')->everyFiveMinutes()->withoutOverlapping();

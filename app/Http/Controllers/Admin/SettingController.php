@@ -73,10 +73,12 @@ class SettingController extends Controller
      */
     public function paymentIndex()
     {
-        $tenantId = auth()->user()->tenant_id ?? session('active_tenant_id') ?? 1;
+        $tenantId = request()->attributes->get('resolved_tenant_id') ?? auth()->user()->tenant_id ?? session('active_tenant_id');
         $paymentSetting = TenantPaymentSetting::firstOrCreate(['tenant_id' => $tenantId]);
 
-        return view('admin.settings.payment', compact('paymentSetting'));
+        $paymentIssues = \App\Models\CustomerPayment::where('tenant_id', $tenantId)
+            ->whereIn('status', ['review', 'captured', 'creation_unknown'])->latest()->limit(20)->get();
+        return view('admin.settings.payment', compact('paymentSetting', 'paymentIssues'));
     }
 
     /**
@@ -84,50 +86,51 @@ class SettingController extends Controller
      */
     public function paymentUpdate(Request $request)
     {
-        $tenantId = auth()->user()->tenant_id ?? session('active_tenant_id') ?? 1;
+        $tenantId = request()->attributes->get('resolved_tenant_id') ?? auth()->user()->tenant_id ?? session('active_tenant_id');
         $paymentSetting = TenantPaymentSetting::firstOrCreate(['tenant_id' => $tenantId]);
 
         $validated = $request->validate([
             'cod_enabled' => 'nullable|boolean',
             'whatsapp_checkout_enabled' => 'nullable|boolean',
-            'stripe_enabled' => 'nullable|boolean',
-            'stripe_key' => 'nullable|string|max:255',
-            'stripe_secret' => 'nullable|string|max:255',
             'razorpay_enabled' => 'nullable|boolean',
             'razorpay_key' => 'nullable|string|max:255',
             'razorpay_secret' => 'nullable|string|max:255',
+            'razorpay_webhook_secret' => 'nullable|string|min:16|max:255',
             'phonepe_enabled' => 'nullable|boolean',
-            'phonepe_merchant_id' => 'nullable|string|max:255',
-            'phonepe_salt_key' => 'nullable|string|max:255',
-            'phonepe_salt_index' => 'nullable|string|max:255',
+            'paytm_enabled' => 'nullable|boolean',
+            'paytm_mid' => 'nullable|string|regex:/^[A-Za-z0-9]{4,100}$/',
+            'paytm_merchant_key' => 'nullable|string|size:16',
+            'paytm_environment' => 'nullable|in:test,live',
+            'paytm_website_name' => 'nullable|string|regex:/^[A-Za-z0-9_]{1,100}$/',
+            'phonepe_client_id' => 'nullable|string|max:150',
+            'phonepe_client_version' => 'nullable|integer|min:1|max:2147483647',
+            'phonepe_client_secret' => 'nullable|string|max:255',
+            'phonepe_environment' => 'nullable|in:test,live',
+            'phonepe_webhook_username' => 'nullable|string|regex:/^[A-Za-z0-9_.@-]{1,100}$/',
+            'phonepe_webhook_password' => 'nullable|string|min:16|max:255',
         ]);
-
-        $stripeKey = $request->input('stripe_key', $paymentSetting->stripe_key);
-        $stripeSecret = $request->filled('stripe_secret') ? $request->stripe_secret : $paymentSetting->stripe_secret;
-        $stripeCanEnable = !empty($stripeKey) && !empty($stripeSecret);
 
         $razorpayKey = $request->input('razorpay_key', $paymentSetting->razorpay_key);
         $razorpaySecret = $request->filled('razorpay_secret') ? $request->razorpay_secret : $paymentSetting->razorpay_secret;
-        $razorpayCanEnable = !empty($razorpayKey) && !empty($razorpaySecret);
-
-        $phonepeMid = $request->input('phonepe_merchant_id', $paymentSetting->phonepe_merchant_id);
-        $phonepeSalt = $request->filled('phonepe_salt_key') ? $request->phonepe_salt_key : $paymentSetting->phonepe_salt_key;
-        $phonepeCanEnable = !empty($phonepeMid) && !empty($phonepeSalt);
+        $webhookSecret = $request->filled('razorpay_webhook_secret') ? $request->razorpay_webhook_secret : $paymentSetting->razorpay_webhook_secret;
+        $razorpayCanEnable = !empty($razorpayKey) && !empty($razorpaySecret) && !empty($webhookSecret);
+        if ($request->boolean('razorpay_enabled') && !$razorpayCanEnable) {
+            throw \Illuminate\Validation\ValidationException::withMessages(['razorpay_enabled' => 'Set the Key ID, Key Secret and webhook secret before enabling Razorpay.']);
+        }
+        if ($request->boolean('razorpay_enabled') && !preg_match('/^rzp_(test|live)_[a-zA-Z0-9]+$/', (string) $razorpayKey)) {
+            throw \Illuminate\Validation\ValidationException::withMessages(['razorpay_key' => 'Enter a valid Razorpay test or live Key ID.']);
+        }
 
         $updateData = [
             'cod_enabled' => $request->boolean('cod_enabled'),
             'whatsapp_checkout_enabled' => $request->boolean('whatsapp_checkout_enabled'),
-            'stripe_enabled' => $request->boolean('stripe_enabled') && $stripeCanEnable,
+            'stripe_enabled' => false,
             'razorpay_enabled' => $request->boolean('razorpay_enabled') && $razorpayCanEnable,
-            'phonepe_enabled' => $request->boolean('phonepe_enabled') && $phonepeCanEnable,
+            'phonepe_enabled' => $request->boolean('phonepe_enabled'),
+            'paytm_enabled' => $request->boolean('paytm_enabled'),
         ];
 
-        if ($request->has('stripe_key')) {
-            $updateData['stripe_key'] = $validated['stripe_key'] ?? null;
-        }
-        if ($request->filled('stripe_secret')) {
-            $updateData['stripe_secret'] = $validated['stripe_secret'];
-        }
+        if ($request->filled('razorpay_webhook_secret')) $updateData['razorpay_webhook_secret'] = $validated['razorpay_webhook_secret'];
 
         if ($request->has('razorpay_key')) {
             $updateData['razorpay_key'] = $validated['razorpay_key'] ?? null;
@@ -136,19 +139,40 @@ class SettingController extends Controller
             $updateData['razorpay_secret'] = $validated['razorpay_secret'];
         }
 
-        if ($request->has('phonepe_merchant_id')) {
-            $updateData['phonepe_merchant_id'] = $validated['phonepe_merchant_id'] ?? null;
+        $gatewayFields = ['paytm_mid', 'paytm_merchant_key', 'paytm_environment', 'paytm_website_name',
+            'phonepe_client_id', 'phonepe_client_version', 'phonepe_client_secret', 'phonepe_environment',
+            'phonepe_webhook_username', 'phonepe_webhook_password'];
+        $secretFields = ['paytm_merchant_key', 'phonepe_client_secret', 'phonepe_webhook_password'];
+        foreach ($gatewayFields as $field) {
+            if (in_array($field, $secretFields, true) && !$request->filled($field)) continue;
+            if ($request->has($field)) $updateData[$field] = $validated[$field] ?? null;
         }
-        if ($request->filled('phonepe_salt_key')) {
-            $updateData['phonepe_salt_key'] = $validated['phonepe_salt_key'];
-        }
-        if ($request->has('phonepe_salt_index')) {
-            $updateData['phonepe_salt_index'] = $validated['phonepe_salt_index'] ?? null;
+        foreach (['paytm' => ['paytm_mid', 'paytm_merchant_key', 'paytm_environment', 'paytm_website_name'],
+            'phonepe' => ['phonepe_client_id', 'phonepe_client_version', 'phonepe_client_secret', 'phonepe_environment', 'phonepe_webhook_username', 'phonepe_webhook_password']] as $gateway => $required) {
+            if (!$request->boolean($gateway.'_enabled')) continue;
+            foreach ($required as $field) {
+                if (empty(array_key_exists($field, $updateData) ? $updateData[$field] : $paymentSetting->$field)) {
+                    throw \Illuminate\Validation\ValidationException::withMessages([$field => 'Complete all '.$gateway.' merchant credentials before enabling checkout.']);
+                }
+            }
         }
 
         $paymentSetting->update($updateData);
 
         return redirect()->back()->with('success', 'Payment gateway settings updated successfully.');
+    }
+
+    public function retryCustomerPayment(Request $request, string $checkout)
+    {
+        $request->validate(['confirm_not_refunded' => 'required|accepted']);
+        $tenantId = $request->attributes->get('resolved_tenant_id');
+        $payment = \App\Models\CustomerPayment::where('tenant_id', $tenantId)->where('gateway', 'phonepe')->where('status', 'review')->findOrFail($checkout);
+        try {
+            $payment = app(\App\Services\AlternativeCustomerGateways::class)->reconcile($payment, app(\App\Services\CustomerPayments::class), true);
+        } catch (\Throwable $e) {
+            return back()->withErrors(['payment' => 'The provider could not confirm payment. Nothing was fulfilled; check again later.']);
+        }
+        return back()->with('success', $payment->status === 'completed' ? 'Payment verified and order created.' : 'This payment still requires review.');
     }
 
     /**

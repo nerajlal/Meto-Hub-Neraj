@@ -32,10 +32,29 @@ if ($mode === '--bundle-create' || $mode === '--bundle-edit') {
     $bundle = App\Models\Bundle::create(['tenant_id' => $tenant->id, 'title' => 'Snack Duo', 'slug' => 'snack-duo', 'type' => 'bundle', 'status' => 'active', 'discount_type' => 'fixed', 'discount_value' => 50]);
     $bundle->products()->attach($product->id, ['product_variant_id' => $large->id, 'quantity' => 2]);
 }
+if (in_array($mode, ['--payment', '--customer-checkout', '--paytm-checkout', '--phonepe-checkout'], true)) {
+    $tenant->update(['currency' => 'INR']);
+    App\Models\TenantPaymentSetting::create(['tenant_id' => $tenant->id, 'cod_enabled' => true, 'razorpay_enabled' => true,
+        'razorpay_key' => 'rzp_test_fixture', 'razorpay_secret' => 'fixture-secret', 'razorpay_webhook_secret' => 'fixture-webhook-secret']);
+    if (in_array($mode, ['--paytm-checkout', '--phonepe-checkout'], true)) {
+        App\Models\TenantPaymentSetting::withoutGlobalScopes()->where('tenant_id', $tenant->id)->first()->update([
+            'cod_enabled' => false, 'paytm_enabled' => true, 'paytm_mid' => 'MIDfixture12345678901', 'paytm_merchant_key' => '1234567890123456',
+            'paytm_website_name' => 'WEBSTAGING', 'phonepe_enabled' => true, 'phonepe_client_id' => 'fixture-client', 'phonepe_client_version' => 1,
+            'phonepe_client_secret' => 'fixture-client-secret', 'phonepe_webhook_username' => 'fixture-user', 'phonepe_webhook_password' => 'fixture-webhook-password']);
+    }
+    if (in_array($mode, ['--customer-checkout', '--paytm-checkout', '--phonepe-checkout'], true)) {
+        $product = App\Models\Product::create(['tenant_id' => $tenant->id, 'title' => 'Fixture Chips', 'status' => 'active']);
+        $variant = $product->variants()->create(['size' => '100g', 'price' => 100, 'stock' => 10]);
+        App\Models\Cart::create(['tenant_id' => $tenant->id, 'user_id' => $user->id, 'product_id' => $product->id,
+            'product_variant_id' => $variant->id, 'quantity' => 1, 'size' => '100g']);
+    }
+}
 Illuminate\Support\Facades\Auth::login($user);
 $path = $mode === '--unavailable' ? '/store/'.$tenant->slug : '/'.$tenant->id.'/admin/'.(in_array($mode, ['--expired', '--billing', '--billing-resume'], true) ? 'billing' : 'settings');
 if ($mode === '--bundle-create') $path = '/'.$tenant->id.'/admin/bundles/create';
 if ($mode === '--bundle-edit') $path = '/'.$tenant->id.'/admin/bundles/'.$bundle->id.'/edit';
+if ($mode === '--payment') $path = '/'.$tenant->id.'/admin/settings/payment';
+if (in_array($mode, ['--customer-checkout', '--paytm-checkout', '--phonepe-checkout'], true)) $path = '/store/'.$tenant->slug.'/checkout';
 $response = $app->make(Illuminate\Contracts\Http\Kernel::class)->handle(Illuminate\Http\Request::create('http://127.0.0.1:8000'.$path));
 if ($response->getStatusCode() !== ($mode === '--unavailable' ? 503 : 200) || empty($argv[1])) throw new RuntimeException('Settings fixture failed');
 file_put_contents($argv[1], $response->getContent());

@@ -17,28 +17,8 @@ use App\Services\WhatsAppService;
 
 class OrderController extends Controller
 {
-    public function store(Request $request)
+    public function validateCheckout(Request $request, \App\Models\Tenant $tenant): void
     {
-        // Map alternative names to standard field names if they exist
-        if (!$request->has('name') && ($request->has('first_name') || $request->has('last_name'))) {
-            $request->merge([
-                'name' => trim($request->input('first_name', '') . ' ' . $request->input('last_name', ''))
-            ]);
-        }
-        if (!$request->has('pincode') && $request->has('zip')) {
-            $request->merge([
-                'pincode' => $request->input('zip')
-            ]);
-        }
-        if (!$request->has('payment_method')) {
-            $request->merge([
-                'payment_method' => $request->input('payment') ?? 'cod'
-            ]);
-        }
-
-        // 1. Validate Input
-        $tenantId = $request->attributes->get('resolved_tenant_id') ?? session('active_tenant_id');
-        $tenant = \App\Models\Tenant::findOrFail($tenantId);
         $cf = $tenant ? ($tenant->checkout_fields ?? []) : [];
         
         $rules = [
@@ -63,9 +43,9 @@ class OrderController extends Controller
             $isRequired = !isset($cf[$f]) || (isset($cf[$f]['required']) && $cf[$f]['required']);
             
             if ($isEnabled && $isRequired) {
-                $rules[$f] = ($f === 'email') ? 'required|email' : 'required';
+                $rules[$f] = ($f === 'email') ? 'required|email|max:255' : 'required|string|max:1000';
             } elseif ($isEnabled && $f === 'email') {
-                $rules[$f] = 'nullable|email';
+                $rules[$f] = 'nullable|email|max:255';
             }
         }
 
@@ -85,7 +65,44 @@ class OrderController extends Controller
             $rules['order_notes'] = 'required';
         }
 
+        foreach (['name', 'phone', 'address', 'apartment', 'city', 'state', 'pincode', 'alternate_phone', 'company_name', 'gst_number', 'landmark', 'order_notes'] as $field) {
+            $rules[$field] = ($rules[$field] ?? 'nullable').'|string|max:1000';
+        }
+        foreach (['name', 'phone'] as $field) $rules[$field] = str_replace('max:1000', 'max:255', $rules[$field]);
+        $rules['email'] ??= 'nullable|email|max:255';
+        $rules['delivery_date'] ??= 'nullable|date';
+        $rules['delivery_time_slot'] ??= 'nullable|string|max:255';
         $request->validate($rules);
+
+    }
+
+    public function store(Request $request)
+    {
+        // Map alternative names to standard field names if they exist
+        if (!$request->has('name') && ($request->has('first_name') || $request->has('last_name'))) {
+            $request->merge([
+                'name' => trim($request->input('first_name', '') . ' ' . $request->input('last_name', ''))
+            ]);
+        }
+        if (!$request->has('pincode') && $request->has('zip')) {
+            $request->merge([
+                'pincode' => $request->input('zip')
+            ]);
+        }
+        if (!$request->has('payment_method')) {
+            $request->merge([
+                'payment_method' => $request->input('payment') ?? 'cod'
+            ]);
+        }
+
+        // 1. Validate Input
+        $tenantId = $request->attributes->get('resolved_tenant_id') ?? session('active_tenant_id');
+        $tenant = \App\Models\Tenant::findOrFail($tenantId);
+        $this->validateCheckout($request, $tenant);
+        $cf = $tenant->checkout_fields ?? [];
+        if (in_array($request->payment_method, ['online', 'razorpay', 'stripe', 'phonepe', 'paytm'], true)) {
+            throw ValidationException::withMessages(['payment_method' => 'Complete the secure online checkout before placing a paid order.']);
+        }
 
         try {
             DB::beginTransaction();
@@ -148,8 +165,7 @@ class OrderController extends Controller
         }
         $shipping = 0; // Free shipping
         
-        $tenantId = session('active_tenant_id') ?? 1;
-        $tenant = \App\Models\Tenant::find($tenantId);
+
         $taxAmount = 0.00;
         $taxRate = null;
         $taxName = null;
@@ -202,8 +218,7 @@ class OrderController extends Controller
         }
 
         // 4. Create Order
-        $isOnlinePayment = in_array($request->payment_method, ['online', 'razorpay', 'stripe', 'phonepe'], true);
-        $paymentStatus = ($isOnlinePayment && $request->filled('gateway_payment_id')) ? 'paid' : 'pending';
+        $paymentStatus = 'pending';
 
         $order = Order::create([
             'user_id' => Auth::id(),
@@ -211,9 +226,9 @@ class OrderController extends Controller
             'status' => 'pending',
             'payment_method' => $request->payment_method ?? 'cod',
             'payment_status' => $paymentStatus,
-            'gateway_payment_id' => $request->gateway_payment_id,
-            'gateway_order_id' => $request->gateway_order_id,
-            'gateway_name' => $request->gateway_name ?? ($isOnlinePayment ? $request->payment_method : null),
+            'gateway_payment_id' => null,
+            'gateway_order_id' => null,
+            'gateway_name' => null,
             'subtotal' => $cartData['subtotal'],
             'discount_amount' => $savings,
             'shipping_cost' => $shipping,

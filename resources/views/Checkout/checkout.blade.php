@@ -291,11 +291,12 @@
                             $availableMethods = app(\App\Services\CheckoutPaymentPolicy::class)->availableMethods($currentTenant);
                             $codEnabled = in_array('cod', $availableMethods, true);
                             $razorpayEnabled = in_array('razorpay', $availableMethods, true);
-                            $stripeEnabled = in_array('stripe', $availableMethods, true);
+                            $paytmEnabled = in_array('paytm', $availableMethods, true);
                             $phonepeEnabled = in_array('phonepe', $availableMethods, true);
-                            $anyOnlineEnabled = $razorpayEnabled || $stripeEnabled || $phonepeEnabled || in_array('online', $availableMethods, true);
+                            $anyOnlineEnabled = $razorpayEnabled || $paytmEnabled || $phonepeEnabled;
                             $anyAvailable = !empty($availableMethods);
-                            $defaultToOnline = !$codEnabled && $anyAvailable;
+                            $defaultToOnline = !$codEnabled && $anyOnlineEnabled;
+                            $defaultOnline = collect(['razorpay', 'paytm', 'phonepe'])->first(fn ($method) => in_array($method, $availableMethods, true));
                         @endphp
                         @unless($anyAvailable)
                             <p role="status">Ordering is temporarily unavailable. Please contact the store.</p>
@@ -323,20 +324,16 @@
                         </label>
                         @endif
 
-                        @if($stripeEnabled)
-                        <label class="pay-option" style="display: flex; align-items: center; gap: 1.5rem; padding: 1.5rem; border: 2px solid var(--border-color); border-radius: 1rem; cursor: pointer; transition: 0.2s;">
-                            <input type="radio" name="payment_method" value="stripe" style="accent-color: var(--accent-color); transform: scale(1.25);">
-                            <div class="pay-content" style="flex-grow: 1;">
-                                <span class="pay-title" style="display: block; font-weight: 700; color: var(--primary-color); font-size: 1.1rem; margin-bottom: 0.25rem;">Credit / Debit Card (Stripe)</span>
-                                <span class="pay-desc" style="font-size: 0.85rem; color: var(--text-muted);">Pay securely with Visa, Mastercard, RuPay, or Apple Pay.</span>
-                            </div>
-                            <i class="fa-brands fa-stripe" style="font-size: 1.8rem; color: var(--text-muted);"></i>
+                        @if($paytmEnabled)
+                        <label class="pay-option" style="display:flex;align-items:center;gap:1.5rem;padding:1.5rem;border:2px solid var(--border-color);border-radius:1rem;cursor:pointer">
+                            <input type="radio" name="payment_method" value="paytm" @checked($defaultToOnline && $defaultOnline === 'paytm') style="accent-color:var(--accent-color)">
+                            <div class="pay-content"><span class="pay-title" style="display:block;font-weight:700;color:var(--primary-color)">Paytm Payments</span><span class="pay-desc" style="color:var(--text-muted);font-size:.85rem">Complete payment securely through the store’s Paytm gateway.</span></div>
                         </label>
                         @endif
 
                         @if($phonepeEnabled)
                         <label class="pay-option" style="display: flex; align-items: center; gap: 1.5rem; padding: 1.5rem; border: 2px solid var(--border-color); border-radius: 1rem; cursor: pointer; transition: 0.2s;">
-                            <input type="radio" name="payment_method" value="phonepe" style="accent-color: var(--accent-color); transform: scale(1.25);">
+                            <input type="radio" name="payment_method" value="phonepe" @checked($defaultToOnline && $defaultOnline === 'phonepe') style="accent-color: var(--accent-color); transform: scale(1.25);">
                             <div class="pay-content" style="flex-grow: 1;">
                                 <span class="pay-title" style="display: block; font-weight: 700; color: var(--primary-color); font-size: 1.1rem; margin-bottom: 0.25rem;">PhonePe UPI</span>
                                 <span class="pay-desc" style="font-size: 0.85rem; color: var(--text-muted);">Pay instantly using your PhonePe UPI app or QR.</span>
@@ -363,13 +360,11 @@
                     </div>
                 </div>
 
-                <input type="hidden" name="gateway_payment_id" id="gateway_payment_id" value="">
-                <input type="hidden" name="gateway_order_id" id="gateway_order_id" value="">
-                <input type="hidden" name="gateway_name" id="gateway_name" value="">
-
                 <button type="submit" @disabled(!$anyAvailable) class="btn-complete-order" style="width: 100%; background: var(--accent-color); color: #fff; border: none; padding: 1.25rem; border-radius: 9999px; font-weight: 800; font-size: 1.2rem; cursor: pointer; transition: 0.2s;">
                     Complete Order • {{ $currentTenant->currency ?? '₹' }}{{ number_format($total, 2) }}
                 </button>
+                <p id="customer-payment-message" role="status" aria-live="polite" class="small mt-3"></p>
+                <button type="button" id="customer-payment-status" hidden class="btn btn-outline-secondary mt-2">Check payment status</button>
             </form>
         </div>
 
@@ -443,8 +438,10 @@
 @endsection
 
 @section('scripts')
+@if($razorpayEnabled ?? false)
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-<script src="https://js.stripe.com/v3/"></script>
+@endif
+
 <script>
     function detectLocation() {
         const btn = document.getElementById('btn-geolocation');
@@ -623,100 +620,153 @@
                 });
             }
 
-            // Razorpay Gateway
-            if (paymentMethod === 'razorpay') {
+            // Only the server can create a paid order. The browser never submits a paid flag or amount.
+            if (['razorpay', 'paytm', 'phonepe'].includes(paymentMethod)) {
+                const key = 'metohub-checkout-{{ $currentTenant->id }}';
+                let saved = {};
+                try { saved = JSON.parse(sessionStorage.getItem(key) || '{}'); } catch (_) {}
+                if (!saved.requestId) {
+                    saved.requestId = crypto.randomUUID();
+                    sessionStorage.setItem(key, JSON.stringify(saved));
+                }
+                const reset = () => $btn.html(originalHtml).prop('disabled', false);
+                const finish = (result) => {
+                    if (result.success && result.redirect_url) {
+                        window.MetoHubTracking?.consume(result.tracking);
+                        localStorage.removeItem('checkout_form_data');
+                        sessionStorage.removeItem(key);
+                        window.location.href = result.redirect_url;
+                    } else {
+                        $('#customer-payment-message').text(result.message || 'Check payment status before paying again.');
+                        reset();
+                    }
+                };
                 $.ajax({
-                    url: '{{ route("payment.initiate") }}',
+                    url: '{{ route("payment.initiate", ["tenant_id" => $currentTenant->id]) }}',
                     method: 'POST',
-                    data: {
-                        _token: '{{ csrf_token() }}',
-                        gateway: 'razorpay',
-                        amount: {{ (float) $total }},
-                        customer_name: $('input[name="name"]').val(),
-                        customer_email: $('input[name="email"]').val(),
-                        customer_phone: $('input[name="phone"]').val()
-                    },
+                    data: $form.serialize() + '&gateway=' + encodeURIComponent(paymentMethod) + '&checkout_request_id=' + encodeURIComponent(saved.requestId),
                     success: function(initRes) {
-                        if (initRes.success) {
-                            const rzpOptions = {
-                                key: initRes.key,
-                                amount: initRes.amount,
-                                currency: initRes.currency,
-                                name: initRes.store_name,
-                                description: 'Order Payment',
-                                order_id: initRes.order_id,
-                                prefill: {
-                                    name: $('input[name="name"]').val(),
-                                    email: $('input[name="email"]').val(),
-                                    contact: $('input[name="phone"]').val()
-                                },
-                                theme: {
-                                    color: getComputedStyle(document.documentElement).getPropertyValue('--accent-color').trim() || '#10b981'
-                                },
-                                handler: function(response) {
-                                    $('#gateway_payment_id').val(response.razorpay_payment_id);
-                                    $('#gateway_order_id').val(response.razorpay_order_id);
-                                    $('#gateway_name').val('razorpay');
-                                    executeOrderSubmission();
-                                },
-                                modal: {
-                                    ondismiss: function() {
-                                        $btn.html(originalHtml).prop('disabled', false);
-                                    }
-                                }
-                            };
-                            const rzp = new Razorpay(rzpOptions);
-                            rzp.on('payment.failed', function(resp) {
-                                alert('Payment failed: ' + resp.error.description);
-                                $btn.html(originalHtml).prop('disabled', false);
-                            });
-                            rzp.open();
-                        } else {
-                            alert(initRes.message || 'Unable to start online payment.');
-                            $btn.html(originalHtml).prop('disabled', false);
+                        if (!initRes.success) {
+                            if (initRes.restart_allowed) { sessionStorage.removeItem(key); $('#customer-payment-status').prop('hidden', true); }
+                            $('#customer-payment-message').text(initRes.message || 'Checkout could not be opened. Check payment status before retrying.');
+                            reset(); return;
                         }
+                        if (initRes.redirect_url) { finish(initRes); return; }
+                        saved.checkoutId = initRes.checkout_id;
+                        saved.requestId = initRes.checkout_id;
+                        sessionStorage.setItem(key, JSON.stringify(saved));
+                        $('#customer-payment-status').prop('hidden', false);
+                        $('#customer-payment-message').text('Complete payment in the secure provider checkout. If interrupted, use Check payment status before paying again.');
+                        if (initRes.gateway === 'phonepe') {
+                            window.location.assign(initRes.payment_url);
+                            return;
+                        }
+                        if (initRes.gateway === 'paytm') {
+                            const checkPaytm = function() {
+                                $.ajax({url: '{{ route("payment.status", ["tenant_id" => $currentTenant->id]) }}', method: 'POST',
+                                    data: {_token: '{{ csrf_token() }}', checkout_id: saved.checkoutId}, success: finish,
+                                    error: function() { $('#customer-payment-message').text('Payment is not confirmed. Use Check payment status before paying again.'); reset(); }});
+                            };
+                            const invoke = function() {
+                                if (!window.Paytm?.CheckoutJS) { reset(); return; }
+                                window.Paytm.CheckoutJS.onLoad(function() {
+                                    window.Paytm.CheckoutJS.init({root: '', flow: 'DEFAULT',
+                                        data: {orderId: initRes.order_id, token: initRes.txn_token, tokenType: 'TXN_TOKEN', amount: (initRes.amount / 100).toFixed(2)},
+                                        merchant: {mid: initRes.mid, redirect: false},
+                                        handler: {
+                                            transactionStatus: function() { window.Paytm.CheckoutJS.close(); checkPaytm(); },
+                                            notifyMerchant: function(eventName) { if (eventName === 'APP_CLOSED') { reset(); checkPaytm(); } }
+                                        }
+                                    }).then(function() { window.Paytm.CheckoutJS.invoke(); })
+                                    .catch(function() { $('#customer-payment-message').text('Paytm could not open. Check payment status before retrying.'); reset(); });
+                                });
+                            };
+                            if (window.loadedPaytmScript === initRes.script_url && window.Paytm?.CheckoutJS) invoke();
+                            else {
+                                const script = document.createElement('script');
+                                script.src = initRes.script_url; script.crossOrigin = 'anonymous';
+                                script.onload = function() { window.loadedPaytmScript = initRes.script_url; invoke(); };
+                                script.onerror = function() { $('#customer-payment-message').text('Paytm could not load. No order has been confirmed; use Check payment status.'); reset(); };
+                                document.head.appendChild(script);
+                            }
+                            return;
+                        }
+                        const rzp = new Razorpay({
+                            key: initRes.key, amount: initRes.amount, currency: initRes.currency,
+                            name: initRes.store_name, description: 'Store order', order_id: initRes.order_id,
+                            prefill: {name: $('input[name="name"]').val(), email: $('input[name="email"]').val(), contact: $('input[name="phone"]').val()},
+                            theme: {color: getComputedStyle(document.documentElement).getPropertyValue('--accent-color').trim() || '#10b981'},
+                            handler: function(result) {
+                                $('#customer-payment-message').text('Checking payment with Razorpay…');
+                                $.ajax({url: '{{ route("payment.verify", ["tenant_id" => $currentTenant->id]) }}', method: 'POST',
+                                    data: {_token: '{{ csrf_token() }}', gateway: 'razorpay', checkout_id: saved.checkoutId,
+                                        razorpay_payment_id: result.razorpay_payment_id,
+                                        razorpay_order_id: result.razorpay_order_id, razorpay_signature: result.razorpay_signature},
+                                    success: finish,
+                                    error: function(xhr) {
+                                        $('#customer-payment-message').text(xhr.responseJSON?.message || 'Payment could not be checked. Do not pay again; use Check payment status.');
+                                        reset();
+                                    }});
+                            },
+                            modal: {ondismiss: reset}
+                        });
+                        rzp.on('payment.failed', function() {
+                            $('#customer-payment-message').text('Payment attempt failed. Check payment status before retrying this checkout.');
+                            reset();
+                        });
+                        rzp.open();
                     },
-                    error: function(err) {
-                        alert(err.responseJSON?.message || 'Error initializing Razorpay gateway.');
-                        $btn.html(originalHtml).prop('disabled', false);
+                    error: function(xhr) {
+                        if (xhr.responseJSON?.checkout_id) {
+                            saved.checkoutId = xhr.responseJSON.checkout_id;
+                            saved.requestId = xhr.responseJSON.checkout_id;
+                            sessionStorage.setItem(key, JSON.stringify(saved));
+                            $('#customer-payment-status').prop('hidden', false);
+                        }
+                        $('#customer-payment-message').text(xhr.responseJSON?.message || 'Checkout could not be started. Check payment status before trying again.');
+                        reset();
                     }
                 });
                 return;
             }
-
-            // Stripe / PhonePe Gateways
-            if (paymentMethod === 'stripe' || paymentMethod === 'phonepe') {
-                $.ajax({
-                    url: '{{ route("payment.initiate") }}',
-                    method: 'POST',
-                    data: {
-                        _token: '{{ csrf_token() }}',
-                        gateway: paymentMethod,
-                        amount: {{ (float) $total }},
-                        customer_name: $('input[name="name"]').val(),
-                        customer_email: $('input[name="email"]').val(),
-                        customer_phone: $('input[name="phone"]').val()
-                    },
-                    success: function(initRes) {
-                        if (initRes.success) {
-                            $('#gateway_order_id').val(initRes.transaction_id || initRes.client_secret || '');
-                            $('#gateway_name').val(paymentMethod);
-                            executeOrderSubmission();
-                        } else {
-                            alert(initRes.message || 'Payment initiation failed.');
-                            $btn.html(originalHtml).prop('disabled', false);
-                        }
-                    },
-                    error: function(err) {
-                        alert(err.responseJSON?.message || 'Error connecting to payment gateway.');
-                        $btn.html(originalHtml).prop('disabled', false);
-                    }
-                });
+            if (['stripe', 'online'].includes(paymentMethod)) {
+                $('#customer-payment-message').text('This online payment method is not available. Choose Razorpay, cash on delivery or WhatsApp.');
+                $btn.html(originalHtml).prop('disabled', false);
                 return;
             }
 
             // Standard Cash on Delivery
             executeOrderSubmission();
+        });
+
+        const paymentStorageKey = 'metohub-checkout-{{ $currentTenant->id }}';
+        let pendingCheckout;
+        try { pendingCheckout = JSON.parse(sessionStorage.getItem(paymentStorageKey) || '{}'); } catch (_) { pendingCheckout = {}; }
+        if (pendingCheckout.checkoutId) {
+            $('#customer-payment-status').prop('hidden', false);
+            $('#customer-payment-message').text('An earlier payment checkout exists. Check its status before placing another order.');
+        }
+        $('#customer-payment-status').on('click', function() {
+            let saved;
+            try { saved = JSON.parse(sessionStorage.getItem(paymentStorageKey) || '{}'); } catch (_) { return; }
+            if (!saved.checkoutId) return;
+            const button = $(this).prop('disabled', true);
+            $.ajax({url: '{{ route("payment.status", ["tenant_id" => $currentTenant->id]) }}', method: 'POST',
+                data: {_token: '{{ csrf_token() }}', checkout_id: saved.checkoutId},
+                success: function(result) {
+                    if (result.success && result.redirect_url) {
+                        window.MetoHubTracking?.consume(result.tracking);
+                        sessionStorage.removeItem(paymentStorageKey);
+                        localStorage.removeItem('checkout_form_data');
+                        window.location.href = result.redirect_url;
+                    } else {
+                        $('#customer-payment-message').text(result.message);
+                        if (result.restart_allowed) { sessionStorage.removeItem(paymentStorageKey); button.prop('hidden', true); }
+                    }
+                },
+                error: function(xhr) { $('#customer-payment-message').text(xhr.responseJSON?.message || 'Status is temporarily unavailable. Do not pay again; check again shortly.'); },
+                complete: function() { button.prop('disabled', false); }
+            });
         });
 
         // Payment option toggle

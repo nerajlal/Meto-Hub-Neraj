@@ -56,7 +56,7 @@
       </div>
       <div class="feature-card"><span class="f-icon"><i class="fa-solid fa-credit-card"></i></span>
         <h3>Checkout &amp; Subscription Billing</h3>
-        <p>Offer cash-on-delivery checkout. MetoHub software subscription billing is handled through Razorpay.</p>
+        <p>Offer cash on delivery, WhatsApp orders and online payments through Razorpay, Paytm or PhonePe when configured with your activated merchant account. MetoHub subscription billing is separate.</p>
       </div>
       <div class="feature-card"><span class="f-icon"><i class="fa-solid fa-globe"></i></span>
         <h3>Custom Domains</h3>

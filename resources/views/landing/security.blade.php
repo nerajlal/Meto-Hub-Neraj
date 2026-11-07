@@ -34,7 +34,7 @@
            <div class="sec-icon"><i class="fa-solid fa-credit-card"></i></div>
            <h3>Subscription Payments</h3>
            <p>
-             MetoHub subscriptions use Razorpay’s hosted checkout. Customer storefront checkout currently supports cash on delivery. Platform subscription billing is separate from customer order payments.
+             MetoHub subscriptions use Razorpay’s hosted checkout. Stores can offer cash on delivery, WhatsApp orders and online payments through Razorpay, Paytm or PhonePe when the merchant configures an activated gateway account. Platform subscription billing is separate from customer order payments.
            </p>
          </div>
 
