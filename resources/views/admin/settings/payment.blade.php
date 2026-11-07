@@ -3,6 +3,15 @@
 @section('title', 'Payment Settings')
 
 @section('content')
+<style>
+.gateway-summary{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:20px 24px;cursor:pointer;list-style:none;color:#4c1d95}
+.gateway-summary::-webkit-details-marker{display:none}
+.gateway-summary-icon{display:grid;place-items:center;width:36px;height:36px;border-radius:10px;background:#f5f3ff;color:#7c3aed;flex-shrink:0}
+.gateway-chevron{font-size:12px;transition:transform .2s}
+.gateway-settings[open]>.gateway-summary .gateway-chevron{transform:rotate(180deg)}
+.gateway-summary:focus-visible{outline:2px solid #7c3aed;outline-offset:-3px;border-radius:16px}
+@media(max-width:575px){.gateway-summary{padding:16px;gap:8px;font-size:14px}.gateway-summary .badge{font-size:10px}}
+</style>
 <div class="container-fluid py-4" style="background: var(--sf-bg); min-height: 100vh;">
 
     <!-- Premium Header -->
@@ -101,23 +110,18 @@
                 </div>
             </div>
 
-            <div class="col-12"><div class="alert alert-info">Online payments go to each store’s own activated merchant account. An in-store QR code or Soundbox alone does not enable website payments. Start in Test mode, configure the webhook and complete a test order before switching to Live.</div></div>
+            <div class="col-12"><div class="alert alert-info">Online payments go to each store’s own activated merchant account. An in-store QR code or Soundbox alone does not enable website payments. Use the Create account link below if you do not have credentials. Registration and activation are handled by the provider. Return here to enter your credentials, configure the webhook and test an order before switching to Live.</div></div>
             @include('admin.settings.partials.paytm-settings')
 
-            <!-- Razorpay Gateway -->
-            <div class="col-lg-4 col-md-6 col-12">
-                <div class="card border-0 rounded-4 shadow-sm p-4 h-100" style="background: #ffffff;">
-                    <div class="d-flex align-items-center justify-content-between mb-4">
-                        <div class="d-flex align-items-center gap-3">
-                            <div class="p-2.5 bg-info-subtle text-info rounded-3" style="font-size: 22px;">
-                                <i class="fa-solid fa-wallet"></i>
-                            </div>
-                            <h4 class="h6 fw-bold mb-0 text-dark" style="font-family: 'Playfair Display', serif;">Razorpay Payments</h4>
-                        </div>
-                        <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" name="razorpay_enabled" id="razorpay_enabled" value="1" {{ $paymentSetting->razorpay_enabled ? 'checked' : '' }} style="width: 40px; height: 20px; cursor: pointer;">
-                        </div>
-                    </div>
+            <div class="col-12">
+                <details class="gateway-settings card border-0 rounded-4 shadow-sm bg-white" data-gateway-settings="razorpay" @if(collect(array_keys($errors->getMessages()))->contains(fn ($field) => str_starts_with($field, 'razorpay_'))) open @endif>
+                    @include('admin.settings.partials.gateway-summary', ['gateway' => 'razorpay', 'gatewayName' => 'Razorpay'])
+                    <div class="gateway-settings-body p-3 p-md-4 border-top">
+                        <label class="form-check form-switch d-flex align-items-center gap-2 mb-4">
+                            <input class="form-check-input" type="checkbox" name="razorpay_enabled" id="razorpay_enabled" value="1" @checked(old('razorpay_enabled', $paymentSetting->razorpay_enabled))>
+                            <span class="small fw-semibold">Enable Razorpay payments</span>
+                        </label>
+                    @include('admin.settings.partials.gateway-onboarding', ['gateway' => 'razorpay'])
 
                     <div class="form-group mb-3">
                         <label for="razorpay_key" class="form-label fw-semibold text-dark small">Razorpay Key ID</label>
@@ -148,7 +152,8 @@
                     <div class="p-2.5 rounded-3 bg-light mt-auto">
                         <small class="text-muted d-block" style="font-size: 11px;">Accepts UPI (GPay, PhonePe, Paytm), Cards, NetBanking, and Wallets.</small>
                     </div>
-                </div>
+                    </div>
+                </details>
             </div>
 
             @include('admin.settings.partials.phonepe-settings')
@@ -163,9 +168,12 @@
 </div>
 @endsection
 
-@section('scripts')
+@push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.gateway-settings').forEach(section => {
+        section.addEventListener('invalid', function () { section.open = true; }, true);
+    });
     // Check if gateway has saved credentials from database
     const hasSavedWebhookSecret = {{ !empty($paymentSetting->razorpay_webhook_secret) ? 'true' : 'false' }};
     const hasSavedRazorpaySecret = {{ !empty($paymentSetting->razorpay_secret) ? 'true' : 'false' }};
@@ -212,4 +220,4 @@ document.addEventListener('DOMContentLoaded', function () {
     checkRazorpay();
 });
 </script>
-@endsection
+@endpush

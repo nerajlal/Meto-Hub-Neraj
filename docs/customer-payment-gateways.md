@@ -6,7 +6,7 @@ This feature accepts payments into each store's own approved payment-gateway acc
 
 ## Merchant setup
 
-Open `/{store}/admin/settings/payment`. Saving credentials does not certify that the account is activated or that the credentials work. Keep the store currency set to INR.
+Open `/{store}/admin/settings/payment`. Each gateway card includes Create account and Open dashboard links to the official provider pages, with guidance for obtaining online-payment credentials. Registration opens in a separate tab, so merchants can return to this settings form. Saving credentials does not certify that the account is activated or that the credentials work. Keep the store currency set to INR.
 
 ### Paytm
 
