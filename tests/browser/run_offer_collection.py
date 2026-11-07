@@ -17,11 +17,18 @@ with tempfile.TemporaryDirectory(prefix='offer-collection-qa-') as directory:
                 assert not c.js('document.documentElement.scrollWidth>innerWidth+1'),(theme,width)
                 assert c.js('document.querySelectorAll("h1").length')==1
                 assert c.js("document.querySelectorAll('[data-offer-collection]').length")==1
+                button=c.js("(()=>{const button=document.querySelector('.offer-fixed .inline-add-btn'),r=button.getBoundingClientRect();return {width:r.width,height:r.height,bg:getComputedStyle(button).backgroundColor,brand:getComputedStyle(document.documentElement).getPropertyValue('--accent-color').trim()};})()")
+                assert abs(button['width']-44)<1 and abs(button['height']-44)<1,(theme,width,button)
+                assert c.js("(()=>{const b=document.querySelector('.offer-fixed .inline-add-btn'),p=document.createElement('span');p.style.background='var(--accent-color)';document.body.append(p);const same=getComputedStyle(b).backgroundColor===getComputedStyle(p).backgroundColor;p.remove();return same;})()")
+                c.js("window.bundleButtonCalls=[];window.updateInlineCart=(key,delta)=>bundleButtonCalls.push({key,delta});document.querySelector('.offer-fixed .inline-add-btn').click()")
+                assert c.js("bundleButtonCalls[0].key.startsWith('bundle-') && bundleButtonCalls[0].delta===1")
+
                 assert c.js("document.querySelector('.offer-collection-heading img').naturalWidth")>0,c.js("document.querySelector('.offer-collection-heading img').src")
                 assert c.js("document.querySelectorAll('[data-pool-offer]').length")==1
                 assert c.js("document.querySelectorAll('[data-pool-offer] .product-card').length")>0
                 assert not c.js("!!document.querySelector('[data-pool-offer] [data-cart-key^=\"bundle-\"]')")
                 if theme==31:
-                    assert c.js("document.querySelectorAll('.ps-bundle-promo').length")==4
+                    assert c.js("document.querySelectorAll('.offer-fixed .product-card').length")==4
+                    assert not c.js("!!document.querySelector('.ps-bundle-promo')")
                     c.screenshot(f'/private/tmp/offer-collection-{width}.png')
             print(f'PASS: theme {theme} automatic offer collection, cover image, pools and mobile/desktop sizing.',flush=True)

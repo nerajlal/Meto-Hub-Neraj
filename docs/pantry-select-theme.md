@@ -35,4 +35,4 @@ Bundle Create/Edit and Pack Edit include a Promotional card background panel. Ch
 
 The saved JSON is in `bundles.card_background`. Only validated modes, hex colors and bounded angles are accepted; rendering constructs CSS from these values rather than accepting arbitrary CSS. Text contrast follows the selected solid color or gradient midpoint. Older requests that omit the panel preserve the existing override on edit, and pack editing preserves variant quantities.
 
-These settings affect Pantry Select's wide promotional cards on its homepage and automatic offers collection. Other themes retain their own card layouts. Deploy migration `2026_11_07_160000_add_bundle_card_background` with `php artisan migrate --force` in the app container; it has been applied locally.
+These settings affect Pantry Select's wide promotional cards on its homepage. Other themes retain their own card layouts. Deploy migration `2026_11_07_160000_add_bundle_card_background` with `php artisan migrate --force` in the app container; it has been applied locally.

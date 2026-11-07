@@ -1,4 +1,4 @@
-<div class="product-card" style="border: 1px solid var(--border-color); border-radius: 1rem; overflow: hidden; background: #fff; transition: all 0.3s ease; position: relative;">
+<div class="product-card sf-bundle-standard" style="border: 1px solid var(--border-color); border-radius: 1rem; overflow: hidden; background: #fff; transition: all 0.3s ease; position: relative;">
     <a href="{{ app(\App\Services\StorefrontTheme::class)->url('v1.combo', ['id' => $bundle->id]) }}" class="card-img" style="display: block; position: relative; padding-top: 100%; background: #f8fafc;">
         @php 
             $imagePath = $bundle->image ? Storage::url($bundle->image) : null;
@@ -29,23 +29,17 @@
             @endif
         </div>
         <a href="{{ app(\App\Services\StorefrontTheme::class)->url('v1.combo', ['id' => $bundle->id]) }}" class="p-name" style="font-weight: 700; font-size: 0.85rem; line-height: 1.15rem; color: var(--primary-color); text-decoration: none; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; height: 3.45rem;">{{ $bundle->title }}</a>
-        <span class="p-meta" style="font-size: 0.75rem; color: var(--text-muted); padding-right: 2.2rem; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ $bundle->products->sum(fn ($item) => $item->pivot->quantity ?? 1) }} items included</span>
     </div>
-    <div class="product-action-wrapper" data-cart-key="bundle-{{ $bundle->id }}" style="position: absolute; bottom: 10px; right: 10px; z-index: 15;">
+    <div class="sf-bundle-card-footer">
+        <span class="p-meta">{{ $bundle->products->sum(fn ($item) => $item->pivot->quantity ?? 1) }} items included</span>
+        <div class="product-action-wrapper" data-cart-key="bundle-{{ $bundle->id }}">
         <!-- Default Add Button -->
-        <button class="inline-add-btn shadow-sm" onclick="updateInlineCart('bundle-{{ $bundle->id }}', 1)" style="width: 36px; height: 36px; border-radius: 50%; background: #f1f5f9; border: none; display: flex; align-items: center; justify-content: center; color: var(--primary-color); cursor: pointer; transition: all 0.2s ease;">
-            <i class="fa-solid fa-plus"></i>
-        </button>
-        
-        <!-- Quantity Controller (Hidden by default) -->
-        <div class="qty-controller shadow-sm" style="display: none; align-items: center; justify-content: space-between; width: 90px; height: 36px; background: #fff; border: 1px solid var(--border-color); border-radius: 20px; padding: 0 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
-            <button class="qty-btn-minus" onclick="updateInlineCart('bundle-{{ $bundle->id }}', -1)" style="width: 28px; height: 28px; border: none; background: transparent; color: var(--text-muted); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 0.8rem;">
-                <i class="fa-solid fa-minus"></i>
-            </button>
-            <span class="qty-value" style="font-weight: 700; font-size: 0.9rem; color: var(--primary-color);">1</span>
-            <button class="qty-btn-plus" onclick="updateInlineCart('bundle-{{ $bundle->id }}', 1)" style="width: 28px; height: 28px; border: none; background: transparent; color: var(--accent-color); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 0.8rem;">
-                <i class="fa-solid fa-plus"></i>
-            </button>
+        <button type="button" class="inline-add-btn" onclick="updateInlineCart('bundle-{{ $bundle->id }}', 1)" aria-label="Add {{ $bundle->title }} to basket"><i class="fa-solid fa-plus" aria-hidden="true"></i></button>
+        <div class="qty-controller" style="display:none">
+            <button type="button" class="qty-btn-minus" onclick="updateInlineCart('bundle-{{ $bundle->id }}', -1)" aria-label="Remove one {{ $bundle->title }}"><i class="fa-solid fa-minus" aria-hidden="true"></i></button>
+            <span class="qty-value">1</span>
+            <button type="button" class="qty-btn-plus" onclick="updateInlineCart('bundle-{{ $bundle->id }}', 1)" aria-label="Add one {{ $bundle->title }}"><i class="fa-solid fa-plus" aria-hidden="true"></i></button>
+        </div>
         </div>
     </div>
 </div>

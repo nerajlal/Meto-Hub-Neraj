@@ -8,7 +8,7 @@ The collection uses an internal `system_key=offers`, unique per tenant, rather t
 
 The normal collection URL renders an offer-specific page with the selected theme's header and footer, the uploaded cover, active combos and packs, and active mix-and-match pools. Pools show qualifying products rather than a bundle Add button, preserving the existing basket discount calculation. Draft offers and other tenants' offers are excluded. A Draft collection returns 404 and disappears from navigation. Its products remain in their original product collections.
 
-Pantry Select uses the collection's cover in the category row instead of its old static Bundles & packs tile. Fixed bundle homepage shelves continue to use their existing placement. Automatic collections are excluded from normal product category selectors. The admin list and detail page show offer counts and links. To remove it from the storefront, set it to Draft; deleting the automatic collection through admin is prevented to protect its links.
+Pantry Select uses the collection's cover in the category row instead of its old static Bundles & packs tile. The collection page uses the normal bundle cards from the Combos page; wide promotional cards remain on the homepage. Fixed bundle homepage shelves continue to use their existing placement. Automatic collections are excluded from normal product category selectors. The admin list and detail page show offer counts and links. To remove it from the storefront, set it to Draft; deleting the automatic collection through admin is prevented to protect its links.
 
 ## Deployment
 

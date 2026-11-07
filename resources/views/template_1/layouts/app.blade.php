@@ -85,7 +85,7 @@
     </style>
     <link rel="stylesheet" href="{{ asset('css/storefront-themes.css') }}">
     <link rel="stylesheet" href="{{ asset('css/storefront-premium.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/storefront-products.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/storefront-products.css').'?v='.filemtime(public_path('css/storefront-products.css')) }}">
     @if(in_array($storefrontTheme['id'], ['template_2', 'template_31']))<link rel="stylesheet" href="{{ asset('css/fresh-market.css').'?v='.filemtime(public_path('css/fresh-market.css')) }}">@endif
     @yield('styles')
     <link rel="stylesheet" href="{{ asset('css/storefront-mobile-grid.css') . '?v=' . filemtime(public_path('css/storefront-mobile-grid.css')) }}">

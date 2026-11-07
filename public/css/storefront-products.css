@@ -300,3 +300,15 @@
  .template_1 .header-nav-container .nav-items-wrapper {flex-wrap:nowrap!important;gap:1rem!important;}
  .template_1 .header-nav-container .nav-link {font-size:.78rem!important;white-space:nowrap;gap:.4rem!important;}
 }
+
+/* Standard bundle cards use a real footer row, with a non-shrinking brand button. */
+.storefront-theme .sf-bundle-standard .sf-bundle-card-footer{display:flex;align-items:center;justify-content:space-between;gap:.65rem;padding:0 1rem 1rem;margin-top:auto;min-width:0}
+.storefront-theme .sf-bundle-standard .sf-bundle-card-footer .p-meta{font-size:.75rem;color:var(--text-muted);min-width:0;overflow-wrap:anywhere;line-height:1.4}
+.storefront-theme .sf-bundle-standard .sf-bundle-card-footer .product-action-wrapper{position:static!important;flex:0 0 auto;min-width:44px}
+.storefront-theme .sf-bundle-standard .sf-bundle-card-footer .inline-add-btn{display:flex;align-items:center;justify-content:center;width:44px!important;min-width:44px!important;height:44px!important;min-height:44px!important;flex:0 0 44px;border-radius:50%!important;border:0!important;padding:0;background:var(--accent-color)!important;color:var(--store-brand-fg)!important;font-size:1rem;cursor:pointer;box-shadow:none!important}
+.storefront-theme .sf-bundle-standard .sf-bundle-card-footer .inline-add-btn:after{content:none!important}
+.storefront-theme .sf-bundle-standard .sf-bundle-card-footer .qty-controller{align-items:center;justify-content:space-between;width:104px;height:44px;border:1px solid var(--accent-color);border-radius:24px;background:#fff;color:var(--primary-color);padding:0 4px;gap:4px}
+.storefront-theme .sf-bundle-standard .sf-bundle-card-footer .qty-controller button{display:flex;align-items:center;justify-content:center;flex:0 0 28px;width:28px;height:40px;border:0;background:transparent;color:inherit;cursor:pointer;font-size:.9rem}
+.storefront-theme .sf-bundle-standard .sf-bundle-card-footer .qty-value{font-size:.85rem;min-width:1ch;text-align:center}
+.storefront-theme .sf-bundle-standard .sf-bundle-card-footer button:focus-visible{outline:2px solid var(--primary-color);outline-offset:3px}
+@media(max-width:767px){.storefront-theme .sf-bundle-standard .sf-bundle-card-footer{padding:0 .65rem .65rem;gap:.4rem;flex-wrap:wrap}}

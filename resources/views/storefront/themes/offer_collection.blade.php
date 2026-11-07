@@ -14,11 +14,7 @@
         @if($collection->image)<img src="{{ Storage::url($collection->image) }}" alt="{{ $collection->name }}" width="600" height="400">@endif
     </header>
     @if($fixedOffers->isNotEmpty())
-        @if($storefrontTheme['id'] === 'template_31')
-            @include('storefront.themes.pantryselect.bundles', ['bundles' => $fixedOffers])
-        @else
-            <section class="offer-fixed"><h2>Bundles & packs</h2><div class="product-grid grid-cols-mobile-{{ $currentTenant->mobile_grid_cols ?? 2 }}">@foreach($fixedOffers as $bundle)@include('template_1.partials.bundle_card')@endforeach</div></section>
-        @endif
+        <section class="offer-fixed"><h2>Bundles & packs</h2><div class="product-grid bundle-responsive-grid grid-cols-mobile-{{ $currentTenant->mobile_grid_cols ?? 2 }}">@foreach($fixedOffers as $bundle)@include('template_1.partials.bundle_card')@endforeach</div></section>
     @endif
     @foreach($pools as $pool)
         <section class="offer-pool" data-pool-offer="{{ $pool->id }}">
