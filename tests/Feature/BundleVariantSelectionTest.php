@@ -37,6 +37,35 @@ class BundleVariantSelectionTest extends TestCase
         $this->get('/v1?tenant_id='.$tenant->id)->assertOk()->assertSee('ps-bundle-rail')->assertSee('Combo selection')->assertSee('Three large packs')->assertSee('Pack of 3')->assertSee('550.00')->assertDontSee('Hidden pool')->assertDontSee('Hidden draft');
     }
 
+    public function test_bundle_backgrounds_save_validate_reset_and_preserve_pack_variants(): void
+    {
+        [$tenant, $product, $small, $large] = $this->setupStore();
+        $tenant->update(['theme' => 'template_31']);
+        $base = '/'.$tenant->id.'/admin/bundles';
+        $payload = ['title' => 'Styled bundle', 'status' => 'active', 'discount_type' => 'fixed', 'discount_value' => 0, 'products' => [$product->id], 'variant_ids' => [$large->id]];
+        $this->post($base, $payload + ['card_background' => ['mode' => 'solid', 'color' => '#183a14']])->assertRedirect()->assertSessionHasNoErrors();
+        $bundle = Bundle::firstOrFail();
+        $this->assertSame(['mode' => 'solid', 'color' => '#183a14'], $bundle->card_background);
+        $this->get('/v1?tenant_id='.$tenant->id)->assertOk()->assertSee('--bundle-promo-background:#183a14;--bundle-promo-text:#ffffff', false);
+        $gradient = ['mode' => 'gradient', 'color' => '#fff0bd', 'color_end' => '#dce9fa', 'angle' => 90];
+        $this->put($base.'/'.$bundle->id, $payload + ['card_background' => $gradient])->assertRedirect()->assertSessionHasNoErrors();
+        $this->assertSame($gradient, $bundle->fresh()->card_background);
+        $this->assertStringContainsString('linear-gradient(90deg, #fff0bd, #dce9fa)', $bundle->fresh()->promoBackgroundStyle());
+        $this->get($base.'/'.$bundle->id.'/edit')->assertOk()->assertSee('Promotional card background')->assertSee('value="#dce9fa"', false);
+        foreach ([['mode' => 'solid', 'color' => 'url(https://bad.test)'], ['mode' => 'gradient', 'color' => '#fff0bd'], ['mode' => 'gradient', 'color' => '#fff0bd', 'color_end' => '#dce9fa', 'angle' => 361], ['mode' => 'unsupported']] as $invalid) {
+            $this->putJson($base.'/'.$bundle->id, $payload + ['card_background' => $invalid])->assertUnprocessable();
+        }
+        $this->assertSame($gradient, $bundle->fresh()->card_background);
+        $bundle->update(['type' => 'pack']);
+        $bundle->products()->updateExistingPivot($product->id, ['quantity' => 3]);
+        $this->put($base.'/'.$bundle->id, $payload)->assertRedirect()->assertSessionHasNoErrors();
+        $this->assertSame($gradient, $bundle->fresh()->card_background);
+        $this->assertEquals(3, $bundle->fresh()->products->first()->pivot->quantity);
+        $this->put($base.'/'.$bundle->id, $payload + ['card_background' => ['mode' => 'auto']])->assertRedirect()->assertSessionHasNoErrors();
+        $this->assertNull($bundle->fresh()->card_background);
+        $this->assertNull($bundle->fresh()->promoBackgroundStyle());
+    }
+
     public function test_selected_variants_and_quantities_survive_create_edit_and_checkout(): void
     {
         [$tenant, $product, $small, $large] = $this->setupStore();

@@ -4,7 +4,7 @@
         @foreach($collections as $collection)
             <a class="sf-category" href="{{ app(\App\Services\StorefrontTheme::class)->url('v1.collection', ['slug' => $collection->slug]) }}">
                 @if($collection->image)<img src="{{ Storage::url($collection->image) }}" alt="" loading="lazy">@else<span class="sf-category-monogram">{{ mb_substr($collection->name, 0, 1) }}</span>@endif
-                <span>{{ $collection->name }}<small>{{ $collection->products->count() }} items to explore</small></span><i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+                <span>{{ $collection->name }}<small>{{ $collection->isOfferCollection() ? $collection->bundles()->where('status', 'active')->count() : $collection->products->count() }} {{ $collection->isOfferCollection() ? 'offers' : 'items' }} to explore</small></span><i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
             </a>
         @endforeach
     </div>

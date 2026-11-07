@@ -15,7 +15,7 @@
             <a href="{{ route('admin.collections.show', ['id' => $collection->id]) }}" class="fw-medium text-dark text-decoration-underline-hover">{{ $collection->name }}</a>
         </div>
     </td>
-    <td class="px-4 py-3 text-secondary">{{ $collection->products_count }} products</td>
+    <td class="px-4 py-3 text-secondary">{{ $collection->isOfferCollection() ? $collection->bundles_count.' offers' : $collection->products_count.' products' }}</td>
     <td class="px-4 py-3">
         <span class="badge {{ $collection->status ? 'bg-success-subtle text-success' : 'bg-secondary-subtle text-secondary' }}">
             {{ $collection->status ? 'Active' : 'Draft' }}

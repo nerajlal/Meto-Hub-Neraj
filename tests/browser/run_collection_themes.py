@@ -18,6 +18,10 @@ with tempfile.TemporaryDirectory(prefix='metohub-themes-') as directory:
                     assert not c.js('document.documentElement.scrollWidth>innerWidth+1'), (number,name,width,c.js('document.documentElement.scrollWidth'))
                     assert c.js('document.querySelectorAll("h1").length') == 1,(number,name)
                     if number==31 and name=='home':
+                        assert c.js("[...document.querySelectorAll('.sf-product-pantryselect')].some(card=>card.querySelectorAll('[data-market-variant]').length===1 && card.querySelector('[data-market-variant]').getAttribute('aria-pressed')==='true' && getComputedStyle(card.querySelector('.sf-product-size')).display==='none')")
+                        alignment=c.js("(()=>{const cards=[...document.querySelector('.sf-product-pantryselect').closest('.product-grid').querySelectorAll('.sf-product-pantryselect')];return cards.slice(0,2).map(card=>({cardHeight:card.getBoundingClientRect().height,captionHeight:card.querySelector('.ps-card-caption').getBoundingClientRect().height,captionFlex:getComputedStyle(card.querySelector('.ps-card-caption')).flex,display:getComputedStyle(card).display,align:getComputedStyle(card).alignSelf,price:card.querySelector('.sf-product-price').getBoundingClientRect().top,add:card.querySelector('.inline-add-btn').getBoundingClientRect().top,variants:card.querySelector('.sf-market-variants').getBoundingClientRect().top}));})()")
+                        assert len(alignment)==2 and abs(alignment[0]['price']-alignment[1]['price'])<1 and abs(alignment[0]['add']-alignment[1]['add'])<1 and abs(alignment[0]['variants']-alignment[1]['variants'])<1,(width,alignment)
+
                         assert c.js("document.querySelectorAll('.ps-category').length")>0
                         assert c.js("document.querySelectorAll('.ps-trust-row[aria-hidden=true]').length")==3
                         assert c.js("document.querySelectorAll('.ps-trust-row:not([aria-hidden]) .ps-trust-icon img').length")>0
@@ -32,6 +36,8 @@ with tempfile.TemporaryDirectory(prefix='metohub-themes-') as directory:
                         assert c.js("getComputedStyle(document.querySelector('.ps-trust-track')).animationPlayState")=='paused'
                         c.js('document.activeElement.blur()')
                         assert c.js("document.querySelectorAll('.ps-bundle-promo').length")==4
+                        assert c.js("[...document.querySelectorAll('.ps-bundle-promo')].some(e=>getComputedStyle(e).backgroundImage.startsWith('linear-gradient(90deg'))")
+                        assert c.js("[...document.querySelectorAll('.ps-bundle-promo')].some(e=>getComputedStyle(e).backgroundColor==='rgb(24, 58, 20)' && getComputedStyle(e).color==='rgb(255, 255, 255)')")
                         c.js("document.querySelector('.ps-bundle-shelf').scrollIntoView()");time.sleep(.3)
                         assert c.js("document.querySelector('.ps-bundle-image img').naturalWidth")>0
                         c.js('scrollTo(0,0)')

@@ -15,7 +15,7 @@ class CollectionController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Collection::withCount('products');
+        $query = Collection::withCount(['products', 'bundles']);
 
         // Search
         if ($request->filled('search')) {
@@ -112,7 +112,7 @@ class CollectionController extends Controller
      */
     public function show($id)
     {
-        $collection = Collection::with(['products.images', 'products.variants'])->findOrFail($id);
+        $collection = Collection::with(['products.images', 'products.variants', 'bundles'])->findOrFail($id);
         return view('admin.collections.show', compact('collection'));
     }
 
@@ -179,6 +179,9 @@ class CollectionController extends Controller
     public function destroy($id)
     {
         $collection = Collection::findOrFail($id);
+        if ($collection->isOfferCollection()) {
+            return redirect()->route('admin.collections.edit', $collection->id)->with('error', 'This collection manages your offers automatically. Set it to Draft to hide it from your store.');
+        }
         if ($collection->image) {
             Storage::disk('public')->delete($collection->image);
         }

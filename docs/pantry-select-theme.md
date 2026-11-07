@@ -28,3 +28,11 @@ Theme tests cover selection and previews plus real home, catalog, product and ch
 Settings > Storefront > Homepage highlight strip controls the scrolling icon labels. Enter up to eight lines (80 characters per line); an empty field hides the strip. Existing stores start with neutral shopping labels. Merchant-supplied text is escaped and stored per tenant; icons are locally hosted SVG artwork from the reference section supplied by the user (alfaquilon.com CDN), with matching 40px artwork, 8px circle padding and 15-second scrolling. Animation pauses on hover and focus and stops for reduced-motion preferences.
 
 Deployments must run `php artisan migrate --force` inside the application container to add the nullable `tenants.trust_badges` JSON column. This migration has been applied to the local development database.
+
+## Per-offer promotional backgrounds
+
+Bundle Create/Edit and Pack Edit include a Promotional card background panel. Choose Theme default, Solid color, or Gradient; gradients have two colors and a 0–360 degree direction. Color pickers and six-digit hex inputs stay synchronized, and the panel includes a live preview. Theme default clears the override.
+
+The saved JSON is in `bundles.card_background`. Only validated modes, hex colors and bounded angles are accepted; rendering constructs CSS from these values rather than accepting arbitrary CSS. Text contrast follows the selected solid color or gradient midpoint. Older requests that omit the panel preserve the existing override on edit, and pack editing preserves variant quantities.
+
+These settings affect Pantry Select's wide promotional cards on its homepage and automatic offers collection. Other themes retain their own card layouts. Deploy migration `2026_11_07_160000_add_bundle_card_background` with `php artisan migrate --force` in the app container; it has been applied locally.

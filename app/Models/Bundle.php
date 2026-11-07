@@ -9,8 +9,11 @@ class Bundle extends Model
 {
     use HasFactory, \App\Models\Traits\BelongsToTenant;
 
+    protected $attributes = ['type' => 'bundle'];
+
     protected $fillable = [
         'title',
+        'card_background',
         'slug',
         'type',
         'description',
@@ -23,6 +26,40 @@ class Bundle extends Model
         'min_order_qty',
         'max_order_qty',
     ];
+
+    protected $casts = ['card_background' => 'array'];
+
+    public function promoBackgroundStyle(): ?string
+    {
+        $settings = $this->card_background ?? [];
+        $mode = $settings['mode'] ?? 'auto';
+        $color = $settings['color'] ?? '';
+        if (!in_array($mode, ['solid', 'gradient'], true) || !preg_match('/^#[a-f0-9]{6}$/i', $color)) return null;
+        $background = $color;
+        $contrastColor = $color;
+        if ($mode === 'gradient') {
+            $end = $settings['color_end'] ?? '';
+            if (!preg_match('/^#[a-f0-9]{6}$/i', $end)) return null;
+            $angle = max(0, min(360, (int) ($settings['angle'] ?? 135)));
+            $background = "linear-gradient({$angle}deg, {$color}, {$end})";
+            $contrastColor = '#';
+            foreach ([1, 3, 5] as $offset) {
+                $contrastColor .= sprintf('%02x', (int) round((hexdec(substr($color, $offset, 2)) + hexdec(substr($end, $offset, 2))) / 2));
+            }
+        }
+        $text = app(\App\Services\StorefrontTheme::class)->contrastText($contrastColor);
+        return "--bundle-promo-background:{$background};--bundle-promo-text:{$text}";
+    }
+
+    protected static function booted(): void
+    {
+        static::created(fn (Bundle $bundle) => app(\App\Services\OfferCollection::class)->assign($bundle));
+    }
+
+    public function collection()
+    {
+        return $this->belongsTo(Collection::class);
+    }
 
     public function getBasePriceAttribute()
     {

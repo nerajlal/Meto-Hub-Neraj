@@ -115,3 +115,20 @@
 @media(min-width:768px){.template_31 .ps-trust-item{width:calc((100vw - 70px)/6);flex-direction:row;text-align:left;font-size:16px;align-items:center}}
 @media(min-width:992px){.template_31 .ps-trust-strip{padding-block:32px}}
 @media(prefers-reduced-motion:reduce){.template_31 .ps-trust-track{animation:none;will-change:auto}.template_31 .ps-trust-strip{overflow-x:auto}.template_31 .ps-trust-row[aria-hidden=true]{display:none}}
+
+.template_31 .ps-bundle-rail{scrollbar-width:none;-ms-overflow-style:none}
+.template_31 .ps-bundle-rail::-webkit-scrollbar{display:none;width:0;height:0}
+.template_31 .ps-bundle-promo[style]{background:var(--bundle-promo-background);color:var(--bundle-promo-text)}
+.storefront-theme.template_31 .product-grid{align-items:stretch}
+.storefront-theme.template_31 .sf-product-pantryselect{align-self:stretch!important;height:auto!important}
+.storefront-theme.template_31 .sf-product-pantryselect .ps-card-caption{flex:1 1 auto!important}
+
+/* Align rows for single- and multi-variant cards. */
+.storefront-theme.template_31 .sf-product-pantryselect .sf-product-info{flex:1 1 auto}
+.storefront-theme.template_31 .sf-product-pantryselect .sf-product-category{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.storefront-theme.template_31 .sf-product-pantryselect .sf-new-title-row{min-height:2.9em;font-size:.9rem}
+.storefront-theme.template_31 .sf-product-pantryselect .sf-product-name{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;min-height:2.9em}
+.template_31 .sf-product-pantryselect .sf-market-variants{min-height:30px;align-content:start;align-items:start}
+.template_31 .sf-product-pantryselect .sf-product-price{margin-top:auto;padding-top:.35rem;min-height:1.6em}
+.template_31 .ps-card-caption .product-action-wrapper{margin-top:0;padding-top:.65rem}
+@media(max-width:767px){.storefront-theme.template_31 .sf-product-pantryselect .sf-new-title-row{font-size:.8rem}}

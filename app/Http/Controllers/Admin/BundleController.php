@@ -90,7 +90,7 @@ class BundleController extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
             'min_order_qty' => 'nullable|integer|min:1',
             'max_order_qty' => 'nullable|integer|min:1' . ($request->filled('min_order_qty') ? '|gte:min_order_qty' : ''),
-        ]);
+        ] + $this->backgroundRules());
 
         $items = $this->bundleItems($request);
 
@@ -108,6 +108,7 @@ class BundleController extends Controller
 
         DB::transaction(function () use ($request, $slug, $imagePath, $items) {
             $bundle = Bundle::create([
+                'card_background' => $this->backgroundData($request),
                 'title' => $request->title,
                 'slug' => $slug,
                 'type' => 'bundle',
@@ -177,7 +178,7 @@ class BundleController extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
             'min_order_qty' => 'nullable|integer|min:1',
             'max_order_qty' => 'nullable|integer|min:1' . ($request->filled('min_order_qty') ? '|gte:min_order_qty' : ''),
-        ]);
+        ] + $this->backgroundRules());
 
         $items = $bundle->type === 'pack' ? [] : $this->bundleItems($request);
 
@@ -202,6 +203,8 @@ class BundleController extends Controller
             'max_order_qty' => $request->max_order_qty,
         ];
 
+        if ($request->exists('card_background')) $data['card_background'] = $this->backgroundData($request);
+
         if ($request->hasFile('image')) {
             $data['image'] = $request->file('image')->store('bundles', 'public');
         }
@@ -215,6 +218,26 @@ class BundleController extends Controller
         });
 
         return redirect()->route('admin.bundles')->with('success', 'Bundle updated successfully.');
+    }
+
+    private function backgroundRules(): array
+    {
+        return [
+            'card_background' => 'nullable|array:mode,color,color_end,angle',
+            'card_background.mode' => 'required_with:card_background|in:auto,solid,gradient',
+            'card_background.color' => 'required_if:card_background.mode,solid,gradient|nullable|regex:/^#[0-9a-fA-F]{6}$/',
+            'card_background.color_end' => 'required_if:card_background.mode,gradient|nullable|regex:/^#[0-9a-fA-F]{6}$/',
+            'card_background.angle' => 'nullable|integer|min:0|max:360',
+        ];
+    }
+
+    private function backgroundData(Request $request): ?array
+    {
+        $mode = $request->input('card_background.mode', 'auto');
+        if ($mode === 'auto') return null;
+        $data = ['mode' => $mode, 'color' => $request->input('card_background.color')];
+        if ($mode === 'gradient') $data += ['color_end' => $request->input('card_background.color_end'), 'angle' => (int) $request->input('card_background.angle', 135)];
+        return $data;
     }
 
     private function bundleItems(Request $request): array

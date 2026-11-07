@@ -22,6 +22,12 @@ foreach(Database\Seeders\DemoStoreDesign::profiles() as $slug=>$profile){
    $p->variants()->create(['size'=>'Family','price'=>1299,'stock'=>5]);
   }
   $p->images()->create(['path'=>'images/landing/hero.png','type'=>'image','order'=>0]);
+  if (($argv[2] ?? '') === '--store-themes' && $i === 0) {
+   $single = App\Models\Product::create(['tenant_id'=>$tenant->id,'title'=>'Single variant product with a longer title','slug'=>$slug.'-single-variant','collection_id'=>$collection->id,'status'=>'active']);
+   $single->variants()->create(['size'=>'150g','price'=>299,'compare_at_price'=>350,'stock'=>10]);
+   $single->images()->create(['path'=>'images/landing/hero.png','type'=>'image','order'=>0]);
+  }
+
  }
 }
 $kernel=$app->make(Illuminate\Contracts\Http\Kernel::class);
@@ -47,15 +53,19 @@ if (($argv[2] ?? '') === '--store-themes') {
     $tenant = App\Models\Tenant::where('slug', 'mens-clothing')->firstOrFail();
     $product = App\Models\Product::withoutGlobalScopes()->where('tenant_id', $tenant->id)->firstOrFail();
     foreach (['bundle', 'pack', 'bundle', 'pack'] as $index => $kind) {
-        $bundle = App\Models\Bundle::create(['tenant_id' => $tenant->id, 'title' => ['Everyday essentials duo', 'Pack of three favourites', 'The weekend collection', 'Family favourites pack'][$index], 'slug' => 'bundle-fixture-'.$index, 'type' => $kind, 'status' => 'active', 'description' => 'A selection from our store, ready to explore together.', 'discount_type' => 'fixed', 'discount_value' => 25]);
+        $bundle = App\Models\Bundle::create(['tenant_id' => $tenant->id, 'title' => ['Everyday essentials duo', 'Pack of three favourites', 'The weekend collection', 'Family favourites pack'][$index], 'slug' => 'bundle-fixture-'.$index, 'card_background' => $index === 0 ? ['mode' => 'solid', 'color' => '#183a14'] : ($index === 1 ? ['mode' => 'gradient', 'color' => '#fff0bd', 'color_end' => '#dce9fa', 'angle' => 90] : null), 'type' => $kind, 'status' => 'active', 'description' => 'A selection from our store, ready to explore together.', 'discount_type' => 'fixed', 'discount_value' => 25]);
         $bundle->products()->attach($product->id, ['product_variant_id' => $product->variants->first()->id, 'quantity' => $kind === 'pack' ? 3 : 1]);
     }
+    $pool = App\Models\Bundle::create(['tenant_id' => $tenant->id, 'title' => 'Mix your favourites', 'slug' => 'pool-fixture', 'type' => 'pool', 'status' => 'active', 'min_quantity' => 2, 'discount_type' => 'fixed', 'discount_value' => 50]);
+    $pool->products()->attach($product->id);
+    $offerCollection = App\Models\Collection::withoutGlobalScopes()->where('tenant_id', $tenant->id)->where('system_key', 'offers')->firstOrFail();
+    $offerCollection->update(['image' => 'images/landing/hero.png']);
     foreach (array_keys(config('storefront_themes')) as $theme) {
         $tenant->update(['theme' => $theme]);
         if ($theme === 'template_2') {
             foreach ([1, 2] as $number) App\Models\Slider::create(['tenant_id' => $tenant->id, 'title' => 'Market banner '.$number, 'image_desktop' => 'images/landing/hero.png', 'image_mobile' => 'images/landing/hero.png', 'status' => true, 'order' => $number]);
         }
-        foreach (['home' => '', 'catalog' => '/all-products', 'product' => '/product?id='.$product->id, 'about' => '/about'] as $name => $suffix) {
+        foreach (['home' => '', 'catalog' => '/all-products', 'product' => '/product?id='.$product->id, 'about' => '/about', 'offers' => '/collections?slug='.$offerCollection->slug] as $name => $suffix) {
             $request = Illuminate\Http\Request::create('http://127.0.0.1:8000/store/'.$tenant->slug.$suffix);
             $response = $kernel->handle($request);
             if ($response->getStatusCode() !== 200) throw new RuntimeException('Theme fixture failed: '.$theme.' '.$name);

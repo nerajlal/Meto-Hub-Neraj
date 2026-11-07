@@ -55,7 +55,8 @@
 
             <!-- Right Column -->
             <div class="col-12 col-lg-4">
-                 <!-- Status -->
+                 @include('admin.bundles.partials.card_background')
+                <!-- Status -->
                 <div class="card border shadow-sm p-3 mb-4">
                     <h2 class="h6 fw-bold text-secondary mb-3">Status</h2>
                     <select name="status" class="form-select">

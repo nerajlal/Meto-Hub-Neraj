@@ -82,7 +82,7 @@ class ProductController extends Controller
 
     public function create()
     {
-        $collections = Collection::all();
+        $collections = Collection::whereNull('system_key')->get();
         $families = Attribute::where('type', 'family')->get();
         $notes = Attribute::where('type', 'note')->get();
         $packDeals = collect();
@@ -209,7 +209,7 @@ class ProductController extends Controller
         }])->findOrFail($id);
         
         $packDeals = $product->bundles()->where('type', 'pack')->get();
-        $collections = Collection::all();
+        $collections = Collection::whereNull('system_key')->get();
         $families = Attribute::where('type', 'family')->get();
         $notes = Attribute::where('type', 'note')->get();
         $allTags = Product::whereNotNull('tags')->pluck('tags')->flatten()->unique()->values()->toArray();

@@ -14,7 +14,7 @@
         </div>
         <div class="d-flex gap-2">
              <a href="{{ route('admin.collections.edit', ['id' => $collection->id]) }}" class="btn btn-white border shadow-sm text-secondary hover-bg-light fw-medium">Edit Collection</a>
-             <a href="{{ route('admin.products.create') }}" class="btn btn-dark shadow-sm fw-medium">Add Product</a>
+             <a href="{{ $collection->isOfferCollection() ? route('admin.bundles.create') : route('admin.products.create') }}" class="btn btn-dark shadow-sm fw-medium">{{ $collection->isOfferCollection() ? 'Add Bundle' : 'Add Product' }}</a>
         </div>
     </div>
 
@@ -22,6 +22,16 @@
         <div class="col-12 col-lg-8">
             <div class="vstack gap-4">
             
+                @if($collection->isOfferCollection())
+                    <div class="card border shadow-sm">
+                        <div class="card-header"><h2 class="h6 mb-0">Offers ({{ $collection->bundles->count() }})</h2></div>
+                        <div class="list-group list-group-flush">
+                            @forelse($collection->bundles as $offer)
+                                <a class="list-group-item p-3" href="{{ route('admin.bundles.edit', $offer->id) }}"><strong>{{ $offer->title }}</strong><span class="d-block small text-muted">{{ ucfirst($offer->type) }} · {{ ucfirst($offer->status) }}</span></a>
+                            @empty<div class="p-4 text-muted">New bundles, packs and pools will appear here automatically.</div>@endforelse
+                        </div>
+                    </div>
+                @else
                 <!-- Products List -->
                 <div class="card border shadow-sm overflow-hidden">
                     <div class="card-header bg-light border-bottom d-flex justify-content-between align-items-center p-3">
@@ -59,6 +69,7 @@
                         @endforelse
                     </div>
                 </div>
+                @endif
             
             </div>
         </div>

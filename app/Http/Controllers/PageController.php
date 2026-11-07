@@ -101,6 +101,10 @@ class PageController extends Controller
             elseif ($gender == 'for-her') { $title = 'Perfumes For Her'; $query->whereIn('gender', ['Women', 'Female', 'Her']); }
             elseif ($gender == 'unisex') { $title = 'Unisex Collection'; $query->whereIn('gender', ['Unisex', 'All']); }
         }
+        if ($collection?->isOfferCollection()) {
+            $offers = $collection->bundles()->where('status', 'active')->with(['products.variants', 'products.images'])->latest()->get();
+            return view('storefront.themes.offer_collection', compact('collection', 'offers'));
+        }
         $request->validate(['min_price' => 'nullable|numeric|min:0', 'max_price' => 'nullable|numeric|min:0']);
 
         // Variant prices are computed from the relation; products has no starting_price column.

@@ -13,6 +13,14 @@ with tempfile.TemporaryDirectory(prefix='bundle-picker-qa-') as directory:
             for width in [375,1440]:
                 c.size(width);time.sleep(.15)
                 assert not c.js('document.documentElement.scrollWidth>innerWidth+1'),(mode,width)
+            assert c.js("!!document.querySelector('[data-bundle-background]')")
+            c.js("(()=>{const m=document.querySelector('[name=\"card_background[mode]\"]');m.value='solid';m.dispatchEvent(new Event('change'));const color=document.querySelector('[name=\"card_background[color]\"]');color.value='#183a14';color.dispatchEvent(new Event('input'))})()")
+            assert c.js("getComputedStyle(document.querySelector('[data-background-preview]')).backgroundColor")=='rgb(24, 58, 20)'
+            assert c.js("getComputedStyle(document.querySelector('[data-background-preview]')).color")=='rgb(255, 255, 255)'
+            c.js("(()=>{const m=document.querySelector('[name=\"card_background[mode]\"]');m.value='gradient';m.dispatchEvent(new Event('change'))})()")
+            assert 'linear-gradient' in c.js("document.querySelector('[data-background-preview]').style.background")
+            c.js("(()=>{const m=document.querySelector('[name=\"card_background[mode]\"]');m.value='auto';m.dispatchEvent(new Event('change'))})()")
+            assert c.js("document.querySelector('[data-background-colors]').hidden")
             if mode=='bundle-edit':
                 assert c.js("document.querySelector('[name=\"variant_ids[]\"]').selectedOptions[0].textContent").startswith('250g')
                 assert c.js("document.querySelector('[name=\"quantities[]\"]').value")=='2'

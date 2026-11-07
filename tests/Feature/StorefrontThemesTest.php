@@ -126,6 +126,16 @@ class StorefrontThemesTest extends TestCase
         $this->get('/v1/product?tenant_id='.$tenant->id.'&id='.$product->id)->assertOk()->assertSee('data-theme-product-composition="pantryselect"', false);
     }
 
+    public function test_single_variant_is_a_selected_card_option_in_shopping_themes(): void
+    {
+        $tenant = $this->store();
+        $this->catalog($tenant);
+        foreach (['template_2', 'template_31'] as $theme) {
+            $tenant->update(['theme' => $theme]);
+            $this->get('/v1?tenant_id='.$tenant->id)->assertOk()->assertSee('Options for Rice')->assertSee('data-market-variant', false)->assertSee('aria-pressed="true"', false)->assertSee('1kg');
+        }
+    }
+
     public function test_settings_lists_all_themes_with_correct_preview_urls(): void
     {
         $tenant = $this->store();

@@ -1,8 +1,9 @@
 <nav class="sf-navigation" aria-label="Shop navigation">
     <a href="{{ app(\App\Services\StorefrontTheme::class)->url('v1.all-products') }}">Shop all</a>
-    @foreach(\App\Models\Collection::where('status', true)->orderBy('name')->get() as $department)
+    @php($navDepartments = \App\Models\Collection::where('status', true)->orderBy('name')->get())
+    @foreach($navDepartments as $department)
         <a href="{{ app(\App\Services\StorefrontTheme::class)->url('v1.collection', ['slug' => $department->slug]) }}">{{ $department->name }}</a>
     @endforeach
-    <a href="{{ app(\App\Services\StorefrontTheme::class)->url('v1.combos') }}">Bundles</a>
+    @unless($navDepartments->contains(fn ($item) => $item->isOfferCollection()))<a href="{{ app(\App\Services\StorefrontTheme::class)->url('v1.combos') }}">Bundles</a>@endunless
     <a href="{{ app(\App\Services\StorefrontTheme::class)->url('v1.about') }}">Our story</a>
 </nav>

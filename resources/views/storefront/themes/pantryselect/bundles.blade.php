@@ -11,7 +11,7 @@
                 $bundleImage = $bundle->image ? app(\App\Services\StorefrontProduct::class)->imageUrl($bundle->image) : ($bundleVariantImage['image_url'] ?? $bundleProductImage);
                 $bundleOut = $bundle->is_out_of_stock;
             @endphp
-            <article class="ps-bundle-promo" role="listitem" data-bundle-promo="{{ $bundle->id }}">
+            <article class="ps-bundle-promo" role="listitem" data-bundle-promo="{{ $bundle->id }}" @if($bundle->promoBackgroundStyle()) style="{{ $bundle->promoBackgroundStyle() }}" @endif>
                 <div class="ps-bundle-copy">
                     <span class="ps-bundle-kind">{{ $bundle->type === 'pack' ? 'Pack of '.$bundle->products->sum(fn ($item) => $item->pivot->quantity ?? 1) : 'Combo bundle' }}</span>
                     <h3><a href="{{ $bundleUrl }}">{{ $bundle->title }}</a></h3>

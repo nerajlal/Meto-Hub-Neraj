@@ -11,6 +11,10 @@
         <h1 class="h3 mb-0 text-primary">Edit collection</h1>
     </div>
 
+    @if($collection->isOfferCollection())
+        <div class="alert alert-info">Bundles, packs and pools are assigned here automatically. Edit the name, description and cover image below. Set the collection to Draft to hide it.</div>
+    @endif
+    @if(session('error'))<div class="alert alert-warning">{{ session('error') }}</div>@endif
     <form action="{{ route('admin.collections.update', ['id' => $collection->id]) }}" method="POST" enctype="multipart/form-data" class="row g-4">
         @csrf
         @method('PUT')

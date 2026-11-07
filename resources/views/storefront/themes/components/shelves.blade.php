@@ -7,7 +7,6 @@
     @foreach($featuredProducts as $product)@include('template_1.partials.product_card')@endforeach
 </div></section>
 @endif
-@if($storefrontTheme['id'] === 'template_31')@include('storefront.themes.pantryselect.trust_badges')@endif
 @foreach($collections as $collection)
     @if($collection->products->isNotEmpty())
         <section class="sf-shelf" id="department-{{ $collection->id }}"><div class="sf-section-heading"><span>SHOP THE DEPARTMENT</span><h2>{{ $collection->name }}</h2><a href="{{ app(\App\Services\StorefrontTheme::class)->url('v1.collection', ['slug' => $collection->slug]) }}">Browse collection →</a></div>
@@ -26,4 +25,5 @@
 <section class="sf-shelf sf-bundle-shelf"><div class="sf-section-heading"><span>BETTER TOGETHER</span><h2>Discover our bundles</h2><a href="{{ app(\App\Services\StorefrontTheme::class)->url('v1.combos') }}">All bundles →</a></div><div class="product-grid grid-cols-mobile-{{ $currentTenant->mobile_grid_cols ?? 2 }}">@foreach($bundles as $bundle)@include('template_1.partials.bundle_card')@endforeach</div></section>
 @endif
 @endif
+@if($storefrontTheme['id'] === 'template_31')@include('storefront.themes.pantryselect.trust_badges')@endif
 @include('storefront.themes.components.reels')

@@ -23,6 +23,16 @@ class Collection extends Model
         'status' => 'boolean',
     ];
 
+    public function isOfferCollection(): bool
+    {
+        return $this->system_key === 'offers';
+    }
+
+    public function bundles()
+    {
+        return $this->hasMany(Bundle::class);
+    }
+
     public function products()
     {
         return $this->hasMany(Product::class);

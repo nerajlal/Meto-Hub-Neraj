@@ -12,7 +12,9 @@
             <span>{{ $collection->name }}</span>
         </a>
     @endforeach
+    @if(!$collections->contains(fn ($item) => $item->isOfferCollection()))
     <a class="ps-category" href="{{ app(\App\Services\StorefrontTheme::class)->url('v1.combos') }}"><span class="ps-category-art"><i class="fa-solid fa-box-open" aria-hidden="true"></i></span><span>Bundles & packs</span></a>
+    @endif
 </nav>
 @endif
 @if(filled($currentTenant->delivery_info))
