@@ -34,7 +34,9 @@
         </div>
         <div class="store-about-brand" aria-label="{{ $currentTenant->name }} brand">
             <div class="store-about-brand-art">
-                @if($currentTenant->logo)
+                @if($currentTenant->about_image)
+                    <img src="{{ app(\App\Services\StorefrontProduct::class)->imageUrl($currentTenant->about_image) }}" alt="{{ $currentTenant->name }} store story" width="480" height="360" class="store-about-story-image">
+                @elseif($currentTenant->logo)
                     <img src="{{ Storage::url($currentTenant->logo) }}" alt="{{ $currentTenant->name }}" width="240" height="240">
                 @else
                     <span class="store-about-monogram" aria-hidden="true">{{ mb_substr($currentTenant->name, 0, 1) }}</span>

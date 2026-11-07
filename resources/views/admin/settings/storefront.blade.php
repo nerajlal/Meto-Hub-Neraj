@@ -233,6 +233,16 @@
                     </div>
                     <div class="card-body">
                         <div class="mb-3">
+                            <label for="about_image" class="form-label fw-semibold">Store story image</label>
+                            <input type="file" class="form-control @error('about_image') is-invalid @enderror" name="about_image" id="about_image" accept="image/jpeg,image/png,image/webp">
+                            <div class="form-text">Shown beside your story below homepage reviews in Pantry Select, and on your About page. Use your own brand or store image. JPG, PNG or WebP, up to 5 MB.</div>
+                            @error('about_image')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                            @if($tenant->about_image)
+                                <img src="{{ Storage::url($tenant->about_image) }}" alt="Current store story image" class="img-thumbnail mt-2" style="max-width:220px;max-height:160px;object-fit:contain">
+                                <label class="d-block small mt-2"><input type="checkbox" name="remove_about_image" value="1" @checked(old('remove_about_image'))> Remove story image</label>
+                            @endif
+                        </div>
+                        <div class="mb-3">
                             <label for="about_title" class="form-label fw-semibold">About Page Hero Title</label>
                             <input type="text" class="form-control @error('about_title') is-invalid @enderror" id="about_title" name="about_title" value="{{ old('about_title', $tenant->about_title ?? 'Welcome to Our Store') }}" required>
                             @error('about_title')

@@ -18,6 +18,27 @@ class StoreNameSettingsTest extends TestCase
             'accent_color' => '#ECFDF5', 'currency' => 'INR'], $overrides);
     }
 
+    public function test_store_story_image_and_content_are_saved_and_render_below_reviews(): void
+    {
+        \Illuminate\Support\Facades\Storage::fake('public');
+        $tenant = Tenant::create(['name' => 'Story Store', 'theme' => 'template_31']);
+        $this->actingAs(User::factory()->create(['tenant_id' => $tenant->id, 'type' => 'admin']));
+        $url = '/'.$tenant->id.'/admin/settings/storefront';
+        $this->get($url)->assertOk()->assertSee('Store story image');
+        $this->post($url, $this->settings(['about_title' => 'Our own story', 'about_text' => 'Our merchant supplied introduction.', 'about_image' => \Illuminate\Http\UploadedFile::fake()->image('story.png')]))->assertRedirect()->assertSessionHasNoErrors();
+        $image = $tenant->fresh()->about_image;
+        \Illuminate\Support\Facades\Storage::disk('public')->assertExists($image);
+        \App\Models\Review::create(['tenant_id' => $tenant->id, 'name' => 'Test shopper', 'review' => 'Published fixture review', 'rating' => 5, 'status' => 'published']);
+        $html = $this->get('/v1?tenant_id='.$tenant->id)->assertOk()->assertSee('Our own story')->assertSee('Our merchant supplied introduction.')->assertSee($image)->getContent();
+        $this->assertLessThan(strpos($html, 'class="ps-story"'), strpos($html, 'class="sf-reviews-section"'));
+        $this->get('/store/'.$tenant->slug.'/about')->assertOk()->assertSee($image);
+        $this->post($url, $this->settings())->assertRedirect()->assertSessionHasNoErrors();
+        $this->assertSame($image, $tenant->fresh()->about_image);
+        $this->post($url, $this->settings(['remove_about_image' => 1]))->assertRedirect()->assertSessionHasNoErrors();
+        $this->assertNull($tenant->fresh()->about_image);
+        \Illuminate\Support\Facades\Storage::disk('public')->assertMissing($image);
+    }
+
     public function test_homepage_highlights_are_editable_escaped_and_can_be_hidden(): void
     {
         $tenant = Tenant::create(['name' => 'Badge Store', 'theme' => 'template_31']);

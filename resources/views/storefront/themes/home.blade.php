@@ -48,6 +48,7 @@
     @endif
     @include('storefront.themes.components.shelves')
     @include('storefront.themes.components.reviews')
+    @if($storefrontTheme['id'] === 'template_31')@include('storefront.themes.pantryselect.story')@endif
     @if($storefrontTheme['id'] === 'template_2')
         <section class="sf-market-story" aria-labelledby="market-story-heading"><div><span class="sf-kicker">{{ $currentTenant->name }}</span><h2 id="market-story-heading">{{ $currentTenant->about_title ?: 'Find your next favourite.' }}</h2><p>{{ $currentTenant->about_text ? Str::limit(strip_tags($currentTenant->about_text), 400) : 'Explore our collections and discover more from '.$currentTenant->name.'. Have a question about a product? Get in touch with the store.' }}</p></div><div class="sf-market-story-links"><a class="sf-primary-button" href="{{ app(\App\Services\StorefrontTheme::class)->url('v1.all-products') }}">Browse the store →</a><a href="{{ app(\App\Services\StorefrontTheme::class)->url('v1.about') }}">Our story ↗</a><a href="{{ app(\App\Services\StorefrontTheme::class)->url('v1.contact') }}">Contact the store</a></div></section>
     @endif

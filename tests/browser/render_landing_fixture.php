@@ -58,6 +58,8 @@ if (($argv[2] ?? '') === '--store-themes') {
     }
     $pool = App\Models\Bundle::create(['tenant_id' => $tenant->id, 'title' => 'Mix your favourites', 'slug' => 'pool-fixture', 'type' => 'pool', 'status' => 'active', 'min_quantity' => 2, 'discount_type' => 'fixed', 'discount_value' => 50]);
     $pool->products()->attach($product->id);
+    $tenant->update(['about_title' => 'The story behind our collection', 'about_text' => 'A merchant-written introduction to the products, people and ideas behind this store. Discover our latest collection and learn more about our business.', 'about_image' => 'images/landing/hero.png']);
+    App\Models\Review::create(['tenant_id' => $tenant->id, 'product_id' => $product->id, 'name' => 'Fixture shopper', 'review' => 'A published review used only for local layout testing.', 'rating' => 5, 'status' => 'published']);
     $offerCollection = App\Models\Collection::withoutGlobalScopes()->where('tenant_id', $tenant->id)->where('system_key', 'offers')->firstOrFail();
     $offerCollection->update(['image' => 'images/landing/hero.png']);
     foreach (array_keys(config('storefront_themes')) as $theme) {

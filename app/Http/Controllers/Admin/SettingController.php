@@ -187,6 +187,8 @@ class SettingController extends Controller
             'hero_button_label' => 'nullable|string|max:60',
             'about_title' => 'required|string|max:255',
             'about_text' => 'nullable|string',
+            'about_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
+            'remove_about_image' => 'nullable|boolean',
             'contact_email' => 'nullable|email|max:255',
             'contact_phone' => 'nullable|string|max:255',
             'whatsapp_number' => 'nullable|string|max:255',
@@ -246,6 +248,13 @@ class SettingController extends Controller
             }
         }
 
+        if ($request->hasFile('about_image')) {
+            $updateData['about_image'] = $request->file('about_image')->store('store-stories', 'public');
+        } elseif ($request->boolean('remove_about_image')) {
+            $updateData['about_image'] = null;
+        }
+        $previousAboutImage = $tenant->about_image;
+
         if ($request->has('remove_logo') && $request->remove_logo == '1') {
             if ($tenant->logo) {
                 \Illuminate\Support\Facades\Storage::disk('public')->delete($tenant->logo);
@@ -277,6 +286,10 @@ class SettingController extends Controller
             \App\Models\User::withoutGlobalScopes()->where('tenant_id', $tenant->id)->where('type', 'admin')
                 ->update(['site_name' => $tenant->name]);
         });
+
+        if (array_key_exists('about_image', $updateData) && $previousAboutImage && $previousAboutImage !== $updateData['about_image']) {
+            \Illuminate\Support\Facades\Storage::disk('public')->delete($previousAboutImage);
+        }
 
         return redirect()->back()->with('success', 'Storefront settings updated successfully.');
     }

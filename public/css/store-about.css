@@ -29,3 +29,5 @@
 .store-about-help a{display:flex;justify-content:space-between;gap:1rem;padding:.9rem 0;border-bottom:1px solid var(--border-color);font-size:.85rem}
 .store-about-help a:hover span:first-child{text-decoration:underline;text-underline-offset:4px}
 @media(max-width:767px){.store-about{padding-top:1.5rem;padding-bottom:2.5rem}.store-about-breadcrumb{margin-bottom:1.5rem}.store-about-hero{grid-template-columns:minmax(0,1fr);gap:1.5rem;padding-bottom:2rem}.store-about-intro{padding:0}.store-about-brand{padding:1rem}.store-about-brand-art{aspect-ratio:1.25}.store-about-brand-art img{width:45%}.store-about-monogram{font-size:7rem}.store-about-bottom{gap:2rem;padding-top:2rem}.store-about-copy{font-size:.9rem}}
+
+.store-about-brand-art .store-about-story-image{width:100%;height:100%;aspect-ratio:auto;object-fit:cover}

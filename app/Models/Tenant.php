@@ -37,6 +37,7 @@ class Tenant extends Model
         'hero_button_label',
         'trust_badges',
         'about_title',
+        'about_image',
         'about_text',
         'contact_email',
         'contact_phone',

@@ -36,3 +36,9 @@ Bundle Create/Edit and Pack Edit include a Promotional card background panel. Ch
 The saved JSON is in `bundles.card_background`. Only validated modes, hex colors and bounded angles are accepted; rendering constructs CSS from these values rather than accepting arbitrary CSS. Text contrast follows the selected solid color or gradient midpoint. Older requests that omit the panel preserve the existing override on edit, and pack editing preserves variant quantities.
 
 These settings affect Pantry Select's wide promotional cards on its homepage. Other themes retain their own card layouts. Deploy migration `2026_11_07_160000_add_bundle_card_background` with `php artisan migrate --force` in the app container; it has been applied locally.
+
+## Story section below reviews
+
+Pantry Select displays a two-column story section below customer reviews, using the saved About title and description, a soft brand-tinted background and a link to the About page. On mobile, the image sits above the text. The saved story image is shared with the About page; the store logo or initial is the fallback.
+
+Upload or remove the image under Settings > Storefront > About Us Page Content > Store story image. Supported formats are JPG, PNG and WebP, up to 5 MB. This uses the new `tenants.about_image` field: run `php artisan migrate --force` in the app container after deployment. Migration `2026_11_07_180000_add_about_image_to_tenants` has been applied locally.

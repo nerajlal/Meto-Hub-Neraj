@@ -18,6 +18,13 @@ with tempfile.TemporaryDirectory(prefix='metohub-themes-') as directory:
                     assert not c.js('document.documentElement.scrollWidth>innerWidth+1'), (number,name,width,c.js('document.documentElement.scrollWidth'))
                     assert c.js('document.querySelectorAll("h1").length') == 1,(number,name)
                     if number==31 and name=='home':
+                        assert c.js("!!document.querySelector('.ps-story')")
+                        assert c.js("!!(document.querySelector('.sf-reviews-section').compareDocumentPosition(document.querySelector('.ps-story')) & Node.DOCUMENT_POSITION_FOLLOWING)")
+                        c.js("document.querySelector('.ps-story').scrollIntoView({block:'center'})");time.sleep(.25)
+                        assert c.js("document.querySelector('.ps-story-visual img').naturalWidth")>0
+                        c.screenshot(f'/private/tmp/pantry-story-{width}.png')
+                        c.js('scrollTo(0,0)')
+
                         assert c.js("[...document.querySelectorAll('.sf-product-pantryselect')].some(card=>card.querySelectorAll('[data-market-variant]').length===1 && card.querySelector('[data-market-variant]').getAttribute('aria-pressed')==='true' && getComputedStyle(card.querySelector('.sf-product-size')).display==='none')")
                         alignment=c.js("(()=>{const cards=[...document.querySelector('.sf-product-pantryselect').closest('.product-grid').querySelectorAll('.sf-product-pantryselect')];return cards.slice(0,2).map(card=>({cardHeight:card.getBoundingClientRect().height,captionHeight:card.querySelector('.ps-card-caption').getBoundingClientRect().height,captionFlex:getComputedStyle(card.querySelector('.ps-card-caption')).flex,display:getComputedStyle(card).display,align:getComputedStyle(card).alignSelf,price:card.querySelector('.sf-product-price').getBoundingClientRect().top,add:card.querySelector('.inline-add-btn').getBoundingClientRect().top,variants:card.querySelector('.sf-market-variants').getBoundingClientRect().top}));})()")
                         assert len(alignment)==2 and abs(alignment[0]['price']-alignment[1]['price'])<1 and abs(alignment[0]['add']-alignment[1]['add'])<1 and abs(alignment[0]['variants']-alignment[1]['variants'])<1,(width,alignment)
