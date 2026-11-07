@@ -26,4 +26,8 @@
 <section class="sf-shelf sf-bundle-shelf"><div class="sf-section-heading"><span>BETTER TOGETHER</span><h2>Discover our bundles</h2><a href="{{ app(\App\Services\StorefrontTheme::class)->url('v1.combos') }}">All bundles →</a></div><div class="product-grid grid-cols-mobile-{{ $currentTenant->mobile_grid_cols ?? 2 }}">@foreach($bundles as $bundle)@include('template_1.partials.bundle_card')@endforeach</div></section>
 @endif
 @endif
-@include('storefront.themes.components.reels')
+@if($storefrontTheme['id'] === 'template_31')
+    @include('storefront.themes.pantryselect.reels')
+@else
+    @include('storefront.themes.components.reels')
+@endif

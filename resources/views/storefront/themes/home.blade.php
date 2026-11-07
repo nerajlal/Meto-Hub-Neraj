@@ -59,5 +59,6 @@
 @endsection
 
 @section('scripts')
+@if($storefrontTheme['id'] === 'template_31')<script src="{{ asset('js/pantry-reels.js').'?v='.filemtime(public_path('js/pantry-reels.js')) }}" defer></script>@endif
 @if(in_array($storefrontTheme['id'], ['template_2', 'template_31']))<script src="{{ asset('js/fresh-market.js').'?v='.filemtime(public_path('js/fresh-market.js')) }}" defer></script>@endif
 @endsection

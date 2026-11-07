@@ -43,6 +43,13 @@
             </div>
         </div>
 
+        <div class="card border shadow-sm mb-4"><div class="card-body">
+            <label for="thumbnail" class="form-label fw-semibold">Reel cover image <span class="text-muted fw-normal">(optional)</span></label>
+            <input type="file" name="thumbnail" id="thumbnail" accept="image/jpeg,image/png,image/webp,image/gif" class="form-control @error('thumbnail') is-invalid @enderror">
+            @error('thumbnail')<div class="invalid-feedback">{{ $message }}</div>@enderror
+            <p class="form-text mb-0">Optional portrait cover (1080 × 1920 px recommended, up to 5 MB). Pantry Select displays the original Instagram player directly.</p>
+        </div></div>
+
         <!-- Link To -->
         <div class="card border shadow-sm mb-4">
             <div class="card-body">

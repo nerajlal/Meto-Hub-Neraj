@@ -62,6 +62,9 @@ if (($argv[2] ?? '') === '--store-themes') {
     App\Models\Review::create(['tenant_id' => $tenant->id, 'product_id' => $product->id, 'name' => 'Fixture shopper', 'review' => 'A published review used only for local layout testing.', 'rating' => 5, 'status' => 'published']);
     $offerCollection = App\Models\Collection::withoutGlobalScopes()->where('tenant_id', $tenant->id)->where('system_key', 'offers')->firstOrFail();
     $offerCollection->update(['image' => 'images/landing/hero.png']);
+    foreach (range(1, 5) as $index) {
+        App\Models\Reel::create(['tenant_id' => $tenant->id, 'title' => 'A closer look at our favourites '.$index, 'instagram_url' => 'https://www.instagram.com/reel/FixtureReel'.$index.'/', 'link_type' => 'product', 'product_id' => $product->id, 'status' => true, 'order' => $index]);
+    }
     foreach (array_keys(config('storefront_themes')) as $theme) {
         $tenant->update(['theme' => $theme]);
         if ($theme === 'template_2') {

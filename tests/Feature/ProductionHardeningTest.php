@@ -199,7 +199,14 @@ class ProductionHardeningTest extends TestCase
         Reel::create(['tenant_id' => $tenant->id, 'instagram_url' => 'https://instagram.com/reel/Valid123/?igsh=tracking', 'link_type' => 'product', 'product_id' => $product->id, 'status' => true]);
         foreach (array_keys(config('storefront_themes')) as $theme) {
             $tenant->update(['theme' => $theme]);
-            $this->get($tenant->storefrontUrl())->assertOk()->assertDontSee('https://untrusted.example.test')->assertSee('https://www.instagram.com/reel/Valid123/embed', false);
+            $response = $this->get($tenant->storefrontUrl())->assertOk()->assertDontSee('https://untrusted.example.test');
+            if ($theme === 'template_31') {
+                $response->assertSee('src="https://www.instagram.com/reel/Valid123/embed/"', false)
+                    ->assertSee('data-pantry-reels', false)->assertDontSee('ps-reel-cover', false)
+                    ->assertDontSee('data-reels-dialog', false)->assertSee('loading="lazy"', false);
+            } else {
+                $response->assertSee('https://www.instagram.com/reel/Valid123/embed', false);
+            }
         }
     }
 

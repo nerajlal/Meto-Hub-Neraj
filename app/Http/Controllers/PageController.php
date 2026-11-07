@@ -42,7 +42,7 @@ class PageController extends Controller
                             }])
                             ->get();
         $bundles = \App\Models\Bundle::where('tenant_id', $tenantId)->where('status', 'active')->whereIn('type', ['bundle', 'pack'])->with(['products.variants', 'products.images'])->latest()->take(4)->get();
-        $reels = \App\Models\Reel::where('tenant_id', $tenantId)->where('status', true)->orderBy('order', 'asc')->get();
+        $reels = \App\Models\Reel::where('tenant_id', $tenantId)->with(['product.images', 'product.variants.images', 'product.variants.image', 'product.discounts', 'collection'])->where('status', true)->orderBy('order', 'asc')->get();
         $reviews = \App\Models\Review::where('tenant_id', $tenantId)
             ->where('status', 'published')
             ->with('product')
