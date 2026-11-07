@@ -23,12 +23,25 @@
             <div class="vstack gap-4">
             
                 @if($collection->isOfferCollection())
-                    <div class="card border shadow-sm">
-                        <div class="card-header"><h2 class="h6 mb-0">Offers ({{ $collection->bundles->count() }})</h2></div>
+                    <div class="card border shadow-sm overflow-hidden">
+                        <div class="card-header bg-light border-bottom d-flex justify-content-between align-items-center p-3"><h2 class="h6 fw-bold text-secondary mb-0">Offers ({{ $collection->bundles->count() }})</h2></div>
                         <div class="list-group list-group-flush">
                             @forelse($collection->bundles as $offer)
-                                <a class="list-group-item p-3" href="{{ route('admin.bundles.edit', $offer->id) }}"><strong>{{ $offer->title }}</strong><span class="d-block small text-muted">{{ ucfirst($offer->type) }} · {{ ucfirst($offer->status) }}</span></a>
-                            @empty<div class="p-4 text-muted">New bundles, packs and pools will appear here automatically.</div>@endforelse
+                                @php
+                                    $offerImagePath = $offer->image ?: $offer->products->first()?->images->sortBy('order')->first()?->path;
+                                    $offerType = ['bundle' => 'Combo', 'pack' => 'Pack', 'pool' => 'Pool'][$offer->type] ?? ucfirst($offer->type);
+                                @endphp
+                                <div class="list-group-item p-3 d-flex gap-3 align-items-center hover-bg-light transition-colors" data-collection-offer-row>
+                                    <div class="d-flex align-items-center justify-content-center bg-light rounded border flex-shrink-0 overflow-hidden" style="width:40px;height:40px">
+                                        @if($offerImagePath)<img src="{{ app(\App\Services\StorefrontProduct::class)->imageUrl($offerImagePath) }}" alt="{{ $offer->title }}" class="w-100 h-100 object-fit-cover">@else<i class="fas fa-image text-secondary opacity-50" aria-hidden="true"></i>@endif
+                                    </div>
+                                    <div class="flex-grow-1" style="min-width:0;overflow-wrap:anywhere">
+                                        <a href="{{ route('admin.bundles.edit', $offer->id) }}" class="d-block text-dark fw-medium text-decoration-none text-decoration-underline-hover small">{{ $offer->title }}</a>
+                                        <p class="small text-muted mb-0">{{ ucfirst($offer->status) }} • {{ $offerType }} • {{ $offer->type === 'pool' ? $offer->products->count().' qualifying products' : $offer->products->sum(fn ($item) => $item->pivot->quantity ?? 1).' items included' }}</p>
+                                    </div>
+                                    <a href="{{ route('admin.bundles.edit', $offer->id) }}" class="btn btn-link btn-sm text-secondary hover-text-primary p-0 flex-shrink-0" aria-label="Edit {{ $offer->title }}"><i class="fas fa-edit" aria-hidden="true"></i></a>
+                                </div>
+                            @empty<div class="list-group-item p-5 text-center text-muted"><p class="mb-0">New bundles, packs and pools will appear here automatically.</p></div>@endforelse
                         </div>
                     </div>
                 @else

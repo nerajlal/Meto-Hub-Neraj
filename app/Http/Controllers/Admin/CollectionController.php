@@ -112,7 +112,7 @@ class CollectionController extends Controller
      */
     public function show($id)
     {
-        $collection = Collection::with(['products.images', 'products.variants', 'bundles'])->findOrFail($id);
+        $collection = Collection::with(['products.images', 'products.variants', 'bundles.products.images', 'bundles.products.variants'])->findOrFail($id);
         return view('admin.collections.show', compact('collection'));
     }
 

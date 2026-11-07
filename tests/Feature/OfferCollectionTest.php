@@ -36,7 +36,7 @@ class OfferCollectionTest extends TestCase
         $foreign = $this->offer($other, 'pool', 'Private foreign offer');
         $this->assertNotEquals($collection->id, $foreign->collection_id);
         $this->get('/'.$tenant->id.'/admin/collections')->assertOk()->assertSee('3 offers');
-        $this->get('/'.$tenant->id.'/admin/collections/'.$collection->id)->assertOk()->assertSee('Mix and match');
+        $this->get('/'.$tenant->id.'/admin/collections/'.$collection->id)->assertOk()->assertSee('Mix and match')->assertSee('data-collection-offer-row', false)->assertSee('aria-label="Edit Snack combo"', false)->assertSee('qualifying products')->assertSee('items included');
         $this->put('/'.$tenant->id.'/admin/collections/'.$collection->id, ['name' => 'Special offers', 'description' => 'Merchant supplied description', 'status' => 1, 'image' => UploadedFile::fake()->image('offers.jpg')])->assertRedirect()->assertSessionHasNoErrors();
         $collection->refresh();
         Storage::disk('public')->assertExists($collection->image);
