@@ -171,4 +171,9 @@ return [
         'description' => 'Country market with a centered welcome, framed feature image, dense square shopping tiles and a separate quick-order panel.',
         'tone' => '#517044', 'background' => '#f3f6eb', 'layout' => 'orchard', 'generation' => 'collection',
     ],
+    'template_31' => [
+        'name' => 'Pantry Select', 'version' => 'Premium collection',
+        'description' => 'A full-width banner shop with a cream navigation bar, compact category tiles, selectable card variants and a clear two-column product page.',
+        'tone' => '#26221e', 'background' => '#fffaf4', 'layout' => 'pantryselect', 'generation' => 'collection',
+    ],
 ];

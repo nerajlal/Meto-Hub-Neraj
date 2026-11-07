@@ -18,6 +18,21 @@ class StoreNameSettingsTest extends TestCase
             'accent_color' => '#ECFDF5', 'currency' => 'INR'], $overrides);
     }
 
+    public function test_homepage_highlights_are_editable_escaped_and_can_be_hidden(): void
+    {
+        $tenant = Tenant::create(['name' => 'Badge Store', 'theme' => 'template_31']);
+        $admin = User::factory()->create(['tenant_id' => $tenant->id, 'type' => 'admin']);
+        $base = '/'.$tenant->id.'/admin/settings/storefront';
+        $this->actingAs($admin)->get($base)->assertOk()->assertSee('Homepage highlight strip');
+        $this->post($base, $this->settings(['trust_badges_text' => "Vacuum Packed\nQuality Checked\n<script>bad()</script>"]))->assertRedirect()->assertSessionHasNoErrors();
+        $this->assertSame(['Vacuum Packed', 'Quality Checked', '<script>bad()</script>'], $tenant->fresh()->trust_badges);
+        $this->get('/v1?tenant_id='.$tenant->id)->assertOk()->assertSee('ps-trust-strip')->assertSee('Vacuum Packed')->assertSee('&lt;script&gt;bad()', false)->assertDontSee('<script>bad()</script>', false);
+        $this->postJson($base, $this->settings(['trust_badges_text' => implode("\n", array_fill(0, 9, 'Too many'))]))->assertUnprocessable();
+        $this->post($base, $this->settings(['trust_badges_text' => '']))->assertRedirect()->assertSessionHasNoErrors();
+        $this->assertSame([], $tenant->fresh()->trust_badges);
+        $this->get('/v1?tenant_id='.$tenant->id)->assertOk()->assertDontSee('class="ps-trust-strip"', false);
+    }
+
     public function test_existing_store_defaults_to_its_registered_owner_contact_details(): void
     {
         $tenant = Tenant::create(['name' => 'Fresh Store', 'theme' => 'template_1']);

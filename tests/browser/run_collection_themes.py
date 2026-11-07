@@ -10,13 +10,39 @@ with tempfile.TemporaryDirectory(prefix='metohub-themes-') as directory:
     for page in folder.glob('*.html'):
         page.write_text(re.sub(r'https?://127\.0\.0\.1:8000/', (project/'public').as_uri()+'/', page.read_text()))
     with Chrome() as c:
-        for number in ([int(value) for value in sys.argv[1].split(',')] if len(sys.argv)>1 and ',' in sys.argv[1] else range(int(sys.argv[1]) if len(sys.argv)>1 else 16,31)):
+        for number in ([int(value) for value in sys.argv[1].split(',')] if len(sys.argv)>1 and ',' in sys.argv[1] else range(int(sys.argv[1]) if len(sys.argv)>1 else 16,32)):
             for name in ['home','catalog','product']:
                 c.visit((folder/f'template_{number}-{name}.html').as_uri())
                 for width in [375,1440]:
                     c.size(width);time.sleep(.1)
                     assert not c.js('document.documentElement.scrollWidth>innerWidth+1'), (number,name,width,c.js('document.documentElement.scrollWidth'))
                     assert c.js('document.querySelectorAll("h1").length') == 1,(number,name)
+                    if number==31 and name=='home':
+                        assert c.js("document.querySelectorAll('.ps-category').length")>0
+                        assert c.js("document.querySelectorAll('.ps-trust-row[aria-hidden=true]').length")==3
+                        assert c.js("document.querySelectorAll('.ps-trust-row:not([aria-hidden]) .ps-trust-icon img').length")>0
+                        c.js("document.querySelector('.ps-trust-strip').scrollIntoView({block:'center'})");time.sleep(.25)
+                        assert c.js("document.querySelector('.ps-trust-icon img').naturalWidth")>0
+                        assert c.js("getComputedStyle(document.querySelector('.ps-trust-strip')).backgroundColor")=='rgba(0, 0, 0, 0)'
+                        c.js("document.querySelector('.ps-trust-strip').scrollIntoView({block:'center'})");time.sleep(.1)
+                        c.screenshot(f'/private/tmp/pantry-trust-{width}.png')
+                        c.js('scrollTo(0,0)')
+                        assert c.js("getComputedStyle(document.querySelector('.ps-trust-track')).animationName")=='ps-trust-scroll'
+                        c.js("document.querySelector('.ps-trust-strip').focus()")
+                        assert c.js("getComputedStyle(document.querySelector('.ps-trust-track')).animationPlayState")=='paused'
+                        c.js('document.activeElement.blur()')
+                        assert c.js("document.querySelectorAll('.ps-bundle-promo').length")==4
+                        c.js("document.querySelector('.ps-bundle-shelf').scrollIntoView()");time.sleep(.3)
+                        assert c.js("document.querySelector('.ps-bundle-image img').naturalWidth")>0
+                        c.js('scrollTo(0,0)')
+                        assert c.js("document.querySelector('.ps-bundle-rail').scrollWidth>document.querySelector('.ps-bundle-rail').clientWidth")
+                        c.js("window.bundlePromoCalls=[];window.updateInlineCart=(key,delta)=>bundlePromoCalls.push({key,delta});document.querySelector('.ps-bundle-promo .inline-add-btn').click()")
+                        assert c.js("bundlePromoCalls[0].key.startsWith('bundle-') && bundlePromoCalls[0].delta===1")
+                        assert c.js("getComputedStyle(document.querySelector('.sf-product-pantryselect .card-info')).paddingLeft")=='0px'
+                        assert c.js("document.querySelectorAll('[data-slide-dot]').length")==2
+                        c.js("document.querySelector('.sf-product-pantryselect [data-market-variant]:nth-child(2)').click()")
+                        assert c.js("document.querySelector('.sf-product-pantryselect .p-price').textContent").endswith('799.00')
+                        assert c.js("document.querySelector('.sf-product-pantryselect .product-action-wrapper').dataset.cartKey").endswith('-Large-Pack')
                     if number==21 and name in ['home','catalog'] and width==375:
                         assert c.js('document.querySelector(".sf-product").getBoundingClientRect().width')>300, 'Harvest cards must be full-width shopping rows'
                     c.js('scrollTo(0,700)');time.sleep(.05)
@@ -26,5 +52,8 @@ with tempfile.TemporaryDirectory(prefix='metohub-themes-') as directory:
                     if name=='home':
                         c.js('scrollTo(0,0)');time.sleep(.1)
                         c.screenshot(f'/private/tmp/metohub-template-{number}-{width}.png')
+                    if number==31:
+                        c.js("document.querySelector('.ps-bundle-shelf').scrollIntoView()" if name=='home' else 'scrollTo(0,0)')
+                        c.screenshot(f'/private/tmp/metohub-template-31-{name}-detail-{width}.png')
                     c.js('scrollTo(0,0)')
             print(f'PASS template_{number}: home/catalog/product, mobile/desktop, sticky header and purchase bar.',flush=True)

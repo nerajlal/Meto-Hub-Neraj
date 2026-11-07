@@ -2,7 +2,7 @@
     document.addEventListener('click', event => {
         const option = event.target.closest('[data-market-variant]');
         if (!option || option.disabled) return;
-        const card = option.closest('.sf-product-market');
+        const card = option.closest('.sf-product-market, .sf-product-pantryselect');
         if (!card) return;
         const variant = JSON.parse(option.dataset.marketVariant);
         const actions = card.querySelector('.product-action-wrapper');

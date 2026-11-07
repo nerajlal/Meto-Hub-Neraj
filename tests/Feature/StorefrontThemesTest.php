@@ -112,12 +112,26 @@ class StorefrontThemesTest extends TestCase
             ->assertDontSee('class="theme-department-sidebar"', false);
     }
 
-    public function test_settings_lists_thirty_themes_with_correct_preview_urls(): void
+    public function test_pantry_select_uses_merchant_content_colors_and_selectable_variants(): void
+    {
+        $tenant = $this->store();
+        $tenant->update(['theme' => 'template_31', 'primary_color' => '#48a51c', 'dark_color' => '#183a14', 'accent_color' => '#fffdf5', 'hero_heading' => 'Merchant campaign', 'hero_description' => 'Merchant introduction', 'delivery_info' => 'Dispatch Monday to Friday']);
+        $product = $this->catalog($tenant);
+        $product->variants()->create(['size' => '2kg', 'price' => 180, 'stock' => 10]);
+        $this->get('/v1?tenant_id='.$tenant->id)->assertOk()->assertSee('data-theme-composition="pantryselect"', false)
+            ->assertSee('Merchant campaign')->assertSee('Merchant introduction')->assertSee('Dispatch Monday to Friday')
+            ->assertSee('#48a51c')->assertSee('#183a14')->assertSee('data-market-variant', false)
+            ->assertSee('1kg')->assertSee('2kg')->assertSee('pantry-select.css')
+            ->assertDontSee('FSSAI Certified')->assertDontSee('Free Shipping All Over Kerala');
+        $this->get('/v1/product?tenant_id='.$tenant->id.'&id='.$product->id)->assertOk()->assertSee('data-theme-product-composition="pantryselect"', false);
+    }
+
+    public function test_settings_lists_all_themes_with_correct_preview_urls(): void
     {
         $tenant = $this->store();
         $admin = User::factory()->create(['tenant_id' => $tenant->id, 'type' => 'admin']);
         $response = $this->actingAs($admin)->get("/{$tenant->id}/admin/settings/theme")->assertOk();
-        $response->assertViewHas('themes', fn ($themes) => count($themes) === 30);
+        $response->assertViewHas('themes', fn ($themes) => count($themes) === count(config('storefront_themes')));
         foreach (app(StorefrontTheme::class)->all() as $id => $theme) {
             $response->assertSee($theme['name'])->assertSee('preview_theme='.$id);
             $this->assertFileExists(public_path('images/themes/'.$id.'.svg'));
@@ -133,7 +147,7 @@ class StorefrontThemesTest extends TestCase
             $this->assertEquals($id, $tenant->fresh()->theme);
         }
         $this->postJson("/{$tenant->id}/admin/settings/theme", ['theme' => 'unknown'])->assertUnprocessable();
-        $this->assertEquals('template_30', $tenant->fresh()->theme);
+        $this->assertEquals(array_key_last(config('storefront_themes')), $tenant->fresh()->theme);
     }
 
     public function test_every_theme_renders_home_catalog_product_and_checkout(): void

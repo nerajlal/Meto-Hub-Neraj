@@ -214,6 +214,17 @@
                     </div>
                 </div>
 
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header py-3"><h5 class="m-0 fw-bold">Homepage highlight strip</h5></div>
+                    <div class="card-body">
+                        <p class="small text-muted">Scrolling icon badges for Pantry Select. Add your store’s own highlights; only include delivery, quality or certification claims that apply to your business.</p>
+                        <label class="form-label fw-semibold" for="trust_badges_text">Badge labels</label>
+                        <textarea id="trust_badges_text" name="trust_badges_text" class="form-control @error('trust_badges_text') is-invalid @enderror" rows="5" maxlength="1000" aria-describedby="trust-badges-help">{{ old('trust_badges_text', implode("\n", app(\App\Services\StorefrontTheme::class)->trustBadges($tenant))) }}</textarea>
+                        <div id="trust-badges-help" class="form-text">One label per line. Up to 8 labels, 80 characters each. Leave empty to hide the strip.</div>
+                        @error('trust_badges_text')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                    </div>
+                </div>
+
                 <!-- About Page Settings -->
                 <div class="card mb-4 shadow-sm">
                     <div class="card-header py-3 d-flex align-items-center">

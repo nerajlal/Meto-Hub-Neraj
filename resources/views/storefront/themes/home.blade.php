@@ -5,7 +5,9 @@
     $hero = app(\App\Services\StorefrontTheme::class)->hero($currentTenant, $storefrontTheme['id']);
 @endphp
 <div class="sf-home sf-home-{{ $storefrontTheme['layout'] }}" data-theme-home="{{ $storefrontTheme['layout'] }}">
-    @if(in_array($storefrontTheme['layout'], ['urban', 'harvest', 'timepiece', 'linen', 'circuit', 'district', 'velvetroom', 'prism', 'petal', 'scent', 'crafted', 'coastal', 'forma', 'orchard']))
+    @if($storefrontTheme['id'] === 'template_31')
+        @include('storefront.themes.pantryselect.home')
+    @elseif(in_array($storefrontTheme['layout'], ['urban', 'harvest', 'timepiece', 'linen', 'circuit', 'district', 'velvetroom', 'prism', 'petal', 'scent', 'crafted', 'coastal', 'forma', 'orchard']))
         @include('storefront.themes.rebuilt.home_'.$storefrontTheme['layout'])
     @elseif(($storefrontTheme['generation'] ?? '') === 'collection')
         @include('storefront.themes.components.collection_hero')
@@ -56,5 +58,5 @@
 @endsection
 
 @section('scripts')
-@if($storefrontTheme['id'] === 'template_2')<script src="{{ asset('js/fresh-market.js').'?v='.filemtime(public_path('js/fresh-market.js')) }}" defer></script>@endif
+@if(in_array($storefrontTheme['id'], ['template_2', 'template_31']))<script src="{{ asset('js/fresh-market.js').'?v='.filemtime(public_path('js/fresh-market.js')) }}" defer></script>@endif
 @endsection

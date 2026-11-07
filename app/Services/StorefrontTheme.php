@@ -32,6 +32,11 @@ class StorefrontTheme
         return $content;
     }
 
+    public function trustBadges(Tenant $tenant): array
+    {
+        return $tenant->trust_badges ?? ['Explore collections', 'Choose your options', 'Bundles & packs', 'Contact the store'];
+    }
+
     public function all(): array
     {
         return config('storefront_themes');

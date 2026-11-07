@@ -156,7 +156,7 @@ class SettingController extends Controller
      */
     public function storefrontIndex()
     {
-        $tenantId = auth()->user()->tenant_id ?? session('active_tenant_id') ?? 1;
+        $tenantId = request()->attributes->get('resolved_tenant_id') ?? auth()->user()->tenant_id ?? session('active_tenant_id') ?? 1;
         $tenant = Tenant::findOrFail($tenantId);
         $registeredContact = \App\Models\User::withoutGlobalScopes()->where('tenant_id', $tenant->id)
             ->where('type', 'admin')->oldest('id')->first();
@@ -175,11 +175,12 @@ class SettingController extends Controller
      */
     public function storefrontUpdate(Request $request)
     {
-        $tenantId = auth()->user()->tenant_id ?? session('active_tenant_id') ?? 1;
+        $tenantId = request()->attributes->get('resolved_tenant_id') ?? auth()->user()->tenant_id ?? session('active_tenant_id') ?? 1;
         $tenant = Tenant::findOrFail($tenantId);
 
         $request->validate([
             'store_name' => 'required|string|max:191',
+            'trust_badges_text' => 'nullable|string|max:1000',
             'hero_eyebrow' => 'nullable|string|max:120',
             'hero_heading' => 'nullable|string|max:200',
             'hero_description' => 'nullable|string|max:1000',
@@ -229,6 +230,14 @@ class SettingController extends Controller
             'delivery_info' => $request->delivery_info,
             'min_order_value' => $request->min_order_value ?? 0,
         ];
+
+        if ($request->exists('trust_badges_text')) {
+            $badges = array_values(array_filter(array_map('trim', preg_split('/\r\n|\r|\n/', (string) $request->input('trust_badges_text'))), fn ($label) => $label !== ''));
+            if (count($badges) > 8 || collect($badges)->contains(fn ($label) => mb_strlen($label) > 80)) {
+                throw \Illuminate\Validation\ValidationException::withMessages(['trust_badges_text' => 'Use up to 8 labels, each no longer than 80 characters.']);
+            }
+            $updateData['trust_badges'] = $badges;
+        }
 
         foreach (['hero_eyebrow', 'hero_heading', 'hero_description', 'hero_button_label'] as $field) {
             if ($request->exists($field)) {

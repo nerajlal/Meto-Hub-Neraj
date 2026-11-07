@@ -86,7 +86,7 @@
     <link rel="stylesheet" href="{{ asset('css/storefront-themes.css') }}">
     <link rel="stylesheet" href="{{ asset('css/storefront-premium.css') }}">
     <link rel="stylesheet" href="{{ asset('css/storefront-products.css') }}">
-    @if($storefrontTheme['id'] === 'template_2')<link rel="stylesheet" href="{{ asset('css/fresh-market.css').'?v='.filemtime(public_path('css/fresh-market.css')) }}">@endif
+    @if(in_array($storefrontTheme['id'], ['template_2', 'template_31']))<link rel="stylesheet" href="{{ asset('css/fresh-market.css').'?v='.filemtime(public_path('css/fresh-market.css')) }}">@endif
     @yield('styles')
     <link rel="stylesheet" href="{{ asset('css/storefront-mobile-grid.css') . '?v=' . filemtime(public_path('css/storefront-mobile-grid.css')) }}">
     @if(in_array($storefrontTheme['id'], ['template_7', 'template_8', 'template_9', 'template_10', 'template_11', 'template_12', 'template_13', 'template_14', 'template_15']) || ($storefrontTheme['generation'] ?? '') === 'collection')
@@ -96,6 +96,7 @@
     @if(in_array($storefrontTheme['layout'], ['district', 'velvetroom', 'prism', 'petal']))<link rel="stylesheet" href="{{ asset('css/storefront-rebuilt-boutiques.css').'?v='.filemtime(public_path('css/storefront-rebuilt-boutiques.css')) }}">@endif
     @if(in_array($storefrontTheme['layout'], ['scent', 'crafted', 'coastal', 'forma', 'orchard']))<link rel="stylesheet" href="{{ asset('css/storefront-rebuilt-editorial.css').'?v='.filemtime(public_path('css/storefront-rebuilt-editorial.css')) }}">@endif
     @endif
+    @if($storefrontTheme['id'] === 'template_31')<link rel="stylesheet" href="{{ asset('css/pantry-select.css').'?v='.filemtime(public_path('css/pantry-select.css')) }}">@endif
     @if($storefrontTheme['id'] !== 'template_1')
     <style>body { --theme-tone: {{ $storefrontTheme['tone'] }}; --theme-surface: {{ $storefrontTheme['background'] }}; }</style>
     @endif
@@ -371,7 +372,7 @@
     @include('template_1.partials.floating_cart_summary')
     @include('partials.customer_auth_modal')
     @include('storefront.integrations.runtime')
-    @if($storefrontTheme['id'] === 'template_2')<script src="{{ asset('js/fresh-market-variants.js').'?v='.filemtime(public_path('js/fresh-market-variants.js')) }}" defer></script>@endif
+    @if(in_array($storefrontTheme['id'], ['template_2', 'template_31']))<script src="{{ asset('js/fresh-market-variants.js').'?v='.filemtime(public_path('js/fresh-market-variants.js')) }}" defer></script>@endif
     @yield('scripts')
 </body>
 

@@ -1,4 +1,4 @@
-@if($storefrontTheme['id'] === 'template_2')
+@if(in_array($storefrontTheme['id'], ['template_2', 'template_31']))
     @include('storefront.themes.cards.market_actions')
 @else
 <div class="product-action-wrapper" data-cart-key="{{ $cartKey }}">

@@ -35,6 +35,7 @@ class Tenant extends Model
         'hero_heading',
         'hero_description',
         'hero_button_label',
+        'trust_badges',
         'about_title',
         'about_text',
         'contact_email',
@@ -73,6 +74,7 @@ class Tenant extends Model
         'maintenance_mode' => 'boolean',
         'deletion_requested_at' => 'datetime',
         'settings' => 'array',
+        'trust_badges' => 'array',
         'checkout_fields' => 'array',
     ];
 

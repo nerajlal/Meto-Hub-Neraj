@@ -46,6 +46,10 @@ if (($argv[2] ?? '') === '--public-pages') {
 if (($argv[2] ?? '') === '--store-themes') {
     $tenant = App\Models\Tenant::where('slug', 'mens-clothing')->firstOrFail();
     $product = App\Models\Product::withoutGlobalScopes()->where('tenant_id', $tenant->id)->firstOrFail();
+    foreach (['bundle', 'pack', 'bundle', 'pack'] as $index => $kind) {
+        $bundle = App\Models\Bundle::create(['tenant_id' => $tenant->id, 'title' => ['Everyday essentials duo', 'Pack of three favourites', 'The weekend collection', 'Family favourites pack'][$index], 'slug' => 'bundle-fixture-'.$index, 'type' => $kind, 'status' => 'active', 'description' => 'A selection from our store, ready to explore together.', 'discount_type' => 'fixed', 'discount_value' => 25]);
+        $bundle->products()->attach($product->id, ['product_variant_id' => $product->variants->first()->id, 'quantity' => $kind === 'pack' ? 3 : 1]);
+    }
     foreach (array_keys(config('storefront_themes')) as $theme) {
         $tenant->update(['theme' => $theme]);
         if ($theme === 'template_2') {

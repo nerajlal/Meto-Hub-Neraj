@@ -9,7 +9,9 @@
 @endphp
 <article class="pd-page pd-{{ $storefrontTheme['layout'] }}" data-product-detail="{{ $storefrontTheme['layout'] }}">
     <nav class="pd-breadcrumb" aria-label="Breadcrumb"><a href="{{ app(\App\Services\StorefrontTheme::class)->url('v1.home') }}">Home</a><span>/</span><a href="{{ app(\App\Services\StorefrontTheme::class)->url('v1.all-products') }}">Shop</a>@if($product->collection)<span>/</span><a href="{{ app(\App\Services\StorefrontTheme::class)->url('v1.collection', ['slug' => $product->collection->slug]) }}">{{ $product->collection->name }}</a>@endif</nav>
-    @if(in_array($storefrontTheme['layout'], ['urban', 'harvest', 'timepiece', 'linen', 'circuit', 'district', 'velvetroom', 'prism', 'petal', 'scent', 'crafted', 'coastal', 'forma', 'orchard']))
+    @if($storefrontTheme['id'] === 'template_31')
+        @include('storefront.themes.pantryselect.product')
+    @elseif(in_array($storefrontTheme['layout'], ['urban', 'harvest', 'timepiece', 'linen', 'circuit', 'district', 'velvetroom', 'prism', 'petal', 'scent', 'crafted', 'coastal', 'forma', 'orchard']))
         @include('storefront.themes.rebuilt.product_'.$storefrontTheme['layout'])
     @elseif(($storefrontTheme['generation'] ?? '') === 'collection')
         @include('storefront.themes.product.collection')

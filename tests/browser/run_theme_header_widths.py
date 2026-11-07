@@ -7,7 +7,7 @@ with tempfile.TemporaryDirectory(prefix='header-widths-') as directory:
     folder=Path(directory)
     subprocess.run(['php',str(project/'tests/browser/render_landing_fixture.php'),str(folder/'landing.html'),'--store-themes'],cwd=project,check=True)
     with Chrome() as c:
-        for number in range(2,31):
+        for number in range(2,32):
             page=folder/f'template_{number}-home.html'
             page.write_text(re.sub(r'https?://127\.0\.0\.1:8000/',(project/'public').as_uri()+'/',page.read_text()))
             c.visit(page.as_uri());c.size(1920);c.js('scrollTo(0,600)');time.sleep(.05)

@@ -33,6 +33,8 @@ class BundleVariantSelectionTest extends TestCase
             ->assertSee('Discover our bundles')->assertSee('Combo selection')->assertSee('Three large packs')
             ->assertSee('Pack of 3')->assertSee('600.00')->assertSee('550.00')
             ->assertDontSee('Hidden pool')->assertDontSee('Hidden draft');
+        $tenant->update(['theme' => 'template_31']);
+        $this->get('/v1?tenant_id='.$tenant->id)->assertOk()->assertSee('ps-bundle-rail')->assertSee('Combo selection')->assertSee('Three large packs')->assertSee('Pack of 3')->assertSee('550.00')->assertDontSee('Hidden pool')->assertDontSee('Hidden draft');
     }
 
     public function test_selected_variants_and_quantities_survive_create_edit_and_checkout(): void

@@ -31,4 +31,5 @@ return [
     'template_28' => ['eyebrow' => '{store} / THE COLLECTION', 'heading' => 'Thoughtfully chosen. Beautifully everyday.', 'description' => 'Discover the latest collections and favourite finds from {store}.', 'button_label' => 'Explore the collection'],
     'template_29' => ['eyebrow' => '{store} / THE COLLECTION', 'heading' => 'A different point of view.', 'description' => 'Discover the latest collections and favourite finds from {store}.', 'button_label' => 'Explore the collection'],
     'template_30' => ['eyebrow' => '{store} / THE COLLECTION', 'heading' => 'Fresh finds. Everyday favourites.', 'description' => 'Discover the latest collections and favourite finds from {store}.', 'button_label' => 'Explore the collection'],
+    'template_31' => ['eyebrow' => 'WELCOME TO {store}', 'heading' => 'Discover your everyday favourites.', 'description' => 'Explore our collections, choose your options and find something to enjoy.', 'button_label' => 'Explore the collection'],
 ];
