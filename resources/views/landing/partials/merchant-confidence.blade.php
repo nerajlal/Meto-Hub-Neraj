@@ -1,8 +1,7 @@
-<section class="wrap" aria-labelledby="merchant-confidence-title" style="padding-block: clamp(40px, 6vw, 80px); border-top: var(--rule);">
+<section class="wrap merchant-confidence" aria-labelledby="merchant-confidence-title" style="padding-block: clamp(40px, 6vw, 80px); border-top: var(--rule);">
   <header class="section-head section-head--left">
     <p class="eyebrow">BUILT FOR EVERYDAY SELLING</p>
     <h2 id="merchant-confidence-title">Your orders. Your customers. <em>Your business.</em></h2>
-    <p>Active client: <strong>Mithram Products</strong>. A client mention, rather than a customer review or rating.</p>
   </header>
   <div class="feature-grid">
     <article class="feature-card">

@@ -154,16 +154,18 @@ class LandingHomepageTest extends TestCase
 
     public function test_public_capabilities_are_factual_and_do_not_invent_client_reviews(): void
     {
-        $this->get('/')->assertOk()->assertSee('Mithram Products')
+        $this->get('/')->assertOk()->assertDontSee('class="merchant-client"', false)
             ->assertSee('owner email alerts')->assertSee('DTDC or India Post')
             ->assertSee('Book pickups and pay postage directly with your courier.')
             ->assertSee('Export products and orders')
             ->assertSee(count(config('storefront_themes')).' Themes, Logo')
             ->assertDontSee('15 Themes')->assertDontSee('Anjali Menon')
-            ->assertDontSee('id="client-reviews"', false)
+            ->assertSee('id="client-reviews"', false)
+            ->assertSee('Names and quotes are fictional examples')
+            ->assertSee('Illustrative example')->assertSee('Meera Nair')
             ->assertDontSee('Notify buyers and send instant tracking numbers via WhatsApp.');
         $this->get('/features')->assertOk()->assertSee('Order notifications')
-            ->assertSee('Courier tracking')->assertSee('Mithram Products');
+            ->assertSee('Courier tracking')->assertDontSee('class="merchant-client"', false);
         $this->get('/llms.txt')->assertOk()->assertSee('owner email alerts')
             ->assertSee('does not claim automated courier booking');
     }

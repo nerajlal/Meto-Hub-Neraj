@@ -761,3 +761,17 @@
   
 
 
+
+/* Merchant confidence uses its own grid, independent of feature page utilities. */
+.merchant-confidence .section-head{max-width:860px;margin-bottom:32px}
+.merchant-confidence .section-head h2{font-size:clamp(30px,3.6vw,52px);line-height:1.12;letter-spacing:-.035em;margin:14px 0 20px}
+.merchant-confidence .feature-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.merchant-confidence .feature-card{min-width:0;padding:26px;border:var(--rule);border-radius:18px;background:rgba(255,255,255,.75)}
+.merchant-confidence .f-icon{display:grid;place-items:center;width:44px;height:44px;border-radius:13px;background:color-mix(in srgb,var(--red) 10%,white);color:var(--red);font-size:17px;margin-bottom:20px}
+.merchant-confidence .feature-card h3{font-family:var(--sans);font-size:17px;font-weight:700;line-height:1.4;margin:0 0 12px;letter-spacing:-.02em}
+.merchant-confidence .feature-card p{font:400 13px/1.8 var(--sans);color:var(--ink-2);margin:0 0 12px}
+.merchant-confidence .feature-card p:last-child{margin-bottom:0}
+.merchant-confidence .feature-card a{text-decoration:underline;text-underline-offset:3px}
+@media(max-width:900px){.merchant-confidence .feature-grid{grid-template-columns:1fr}.merchant-confidence .feature-card{padding:22px}.merchant-confidence .section-head{margin-bottom:24px}}
+
+.story-sample-label{display:inline-block;font:500 10px/1.5 var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2);margin-bottom:16px}

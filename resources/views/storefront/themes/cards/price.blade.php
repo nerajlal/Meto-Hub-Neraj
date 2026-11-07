@@ -1,0 +1,1 @@
+<div class="sf-product-price"><strong class="p-price">{{ $currentTenant->currency ?? '₹' }}{{ number_format($selected['price'] ?? 0, 2) }}</strong>@if(($selected['compare'] ?? 0) > ($selected['price'] ?? 0))<del>{{ $currentTenant->currency ?? '₹' }}{{ number_format($selected['compare'], 2) }}</del>@endif</div>

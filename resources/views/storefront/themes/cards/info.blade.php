@@ -26,6 +26,8 @@
             @if($cardData['variants']->count() > 3)<a href="{{ $productUrl }}">+{{ $cardData['variants']->count() - 3 }} more</a>@endif
         </div>
     @endif
-    <div class="sf-product-price"><strong class="p-price">{{ $currentTenant->currency ?? '₹' }}{{ number_format($selected['price'] ?? 0, 2) }}</strong>@if(($selected['compare'] ?? 0) > ($selected['price'] ?? 0))<del>{{ $currentTenant->currency ?? '₹' }}{{ number_format($selected['compare'], 2) }}</del>@endif</div>
+    @unless($storefrontTheme['id'] === 'template_31')
+        @include('storefront.themes.cards.price')
+    @endunless
     @if(!in_array($storefrontTheme['id'], ['template_31', 'template_2', 'template_3', 'template_5', 'template_7', 'template_8', 'template_9', 'template_10', 'template_11', 'template_12', 'template_13', 'template_14', 'template_15']) && ($storefrontTheme['generation'] ?? '') !== 'collection' && !empty($product->tags))<span class="sf-product-tag">{{ last($product->tags) }}</span>@endif
 </div>

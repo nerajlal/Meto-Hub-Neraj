@@ -570,11 +570,12 @@
   <section class="wrap" id="client-reviews" style="padding-block: clamp(70px, 9vw, 120px); border-top: var(--rule);">
     <header class="section-head section-head--left">
       <p class="eyebrow eyebrow--pill"><b>SELLER STORIES</b></p>
-      <h2>Loved by <em>creators</em> across India.</h2>
       @if($reviews->every(fn ($review) => ($review['sample'] ?? false) === true))
-      <p class="lede">From Instagram boutiques to handcrafted luxury collections, here is how sellers run on MetoHub.</p>
+      <h2>Small brands. <em>Everyday possibilities.</em></h2>
+      <p class="lede">Illustrative seller stories showing how different brands could use MetoHub.</p>
       <p style="font-size: 13px; color: var(--ink-3); margin-top: 6px; font-family: var(--mono);">Names and quotes are fictional examples, not MetoHub client reviews. Illustrative example.</p>
       @else
+      <h2>Loved by <em>creators</em> across India.</h2>
       <p class="lede">From the people behind the brands running on MetoHub.</p>
       @endif
     </header>
@@ -585,9 +586,13 @@
           @foreach($reviews as $review)
           <article class="story-card-luxury" @if($iteration === 2) aria-hidden="true" @endif>
             <div>
+              @if($review['sample'] ?? false)
+              <span class="story-sample-label">Illustrative example</span>
+              @else
               <div class="story-stars" aria-label="5 out of 5 stars">
                 <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
               </div>
+              @endif
               <p class="story-quote">“{{ $review['quote'] }}”</p>
             </div>
             <div class="story-author">
