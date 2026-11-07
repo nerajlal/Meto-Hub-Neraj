@@ -66,7 +66,7 @@ class LandingHomepageTest extends TestCase
             $this->assertStringContainsString('9-day free trial', $app['description']);
             if ($path === '/') {
                 $questions = $graph->firstWhere('@type', 'FAQPage')['mainEntity'];
-                $this->assertCount(8, $questions);
+                $this->assertCount(count(app(\App\Services\MarketingContent::class)->faqs()), $questions);
                 foreach ($questions as $question) {
                     $response->assertSee('<h3 style="font: inherit; margin: 0">'.e($question['name']).'</h3>', false)
                         ->assertSee(e($question['acceptedAnswer']['text']), false);
@@ -152,12 +152,20 @@ class LandingHomepageTest extends TestCase
             ->assertDontSee('Incomplete feedback');
     }
 
-    public function test_sample_seller_stories_are_explicitly_disclosed(): void
+    public function test_public_capabilities_are_factual_and_do_not_invent_client_reviews(): void
     {
-        $this->get('/')->assertOk()->assertSee('Anjali Menon')
-            ->assertSee('Fathima Nazeer')->assertSee('Arjun Nair')
-            ->assertSee('Names and quotes are fictional examples, not MetoHub client reviews.')
-            ->assertSee('Illustrative example')->assertDontSee('Trusted by 500');
+        $this->get('/')->assertOk()->assertSee('Mithram Products')
+            ->assertSee('owner email alerts')->assertSee('DTDC or India Post')
+            ->assertSee('Book pickups and pay postage directly with your courier.')
+            ->assertSee('Export products and orders')
+            ->assertSee(count(config('storefront_themes')).' Themes, Logo')
+            ->assertDontSee('15 Themes')->assertDontSee('Anjali Menon')
+            ->assertDontSee('id="client-reviews"', false)
+            ->assertDontSee('Notify buyers and send instant tracking numbers via WhatsApp.');
+        $this->get('/features')->assertOk()->assertSee('Order notifications')
+            ->assertSee('Courier tracking')->assertSee('Mithram Products');
+        $this->get('/llms.txt')->assertOk()->assertSee('owner email alerts')
+            ->assertSee('does not claim automated courier booking');
     }
 
     public function test_public_pages_share_the_homepage_header_and_footer(): void

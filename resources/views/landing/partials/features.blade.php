@@ -67,8 +67,18 @@
         <h3>Customer Accounts</h3>
         <p>Let shoppers save addresses, track orders, and reorder favorites.</p>
       </div> -->
+      <div class="feature-card"><span class="f-icon"><i class="fa-solid fa-bell"></i></span>
+        <h3>Order notifications</h3>
+        <p>New orders appear in your dashboard notification bell, with owner email alerts and optional device push notifications on supported browsers.</p>
+      </div>
+      <div class="feature-card"><span class="f-icon"><i class="fa-solid fa-truck"></i></span>
+        <h3>Courier tracking &amp; packing labels</h3>
+        <p>Manage delivery partners such as DTDC and India Post, save tracking numbers, and print invoices and packing labels. Book shipments directly with your courier.</p>
+      </div>
     </div>
   </section>
+
+  @include('landing.partials.merchant-confidence')
 
   <!-- ================= PRICING ENGINE ================= -->
   <section class="product-mgmt">

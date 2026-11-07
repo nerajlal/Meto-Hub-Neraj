@@ -372,7 +372,7 @@
   <section class="process wrap" id="how-it-works" style="border-top: var(--rule);">
     <header class="section-head section-head--left">
       <p class="eyebrow eyebrow--pill"><b>HOW IT WORKS</b></p>
-      <h2>Three simple steps to <em>launch.</em></h2>
+      <h2>Four simple steps to <em>launch.</em></h2>
       <p class="lede">From signing up to accepting your first order in under 10 minutes.</p>
     </header>
     <div class="cards">
@@ -380,7 +380,7 @@
         <span class="card__no">1</span>
         <img class="card__img" src="{{ asset('img/ello/ello-sketch-sm.webp') }}" alt="Store creation">
         <h3>Create Your Store</h3>
-        <p>Register your brand name, select your preferred theme, and create your password in 60 seconds.</p>
+        <p>Register your brand name and create your account. Start with a ready-to-use theme and personalize it from your dashboard.</p>
       </div>
       <div class="card">
         <span class="card__no">2</span>
@@ -399,7 +399,7 @@
         <span class="card__no" style="display:none"></span>
         <img class="card__img" src="{{ asset('img/ello/ello-jump-sm.webp') }}" alt="Fulfill orders">
         <h3>Fulfill &amp; Grow</h3>
-        <p>Print packing slips, send WhatsApp status updates, and build your thriving independent business.</p>
+        <p>Print invoices and packing labels, save your courier tracking number, and keep customers informed.</p>
       </div>
     </div>
 
@@ -459,8 +459,8 @@
         <div class="included-item">
           <i class="fa-brands fa-whatsapp"></i>
           <div>
-            <strong>Direct WhatsApp Integration</strong>
-            <span>Notify buyers and send instant tracking numbers via WhatsApp.</span>
+            <strong>Email, Bell &amp; Device Alerts</strong>
+            <span>Receive order alerts in your dashboard and by email. Enable device notifications on a supported browser.</span>
           </div>
         </div>
         <div class="included-item">
@@ -501,7 +501,7 @@
 
           <ul style="list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; font-size: 15px; color: var(--ink-2);">
             <li><i class="fa-solid fa-check" style="color: var(--red); margin-right: 8px;"></i> Custom MetoHub Store Link</li>
-            <li><i class="fa-solid fa-check" style="color: var(--red); margin-right: 8px;"></i> 15 Themes, Logo &amp; Brand Colors</li>
+            <li><i class="fa-solid fa-check" style="color: var(--red); margin-right: 8px;"></i> {{ count(config('storefront_themes')) }} Themes, Logo &amp; Brand Colors</li>
             <li><i class="fa-solid fa-check" style="color: var(--red); margin-right: 8px;"></i> Product Variants &amp; Stock Tracking</li>
             <li><i class="fa-solid fa-check" style="color: var(--red); margin-right: 8px;"></i> Invoices &amp; Packing Labels</li>
             <li><i class="fa-solid fa-check" style="color: var(--red); margin-right: 8px;"></i> Discount Codes &amp; Bundles</li>
@@ -562,6 +562,8 @@
     </div>
     <p class="pricing-footnote">Prices shown are for monthly subscriptions. Choose your paid plan in your dashboard after the trial.</p>
   </section>
+
+  @include('landing.partials.merchant-confidence')
 
   <!-- Creator Stories & Testimonials Slider -->
   @if($reviews->isNotEmpty())
