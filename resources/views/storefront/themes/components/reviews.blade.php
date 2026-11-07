@@ -8,7 +8,7 @@
         <div style="display: flex; align-items: center; gap: 0.75rem;">
             <div style="display: flex; align-items: center; gap: 0.35rem; font-size: 0.85rem; color: #f59e0b; font-weight: 700;">
                 <i class="fa-solid fa-star"></i>
-                <span style="color: var(--text-color, #334155);">Verified Buyer Reviews</span>
+                <span style="color: var(--text-color, #334155);">Verified Reviews</span>
             </div>
             <div class="sf-reviews-nav-btns" style="display: flex; gap: 0.5rem;">
                 <button type="button" class="sf-review-prev-btn" aria-label="Previous reviews" style="width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--border-color, #cbd5e1); background: #ffffff; color: var(--primary-color, #0f172a); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease;">

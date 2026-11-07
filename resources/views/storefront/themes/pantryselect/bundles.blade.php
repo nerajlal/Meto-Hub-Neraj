@@ -1,5 +1,5 @@
 <section class="sf-shelf ps-bundle-shelf" aria-labelledby="ps-bundles-heading">
-    <div class="sf-section-heading"><span>BETTER TOGETHER</span><h2 id="ps-bundles-heading">Discover our bundles</h2><a href="{{ app(\App\Services\StorefrontTheme::class)->url('v1.combos') }}">All bundles →</a></div>
+    <div class="sf-section-heading"><span>BETTER TOGETHER</span><h2 id="ps-bundles-heading">Discover our Combos</h2><a href="{{ app(\App\Services\StorefrontTheme::class)->url('v1.combos') }}">All bundles →</a></div>
     <div class="ps-bundle-rail" role="list" aria-label="Bundles and packs">
         @foreach($bundles as $bundle)
             @php
