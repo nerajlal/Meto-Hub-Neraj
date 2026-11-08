@@ -44,18 +44,7 @@
                                         class="form-control">{{ $bundle->description }}</textarea>
                                 </div>
                             @endif
-                            @if($bundle->type != 'pack')
-                                <div>
-                                    <label class="form-label fw-medium text-secondary small">Image (WebP, PNG, JPG, JPEG)</label>
-                                    @if($bundle->image)
-                                        <div class="mb-2">
-                                            <img src="{{ Storage::url($bundle->image) }}" class="rounded border"
-                                                style="width: 100px; height: 100px; object-fit: cover;">
-                                        </div>
-                                    @endif
-                                    <input type="file" name="image" class="form-control" accept="image/webp,image/png,image/jpeg,image/jpg">
-                                </div>
-                            @endif
+                            @include('admin.bundles.partials.image-upload', ['currentImage' => $bundle->image])
                         </div>
                     </div>
 

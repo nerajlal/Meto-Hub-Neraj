@@ -121,4 +121,5 @@
     .hover-text-dark:hover { color: #343a40 !important; }
     .hover-text-danger:hover { color: var(--bs-danger) !important; }
 </style>
+@include('admin.bundles.partials.image-conversion')
 @endsection
