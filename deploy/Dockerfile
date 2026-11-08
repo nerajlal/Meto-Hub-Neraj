@@ -7,9 +7,9 @@ COPY public/ public/
 RUN npm run build
 
 FROM php:8.3-fpm-alpine AS php-base
-RUN apk add --no-cache curl libpng-dev libjpeg-turbo-dev freetype-dev libzip-dev \
+RUN apk add --no-cache curl libpng-dev libwebp-dev libjpeg-turbo-dev freetype-dev libzip-dev \
     icu-dev oniguruma-dev libxml2-dev gmp-dev curl-dev bash su-exec unzip \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
     && docker-php-ext-install -j2 pdo_mysql exif pcntl bcmath gd zip intl gmp
 COPY docker/php/production.ini /usr/local/etc/php/conf.d/99-production.ini
 COPY docker/php/fpm.conf /usr/local/etc/php-fpm.d/zz-docker.conf

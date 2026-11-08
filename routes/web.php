@@ -11,6 +11,8 @@ Route::get('/merchant-manifest/{tenant}.webmanifest', function (int $tenant) {
     ], 200, ['Content-Type'=>'application/manifest+json','X-Robots-Tag'=>'noindex']);
 })->whereNumber('tenant');
 
+Route::get('/social/stores/{slug}/thumbnail.png', App\Http\Controllers\StoreShareThumbnailController::class)->where('slug', '[a-z0-9]+(?:-[a-z0-9]+)*')->name('store.share-thumbnail');
+
 Route::get('/robots.txt', [App\Http\Controllers\SearchController::class, 'robots']);
 Route::get('/llms.txt', [App\Http\Controllers\SearchController::class, 'llms']);
 Route::get('/sitemap-blogs.xml', [App\Http\Controllers\SearchController::class, 'blogs']);
@@ -152,6 +154,7 @@ Route::prefix('superadmin')->name('super_admin.')->group(function () {
     // Protected Routes
     Route::middleware([\App\Http\Middleware\SuperAdminMiddleware::class])->group(function () {
         Route::get('/', [App\Http\Controllers\SuperAdmin\DashboardController::class, 'index'])->name('dashboard');
+        Route::get('/payments', [App\Http\Controllers\SuperAdmin\DashboardController::class, 'payments'])->name('payments');
         Route::get('/subscriptions', [App\Http\Controllers\SuperAdmin\DashboardController::class, 'subscriptions'])->name('subscriptions');
         Route::patch('/tenants/{id}/trial', [App\Http\Controllers\SuperAdmin\DashboardController::class, 'updateTrial'])->middleware('throttle:20,1')->name('tenants.trial.update');
         Route::get('/tenants', [App\Http\Controllers\SuperAdmin\DashboardController::class, 'tenants'])->name('tenants');

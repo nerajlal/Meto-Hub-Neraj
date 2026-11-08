@@ -59,7 +59,7 @@ class SuperAdminOverviewTest extends TestCase
         $this->get('/superadmin')->assertOk()->assertViewHas('counts', fn ($counts) => $counts['total'] === 8 && $counts['trial'] === 2 && $counts['trial_expired'] === 1 &&
             $counts['pending'] === 2 && $counts['active'] === 1 && $counts['halted'] === 1 &&
             $counts['unknown'] === 1 && $counts['trial_ending'] === 1 && $counts['unverified'] === 8)
-            ->assertSee('Subscriptions & Trials', false)->assertSee('Plan distribution')->assertSee('Pro');
+            ->assertSee('Subscriptions & Trials', false)->assertSee('Selected store plans')->assertSee('Pro');
     }
 
     public function test_store_filters_match_the_same_status_classification_and_keep_query_on_pagination(): void

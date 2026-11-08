@@ -38,7 +38,9 @@ class PlanAccess
 
     public function hasPaidAccess(Tenant $tenant): bool
     {
-        $subscription = $tenant->subscriptions()->where('gateway_id', $tenant->razorpay_subscription_id)->first();
+        $subscription = $tenant->relationLoaded('subscriptions')
+            ? $tenant->subscriptions->firstWhere('gateway_id', $tenant->razorpay_subscription_id)
+            : $tenant->subscriptions()->where('gateway_id', $tenant->razorpay_subscription_id)->first();
         if (! $subscription || (! $subscription->synced_at && ! $subscription->cycle && $subscription->status === 'active')) {
             return false;
         } // A legacy status alone cannot establish a paid billing period.

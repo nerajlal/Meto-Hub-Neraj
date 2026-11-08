@@ -5,12 +5,15 @@ namespace App\Http\Controllers\SuperAdmin;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Hash;
 
 class DashboardController extends Controller
 {
-    public function index(\App\Services\SuperAdminStoreOverview $overview)
+    public function index(Request $request, \App\Services\SuperAdminStoreOverview $overview, \App\Services\SuperAdminAnalytics $analytics)
     {
+        $range = $this->analyticsRange($request);
+        $analyticsReport = $analytics->dashboard($range['from'], $range['to']);
         $counts = $overview->counts();
         $totalStores = $counts['total'];
         $totalOrders = \App\Models\Order::withoutGlobalScopes()->count();
@@ -22,10 +25,26 @@ class DashboardController extends Controller
             ->where('orders.status', '!=', 'cancelled')->selectRaw('tenants.currency, SUM(orders.total_amount) as amount')
             ->groupBy('tenants.currency')->get();
 
-        $subscriptionCollections = \App\Models\SubscriptionPayment::where('status', 'captured')->selectRaw('currency, SUM(amount) as captured, SUM(amount_refunded) as refunded')->groupBy('currency')->get();
+        $subscriptionCollections = \App\Models\SubscriptionPayment::whereIn('status', ['captured', 'refunded'])->selectRaw('currency, SUM(amount) as captured, SUM(amount_refunded) as refunded')->groupBy('currency')->get();
         $outstandingInvoices = \App\Models\SubscriptionInvoice::whereIn('status', ['issued', 'partially_paid'])->selectRaw('currency, SUM(amount_due) as due')->groupBy('currency')->get();
 
-        return view('super_admin.dashboard', compact('counts', 'totalStores', 'totalOrders', 'totalCustomers', 'recentOrders', 'tenants', 'planBreakdown', 'salesByCurrency', 'overview', 'subscriptionCollections', 'outstandingInvoices'));
+        return view('super_admin.dashboard', compact('counts', 'totalStores', 'totalOrders', 'totalCustomers', 'recentOrders', 'tenants', 'planBreakdown', 'salesByCurrency', 'overview', 'subscriptionCollections', 'outstandingInvoices', 'analyticsReport', 'range'));
+    }
+
+    private function analyticsRange(Request $request): array
+    {
+        $range = $request->validate(['from' => 'nullable|date_format:Y-m-d', 'to' => 'nullable|date_format:Y-m-d'.($request->filled('from') ? '|after_or_equal:from' : '')]);
+        $range = ['from' => $range['from'] ?? now()->startOfMonth()->toDateString(), 'to' => $range['to'] ?? now()->toDateString()];
+        if ($range['from'] > $range['to']) throw ValidationException::withMessages(['to' => 'End date must be on or after the start date.']);
+        return $range;
+    }
+
+    public function payments(Request $request, \App\Services\SuperAdminAnalytics $analytics)
+    {
+        $filters = $request->validate(['from' => 'nullable|date_format:Y-m-d', 'to' => 'nullable|date_format:Y-m-d'.($request->filled('from') ? '|after_or_equal:from' : ''),
+            'q' => 'nullable|string|max:200', 'status' => 'nullable|in:created,authorized,captured,refunded,failed', 'currency' => 'nullable|string|size:3']);
+        $payments = $analytics->paymentQuery($filters)->orderByDesc('attempted_at')->orderByDesc('id')->paginate(20)->withQueryString();
+        return view('super_admin.payments', compact('payments', 'filters'));
     }
 
     private function storeFilters(Request $request): array

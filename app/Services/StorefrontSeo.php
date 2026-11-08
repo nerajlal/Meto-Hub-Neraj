@@ -91,6 +91,10 @@ class StorefrontSeo
             ]];
         }
 
-        return compact('title', 'description', 'canonical', 'noindex', 'graph') + ['image' => $this->image($image), 'type' => $product ? 'product' : 'website'];
+        $compactShare = $page === 'home';
+        $shareImage = $compactShare
+            ? route('store.share-thumbnail', ['slug' => $tenant->slug, 'v' => app(StoreShareThumbnail::class)->version($tenant)])
+            : $this->image($image);
+        return compact('title', 'description', 'canonical', 'noindex', 'graph') + ['compactShare' => $compactShare, 'image' => $shareImage, 'type' => $product ? 'product' : 'website'];
     }
 }

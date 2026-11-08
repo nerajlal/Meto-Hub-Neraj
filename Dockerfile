@@ -31,7 +31,7 @@ FROM php:8.2-fpm-alpine AS base
 RUN apk add --no-cache \
     curl \
     libpng-dev \
-    libjpeg-turbo-dev \
+    libwebp-dev libjpeg-turbo-dev \
     freetype-dev \
     libzip-dev \
     zip \
@@ -44,7 +44,7 @@ RUN apk add --no-cache \
     su-exec
 
 # Configure and install PHP extensions
-RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
     && docker-php-ext-install -j$(nproc) \
         pdo_mysql \
         mbstring \

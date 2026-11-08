@@ -8,11 +8,17 @@
 <meta property="og:title" content="{{ $seo['title'] }}">
 <meta property="og:description" content="{{ $seo['description'] }}">
 <meta property="og:url" content="{{ $seo['canonical'] }}">
-<meta name="twitter:card" content="{{ $seo['image'] ? 'summary_large_image' : 'summary' }}">
+<meta name="twitter:card" content="{{ $seo['image'] && !$seo['compactShare'] ? 'summary_large_image' : 'summary' }}">
 <meta name="twitter:title" content="{{ $seo['title'] }}">
 <meta name="twitter:description" content="{{ $seo['description'] }}">
 @if($seo['image'])
 <meta property="og:image" content="{{ $seo['image'] }}">
 <meta name="twitter:image" content="{{ $seo['image'] }}">
+<meta property="og:image:alt" content="{{ $seo['compactShare'] ? $currentTenant->name.' logo' : $seo['title'] }}">
+@if($seo['compactShare'])
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="200">
+<meta property="og:image:height" content="200">
+@endif
 @endif
 <script type="application/ld+json">{!! json_encode(['@context'=>'https://schema.org', '@graph'=>$seo['graph']], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}</script>
