@@ -5,7 +5,7 @@ namespace Tests\Feature;
 use App\Models\{Tenant, Product};
 use App\Services\StoreShareThumbnail;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\{Storage, Http};
+use Illuminate\Support\Facades\{Storage, Http, Cache};
 use Tests\TestCase;
 
 class StoreShareThumbnailTest extends TestCase
@@ -48,6 +48,22 @@ class StoreShareThumbnailTest extends TestCase
         $old = app(StoreShareThumbnail::class)->version($tenant);
         $tenant->update(['logo' => null]);
         $this->assertNotSame($old, app(StoreShareThumbnail::class)->version($tenant));
+    }
+
+    public function test_cached_png_is_encoded_as_safe_text_for_mysql_cache_columns(): void
+    {
+        $tenant = Tenant::create(['name' => 'Database cached store']);
+        Cache::shouldReceive('remember')->once()->andReturnUsing(function ($key, $ttl, $render) {
+            $encoded = $render();
+            $this->assertStringContainsString('store-share:png-base64:', $key);
+            $this->assertTrue(mb_check_encoding($encoded, 'UTF-8'));
+            $this->assertMatchesRegularExpression('/^[A-Za-z0-9+\/=]+$/', $encoded);
+            $png = base64_decode($encoded, true);
+            $this->assertStringStartsWith("\x89PNG\r\n\x1a\n", $png);
+            return $encoded;
+        });
+        $response = $this->get(route('store.share-thumbnail', ['slug' => $tenant->slug]))->assertOk()->assertHeader('Content-Type', 'image/png');
+        $this->assertSame([200, 200], array_slice(getimagesizefromstring($response->getContent()), 0, 2));
     }
 
     public function test_missing_or_external_logo_uses_fallback_without_fetching_external_resources(): void

@@ -29,7 +29,7 @@ class StoreShareThumbnail
     public function version(Tenant $tenant): string
     {
         $logo = $this->localLogo($tenant);
-        return substr(hash('sha256', json_encode([$tenant->name, $tenant->seo_image, $tenant->logo, $tenant->primary_color,
+        return substr(hash('sha256', json_encode(['png-base64-v2', $tenant->name, $tenant->seo_image, $tenant->logo, $tenant->primary_color,
             $tenant->updated_at?->getTimestamp(), $logo ? filemtime($logo) : null, $logo ? filesize($logo) : null])), 0, 16);
     }
 
