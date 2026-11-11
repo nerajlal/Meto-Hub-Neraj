@@ -23,11 +23,11 @@
                 @if($bundleImage)<a class="ps-bundle-image" href="{{ $bundleUrl }}" tabindex="-1" aria-hidden="true"><img src="{{ $bundleImage }}" alt="" loading="lazy"></a>@endif
                 <div class="ps-bundle-bottom">
                     <div class="ps-bundle-pricing">
+                        <span class="ps-bundle-price-label">Combo –</span>
+                        <strong class="ps-bundle-price" aria-label="Combo price {{ $currentTenant->currency ?? '₹' }}{{ number_format($comboPrice, 2) }}">{{ $currentTenant->currency ?? '₹' }}{{ number_format($comboPrice, 2) }}</strong>
                         @if($saving > 0)
-                            <del class="ps-bundle-original"><span class="visually-hidden">Original price </span>{{ $currentTenant->currency ?? '₹' }}{{ number_format($originalPrice, 2) }}</del>
+                            <del class="ps-bundle-original" aria-label="Original price {{ $currentTenant->currency ?? '₹' }}{{ number_format($originalPrice, 2) }}">{{ $currentTenant->currency ?? '₹' }}{{ number_format($originalPrice, 2) }}</del>
                         @endif
-                        <strong class="ps-bundle-price"><span class="visually-hidden">Combo price </span>{{ $currentTenant->currency ?? '₹' }}{{ number_format($comboPrice, 2) }}</strong>
-                        @if($saving > 0)<span class="ps-bundle-saving">Save {{ $currentTenant->currency ?? '₹' }}{{ number_format($saving, 2) }}</span>@endif
                     </div>
                     <div class="product-action-wrapper" data-cart-key="bundle-{{ $bundle->id }}">
                         <button type="button" class="inline-add-btn" onclick="updateInlineCart('bundle-{{ $bundle->id }}', 1)" aria-label="Add {{ $bundle->title }} to basket" @disabled($bundleOut)><span>{{ $bundleOut ? 'Sold out' : 'Add' }}</span>@unless($bundleOut)<i class="fa-solid fa-plus" aria-hidden="true"></i>@endunless</button>
