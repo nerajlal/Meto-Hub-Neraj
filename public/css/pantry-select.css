@@ -76,8 +76,8 @@
 /* Wide desktop campaigns and a dedicated mobile crop. */
 .storefront-theme.template_31 .main-content{padding-top:0}
 .storefront-theme.template_31 .sf-home-pantryselect{padding-top:0;margin-top:0}
-.template_31 .ps-cover-media .sf-merchant-banner img{aspect-ratio:3.4;max-height:none;object-fit:cover}
-@media(max-width:767px){.template_31 .ps-cover-media .sf-merchant-banner img{aspect-ratio:1.6}}
+.template_31 .ps-cover-media .sf-merchant-banner img{aspect-ratio:16/5;max-height:none;object-fit:cover}
+@media(max-width:768px){.template_31 .ps-cover-media .sf-merchant-banner img{aspect-ratio:2/3}}
 .storefront-theme.template_31 .sf-product-pantryselect .card-info{padding:0!important}
 /* Wide, horizontally browsable bundle promotions. */
 .template_31 .ps-bundle-rail{display:grid;grid-auto-flow:column;grid-auto-columns:clamp(300px,32vw,520px);gap:1.25rem;overflow-x:auto;scroll-snap-type:x proximity;scroll-padding-inline:0;padding-bottom:1rem;scrollbar-width:thin}

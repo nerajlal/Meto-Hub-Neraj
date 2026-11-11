@@ -322,6 +322,7 @@ Route::prefix('{tenant}/admin')->name('admin.')->middleware(['identify_tenant', 
     Route::get('/settings/slider/create', [App\Http\Controllers\Admin\SliderController::class, 'create'])->name('settings.slider.create');
     Route::post('/settings/slider', [App\Http\Controllers\Admin\SliderController::class, 'store'])->name('settings.slider.store');
     Route::post('/settings/slider/reorder', [App\Http\Controllers\Admin\SliderController::class, 'reorder'])->name('settings.slider.reorder');
+    Route::patch('/settings/slider/{id}/status', [App\Http\Controllers\Admin\SliderController::class, 'updateStatus'])->name('settings.slider.status');
     Route::delete('/settings/slider/{id}', [App\Http\Controllers\Admin\SliderController::class, 'destroy'])->name('settings.slider.destroy');
 
     // Instagram Reels

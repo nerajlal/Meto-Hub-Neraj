@@ -43,6 +43,16 @@ class SliderController extends Controller
         return redirect()->route('admin.settings.slider')->with('success', 'Slide added successfully.');
     }
 
+    public function updateStatus(Request $request, $id)
+    {
+        $slider = Slider::findOrFail($id);
+        $request->validate(['status' => 'required|boolean']);
+        $slider->update(['status' => $request->boolean('status')]);
+
+        if ($request->expectsJson()) return response()->json(['status' => $slider->status]);
+        return redirect()->route('admin.settings.slider')->with('success', $slider->status ? 'Slide enabled.' : 'Slide hidden from storefront.');
+    }
+
     public function reorder(Request $request)
     {
         $request->validate([
