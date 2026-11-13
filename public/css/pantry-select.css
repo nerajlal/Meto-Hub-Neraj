@@ -220,3 +220,18 @@
 .template_31 .ps-combo-information a{font-size:.8rem;color:inherit;text-decoration:underline}
 .template_31 .ps-combo-page a:focus-visible,.template_31 .ps-combo-page button:focus-visible{outline:2px solid var(--accent-color);outline-offset:3px}
 @media(max-width:767px){.template_31 .ps-combo-information{grid-template-columns:1fr;gap:1.5rem}.template_31 .ps-combo-page .thumb-grid{scrollbar-width:none}.template_31 .ps-combo-page .thumb-grid::-webkit-scrollbar{display:none}}
+
+/* Crunchiko green accents: light touches on the original white storefront. */
+.storefront-theme.template_31{
+    --crunchiko-leaf:#4f7427;
+    --crunchiko-citrus:#9eb70b;
+    --ps-line:color-mix(in srgb,var(--crunchiko-leaf) 14%,white);
+}
+.storefront-theme.template_31 .sf-shelf>.sf-section-heading{border-bottom:1px solid color-mix(in srgb,var(--crunchiko-leaf) 16%,white);padding-bottom:.85rem}
+.storefront-theme.template_31 .sf-section-heading h2{ text-decoration:underline;text-decoration-color:color-mix(in srgb,var(--crunchiko-citrus) 38%,transparent);text-decoration-thickness:3px;text-underline-offset:7px}
+.storefront-theme.template_31 .sf-product-pantryselect,.storefront-theme.template_31 .sf-bundle-standard{border-color:color-mix(in srgb,var(--crunchiko-leaf) 18%,white)!important}
+.template_31 .ps-card-visual,.template_31 .pd-gallery .main-image-display{box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--crunchiko-leaf) 10%,transparent)}
+.template_31 .ps-trust-icon{background:color-mix(in srgb,var(--crunchiko-citrus) 9%,white);border:1px solid color-mix(in srgb,var(--crunchiko-leaf) 12%,white)}
+.template_31 .ps-bundle-promo{border-color:color-mix(in srgb,var(--crunchiko-leaf) 12%,white)}
+.template_31 .ps-story{border-block:1px solid color-mix(in srgb,var(--crunchiko-leaf) 12%,white)}
+.template_31 .ps-combo-kind{border:1px solid color-mix(in srgb,var(--crunchiko-leaf) 18%,white)}
