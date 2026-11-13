@@ -173,7 +173,7 @@ return [
     ],
     'template_31' => [
         'name' => 'Crunchiko', 'version' => 'Premium collection',
-        'description' => 'An olive-and-lime specialty storefront with a full-width banner, combo deals, compact product cards and matching two-column product and combo pages.',
-        'tone' => '#9eb70b', 'background' => '#4f7427', 'layout' => 'pantryselect', 'generation' => 'collection',
+        'description' => 'A light, banner-led specialty storefront with a cream navigation bar, compact category tiles, selectable product variants and clear product and combo pages.',
+        'tone' => '#26221e', 'background' => '#fffaf4', 'layout' => 'pantryselect', 'generation' => 'collection',
     ],
 ];
