@@ -14,7 +14,7 @@ class Tenant extends Model
         static::creating(function (Tenant $tenant) {
             $base = rtrim(\Illuminate\Support\Str::limit(\Illuminate\Support\Str::slug($tenant->name), 120, ''), '-') ?: 'store';
             $slug = $base;
-            while (static::where('slug', $slug)->exists()) {
+            while (static::withTrashed()->where('slug', $slug)->exists()) {
                 $slug = $base.'-'.\Illuminate\Support\Str::lower(\Illuminate\Support\Str::random(6));
             }
             $tenant->slug = $slug;
@@ -70,6 +70,8 @@ class Tenant extends Model
     ];
 
     protected $casts = [
+        'is_frozen' => 'boolean',
+        'frozen_at' => 'datetime',
         'trial_ends_at' => 'datetime',
         'search_indexable' => 'boolean',
         'maintenance_mode' => 'boolean',

@@ -30,6 +30,12 @@ class IdentifyStorefrontTenant
         abort_unless(filter_var($tenantId, FILTER_VALIDATE_INT) && (int) $tenantId > 0, 404);
         $tenant = $hostTenant ?? $slugTenant ?? Tenant::findOrFail($tenantId);
 
+        if ($tenant->is_frozen) {
+            $headers = ['Cache-Control' => 'private, no-store', 'X-Robots-Tag' => 'noindex, nofollow', 'Retry-After' => '3600'];
+            if ($request->expectsJson() || !$request->isMethodSafe()) return response()->json(['message' => 'This store is temporarily unavailable.'], 503, $headers);
+            return response()->view('storefront.frozen', [], 503, $headers);
+        }
+
         $access = app(\App\Services\PlanAccess::class);
         if (! $access->storefrontAvailable($tenant)) {
             $headers = ['Cache-Control' => 'private, no-store', 'Retry-After' => '3600', 'X-Robots-Tag' => 'noindex, nofollow'];

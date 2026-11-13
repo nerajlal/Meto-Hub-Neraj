@@ -51,6 +51,7 @@ class PlanAccess
 
     public function adminAvailable(Tenant $tenant): bool
     {
+        if ($tenant->is_frozen) return false;
         return $this->inTrial($tenant) || $this->hasPaidAccess($tenant) || $this->inSubscriptionGrace($tenant);
     }
 
@@ -81,6 +82,7 @@ class PlanAccess
 
     public function storefrontAvailable(Tenant $tenant): bool
     {
+        if ($tenant->is_frozen) return false;
         return $this->adminAvailable($tenant) || now()->lt($this->storefrontGraceEndsAt($tenant));
     }
 

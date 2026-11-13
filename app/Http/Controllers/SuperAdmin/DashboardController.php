@@ -158,6 +158,48 @@ class DashboardController extends Controller
         return view('super_admin.customers', compact('customers'));
     }
 
+    public function freezeTenant(Request $request, $id)
+    {
+        $tenant = \App\Models\Tenant::findOrFail($id);
+        $data = $request->validate(['frozen' => 'required|boolean', 'reason' => 'nullable|string|max:1000']);
+        $tenant->forceFill(['is_frozen' => $request->boolean('frozen'), 'frozen_at' => $request->boolean('frozen') ? now() : null,
+            'freeze_reason' => $request->boolean('frozen') ? ($data['reason'] ?? null) : null])->save();
+        \Illuminate\Support\Facades\Log::info('Superadmin store freeze changed', ['tenant_id' => $tenant->id, 'actor_id' => $request->user()->id, 'frozen' => $tenant->is_frozen]);
+        return back()->with('success', $tenant->is_frozen ? 'Store frozen. Its billing subscription has not been cancelled.' : 'Store unfrozen. Normal subscription access rules apply.');
+    }
+
+    public function deleteTenant(Request $request, $id)
+    {
+        $tenant = \App\Models\Tenant::findOrFail($id);
+        $request->validate(['confirm_name' => ['required', 'string', \Illuminate\Validation\Rule::in([$tenant->name])]]);
+        // Deleting a local record must never leave an undisclosed recurring charge running.
+        $terminal = ['cancelled', 'completed', 'expired'];
+        if (($tenant->razorpay_subscription_id && !in_array($tenant->subscription_status, $terminal, true))
+            || $tenant->subscriptions()->whereNotIn('status', $terminal)->exists()) {
+            throw ValidationException::withMessages(['confirm_name' => 'Cancel the gateway subscription and refresh billing records before deleting this store. You can freeze the store meanwhile.']);
+        }
+        $tenant->delete(); // Soft deletion preserves order/payment history and uploaded files.
+        \Illuminate\Support\Facades\Log::info('Superadmin store deleted', ['tenant_id' => $tenant->id, 'actor_id' => $request->user()->id]);
+        return redirect()->route('super_admin.tenants')->with('success', 'Store deleted from active stores. Historical data is retained.');
+    }
+
+    public function themes(\App\Services\StorefrontTheme $catalog)
+    {
+        $usage = [];
+        foreach (\App\Models\Tenant::selectRaw('theme, COUNT(*) as store_count')->groupBy('theme')->get() as $row) {
+            $id = $catalog->normalize($row->theme);
+            $usage[$id] = ($usage[$id] ?? 0) + $row->store_count;
+        }
+        $access = app(\App\Services\PlanAccess::class);
+        $demos = \App\Models\Tenant::whereIn('slug', array_keys(config('demo_storefronts', [])))->orderBy('id')->get()
+            ->filter(fn ($store) => $access->storefrontAvailable($store));
+        $themes = collect($catalog->all())->map(function ($theme, $id) use ($usage, $demos) {
+            $demo = $demos->firstWhere('theme', $id) ?? $demos->first();
+            return $theme + ['stores' => (int) ($usage[$id] ?? 0), 'preview_url' => $demo?->storefrontUrl(['preview' => 1, 'preview_theme' => $id])];
+        });
+        return view('super_admin.themes', compact('themes'));
+    }
+
     public function plans()
     {
         $plans = config('saas.plans');

@@ -195,3 +195,65 @@
 .template_31 .ps-bundle-price-label{font-size:.85rem;font-weight:600;white-space:nowrap}
 .template_31 .ps-bundle-original{font-size:.8rem;line-height:1.2;opacity:.8;text-decoration-thickness:1px;white-space:nowrap}
 @media(max-width:767px){.template_31 #ps-bundles-heading{font-size:1.45rem}.template_31 .ps-bundle-original{font-size:.75rem}.template_31 .ps-bundle-bottom{width:100%;gap:.5rem}.template_31 .ps-bundle-pricing{position:relative;z-index:1}}
+
+/* Pantry Select's olive and citrus colour direction. Scoped to theme 31. */
+body.storefront-theme.template_31{
+    --ps-leaf:#4f7427;--ps-citrus:#9eb70b;--ps-forest:#263d17;--ps-ink:#203311;
+    --primary-color:var(--ps-ink);--accent-color:var(--ps-citrus);--accent-hover:#b0c924;
+    --bg-light:#e8edcc;--ps-cream:#e8edcc;--ps-line:#c8d4a3;--ps-muted:#50613b;
+    --store-brand-fg:#203311;--store-badge-bg:var(--ps-citrus);--store-badge-fg:#203311;
+    --store-stock-bg:var(--ps-forest);--store-stock-fg:#f7f9ec;--text-muted:#50613b;
+    --card-bg:#f0f3df;--border-color:#c8d4a3;--theme-tone:var(--ps-forest);
+    background:var(--ps-leaf);color:#f7f9ec;
+}
+.storefront-theme.template_31 .main-content{background:var(--ps-leaf)}
+.storefront-theme.template_31 .sf-header,.storefront-theme.template_31 .ps-header>.sf-header-row{background:var(--ps-forest);color:#f7f9ec;border-color:#ffffff20}
+.template_31 .ps-header .sf-brand,.template_31 .ps-header .sf-actions>a,.template_31 .ps-header .sf-actions>button{color:#f7f9ec}
+.storefront-theme.template_31 .sf-header .sf-search{background:#edf1d8;border-color:var(--ps-citrus);color:var(--ps-ink)}
+.template_31 .sf-search input{color:var(--ps-ink)}
+.template_31 .ps-welcome{background:var(--ps-citrus);color:var(--ps-ink)}
+.template_31 .ps-navigation{background:#3c5b20;color:#f7f9ec}
+.template_31 .ps-navigation .sf-navigation a,.template_31 .ps-navigation .sf-navigation button{color:#f7f9ec}
+.template_31 .ps-cover-media{background:var(--ps-forest)}
+.template_31 .ps-cover-caption{color:#f7f9ec;border-color:#ffffff30}
+.template_31 .ps-cover-caption h1,.template_31 .ps-category{color:#f7f9ec}
+.template_31 .ps-cover-caption p,.template_31 .ps-cover-caption .sf-kicker{color:#e0e9c9}
+.template_31 .ps-category-art{background:linear-gradient(135deg,#cbd68b,#e8edcc);color:var(--ps-ink);border:1px solid #ffffff20}
+.template_31 .ps-category:nth-child(3n+2) .ps-category-art{background:#d5dfaa}
+.template_31 .ps-store-note{color:var(--ps-ink);background:#dce6b6}
+.storefront-theme.template_31 .sf-shelf>.sf-section-heading h2,.storefront-theme.template_31 .sf-shelf>.sf-section-heading>a{color:#f7f9ec}
+.template_31 .sf-shelf>.sf-section-heading>span{color:#e2edc8}
+.template_31 .ps-bundle-shelf .sf-section-heading>span,.template_31 #ps-bundles-heading em{color:#d9ed72}
+.storefront-theme.template_31 .sf-product-pantryselect,.storefront-theme.template_31 .sf-bundle-standard{background:#f0f3df;color:var(--ps-ink);border-color:#d2dcaf!important}
+.template_31 .ps-card-visual{background:#dce6b6}
+.template_31 .ps-card-caption{background:#f0f3df}
+.template_31 .sf-product-pantryselect .sf-market-variants button{background:#e2e8c7;color:var(--ps-ink);border-color:#bdca94}
+.template_31 .sf-product-pantryselect .sf-market-variants button[aria-pressed=true]{background:var(--ps-citrus);color:var(--ps-ink);border-color:var(--ps-leaf)}
+.template_31 .sf-product-pantryselect .qty-controller,.template_31 .sf-bundle-standard .qty-controller{background:#e8edcc}
+.template_31 .ps-bundle-promo:not([style]){background:#dce6b6;color:var(--ps-ink)}
+.template_31 .ps-bundle-promo:not([style]):nth-child(3n+2){background:#c6d789}
+.template_31 .ps-bundle-promo:not([style]):nth-child(3n){background:#e5eab9}
+.storefront-theme.template_31 .ps-bundle-promo .inline-add-btn{background:#edf2d8!important;color:var(--ps-ink)!important}
+.template_31 .ps-trust-strip{background:transparent;color:#f7f9ec}
+.template_31 .ps-trust-item{color:#f7f9ec}
+.template_31 .ps-trust-icon{background:#d9e79a;color:var(--ps-ink)}
+.template_31 .sf-reviews-section{--text-color:#f7f9ec;--primary-color:#f7f9ec;--border-color:#ffffff40}
+.template_31 .sf-reviews-section .sf-review-card-item{--primary-color:#203311;--text-color:#203311;--border-color:#c8d4a3;--accent-color:#4f7427;color:#203311;background:#edf1d8}
+.template_31 .sf-reviews-nav-btns button{background:#dce6b6!important;color:#203311!important}
+.template_31 .ps-reels{background:#dce6b6;color:var(--ps-ink);border-color:#bfd08e}
+.template_31 .ps-reel-card,.template_31 .ps-reels-controls button{background:#f0f3df}
+.template_31 .ps-story{background:#dce6b6;color:var(--ps-ink)}
+.template_31 .ps-product-order,.template_31 .ps-product-information{background:#edf1d8;color:var(--ps-ink);border-radius:14px;padding:1.5rem}
+.template_31 .pd-gallery .main-image-display,.template_31 .ct-heading,.template_31 .ct-filters{background:#e8edcc;color:var(--ps-ink)}
+.template_31 .ps-product-order .size-rect,.template_31 .ps-product-order input{background:#f0f3df;color:var(--ps-ink)}
+.template_31 .sf-footer-pantryselect{background:var(--ps-forest);color:#f7f9ec;border-top:1px solid #ffffff20}
+.template_31 .sf-footer-pantryselect a{color:inherit}
+@media(max-width:767px){.template_31 .ps-product-order,.template_31 .ps-product-information{padding:1rem}}
+.template_31 .ps-header .sf-actions>a,.template_31 .ps-header .sf-actions>button{color:#f7f9ec}
+.template_31 .ps-header .sf-actions>.sf-cart,.template_31 .pd-add-button{color:var(--ps-ink)!important}
+.template_31 .pd-breadcrumb,.template_31 .pd-breadcrumb a{color:#e0e9c9}
+.template_31 .sf-reviews-section{--accent-color:#e2edc8}
+.template_31 .store-about{--primary-color:#f7f9ec;color:#f7f9ec}
+.template_31 .store-about-copy,.template_31 .store-about-help p{color:#e0e9c9}
+.template_31 .store-about-brand{--primary-color:#203311;color:#203311;background:#e8edcc}
+.template_31 .store-about-links .store-about-primary,.template_31 .store-about-links a:first-child{background:#9eb70b;color:#203311}

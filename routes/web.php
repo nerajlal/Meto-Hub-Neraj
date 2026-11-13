@@ -156,6 +156,8 @@ Route::prefix('superadmin')->name('super_admin.')->group(function () {
         Route::get('/', [App\Http\Controllers\SuperAdmin\DashboardController::class, 'index'])->name('dashboard');
         Route::get('/payments', [App\Http\Controllers\SuperAdmin\DashboardController::class, 'payments'])->name('payments');
         Route::get('/subscriptions', [App\Http\Controllers\SuperAdmin\DashboardController::class, 'subscriptions'])->name('subscriptions');
+        Route::patch('/tenants/{id}/freeze', [App\Http\Controllers\SuperAdmin\DashboardController::class, 'freezeTenant'])->name('tenants.freeze');
+        Route::delete('/tenants/{id}', [App\Http\Controllers\SuperAdmin\DashboardController::class, 'deleteTenant'])->name('tenants.delete');
         Route::patch('/tenants/{id}/trial', [App\Http\Controllers\SuperAdmin\DashboardController::class, 'updateTrial'])->middleware('throttle:20,1')->name('tenants.trial.update');
         Route::get('/tenants', [App\Http\Controllers\SuperAdmin\DashboardController::class, 'tenants'])->name('tenants');
         Route::post('/tenants/{id}/billing/refresh', [App\Http\Controllers\SuperAdmin\DashboardController::class, 'refreshBilling'])->middleware('throttle:10,1')->name('tenants.billing.refresh');
@@ -164,6 +166,7 @@ Route::prefix('superadmin')->name('super_admin.')->group(function () {
         Route::post('/create-tenant', [App\Http\Controllers\SuperAdmin\DashboardController::class, 'storeTenant'])->name('store_tenant');
         Route::get('/orders', [App\Http\Controllers\SuperAdmin\DashboardController::class, 'orders'])->name('orders');
         Route::get('/customers', [App\Http\Controllers\SuperAdmin\DashboardController::class, 'customers'])->name('customers');
+        Route::get('/themes', [App\Http\Controllers\SuperAdmin\DashboardController::class, 'themes'])->name('themes');
         Route::get('/plans', [App\Http\Controllers\SuperAdmin\DashboardController::class, 'plans'])->name('plans');
         Route::get('/status', [App\Http\Controllers\SuperAdmin\DashboardController::class, 'status'])->name('status');
 

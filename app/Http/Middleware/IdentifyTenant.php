@@ -29,6 +29,8 @@ class IdentifyTenant
                 abort(404, 'Tenant storefront not found.');
             }
 
+            abort_if($tenant->is_frozen && $request->user()?->type !== 'super_admin', 403, 'This store has been frozen by the platform. Contact support.');
+
             // Calculate trial remaining days (7 day trial)
             // Calculate trial remaining days accurately by exact date and time
             $access = app(\App\Services\PlanAccess::class);
