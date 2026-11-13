@@ -22,7 +22,7 @@ foreach (['Monthly studio', 'Yearly shop', 'Renewal follow-up'] as $i => $name) 
         'currency' => 'INR', 'status' => 'captured', 'paid_at' => now()->subDay(), 'attempted_at' => now()->subDay()]);
 }
 $kernel = $app->make(Illuminate\Contracts\Http\Kernel::class);
-foreach (['dashboard' => '/superadmin', 'payments' => '/superadmin/payments'] as $name => $path) {
+foreach (['dashboard' => '/superadmin', 'payments' => '/superadmin/payments', 'themes' => '/superadmin/themes'] as $name => $path) {
     $response = $kernel->handle(Illuminate\Http\Request::create('http://localhost'.$path));
     if ($response->getStatusCode() !== 200) throw new RuntimeException('Fixture failed: '.$name.' '.$response->getStatusCode());
     file_put_contents($argv[1].'/superadmin-'.$name.'.html', $response->getContent());

@@ -217,7 +217,7 @@
                 <div class="card mb-4 shadow-sm">
                     <div class="card-header py-3"><h5 class="m-0 fw-bold">Homepage highlight strip</h5></div>
                     <div class="card-body">
-                        <p class="small text-muted">Scrolling icon badges for Pantry Select. Add your store’s own highlights; only include delivery, quality or certification claims that apply to your business.</p>
+                        <p class="small text-muted">Scrolling icon badges for Crunchiko. Add your store’s own highlights; only include delivery, quality or certification claims that apply to your business.</p>
                         <label class="form-label fw-semibold" for="trust_badges_text">Badge labels</label>
                         <textarea id="trust_badges_text" name="trust_badges_text" class="form-control @error('trust_badges_text') is-invalid @enderror" rows="5" maxlength="1000" aria-describedby="trust-badges-help">{{ old('trust_badges_text', implode("\n", app(\App\Services\StorefrontTheme::class)->trustBadges($tenant))) }}</textarea>
                         <div id="trust-badges-help" class="form-text">One label per line. Up to 8 labels, 80 characters each. Leave empty to hide the strip.</div>
@@ -235,7 +235,7 @@
                         <div class="mb-3">
                             <label for="about_image" class="form-label fw-semibold">Store story image</label>
                             <input type="file" class="form-control @error('about_image') is-invalid @enderror" name="about_image" id="about_image" accept="image/jpeg,image/png,image/webp">
-                            <div class="form-text">Shown beside your story below homepage reviews in Pantry Select, and on your About page. Use your own brand or store image. JPG, PNG or WebP, up to 5 MB.</div>
+                            <div class="form-text">Shown beside your story below homepage reviews in Crunchiko, and on your About page. Use your own brand or store image. JPG, PNG or WebP, up to 5 MB.</div>
                             @error('about_image')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             @if($tenant->about_image)
                                 <img src="{{ Storage::url($tenant->about_image) }}" alt="Current store story image" class="img-thumbnail mt-2" style="max-width:220px;max-height:160px;object-fit:contain">

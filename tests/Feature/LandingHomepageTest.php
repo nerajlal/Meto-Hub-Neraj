@@ -154,6 +154,7 @@ class LandingHomepageTest extends TestCase
 
     public function test_public_capabilities_are_factual_and_do_not_invent_client_reviews(): void
     {
+        config(['landing_reviews' => [['sample' => true, 'approved' => false, 'name' => 'Meera Nair', 'store' => 'Example Store', 'quote' => 'Illustrative review for layout testing.']]]);
         $this->get('/')->assertOk()->assertDontSee('class="merchant-client"', false)
             ->assertSee('owner email alerts')->assertSee('DTDC or India Post')
             ->assertSee('Book pickups and pay postage directly with your courier.')

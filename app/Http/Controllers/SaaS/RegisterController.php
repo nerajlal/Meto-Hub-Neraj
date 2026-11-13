@@ -21,11 +21,13 @@ class RegisterController extends Controller
             'country' => 'required|string|max:255', 'email' => 'required|email|unique:users,email',
             'whatsapp' => 'required|string|max:30', 'password' => 'required|string|min:8',
             'plan' => 'nullable|in:base,pro,enterprise,sprout,blossom,tree',
-            'theme' => ['nullable', 'string', Rule::in(array_keys(config('storefront_themes')))],
+            'theme' => ['nullable', 'string', Rule::in(array_keys(app(\App\Services\ThemeAvailability::class)->available()))],
         ]);
-        $user = DB::transaction(function () use ($validated) {
+        $defaultTheme = app(\App\Services\ThemeAvailability::class)->defaultTheme();
+        if (!$defaultTheme) throw \Illuminate\Validation\ValidationException::withMessages(['theme' => 'Store creation is temporarily unavailable. Please contact support.']);
+        $user = DB::transaction(function () use ($validated, $defaultTheme) {
             $tenant = Tenant::create([
-                'name' => $validated['business'], 'plan' => 'base', 'theme' => $validated['theme'] ?? 'template_1',
+                'name' => $validated['business'], 'plan' => 'base', 'theme' => $validated['theme'] ?? $defaultTheme,
                 'contact_email' => $validated['email'], 'contact_phone' => $validated['whatsapp'],
                 'whatsapp_number' => preg_replace('/\D/', '', $validated['whatsapp']),
             ]);

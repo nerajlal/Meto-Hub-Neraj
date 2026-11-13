@@ -166,6 +166,7 @@ Route::prefix('superadmin')->name('super_admin.')->group(function () {
         Route::post('/create-tenant', [App\Http\Controllers\SuperAdmin\DashboardController::class, 'storeTenant'])->name('store_tenant');
         Route::get('/orders', [App\Http\Controllers\SuperAdmin\DashboardController::class, 'orders'])->name('orders');
         Route::get('/customers', [App\Http\Controllers\SuperAdmin\DashboardController::class, 'customers'])->name('customers');
+        Route::patch('/themes/{theme}/availability', [App\Http\Controllers\SuperAdmin\DashboardController::class, 'updateThemeAvailability'])->name('themes.availability');
         Route::get('/themes', [App\Http\Controllers\SuperAdmin\DashboardController::class, 'themes'])->name('themes');
         Route::get('/plans', [App\Http\Controllers\SuperAdmin\DashboardController::class, 'plans'])->name('plans');
         Route::get('/status', [App\Http\Controllers\SuperAdmin\DashboardController::class, 'status'])->name('status');

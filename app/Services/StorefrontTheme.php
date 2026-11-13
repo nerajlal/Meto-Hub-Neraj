@@ -65,6 +65,7 @@ class StorefrontTheme
         if (request()->query('preview') == 1 && request()->filled('preview_theme')) {
             $preview = request()->query('preview_theme');
             abort_unless(is_string($preview) && isset($this->all()[$preview]), 404);
+            abort_unless(isset(app(ThemeAvailability::class)->available()[$preview]) || $preview === $id || request()->user()?->type === 'super_admin', 404);
             $id = $preview;
         }
         $theme = ['id' => $id] + $this->all()[$id];

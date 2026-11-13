@@ -518,7 +518,7 @@
 
     <section class="stats-section reveal">
       <div class="stat-item">
-        <h3>{{ count(config('storefront_themes')) }}</h3>
+        <h3>{{ count(app(\App\Services\ThemeAvailability::class)->available()) }}</h3>
         <p>Storefront themes</p>
       </div>
       <div class="stat-item">

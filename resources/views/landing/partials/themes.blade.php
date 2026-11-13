@@ -4,14 +4,14 @@
     <span class="eyebrow">Your brand, your storefront</span>
     @php($headingTag = request()->routeIs('landing.themes') ? 'h1' : 'h2')
     <{{ $headingTag }} id="themes-heading">A different look.<br><em>The same possibilities.</em></{{ $headingTag }}>
-    <p>Explore {{ count(config('storefront_themes')) }} customizable designs for clothing, grocery, gadgets, jewelry and more. Your products, brand colors and store tools work across every theme.</p>
+    <p>Explore {{ count(app(\App\Services\ThemeAvailability::class)->available()) }} customizable designs for clothing, grocery, gadgets, jewelry and more. Your products, brand colors and store tools work across every theme.</p>
     <a href="{{ route('landing.pricing') }}">From ₹{{ number_format(config('saas.plans.base.monthly_price')) }}/month · {{ config('saas.trial_days') }}-day free trial ↗</a>
   </div>
   <div class="public-themes-note">Layout illustrations below show each design’s style. Live previews use a demo store’s products; your own logo, colors and content make it yours.</div>
   <div class="public-themes-grid">
-    @foreach($themes ?? config('storefront_themes') as $id => $theme)
+    @foreach($themes ?? app(\App\Services\ThemeAvailability::class)->available() as $id => $theme)
     <article class="public-theme-card" data-public-theme="{{ $id }}" style="--theme-background:{{ $theme['background'] }}">
-      <div class="public-theme-art"><img src="{{ asset('images/themes/'.$id.'.svg') }}" alt="{{ $theme['name'] }} layout illustration" width="640" height="400" loading="lazy" decoding="async"></div>
+      <div class="public-theme-art"><img src="{{ asset('images/themes/'.$id.'.svg') }}?v={{ filemtime(public_path('images/themes/'.$id.'.svg')) }}" alt="{{ $theme['name'] }} layout illustration" width="640" height="400" loading="lazy" decoding="async"></div>
       <div class="public-theme-content">
         <span class="public-theme-edition">{{ $theme['version'] }}</span>
         <h2>{{ $theme['name'] }}</h2>

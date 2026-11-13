@@ -44,7 +44,7 @@
             @endphp
             <article class="theme-choice-card {{ $isActive ? 'is-active' : '' }}" style="--choice-tone: {{ $theme['tone'] }}; --choice-bg: {{ $theme['background'] }};">
                 <div class="theme-choice-art">
-                    <img src="{{ asset($theme['preview_img']) }}" alt="{{ $theme['name'] }} layout illustration" width="640" height="400" loading="lazy">
+                    <img src="{{ asset($theme['preview_img']) }}?v={{ filemtime(public_path(ltrim($theme['preview_img'], '/'))) }}" alt="{{ $theme['name'] }} layout illustration" width="640" height="400" loading="lazy">
                     @if($isActive)<span class="theme-active-badge"><i class="fas fa-check" aria-hidden="true"></i> Active theme</span>@endif
                 </div>
                 <div class="theme-choice-content">

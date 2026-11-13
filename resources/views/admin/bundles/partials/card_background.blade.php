@@ -5,7 +5,7 @@
 @endphp
 <div class="card border shadow-sm p-3 mb-4" data-bundle-background>
     <h2 class="h6 fw-bold text-secondary mb-2">Promotional card background</h2>
-    <p class="small text-muted">For the wide bundle and pack cards on the Pantry Select homepage.</p>
+    <p class="small text-muted">For the wide bundle and pack cards on the Crunchiko homepage.</p>
     <label for="bundle-background-mode" class="form-label small">Background style</label>
     <select id="bundle-background-mode" name="card_background[mode]" class="form-select mb-3">
         @foreach(['auto' => 'Theme default', 'solid' => 'Solid color', 'gradient' => 'Gradient'] as $value => $label)<option value="{{ $value }}" @selected($backgroundMode === $value)>{{ $label }}</option>@endforeach

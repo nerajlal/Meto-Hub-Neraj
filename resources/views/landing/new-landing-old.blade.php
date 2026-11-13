@@ -1388,7 +1388,7 @@
               <div class="saas-form-group" style="grid-column: 1 / -1;">
                 <label for="saas_theme">Store theme</label>
                 <select id="saas_theme">
-                  @foreach(config('storefront_themes') as $themeId => $themeConfig)
+                  @foreach(app(\App\Services\ThemeAvailability::class)->available() as $themeId => $themeConfig)
                     <option value="{{ $themeId }}">{{ $themeConfig['name'] }}</option>
                   @endforeach
                 </select>

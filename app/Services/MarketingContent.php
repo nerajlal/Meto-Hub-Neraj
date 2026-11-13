@@ -6,7 +6,7 @@ class MarketingContent
 {
     public function summary(): string
     {
-        return 'MetoHub helps Instagram sellers and independent brands create an online store with '.count(config('storefront_themes')).' customizable themes, product variants and order management. Plans start at ₹'.number_format(config('saas.plans.base.monthly_price')).'/month, with a '.config('saas.trial_days').'-day free trial and no credit card required. Stores can offer cash on delivery, optional WhatsApp order checkout, and online payments through Razorpay, Paytm or PhonePe when the merchant configures an activated gateway account.';
+        return 'MetoHub helps Instagram sellers and independent brands create an online store with '.count(app(\App\Services\ThemeAvailability::class)->available()).' customizable themes, product variants and order management. Plans start at ₹'.number_format(config('saas.plans.base.monthly_price')).'/month, with a '.config('saas.trial_days').'-day free trial and no credit card required. Stores can offer cash on delivery, optional WhatsApp order checkout, and online payments through Razorpay, Paytm or PhonePe when the merchant configures an activated gateway account.';
     }
 
     public function faqs(): array

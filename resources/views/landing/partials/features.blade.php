@@ -52,7 +52,7 @@
       </div>
       <div class="feature-card"><span class="f-icon"><i class="fa-solid fa-palette"></i></span>
         <h3>Theme Marketplace</h3>
-        <p>Choose from {{ count(config('storefront_themes')) }} customizable storefront themes for your brand.</p>
+        <p>Choose from {{ count(app(\App\Services\ThemeAvailability::class)->available()) }} customizable storefront themes for your brand.</p>
       </div>
       <div class="feature-card"><span class="f-icon"><i class="fa-solid fa-credit-card"></i></span>
         <h3>Checkout &amp; Subscription Billing</h3>

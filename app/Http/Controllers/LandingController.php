@@ -13,10 +13,10 @@ class LandingController extends Controller
         $tenants = \App\Models\Tenant::whereIn('slug', array_keys($profiles))->get()->keyBy('slug');
         $demos = collect($profiles)->map(function ($profile, $slug) use ($tenants) {
             $tenant = $tenants->get($slug);
-            return $tenant ? $profile + ['tenant' => $tenant] : null;
+            return $tenant && isset(app(\App\Services\ThemeAvailability::class)->available()[app(\App\Services\StorefrontTheme::class)->normalize($tenant->theme)]) ? $profile + ['tenant' => $tenant] : null;
         })->filter();
         $landingConfig = [
-            'signupThemes' => collect(config('storefront_themes'))->map(fn ($theme) => $theme['name'])->all(),
+            'signupThemes' => collect(app(\App\Services\ThemeAvailability::class)->available())->map(fn ($theme) => $theme['name'])->all(),
             'plans' => config('saas.plans'), 'trialDays' => config('saas.trial_days'),
             'register' => route('saas.register'), 'resend' => route('saas.verification.resend'),
         ];
@@ -58,7 +58,7 @@ class LandingController extends Controller
         $tenants = \App\Models\Tenant::whereIn('slug', array_keys($profiles))->get()->keyBy('slug');
         $demos = collect($profiles)->map(function ($profile, $slug) use ($tenants) {
             $tenant = $tenants->get($slug);
-            return $tenant ? $profile + ['tenant' => $tenant] : null;
+            return $tenant && isset(app(\App\Services\ThemeAvailability::class)->available()[app(\App\Services\StorefrontTheme::class)->normalize($tenant->theme)]) ? $profile + ['tenant' => $tenant] : null;
         })->filter();
         return view('landing.demos', compact('demos'));
     }
@@ -66,7 +66,7 @@ class LandingController extends Controller
     public function themes()
     {
         $demos = \App\Models\Tenant::whereIn('slug', array_keys(config('demo_storefronts', [])))->orderBy('id')->get();
-        $themes = collect(app(\App\Services\StorefrontTheme::class)->all())->map(function ($theme, $id) use ($demos) {
+        $themes = collect(app(\App\Services\ThemeAvailability::class)->available())->map(function ($theme, $id) use ($demos) {
             $demo = $demos->firstWhere('theme', $id) ?? $demos->first();
 
             return $theme + ['preview_url' => $demo?->storefrontUrl(['preview' => 1, 'preview_theme' => $id])];

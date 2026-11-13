@@ -166,7 +166,7 @@
             <span>Affordable Entry</span>
           </div>
           <div class="hero__stat">
-            <strong>{{ count(config('storefront_themes')) }}</strong>
+            <strong>{{ count(app(\App\Services\ThemeAvailability::class)->available()) }}</strong>
             <span>Curated Themes</span>
           </div>
           <div class="hero__stat">
@@ -438,7 +438,7 @@
         <div class="included-item">
           <i class="fa-solid fa-palette"></i>
           <div>
-            <strong>{{ count(config('storefront_themes')) }} Premium Creator Themes</strong>
+            <strong>{{ count(app(\App\Services\ThemeAvailability::class)->available()) }} Premium Creator Themes</strong>
             <span>Match your brand palette, fonts, and aesthetic style.</span>
           </div>
         </div>
@@ -501,7 +501,7 @@
 
           <ul style="list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; font-size: 15px; color: var(--ink-2);">
             <li><i class="fa-solid fa-check" style="color: var(--red); margin-right: 8px;"></i> Custom MetoHub Store Link</li>
-            <li><i class="fa-solid fa-check" style="color: var(--red); margin-right: 8px;"></i> {{ count(config('storefront_themes')) }} Themes, Logo &amp; Brand Colors</li>
+            <li><i class="fa-solid fa-check" style="color: var(--red); margin-right: 8px;"></i> {{ count(app(\App\Services\ThemeAvailability::class)->available()) }} Themes, Logo &amp; Brand Colors</li>
             <li><i class="fa-solid fa-check" style="color: var(--red); margin-right: 8px;"></i> Product Variants &amp; Stock Tracking</li>
             <li><i class="fa-solid fa-check" style="color: var(--red); margin-right: 8px;"></i> Invoices &amp; Packing Labels</li>
             <li><i class="fa-solid fa-check" style="color: var(--red); margin-right: 8px;"></i> Discount Codes &amp; Bundles</li>
@@ -707,7 +707,7 @@
           <div class="signup-field"><label for="f_pw2">Confirm password</label><input id="f_pw2" name="password_confirmation" type="password" autocomplete="new-password" required aria-describedby="err_password_confirmation"><div class="err" id="err_password_confirmation"></div></div>
         </div>
         <input type="hidden" name="theme" value="template_1">
-        <p class="fine" id="signupThemeNote">Your store starts with Classic Grocery. After verification, preview and change your theme in Dashboard → Settings → Theme.</p>
+        <p class="fine" id="signupThemeNote">Your store starts with {{ config('storefront_themes.'.app(\App\Services\ThemeAvailability::class)->defaultTheme().'.name', 'an available theme') }}. After verification, preview and change your theme in Dashboard → Settings → Theme.</p>
         <p id="err_theme" class="theme-errors" role="alert"></p>
         <p class="fine">After your account is created, verify your email to open your dashboard. <a href="{{ route('landing.terms') }}" target="_blank" rel="noopener">Terms</a> · <a href="{{ route('landing.privacy') }}" target="_blank" rel="noopener">Privacy</a></p>
       </div>

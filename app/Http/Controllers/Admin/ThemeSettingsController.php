@@ -17,7 +17,7 @@ class ThemeSettingsController extends Controller
         $tenantId = request()->attributes->get('resolved_tenant_id');
         $tenant = Tenant::findOrFail($tenantId);
 
-        $themes = collect(app(\App\Services\StorefrontTheme::class)->all())
+        $themes = collect(request()->user()->type === 'super_admin' ? app(\App\Services\StorefrontTheme::class)->all() : app(\App\Services\ThemeAvailability::class)->available())
             ->map(fn ($theme, $id) => ['id' => $id, 'preview_route' => 'v1.home',
                 'preview_img' => '/images/themes/'.$id.'.svg'] + $theme)->values()->all();
 
@@ -50,6 +50,7 @@ class ThemeSettingsController extends Controller
         $tenantId = request()->attributes->get('resolved_tenant_id');
         $tenant = Tenant::findOrFail($tenantId);
         
+        abort_unless($request->user()->type === 'super_admin' || isset(app(\App\Services\ThemeAvailability::class)->available()[$request->theme]) || app(\App\Services\StorefrontTheme::class)->normalize($tenant->theme) === $request->theme, 403, 'This theme is reserved for existing stores.');
         $tenant->theme = $request->theme;
         $tenant->save();
 

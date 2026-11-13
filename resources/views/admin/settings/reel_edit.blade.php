@@ -47,7 +47,7 @@
             <label for="thumbnail" class="form-label fw-semibold">Reel cover image <span class="text-muted fw-normal">(optional)</span></label>
             <input type="file" name="thumbnail" id="thumbnail" accept="image/jpeg,image/png,image/webp,image/gif" class="form-control @error('thumbnail') is-invalid @enderror">
             @error('thumbnail')<div class="invalid-feedback">{{ $message }}</div>@enderror
-            <p class="form-text mb-0">Optional portrait cover (1080 × 1920 px recommended, up to 5 MB). Pantry Select displays the original Instagram player directly.</p>
+            <p class="form-text mb-0">Optional portrait cover (1080 × 1920 px recommended, up to 5 MB). Crunchiko displays the original Instagram player directly.</p>
             @if($reel->thumbnail)<img src="{{ Storage::url($reel->thumbnail) }}" alt="Current reel cover" class="rounded mt-3" style="width:90px;aspect-ratio:9/16;object-fit:cover;">@endif
         </div></div>
 

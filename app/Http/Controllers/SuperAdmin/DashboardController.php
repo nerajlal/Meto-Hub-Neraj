@@ -183,6 +183,15 @@ class DashboardController extends Controller
         return redirect()->route('super_admin.tenants')->with('success', 'Store deleted from active stores. Historical data is retained.');
     }
 
+    public function updateThemeAvailability(Request $request, string $theme)
+    {
+        abort_unless(isset(config('storefront_themes')[$theme]), 404);
+        $data = $request->validate(['is_available' => 'required|boolean']);
+        \App\Models\ThemeAvailability::updateOrCreate(['theme' => $theme], ['is_available' => $request->boolean('is_available')]);
+        \Illuminate\Support\Facades\Log::info('Theme availability changed', ['theme' => $theme, 'available' => $request->boolean('is_available'), 'actor_id' => $request->user()->id]);
+        return back()->with('success', $request->boolean('is_available') ? 'Theme available to all stores.' : 'Theme reserved. Existing stores keep their design.');
+    }
+
     public function themes(\App\Services\StorefrontTheme $catalog)
     {
         $usage = [];
@@ -193,9 +202,10 @@ class DashboardController extends Controller
         $access = app(\App\Services\PlanAccess::class);
         $demos = \App\Models\Tenant::whereIn('slug', array_keys(config('demo_storefronts', [])))->orderBy('id')->get()
             ->filter(fn ($store) => $access->storefrontAvailable($store));
-        $themes = collect($catalog->all())->map(function ($theme, $id) use ($usage, $demos) {
+        $available = app(\App\Services\ThemeAvailability::class)->available();
+        $themes = collect($catalog->all())->map(function ($theme, $id) use ($usage, $demos, $available) {
             $demo = $demos->firstWhere('theme', $id) ?? $demos->first();
-            return $theme + ['stores' => (int) ($usage[$id] ?? 0), 'preview_url' => $demo?->storefrontUrl(['preview' => 1, 'preview_theme' => $id])];
+            return $theme + ['is_available' => isset($available[$id]), 'stores' => (int) ($usage[$id] ?? 0), 'preview_url' => $demo?->storefrontUrl(['preview' => 1, 'preview_theme' => $id])];
         });
         return view('super_admin.themes', compact('themes'));
     }

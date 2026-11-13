@@ -172,8 +172,8 @@ return [
         'tone' => '#517044', 'background' => '#f3f6eb', 'layout' => 'orchard', 'generation' => 'collection',
     ],
     'template_31' => [
-        'name' => 'Pantry Select', 'version' => 'Premium collection',
-        'description' => 'A full-width banner shop with a cream navigation bar, compact category tiles, selectable card variants and a clear two-column product page.',
-        'tone' => '#26221e', 'background' => '#fffaf4', 'layout' => 'pantryselect', 'generation' => 'collection',
+        'name' => 'Crunchiko', 'version' => 'Premium collection',
+        'description' => 'An olive-and-lime specialty storefront with a full-width banner, combo deals, compact product cards and matching two-column product and combo pages.',
+        'tone' => '#9eb70b', 'background' => '#4f7427', 'layout' => 'pantryselect', 'generation' => 'collection',
     ],
 ];
