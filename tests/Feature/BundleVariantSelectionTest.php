@@ -21,6 +21,22 @@ class BundleVariantSelectionTest extends TestCase
         return [$tenant, $product, $small, $large];
     }
 
+    public function test_pantry_combo_detail_preserves_pack_options_and_stock_controls_without_changing_other_themes(): void
+    {
+        [$tenant, $product, $small, $large] = $this->setupStore();
+        $tenant->update(['theme' => 'template_31']);
+        $pack = Bundle::create(['tenant_id' => $tenant->id, 'title' => 'Large chips trio', 'slug' => 'large-chips-trio', 'type' => 'pack', 'status' => 'active', 'discount_type' => 'fixed', 'discount_value' => 50]);
+        $pack->products()->attach($product->id, ['product_variant_id' => $large->id, 'quantity' => 3]);
+        $url = $tenant->storefrontUrl().'/combo?id='.$pack->id;
+        $this->get($url)->assertOk()->assertSee('data-combo-detail="pantryselect"', false)
+            ->assertSee('Pack of 3')->assertSee('250g')->assertSee('×3')->assertSee('550.00')->assertSee('600.00')->assertSee('Save')
+            ->assertSee('data-combo-key="bundle-'.$pack->id.'"', false)->assertSee('data-combo-available="1"', false);
+        $large->update(['stock' => 0]);
+        $this->get($url)->assertOk()->assertSee('data-combo-available="0"', false)->assertSee('Out of stock');
+        $tenant->update(['theme' => 'template_2']);
+        $this->get($url)->assertOk()->assertDontSee('data-combo-detail="pantryselect"', false);
+    }
+
     public function test_homepage_bundle_shelf_includes_active_combos_and_packs_only(): void
     {
         [$tenant, $product, $small, $large] = $this->setupStore();

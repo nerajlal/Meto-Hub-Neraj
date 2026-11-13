@@ -537,6 +537,10 @@ class PageController extends Controller
         }
         $total = $subtotal + $taxAmount;
 
+        if (empty($cart)) {
+            return view('Checkout.empty', compact('layout'));
+        }
+
         // Minimum Order Value Check
         $minOrderValue = $tenant ? ($tenant->min_order_value ?? 0) : 0;
         

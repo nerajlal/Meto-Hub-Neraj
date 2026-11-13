@@ -75,6 +75,9 @@ class StorefrontTheme
 
     public function view(string $page): string
     {
+        if ($page === 'bundle-main' && $this->current()['id'] === 'template_31') {
+            return 'storefront.themes.pantryselect.combo';
+        }
         if ($page === 'home' && $this->current()['id'] !== 'template_1') {
             return 'storefront.themes.home';
         }

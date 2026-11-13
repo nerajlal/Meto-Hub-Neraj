@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Collection;
+use App\Models\Bundle;
 use App\Models\Product;
 use App\Models\Tenant;
 use Illuminate\Support\Str;
@@ -46,6 +47,7 @@ class StorefrontSeo
         }
         // Child Blade loops can leave product/collection variables behind on home pages.
         $product = $page === 'product' && ($view['product'] ?? null) instanceof Product ? $view['product'] : null;
+        $bundle = $page === 'combo' && ($view['bundle'] ?? null) instanceof Bundle ? $view['bundle'] : null;
         $collection = $page === 'collections' && ($view['collection'] ?? null) instanceof Collection ? $view['collection'] : null;
         $query = [];
         if ($product) {
@@ -59,12 +61,13 @@ class StorefrontSeo
             $query['page'] = request()->integer('page');
         }
         $canonical = $this->url($tenant, $page, $query);
-        $entity = $product ?? $collection;
-        $label = $product?->title ?? $collection?->name ?? ($page === 'home' ? null : Str::headline($page));
-        $title = $entity?->seo_title ?: ($label ? $label.' | '.$tenant->name : ($tenant->seo_title ?: $tenant->name));
-        $description = $entity?->seo_description ?: ($entity?->description ?: ($tenant->seo_description ?: 'Explore products and collections from '.$tenant->name.'.'));
+        $entity = $product ?? $collection ?? $bundle;
+        $seoEntity = $product ?? $collection;
+        $label = $product?->title ?? $collection?->name ?? $bundle?->title ?? ($page === 'home' ? null : Str::headline($page));
+        $title = $seoEntity?->seo_title ?: ($label ? $label.' | '.$tenant->name : ($tenant->seo_title ?: $tenant->name));
+        $description = $seoEntity?->seo_description ?: ($entity?->description ?: ($tenant->seo_description ?: 'Explore products and collections from '.$tenant->name.'.'));
         $description = Str::limit(trim(preg_replace('/\s+/u', ' ', strip_tags($description))), 320, '');
-        $image = $entity?->seo_image ?: ($product?->images->first()?->path ?? $collection?->image ?? $tenant->seo_image ?? $tenant->logo);
+        $image = $seoEntity?->seo_image ?: ($product?->images->first()?->path ?? $collection?->image ?? ($bundle?->image ?: $bundle?->products->first()?->images->first()?->path) ?? $tenant->seo_image ?? $tenant->logo);
         $safePages = ['home', 'product', 'collections', 'all-products', 'about', 'contact', 'shipping-policy', 'return-policy', 'terms-of-service', 'combos', 'combo'];
         $filtered = count(array_diff(array_keys(request()->query()), ['id', 'slug', 'page', 'store', 'tenant', 'tenant_id', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'gclid', 'fbclid'])) > 0;
         $noindex = ! $this->indexable($tenant) || ! in_array($page, $safePages) || $filtered || ($page === 'product' && ! $product);
@@ -95,6 +98,7 @@ class StorefrontSeo
         $shareImage = $compactShare
             ? route('store.share-thumbnail', ['slug' => $tenant->slug, 'v' => app(StoreShareThumbnail::class)->version($tenant)])
             : $this->image($image);
-        return compact('title', 'description', 'canonical', 'noindex', 'graph') + ['compactShare' => $compactShare, 'image' => $shareImage, 'type' => $product ? 'product' : 'website'];
+        $jsonLd = json_encode(['@context' => 'https://schema.org', '@graph' => $graph], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        return compact('jsonLd', 'title', 'description', 'canonical', 'noindex', 'graph') + ['compactShare' => $compactShare, 'image' => $shareImage, 'type' => $product ? 'product' : 'website'];
     }
 }
