@@ -49,6 +49,10 @@
             <span>Subtotal</span>
             <span>{{ $currentTenant->currency ?? '₹' }}{{ number_format($cartTotalBeforeTax, 2) }}</span>
         </div>
+        <div class="n-summary-line">
+            <span>Shipping</span>
+            <span>{{ ($shippingTotal ?? 0) > 0 ? ($currentTenant->currency ?? '₹').number_format($shippingTotal, 2) : 'FREE' }}</span>
+        </div>
         @if($taxRate)
             <div class="n-summary-line">
                 <span>{{ $taxName }} ({{ $taxRate }}%)</span>
@@ -68,8 +72,8 @@
         
         @if(isset($minOrderValue) && $minOrderValue > 0)
         @php
-            $percentage = min(100, ($total / $minOrderValue) * 100);
-            $diff = $minOrderValue - $total;
+            $percentage = min(100, ($cartTotalBeforeTax / $minOrderValue) * 100);
+            $diff = $minOrderValue - $cartTotalBeforeTax;
         @endphp
         <div class="n-min-order-container" style="margin-top: 1rem;">
             <div class="n-summary-line" style="margin-bottom: 0.2rem; font-size: 0.8rem;">
@@ -85,7 +89,7 @@
             </div>
         </div>
         
-            @if($total < $minOrderValue)
+            @if($cartTotalBeforeTax < $minOrderValue)
                 <a href="javascript:void(0)" class="n-checkout-btn" style="opacity: 0.5; cursor: not-allowed; pointer-events: none;">PROCEED TO CHECKOUT</a>
             @else
                 <a href="{{ app(\App\Services\StorefrontTheme::class)->url('v1.checkout') }}" class="n-checkout-btn">PROCEED TO CHECKOUT</a>

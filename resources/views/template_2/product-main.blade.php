@@ -334,7 +334,7 @@
 
             <div class="delivery-note" style="margin-bottom: 1.5rem; color: var(--accent-color); font-weight: 700; font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem;">
                 <i class="fa-solid fa-truck-fast"></i>
-                <span>Delivered by {{ \Carbon\Carbon::now()->addDays($currentTenant->delivery_days ?? 2)->format('D, M d') }}</span>
+                <span>Delivered by {{ \Carbon\Carbon::now()->addDays($currentTenant->delivery_days ?? 2)->format('D, M d') }} · Delivery {{ ($product->delivery_fee ?? $currentTenant->default_delivery_fee ?? 0) > 0 ? ($currentTenant->currency ?? '₹').number_format($product->delivery_fee ?? $currentTenant->default_delivery_fee, 2).' per item' : 'free' }}</span>
             </div>
 
             <!-- Variants -->
@@ -437,11 +437,11 @@
                 <p>{!! nl2br(e($product->description)) !!}</p>
             </div>
             <div class="tab-content-minimal d-none" id="tab-shipping" style="font-size: 0.95rem; color: var(--text-muted); line-height: 1.6;">
-                <p>{!! nl2br(e($currentTenant->delivery_info ?? 'We deliver fresh groceries directly to your home within 2 hours. Free shipping applies to all orders over ' . ($currentTenant->currency ?? '₹') . '499. Orders are packed using eco-friendly, hygienically sealed bags.')) !!}</p>
+                <p>{!! nl2br(e($currentTenant->delivery_info ?? 'Delivery charges are shown with your order at checkout. Orders are packed using eco-friendly, hygienically sealed bags.')) !!}</p>
             </div>
             @else
             <div class="tab-content-minimal" id="tab-shipping" style="font-size: 0.95rem; color: var(--text-muted); line-height: 1.6;">
-                <p>{!! nl2br(e($currentTenant->delivery_info ?? 'We deliver fresh groceries directly to your home within 2 hours. Free shipping applies to all orders over ' . ($currentTenant->currency ?? '₹') . '499. Orders are packed using eco-friendly, hygienically sealed bags.')) !!}</p>
+                <p>{!! nl2br(e($currentTenant->delivery_info ?? 'Delivery charges are shown with your order at checkout. Orders are packed using eco-friendly, hygienically sealed bags.')) !!}</p>
             </div>
             @endif
         </div>

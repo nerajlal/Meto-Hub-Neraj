@@ -231,6 +231,8 @@ class SettingController extends Controller
             'tax_rate' => 'nullable|numeric|min:0|max:100',
             'delivery_days' => 'nullable|integer|min:0|max:30',
             'delivery_info' => 'nullable|string',
+            'default_delivery_fee' => 'nullable|numeric|min:0|max:99999999.99',
+            'free_delivery_threshold' => 'nullable|numeric|min:0|max:99999999.99',
             'min_order_value' => 'nullable|numeric|min:0',
         ]);
 
@@ -254,6 +256,8 @@ class SettingController extends Controller
             'tax_rate' => $request->tax_rate,
             'delivery_days' => $request->delivery_days ?? 2,
             'delivery_info' => $request->delivery_info,
+            'default_delivery_fee' => $request->default_delivery_fee ?? 0,
+            'free_delivery_threshold' => $request->filled('free_delivery_threshold') ? $request->free_delivery_threshold : null,
             'min_order_value' => $request->min_order_value ?? 0,
         ];
 

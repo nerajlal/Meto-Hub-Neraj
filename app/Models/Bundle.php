@@ -25,9 +25,10 @@ class Bundle extends Model
         'tenant_id',
         'min_order_qty',
         'max_order_qty',
+        'delivery_fee',
     ];
 
-    protected $casts = ['card_background' => 'array'];
+    protected $casts = ['card_background' => 'array', 'delivery_fee' => 'decimal:2'];
 
     public function promoBackgroundStyle(): ?string
     {

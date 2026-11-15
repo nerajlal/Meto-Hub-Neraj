@@ -126,7 +126,7 @@
                     @endif
                     <div class="st-row">
                         <span>Shipping</span>
-                        <span style="color: #10b981; font-weight: 700;">FREE</span>
+                        <span style="{{ ($shippingTotal ?? 0) > 0 ? 'color: var(--primary-color);' : 'color: #10b981;' }}font-weight:700;">{{ ($shippingTotal ?? 0) > 0 ? ($currentTenant->currency ?? '₹').number_format($shippingTotal, 2) : 'FREE' }}</span>
                     </div>
                     <hr class="st-divider">
                     <div class="st-row grand-total-lg">

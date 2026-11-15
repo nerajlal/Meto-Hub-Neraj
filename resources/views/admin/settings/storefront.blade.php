@@ -367,6 +367,20 @@
                         <h5 class="m-0 fw-bold">Delivery Settings</h5>
                     </div>
                     <div class="card-body">
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label for="default_delivery_fee" class="form-label fw-semibold">Default delivery fee</label>
+                                <div class="input-group"><span class="input-group-text">{{ $currentTenant->currency ?? '₹' }}</span><input type="number" min="0" step="0.01" class="form-control @error('default_delivery_fee') is-invalid @enderror" id="default_delivery_fee" name="default_delivery_fee" value="{{ old('default_delivery_fee', $tenant->default_delivery_fee ?? 0) }}"></div>
+                                @error('default_delivery_fee')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
+                                <div class="form-text">Applied per product or bundle unless that item has its own delivery fee.</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="free_delivery_threshold" class="form-label fw-semibold">Free delivery above</label>
+                                <div class="input-group"><span class="input-group-text">{{ $currentTenant->currency ?? '₹' }}</span><input type="number" min="0" step="0.01" class="form-control @error('free_delivery_threshold') is-invalid @enderror" id="free_delivery_threshold" name="free_delivery_threshold" value="{{ old('free_delivery_threshold', $tenant->free_delivery_threshold) }}" placeholder="Leave blank to disable"></div>
+                                @error('free_delivery_threshold')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
+                                <div class="form-text">Uses the discounted product subtotal. Leave blank to disable the offer.</div>
+                            </div>
+                        </div>
                         <div class="mb-3">
                             <label for="delivery_days" class="form-label fw-semibold">Delivery Days Count</label>
                             <input type="number" class="form-control @error('delivery_days') is-invalid @enderror" id="delivery_days" name="delivery_days" value="{{ old('delivery_days', $tenant->delivery_days ?? 2) }}" min="0" max="30" placeholder="e.g. 2">
@@ -380,7 +394,7 @@
 
                         <div class="mb-3">
                             <label for="delivery_info" class="form-label fw-semibold">Delivery Details Text</label>
-                            <textarea class="form-control @error('delivery_info') is-invalid @enderror" id="delivery_info" name="delivery_info" rows="3" placeholder="e.g. We deliver our products directly to your home within 3-5 days. Free shipping applies to all orders over {{ $currentTenant->currency ?? '₹' }}499.">{{ old('delivery_info', $tenant->delivery_info) }}</textarea>
+                            <textarea class="form-control @error('delivery_info') is-invalid @enderror" id="delivery_info" name="delivery_info" rows="3" placeholder="e.g. We deliver your order within 3-5 business days.">{{ old('delivery_info', $tenant->delivery_info) }}</textarea>
                             @error('delivery_info')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror

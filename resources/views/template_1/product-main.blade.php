@@ -321,7 +321,7 @@
 
             <div class="delivery-note" style="margin-bottom: 2rem; color: var(--text-main); font-weight: 600; font-size: 0.95rem; display: flex; align-items: center; gap: 0.75rem; background: #f8fafc; padding: 1rem 1.25rem; border-radius: 0.75rem; border-left: 4px solid var(--accent-color);">
                 <i class="fa-solid fa-truck-fast" style="color: var(--accent-color); font-size: 1.1rem;"></i>
-                <span>Estimated delivery by <span style="font-weight: 800;">{{ \Carbon\Carbon::now()->addDays($currentTenant->delivery_days ?? 2)->format('D, M d') }}</span></span>
+                <span>Estimated delivery by <span style="font-weight: 800;">{{ \Carbon\Carbon::now()->addDays($currentTenant->delivery_days ?? 2)->format('D, M d') }}</span> · Delivery {{ ($product->delivery_fee ?? $currentTenant->default_delivery_fee ?? 0) > 0 ? ($currentTenant->currency ?? '₹').number_format($product->delivery_fee ?? $currentTenant->default_delivery_fee, 2).' per item' : 'free' }}</span>
             </div>
 
             <!-- Variants -->

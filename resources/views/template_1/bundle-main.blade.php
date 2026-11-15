@@ -64,7 +64,7 @@
 
             <div class="delivery-note" style="margin-bottom: 2rem; color: var(--accent-color); font-weight: 700; font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem;">
                 <i class="fa-solid fa-truck-fast"></i>
-                <span>Delivered by {{ \Carbon\Carbon::now()->addDays($currentTenant->delivery_days ?? 2)->format('D, M d') }}</span>
+                <span>Delivered by {{ \Carbon\Carbon::now()->addDays($currentTenant->delivery_days ?? 2)->format('D, M d') }} · Delivery {{ (($bundle->delivery_fee ?? $currentTenant->default_delivery_fee ?? 0) > 0) ? ($currentTenant->currency ?? '₹').number_format($bundle->delivery_fee ?? $currentTenant->default_delivery_fee, 2) : 'free' }}</span>
             </div>
 
             <div class="p-tabs" style="margin-bottom: 2rem;">

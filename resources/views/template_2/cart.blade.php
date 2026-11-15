@@ -86,7 +86,7 @@
                 @endif
                 <div class="summary-row-lg" style="display: flex; justify-content: space-between; margin-bottom: 1rem; color: #94a3b8;">
                     <span>Shipping</span>
-                    <span class="free-badge" style="color: #10b981; font-weight: 800;">FREE</span>
+                    <span class="free-badge" id="shipping-val" style="color: #10b981; font-weight: 800;">{{ ($shippingTotal ?? 0) > 0 ? ($currentTenant->currency ?? '₹').number_format($shippingTotal, 2) : 'FREE' }}</span>
                 </div>
                 <div class="summary-row-lg" id="savings-row" style="{{ $savings > 0 ? 'display: flex;' : 'display: none;' }} justify-content: space-between; margin-bottom: 1rem; color: #94a3b8;">
                     <span>Volume Discount</span>
@@ -174,7 +174,7 @@
 
     // Run on initial load
     document.addEventListener("DOMContentLoaded", function() {
-        let initialTotal = parseFloat(document.getElementById('total-val').getAttribute('data-val') || 0);
+        let initialTotal = {{ (float) $cartTotalBeforeTax }};
         checkMinOrder(initialTotal);
     });
 
@@ -201,6 +201,7 @@
                     document.getElementById('tax-val').innerText = '{{ $currentTenant->currency ?? '₹' }}' + new Intl.NumberFormat().format(response.taxAmount);
                 }
                 document.getElementById('total-val').innerText = '{{ $currentTenant->currency ?? '₹' }}' + new Intl.NumberFormat().format(response.cartTotal);
+                if (document.getElementById('shipping-val')) document.getElementById('shipping-val').innerText = response.shippingTotal > 0 ? '{{ $currentTenant->currency ?? '₹' }}' + new Intl.NumberFormat().format(response.shippingTotal) : 'FREE';
                 $('#cart-count').text(response.cartCount);
                 
                 if (response.savings > 0) {
@@ -210,7 +211,7 @@
                     document.getElementById('savings-row').style.display = 'none';
                 }
                 
-                checkMinOrder(response.cartTotal);
+                checkMinOrder(response.cartTotalBeforeTax);
             },
             error: function(xhr) {
                 if (xhr.responseJSON && xhr.responseJSON.message) {
@@ -244,8 +245,9 @@
                             document.getElementById('tax-val').innerText = '{{ $currentTenant->currency ?? '₹' }}' + new Intl.NumberFormat().format(response.taxAmount);
                         }
                         document.getElementById('total-val').innerText = '{{ $currentTenant->currency ?? '₹' }}' + new Intl.NumberFormat().format(response.cartTotal);
+                        if (document.getElementById('shipping-val')) document.getElementById('shipping-val').innerText = response.shippingTotal > 0 ? '{{ $currentTenant->currency ?? '₹' }}' + new Intl.NumberFormat().format(response.shippingTotal) : 'FREE';
                         $('#cart-count').text(response.cartCount);
-                        checkMinOrder(response.cartTotal);
+                        checkMinOrder(response.cartTotalBeforeTax);
                     }, 300);
                 }
             }

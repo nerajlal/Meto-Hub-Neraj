@@ -98,6 +98,13 @@
                      <div class="form-text text-muted small mt-2">Leave blank to disable order constraints on this bundle.</div>
                  </div>
 
+                <div class="card border shadow-sm p-3 mb-4">
+                    <h2 class="h6 fw-bold text-secondary mb-2">Delivery charge</h2>
+                    <label class="form-label fw-medium text-secondary small" for="bundle-delivery-fee">Per bundle delivery fee</label>
+                    <input id="bundle-delivery-fee" type="number" name="delivery_fee" class="form-control" min="0" max="99999999.99" step="0.01" value="{{ old('delivery_fee') }}" placeholder="Use store default">
+                    <div class="form-text">Leave blank to use the store default. Charged once per bundle added to the cart.</div>
+                </div>
+
                 <!-- Summary -->
                  <div class="card border shadow-sm p-3 mb-4">
                     <h2 class="h6 fw-bold text-secondary mb-3">Summary</h2>

@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Bundle;
 use App\Models\Product;
+use App\Models\Tenant;
 use Illuminate\Support\Facades\Auth;
 
 class CartService
@@ -12,7 +13,7 @@ class CartService
      * Calculate the total for a given cart array.
      * Modifies the cart array by reference to add discount flags.
      */
-    public static function calculateTotal(&$cart)
+    public static function calculateTotal(&$cart, ?Tenant $tenant = null)
     {
         $subtotal = 0;
         $savings = 0;
@@ -115,11 +116,15 @@ class CartService
             }
         }
 
+        $netSubtotal = max(0, $subtotal - $savings);
+        $shipping = app(ShippingCalculator::class)->calculate($cart, $netSubtotal, $tenant);
+
         return [
-            'total' => max(0, $subtotal - $savings),
+            'total' => $netSubtotal,
             'subtotal' => $subtotal,
             'savings' => $savings,
-            'app_discount' => $appDiscount
+            'app_discount' => $appDiscount,
+            ...$shipping,
         ];
     }
 

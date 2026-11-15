@@ -385,6 +385,9 @@
                         <div style="flex-grow: 1; min-width: 0;">
                             <span style="display: block; font-size: 0.95rem; font-weight: 700; color: var(--primary-color); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ $item['name'] }}</span>
                             <span style="font-size: 0.8rem; color: var(--text-muted);">{{ $item['size'] }}</span>
+                            @if(($item['line_delivery_fee_before_waiver'] ?? 0) > 0)
+                                <span style="display:block;font-size:.78rem;color:var(--text-muted);">Delivery: @if(($item['line_delivery_fee'] ?? 0) > 0){{ $currentTenant->currency ?? '₹' }}{{ number_format($item['line_delivery_fee'], 2) }}@else Free (threshold reached)@endif</span>
+                            @endif
                             @if(isset($item['coupon']) && $item['coupon'])
                                 <span style="display: inline-block; margin-top: 4px; font-size: 0.7rem; font-weight: 700; color: #10b981; background: #ecfdf5; padding: 2px 6px; border-radius: 4px;"><i class="fa-solid fa-tag"></i> {{ $item['coupon']['code'] ?? 'DISCOUNT' }} Applied</span>
                             @endif
@@ -412,7 +415,7 @@
                     @endif
                     <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem; font-size: 0.95rem; color: var(--text-muted);">
                         <span>Shipping</span>
-                        <span style="color: #10b981; font-weight: 700;">FREE</span>
+                        <span style="{{ $shippingTotal > 0 ? 'color: var(--primary-color);' : 'color: #10b981;' }}font-weight:700;">{{ $shippingTotal > 0 ? ($currentTenant->currency ?? '₹').number_format($shippingTotal, 2) : 'FREE' }}</span>
                     </div>
                     @if(isset($taxName) && isset($taxRate) && $taxAmount > 0)
                     <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem; font-size: 0.95rem; color: var(--text-muted);">

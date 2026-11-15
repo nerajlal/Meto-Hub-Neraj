@@ -655,6 +655,16 @@
             <!-- Purchase Quantity Limits -->
             <div class="card border shadow-sm mb-4">
                 <div class="card-body p-4">
+                    <h2 class="h6 fw-semibold text-secondary mb-2">Delivery charge</h2>
+                    <label class="form-label fw-medium text-secondary small" for="product-delivery-fee">Per item delivery fee</label>
+                    <input id="product-delivery-fee" type="number" name="delivery_fee" class="form-control shadow-sm" min="0" max="99999999.99" step="0.01" value="{{ old('delivery_fee', $product->delivery_fee) }}" placeholder="Use store default">
+                    <div class="form-text">Leave blank to use the store’s default delivery fee. This fee is charged for each unit in the cart.</div>
+                </div>
+            </div>
+
+            <!-- Purchase Quantity Limits -->
+            <div class="card border shadow-sm mb-4">
+                <div class="card-body p-4">
                     <h2 class="h6 fw-semibold text-secondary mb-3">Purchase Limits (Wholesale/Promo)</h2>
                     <div class="row g-2">
                         <div class="col-6">

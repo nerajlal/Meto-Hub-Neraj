@@ -522,11 +522,11 @@ class PageController extends Controller
                 }
             }
         }
-        $cartData = \App\Services\CartService::calculateTotal($cart);
+        $tenant = \App\Models\Tenant::find($tenantId);
+        $cartData = \App\Services\CartService::calculateTotal($cart, $tenant);
         $subtotal = $cartData['total'];
         $savings = $cartData['savings'];
-
-        $tenant = \App\Models\Tenant::find($tenantId);
+        $shippingTotal = (float) ($cartData['shipping_total'] ?? 0);
         $taxAmount = 0.00;
         $taxRate = null;
         $taxName = null;
@@ -535,7 +535,7 @@ class PageController extends Controller
             $taxName = $tenant->tax_name;
             $taxAmount = round($subtotal * ($taxRate / 100), 2);
         }
-        $total = $subtotal + $taxAmount;
+        $total = $subtotal + $shippingTotal + $taxAmount;
 
         if (empty($cart)) {
             return view('Checkout.empty', compact('layout'));
@@ -552,7 +552,7 @@ class PageController extends Controller
             'cart_items' => array_keys($cart)
         ]);
         
-        if ($minOrderValue > 0 && $total < $minOrderValue) {
+        if ($minOrderValue > 0 && $subtotal < $minOrderValue) {
             $formattedMin = '₹' . number_format($minOrderValue, 2);
             $cartRoute = 'v1.home';
             return redirect()->route($cartRoute)->with('error', "Your order total must be at least {$formattedMin} to proceed to checkout.");
@@ -577,7 +577,7 @@ class PageController extends Controller
             '05:00 PM - 09:00 PM'
         ];
 
-        return view($view, compact('cart', 'total', 'subtotal', 'savings', 'address', 'layout', 'taxAmount', 'taxRate', 'taxName', 'deliveryDates', 'deliveryTimeSlots'));
+        return view($view, compact('cart', 'total', 'subtotal', 'savings', 'shippingTotal', 'address', 'layout', 'taxAmount', 'taxRate', 'taxName', 'deliveryDates', 'deliveryTimeSlots'));
     }
 
     private function getActiveCoupon($product)

@@ -157,13 +157,13 @@ class OrderController extends Controller
         $cart = app(CheckoutCartService::class)->prepare($cart);
 
         // 3. Calculate Totals
-        $cartData = CartService::calculateTotal($cart);
+        $cartData = CartService::calculateTotal($cart, $tenant);
         $subtotal = $cartData['total'];
         $savings = min($cartData['subtotal'], $cartData['savings']);
         if ($subtotal < ($tenant->min_order_value ?? 0)) {
             throw ValidationException::withMessages(['cart' => 'Your cart does not meet the minimum order value.']);
         }
-        $shipping = 0; // Free shipping
+        $shipping = (float) ($cartData['shipping_total'] ?? 0);
         
 
         $taxAmount = 0.00;
@@ -295,7 +295,9 @@ class OrderController extends Controller
                 'options' => [
                     'coupon_code' => isset($details['coupon']) ? $details['coupon']->code : (isset($details['coupon_code']) ? $details['coupon_code'] : null),
                     'saved_amount' => $details['line_savings'] ?? 0,
-                    'original_price' => $details['original_price'] ?? null
+                    'original_price' => $details['original_price'] ?? null,
+                    'unit_delivery_fee' => $details['unit_delivery_fee'] ?? 0,
+                    'delivery_fee' => $details['line_delivery_fee'] ?? 0,
                 ]
             ]);
 

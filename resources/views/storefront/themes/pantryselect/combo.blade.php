@@ -37,7 +37,7 @@
                     @endforeach
                 </div>
                 <div class="p-actions-row" id="main-product-actions" data-bundle-id="{{ $bundle->id }}"><div class="qty-control"><button type="button" onclick="updateMainCart(-1)" aria-label="Remove one {{ $kind }}">−</button><span class="page-qty" id="main-qty-value" aria-live="polite">0</span><button type="button" onclick="updateMainCart(1)" aria-label="Add one {{ $kind }}" @disabled(!$available)>+</button></div><button type="button" class="btn-add-to-cart" id="add-to-cart-bundle-btn" onclick="addOrOpenCart()" @disabled(!$available)>{{ $available ? 'Add to basket' : 'Out of stock' }} · {{ $currentTenant->currency ?? '₹' }}{{ number_format($total, 2) }}</button></div>
-                <div class="delivery-note"><i class="fa-solid fa-truck" aria-hidden="true"></i><span>Estimated delivery {{ now()->addDays($currentTenant->delivery_days ?? 2)->format('D, M j') }}</span></div>
+                <div class="delivery-note"><i class="fa-solid fa-truck" aria-hidden="true"></i><span>Estimated delivery {{ now()->addDays($currentTenant->delivery_days ?? 2)->format('D, M j') }} · Delivery {{ (($bundle->delivery_fee ?? $currentTenant->default_delivery_fee ?? 0) > 0) ? ($currentTenant->currency ?? '₹').number_format($bundle->delivery_fee ?? $currentTenant->default_delivery_fee, 2) : 'free' }}</span></div>
             </div>
             <div class="ps-product-help"><i class="fa-regular fa-circle-question" aria-hidden="true"></i><a href="{{ app(\App\Services\StorefrontTheme::class)->url('v1.contact') }}">Have a question? Contact the store</a></div>
         </div>

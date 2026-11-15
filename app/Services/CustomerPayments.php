@@ -76,10 +76,10 @@ class CustomerPayments
             if (!$raw) $this->invalid('Your cart is empty.');
             $cart = app(CheckoutCartService::class)->prepare($raw, false);
             $this->reserve($cart, $tenant->id, false);
-            $totals = CartService::calculateTotal($cart);
+            $totals = CartService::calculateTotal($cart, $tenant);
             if ($totals['total'] < ($tenant->min_order_value ?? 0)) $this->invalid('Your cart does not meet the minimum order value.');
             $tax = $tenant->tax_name && $tenant->tax_rate > 0 ? round($totals['total'] * $tenant->tax_rate / 100, 2) : 0;
-            $amount = (int) round(($totals['total'] + $tax) * 100);
+            $amount = (int) round(($totals['total'] + $totals['shipping_total'] + $tax) * 100);
             if ($amount < 100) $this->invalid('Online payment requires an order total of at least ₹1.');
             if ($amount > 9999999999 || $totals['subtotal'] > 99999999.99) $this->invalid('This order exceeds the supported checkout total.');
             foreach ($cart as &$item) {
@@ -102,7 +102,9 @@ class CustomerPayments
                 'amount' => $amount, 'currency' => 'INR', 'status' => 'creating', 'gateway' => $gateway,
                 'credentials' => $credentials,
                 'snapshot' => ['store_checkout_url' => $checkoutBase.$checkoutPath, 'cart' => $cart, 'raw_cart' => $raw, 'details' => $details, 'subtotal' => $totals['subtotal'],
-                    'savings' => min($totals['subtotal'], $totals['savings']), 'tax_amount' => $tax,
+                    'savings' => min($totals['subtotal'], $totals['savings']), 'shipping_total' => $totals['shipping_total'],
+                    'shipping_before_waiver' => $totals['shipping_before_waiver'],
+                    'free_delivery_applied' => $totals['free_delivery_applied'], 'tax_amount' => $tax,
                     'tax_name' => $tenant->tax_name, 'tax_rate' => $tenant->tax_rate]]);
         });
         if (!$payment->wasRecentlyCreated) {
@@ -235,7 +237,7 @@ class CustomerPayments
                     'order_number' => strtoupper(substr($payment->gateway, 0, 2)).'-'.strtoupper(str_replace('-', '', $payment->id)),
                     'status' => 'pending', 'payment_method' => $payment->gateway, 'payment_status' => 'paid',
                     'gateway_name' => $payment->gateway, 'gateway_order_id' => $payment->provider_order_id, 'gateway_payment_id' => $payment->provider_payment_id,
-                    'subtotal' => $snapshot['subtotal'], 'shipping_cost' => 0, 'discount_amount' => $snapshot['savings'],
+                    'subtotal' => $snapshot['subtotal'], 'shipping_cost' => $snapshot['shipping_total'] ?? 0, 'discount_amount' => $snapshot['savings'],
                     'total_amount' => $payment->amount / 100, 'tax_amount' => $snapshot['tax_amount'],
                     'tax_name' => $snapshot['tax_name'], 'tax_rate' => $snapshot['tax_rate'],
                     'customer_name' => $d['name'] ?? '', 'customer_email' => $d['email'] ?? '', 'customer_phone' => $d['phone'] ?? '',
@@ -252,6 +254,7 @@ class CustomerPayments
                         'total' => $item['price'] * $item['quantity'], 'size' => $item['size'] ?? null, 'type' => $item['type'],
                         'options' => ['coupon_code' => $item['coupon_code'], 'saved_amount' => $item['line_savings'] ?? 0,
                             'original_price' => $item['original_price'] ?? null, 'variant_id' => $item['variant_id'] ?? null,
+                            'unit_delivery_fee' => $item['unit_delivery_fee'] ?? 0, 'delivery_fee' => $item['line_delivery_fee'] ?? 0,
                             'paid_selection' => $item['_reservations']]]);
                     if ($item['coupon_code']) $codes[] = $item['coupon_code'];
                     if ($item['type'] === 'bundle') Bundle::withoutGlobalScopes()->where('tenant_id', $payment->tenant_id)->whereKey($item['bundle_id'])->increment('total_sales', $item['quantity']);

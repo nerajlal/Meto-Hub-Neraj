@@ -90,6 +90,7 @@ class BundleController extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
             'min_order_qty' => 'nullable|integer|min:1',
             'max_order_qty' => 'nullable|integer|min:1' . ($request->filled('min_order_qty') ? '|gte:min_order_qty' : ''),
+            'delivery_fee' => 'nullable|numeric|min:0|max:99999999.99',
         ] + $this->backgroundRules());
 
         $items = $this->bundleItems($request);
@@ -119,6 +120,7 @@ class BundleController extends Controller
                 'discount_value' => $request->discount_value,
                 'min_order_qty' => $request->min_order_qty,
                 'max_order_qty' => $request->max_order_qty,
+                'delivery_fee' => $request->filled('delivery_fee') ? $request->delivery_fee : null,
             ]);
 
             foreach ($items as $item) $bundle->products()->attach($item['product_id'], $item['pivot']);
@@ -178,6 +180,7 @@ class BundleController extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
             'min_order_qty' => 'nullable|integer|min:1',
             'max_order_qty' => 'nullable|integer|min:1' . ($request->filled('min_order_qty') ? '|gte:min_order_qty' : ''),
+            'delivery_fee' => 'nullable|numeric|min:0|max:99999999.99',
         ] + $this->backgroundRules());
 
         $items = $bundle->type === 'pack' ? [] : $this->bundleItems($request);
@@ -201,6 +204,7 @@ class BundleController extends Controller
             'discount_value' => $request->discount_value,
             'min_order_qty' => $request->min_order_qty,
             'max_order_qty' => $request->max_order_qty,
+            'delivery_fee' => $request->filled('delivery_fee') ? $request->delivery_fee : null,
         ];
 
         if ($request->exists('card_background')) $data['card_background'] = $this->backgroundData($request);

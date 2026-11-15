@@ -53,6 +53,7 @@ class CartController extends Controller
         }
 
         $cartData = $this->calculateTotal($cart);
+        $shippingTotal = (float) ($cartData['shipping_total'] ?? 0);
         $cartTotalBeforeTax = $cartData['total'];
         $subtotal = $cartData['subtotal'];
         $savings = $cartData['savings'];
@@ -67,10 +68,10 @@ class CartController extends Controller
             $taxName = $tenant->tax_name;
             $taxAmount = round($cartTotalBeforeTax * ($taxRate / 100), 2);
         }
-        $total = $cartTotalBeforeTax + $taxAmount;
+        $total = $cartTotalBeforeTax + $shippingTotal + $taxAmount;
         
         $minOrderValue = $tenant ? ($tenant->min_order_value ?? 0) : 0;
-        return view('template_1.cart', compact('cart', 'total', 'subtotal', 'savings', 'taxAmount', 'taxRate', 'taxName', 'cartTotalBeforeTax', 'minOrderValue'));
+        return view('template_1.cart', compact('cart', 'total', 'subtotal', 'savings', 'shippingTotal', 'taxAmount', 'taxRate', 'taxName', 'cartTotalBeforeTax', 'minOrderValue'));
     }
 
     /**
@@ -114,6 +115,7 @@ class CartController extends Controller
         }
 
         $cartData = $this->calculateTotal($cart);
+        $shippingTotal = (float) ($cartData['shipping_total'] ?? 0);
         $cartTotalBeforeTax = $cartData['total'];
         $subtotal = $cartData['subtotal'];
         $savings = $cartData['savings'];
@@ -130,10 +132,10 @@ class CartController extends Controller
             $taxName = $tenant->tax_name;
             $taxAmount = round($cartTotalBeforeTax * ($taxRate / 100), 2);
         }
-        $total = $cartTotalBeforeTax + $taxAmount;
+        $total = $cartTotalBeforeTax + $shippingTotal + $taxAmount;
 
         $minOrderValue = $tenant ? ($tenant->min_order_value ?? 0) : 0;
-        return view($view, compact('cart', 'total', 'subtotal', 'savings', 'taxAmount', 'taxRate', 'taxName', 'cartTotalBeforeTax', 'minOrderValue'));
+        return view($view, compact('cart', 'total', 'subtotal', 'savings', 'shippingTotal', 'taxAmount', 'taxRate', 'taxName', 'cartTotalBeforeTax', 'minOrderValue'));
     }
 
     /**
@@ -176,6 +178,7 @@ class CartController extends Controller
         }
 
         $cartData = $this->calculateTotal($cart);
+        $shippingTotal = (float) ($cartData['shipping_total'] ?? 0);
         $cartTotalBeforeTax = $cartData['total'];
         $subtotal = $cartData['subtotal'];
         $savings = $cartData['savings'];
@@ -190,10 +193,10 @@ class CartController extends Controller
             $taxName = $tenant->tax_name;
             $taxAmount = round($cartTotalBeforeTax * ($taxRate / 100), 2);
         }
-        $total = $cartTotalBeforeTax + $taxAmount;
+        $total = $cartTotalBeforeTax + $shippingTotal + $taxAmount;
         
         $minOrderValue = $tenant ? ($tenant->min_order_value ?? 0) : 0;
-        return view('template_1.cart', compact('cart', 'total', 'subtotal', 'savings', 'taxAmount', 'taxRate', 'taxName', 'cartTotalBeforeTax', 'minOrderValue'));
+        return view('template_1.cart', compact('cart', 'total', 'subtotal', 'savings', 'shippingTotal', 'taxAmount', 'taxRate', 'taxName', 'cartTotalBeforeTax', 'minOrderValue'));
     }
 
     /**
@@ -237,6 +240,7 @@ class CartController extends Controller
         }
 
         $cartData = $this->calculateTotal($cart);
+        $shippingTotal = (float) ($cartData['shipping_total'] ?? 0);
         $cartTotalBeforeTax = $cartData['total'];
         $subtotal = $cartData['subtotal'];
         $savings = $cartData['savings'];
@@ -251,15 +255,19 @@ class CartController extends Controller
             $taxName = $tenant->tax_name;
             $taxAmount = round($cartTotalBeforeTax * ($taxRate / 100), 2);
         }
-        $total = $cartTotalBeforeTax + $taxAmount;
+        $total = $cartTotalBeforeTax + $shippingTotal + $taxAmount;
         
         $minOrderValue = $tenant ? ($tenant->min_order_value ?? 0) : 0;
-        return view('template_1.cart', compact('cart', 'total', 'subtotal', 'savings', 'taxAmount', 'taxRate', 'taxName', 'cartTotalBeforeTax', 'minOrderValue'));
+        return view('template_1.cart', compact('cart', 'total', 'subtotal', 'savings', 'shippingTotal', 'taxAmount', 'taxRate', 'taxName', 'cartTotalBeforeTax', 'minOrderValue'));
     }
 
     private function calculateTotal(&$cart)
     {
-        return \App\Services\CartService::calculateTotal($cart);
+        $tenantId = request()->attributes->get('resolved_tenant_id')
+            ?? session('active_tenant_id')
+            ?? (auth()->check() ? auth()->user()->tenant_id : null);
+        $tenant = $tenantId ? \App\Models\Tenant::find($tenantId) : null;
+        return \App\Services\CartService::calculateTotal($cart, $tenant);
     }
 
     /**
@@ -339,12 +347,14 @@ class CartController extends Controller
             }
             $cartImages = array_slice(array_unique($cartImages), 0, 3);
             $cartData = $this->calculateTotal($cart);
+            $shippingTotal = (float) ($cartData['shipping_total'] ?? 0);
 
             return response()->json([
                 'success' => true, 
                 'message' => 'Collection added to Bag!',
                 'cartCount' => $count,
-                'cartTotal' => $cartData['total'],
+                'cartTotal' => $cartData['total'] + $shippingTotal,
+                'shippingTotal' => $shippingTotal,
                 'cartItemsMap' => $cartItemsMap,
                 'cartImages' => $cartImages
             ]);
@@ -587,6 +597,7 @@ class CartController extends Controller
         $cartItemsMap = [];
         $cartImages = [];
         $cartData = $this->calculateTotal($cart);
+        $shippingTotal = (float) ($cartData['shipping_total'] ?? 0);
         foreach($cart as $key => $item) {
             $count += $item['quantity'];
             $cartItemsMap[$key] = $item['quantity'];
@@ -598,7 +609,8 @@ class CartController extends Controller
             'success' => true, 
             'message' => 'Product added to cart!',
             'cartCount' => $count,
-            'cartTotal' => $cartData['total'],
+            'cartTotal' => $cartData['total'] + $shippingTotal,
+            'shippingTotal' => $shippingTotal,
             'cartItemsMap' => $cartItemsMap,
             'cartImages' => $cartImages
         ]);
@@ -720,6 +732,7 @@ class CartController extends Controller
             }
 
             $cartData = $this->calculateTotal($cart);
+            $shippingTotal = (float) ($cartData['shipping_total'] ?? 0);
             $cartTotalBeforeTax = $cartData['total'];
             $count = 0;
             $cartItemsMap = [];
@@ -737,13 +750,14 @@ class CartController extends Controller
             if ($tenant && $tenant->tax_name && $tenant->tax_rate > 0) {
                 $taxAmount = round($cartTotalBeforeTax * ($tenant->tax_rate / 100), 2);
             }
-            $total = $cartTotalBeforeTax + $taxAmount;
+            $total = $cartTotalBeforeTax + $shippingTotal + $taxAmount;
             
             return response()->json([
                 'success' => true, 
                 'itemTotal' => $itemTotal,
                 'cartTotal' => $total,
                 'cartTotalBeforeTax' => $cartTotalBeforeTax,
+                'shippingTotal' => $shippingTotal,
                 'taxAmount' => $taxAmount,
                 'cartCount' => $count,
                 'savings' => $cartData['savings'],
@@ -790,6 +804,7 @@ class CartController extends Controller
             }
             
             $cartData = $this->calculateTotal($cart);
+            $shippingTotal = (float) ($cartData['shipping_total'] ?? 0);
             $cartTotalBeforeTax = $cartData['total'];
             $count = 0;
             $cartItemsMap = [];
@@ -811,12 +826,13 @@ class CartController extends Controller
             if ($tenant && $tenant->tax_name && $tenant->tax_rate > 0) {
                 $taxAmount = round($cartTotalBeforeTax * ($tenant->tax_rate / 100), 2);
             }
-            $total = $cartTotalBeforeTax + $taxAmount;
+            $total = $cartTotalBeforeTax + $shippingTotal + $taxAmount;
 
             return response()->json([
                 'success' => true,
                 'cartTotal' => $total,
                 'cartTotalBeforeTax' => $cartTotalBeforeTax,
+                'shippingTotal' => $shippingTotal,
                 'taxAmount' => $taxAmount,
                 'cartCount' => $count,
                 'isEmpty' => empty($cart),
@@ -960,6 +976,7 @@ class CartController extends Controller
         }
         
         $cartData = $this->calculateTotal($cart);
+        $shippingTotal = (float) ($cartData['shipping_total'] ?? 0);
         $cartTotalBeforeTax = $cartData['total'];
         
         $count = 0;
@@ -980,12 +997,13 @@ class CartController extends Controller
         if ($tenant && $tenant->tax_name && $tenant->tax_rate > 0) {
             $taxAmount = round($cartTotalBeforeTax * ($tenant->tax_rate / 100), 2);
         }
-        $total = $cartTotalBeforeTax + $taxAmount;
+        $total = $cartTotalBeforeTax + $shippingTotal + $taxAmount;
 
         return response()->json([
             'success' => true,
             'cartCount' => $count,
             'cartTotal' => $total,
+            'shippingTotal' => $shippingTotal,
             'cartItemsMap' => $cartItemsMap,
             'cartImages' => $cartImages
         ]);
@@ -1163,6 +1181,7 @@ class CartController extends Controller
         }
 
         $cartData = $this->calculateTotal($cart);
+        $shippingTotal = (float) ($cartData['shipping_total'] ?? 0);
         $cartTotalBeforeTax = $cartData['total'];
         $subtotal = $cartData['subtotal'];
         $savings = $cartData['savings'];
@@ -1177,12 +1196,12 @@ class CartController extends Controller
             $taxName = $tenant->tax_name;
             $taxAmount = round($cartTotalBeforeTax * ($tenant->tax_rate / 100), 2);
         }
-        $total = $cartTotalBeforeTax + $taxAmount;
+        $total = $cartTotalBeforeTax + $shippingTotal + $taxAmount;
 
         $view = 'template_1.partials.cart_drawer_items';
 
         $minOrderValue = $tenant ? ($tenant->min_order_value ?? 0) : 0;
-        return view($view, compact('cart', 'total', 'subtotal', 'savings', 'taxAmount', 'taxRate', 'taxName', 'cartTotalBeforeTax', 'minOrderValue'))->render();
+        return view($view, compact('cart', 'total', 'subtotal', 'savings', 'shippingTotal', 'taxAmount', 'taxRate', 'taxName', 'cartTotalBeforeTax', 'minOrderValue'))->render();
     }
 
     private function getActiveCoupon($product)

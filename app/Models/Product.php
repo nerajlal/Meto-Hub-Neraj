@@ -28,6 +28,7 @@ class Product extends Model
         'notes_base',
         'min_order_qty',
         'max_order_qty',
+        'delivery_fee',
         'tenant_id',
         'continue_selling_when_out_of_stock',
         'tags',
@@ -35,6 +36,7 @@ class Product extends Model
 
     protected $casts = [
         'tags' => 'array',
+        'delivery_fee' => 'decimal:2',
     ];
 
     protected static function boot()

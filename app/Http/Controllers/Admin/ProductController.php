@@ -100,6 +100,7 @@ class ProductController extends Controller
             'status' => 'required|in:active,draft',
             'min_order_qty' => 'nullable|integer|min:1',
             'max_order_qty' => 'nullable|integer|min:1|gte:min_order_qty',
+            'delivery_fee' => 'nullable|numeric|min:0|max:99999999.99',
             'variants' => 'array',
             'media.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
         ]);
@@ -108,7 +109,7 @@ class ProductController extends Controller
             'seo_title', 'seo_description', 'seo_image', 'title', 'description', 'status', 'type', 'vendor',
             'collection_id', 'gender', 'olfactory_family', 
             'intensity', 'oil_concentration', 'notes_top', 'notes_heart', 'notes_base',
-            'min_order_qty', 'max_order_qty', 'continue_selling_when_out_of_stock'
+            'min_order_qty', 'max_order_qty', 'delivery_fee', 'continue_selling_when_out_of_stock'
         ]);
 
         if (array_key_exists('vendor', $data) && is_null($data['vendor'])) {
@@ -225,6 +226,7 @@ class ProductController extends Controller
              'media.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
              'min_order_qty' => 'nullable|integer|min:1',
              'max_order_qty' => 'nullable|integer|min:1|gte:min_order_qty',
+             'delivery_fee' => 'nullable|numeric|min:0|max:99999999.99',
         ]);
 
         $product = Product::findOrFail($id);
@@ -242,7 +244,7 @@ class ProductController extends Controller
             'seo_title', 'seo_description', 'seo_image', 'title', 'description', 'status', 'type', 'vendor',
             'collection_id', 'gender', 'olfactory_family', 
             'intensity', 'oil_concentration', 'notes_top', 'notes_heart', 'notes_base',
-            'min_order_qty', 'max_order_qty', 'continue_selling_when_out_of_stock'
+            'min_order_qty', 'max_order_qty', 'delivery_fee', 'continue_selling_when_out_of_stock'
         ]);
 
         if (array_key_exists('vendor', $data) && is_null($data['vendor'])) {
